@@ -96,5 +96,33 @@ class HoldoutEvaluationTests(unittest.TestCase):
                 evaluate(root, path)
 
 
+    def test_rejects_wrong_expected_code_ref(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            path = self.fixture(root)
+            labels = json.loads(path.read_text(encoding='utf-8'))
+            labels['frozen_code_ref'] = 'a' * 40
+            path.write_text(json.dumps(labels), encoding='utf-8')
+            with self.assertRaisesRegex(ValueError, 'FROZEN_CODE_REF_MISMATCH'):
+                evaluate(root, path, expected_code_ref='b' * 40)
+
+    def test_rejects_invalid_expected_code_ref(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            path = self.fixture(root)
+            with self.assertRaisesRegex(ValueError, 'EXPECTED_CODE_REF_MUST_BE_FULL_SHA'):
+                evaluate(root, path, expected_code_ref='fixture-commit')
+
+    def test_accepts_matching_expected_code_ref(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            path = self.fixture(root)
+            labels = json.loads(path.read_text(encoding='utf-8'))
+            labels['frozen_code_ref'] = 'a' * 40
+            path.write_text(json.dumps(labels), encoding='utf-8')
+            result = evaluate(root, path, expected_code_ref='A' * 40)
+            self.assertEqual(result['counts']['tp'], 4)
+
 if __name__ == '__main__':
     unittest.main()
+

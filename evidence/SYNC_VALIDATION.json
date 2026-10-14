@@ -1,0 +1,17 @@
+{
+  "date": "2026-10-14",
+  "scope": "Independent allowlisted GitHub sync snapshot, not a production rerun",
+  "runtime": {"python":"3.12.14","os":"Windows","executable":"bundled Codex Python; personal path omitted"},
+  "command": "<BUNDLED_PYTHON> -X utf8 -m unittest discover -s tests",
+  "working_directory": "<SYNC_SNAPSHOT>",
+  "exit_code": 0,
+  "tests_run": 148,
+  "skipped": 0,
+  "duration_seconds": 8.972,
+  "stderr": "....................................................................................................................................................\n----------------------------------------------------------------------\nRan 148 tests in 8.972s\n\nOK\n",
+  "stdout_redacted": "node=openmagpie candidates=1 failed_sources=0\nitems=<SYNC_SNAPSHOT>/.test-tmp/<temporary>/data/inbox/openmagpie.jsonl\nstatus=<SYNC_SNAPSHOT>/.test-tmp/<temporary>/data/status/openmagpie.json\n",
+  "source": "Actual command output captured during this synchronization; temporary personal paths redacted",
+  "local_dependency": "Digest cross-process runtime test used the already-installed upstream venv under C:/WoolRadar; that venv is not shipped",
+  "limits": ["Not a Linux/cloud CI result","Not full upstream deployment acceptance","No95% corpus metrics","Production148 result is separately retained in SYNC_EVIDENCE"],
+  "overall_woolradar_complete": false
+}

@@ -42,3 +42,35 @@ playwright/.auth/
 
 # Local logs
 *.log
+
+# WoolRadar runtime assets stay local
+data/
+logs/
+reports/
+backups/
+.test-tmp/
+.venv*/
+nodes/*/upstream/
+nodes/*/chrome-profile/
+**/auth_state.json
+**/storage-state*.json
+**/cookies*.json
+**/session*.json
+**/credentials*.json
+!**/credentials.example.json
+!**/credentials.application-only.example.json
+*.db
+*.db-*
+*.sqlite*
+*.zip
+*.whl
+*.exe
+*.dll
+Run-Hidden.build.json
+
+# Selected redacted evidence is versioned; raw evidence is not auto-staged
+evidence/*
+!evidence/SYNC_EVIDENCE.json
+!evidence/SYNC_VALIDATION.json
+!evidence/SNAPSHOT_MANIFEST.json
+!evidence/SHARING_AUDIT.json

@@ -1,0 +1,52 @@
+[
+  {
+    "node": "twitter-monitor",
+    "repository": "https://github.com/zy19940510/twitter-monitor",
+    "commit": "0c7cb1d51913afaabd1015814ac0ff00f3a52745",
+    "git_history_retained_locally": true,
+    "copied_to_sync": false,
+    "license_at_install_audit": "MIT",
+    "audit_date": "2026-10-11",
+    "limitations": "Pin and source audit, not full functional acceptance; upstream code/history not shipped"
+  },
+  {
+    "node": "openmagpie",
+    "repository": "https://github.com/obris-dev/openmagpie",
+    "commit": "696e5afb1335ccf20dff534ef5ba3ee463aae2d7",
+    "git_history_retained_locally": true,
+    "copied_to_sync": false,
+    "license_at_install_audit": "Apache-2.0; ee directory separately licensed",
+    "audit_date": "2026-10-11",
+    "limitations": "Pin and source audit, not full functional acceptance; upstream code/history not shipped"
+  },
+  {
+    "node": "digest-ai-agent",
+    "repository": "https://github.com/WHOOPsClaw/Digest_ai_agent",
+    "commit": "3d527f7f7e68e1b3e20df4e2f1e20a5b445f6fcb",
+    "git_history_retained_locally": true,
+    "copied_to_sync": false,
+    "license_at_install_audit": "MIT",
+    "audit_date": "2026-10-11",
+    "limitations": "Pin and source audit, not full functional acceptance; upstream code/history not shipped"
+  },
+  {
+    "node": "clawradar",
+    "repository": "https://github.com/tenlifejosh/clawradar",
+    "commit": "d0beaade417d13a9eb30758c2afe02bf5fda800a",
+    "git_history_retained_locally": true,
+    "copied_to_sync": false,
+    "license_at_install_audit": "MIT",
+    "audit_date": "2026-10-11",
+    "limitations": "Pin and source audit, not full functional acceptance; upstream code/history not shipped"
+  },
+  {
+    "node": "linuxdo-reference",
+    "repository": "https://github.com/xiaowanjiagit/linuxdo",
+    "commit": "5079029150abe78162e7213c8b41be964c0d888b",
+    "git_history_retained_locally": true,
+    "copied_to_sync": false,
+    "license_at_install_audit": "MIT",
+    "audit_date": "2026-10-11",
+    "limitations": "Pin and source audit, not full functional acceptance; upstream code/history not shipped"
+  }
+]

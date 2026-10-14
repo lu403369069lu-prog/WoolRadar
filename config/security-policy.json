@@ -1,0 +1,9 @@
+{
+  "allow_claim": false,
+  "allow_payment": false,
+  "allow_posting": false,
+  "allow_cookie_export": false,
+  "allow_challenge_bypass": false,
+  "allow_account_creation": false,
+  "telegram_send_enabled": false
+}

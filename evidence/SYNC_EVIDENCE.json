@@ -1,0 +1,448 @@
+{
+  "snapshot_at": "2026-10-14T15:20:12.165098+00:00",
+  "claim_class": "as_built and observed public official descriptions",
+  "database": {
+    "event_states": {
+      "EXPIRED": 1,
+      "OFFICIAL_VERIFIED": 19,
+      "UNKNOWN": 85
+    },
+    "event_count": 105,
+    "quick_check": "ok"
+  },
+  "latest_source_statuses": {
+    "clawradar": {
+      "node": "clawradar",
+      "finished_at": "2026-10-14T15:08:54Z",
+      "candidate_count": 0,
+      "sources": [
+        {
+          "source_id": "reddit-oauth",
+          "status": "SKIPPED",
+          "items": 0,
+          "error_code": "SOURCE_DISABLED",
+          "detail": "Disabled by configuration; no request attempted"
+        },
+        {
+          "source_id": "reddit-hot-rss",
+          "status": "OK",
+          "items": 0,
+          "error_code": "",
+          "detail": "fetched=25;sampled=25"
+        }
+      ]
+    },
+    "digest-ai-agent": {
+      "node": "digest-ai-agent",
+      "finished_at": "2026-10-14T12:00:01Z",
+      "candidate_count": 0,
+      "sources": [
+        {
+          "source_id": "reddit-rss",
+          "status": "SKIPPED",
+          "items": 0,
+          "error_code": "REQUEST_BUDGET",
+          "detail": ""
+        },
+        {
+          "source_id": "free-for-dev",
+          "status": "SKIPPED",
+          "items": 0,
+          "error_code": "REQUEST_BUDGET",
+          "detail": ""
+        },
+        {
+          "source_id": "google-cloud",
+          "status": "PAUSED",
+          "items": 0,
+          "error_code": "CAPTCHA_REQUIRED",
+          "detail": ""
+        },
+        {
+          "source_id": "aws",
+          "status": "SKIPPED",
+          "items": 0,
+          "error_code": "REQUEST_BUDGET",
+          "detail": ""
+        },
+        {
+          "source_id": "cloudflare-dev",
+          "status": "SKIPPED",
+          "items": 0,
+          "error_code": "REQUEST_BUDGET",
+          "detail": ""
+        }
+      ]
+    },
+    "linuxdo-monitor": {
+      "node": "linuxdo-monitor",
+      "finished_at": "2026-10-14T15:09:35Z",
+      "candidate_count": 6,
+      "sources": [
+        {
+          "source_id": "linuxdo",
+          "status": "PAUSED",
+          "items": 0,
+          "error_code": "BLOCKED_403",
+          "detail": ""
+        },
+        {
+          "source_id": "nodeseek",
+          "status": "FAILED",
+          "items": 0,
+          "error_code": "NETWORK_TIMEOUT",
+          "detail": "<urlopen error timed out>"
+        },
+        {
+          "source_id": "v2ex",
+          "status": "PAUSED",
+          "items": 0,
+          "error_code": "CAPTCHA_REQUIRED",
+          "detail": ""
+        },
+        {
+          "source_id": "lowendtalk-giveaways",
+          "status": "PAUSED",
+          "items": 0,
+          "error_code": "BLOCKED_403",
+          "detail": ""
+        },
+        {
+          "source_id": "lowendbox",
+          "status": "OK",
+          "items": 6,
+          "error_code": "",
+          "detail": "fetched=20;sampled=20"
+        },
+        {
+          "source_id": "hostloc",
+          "status": "FAILED",
+          "items": 0,
+          "error_code": "NETWORK_TIMEOUT",
+          "detail": "<urlopen error timed out>"
+        }
+      ]
+    },
+    "openmagpie": {
+      "node": "openmagpie",
+      "finished_at": "2026-10-14T15:08:54Z",
+      "candidate_count": 0,
+      "sources": [
+        {
+          "source_id": "hackernews",
+          "status": "SKIPPED",
+          "items": 0,
+          "error_code": "REQUEST_BUDGET",
+          "detail": ""
+        },
+        {
+          "source_id": "producthunt",
+          "status": "OK",
+          "items": 0,
+          "error_code": "",
+          "detail": "fetched=50;sampled=50"
+        },
+        {
+          "source_id": "devhunt",
+          "status": "SKIPPED",
+          "items": 0,
+          "error_code": "REQUEST_BUDGET",
+          "detail": ""
+        },
+        {
+          "source_id": "freestuff",
+          "status": "PAUSED",
+          "items": 0,
+          "error_code": "CAPTCHA_REQUIRED",
+          "detail": ""
+        },
+        {
+          "source_id": "github-education",
+          "status": "SKIPPED",
+          "items": 0,
+          "error_code": "REQUEST_BUDGET",
+          "detail": ""
+        },
+        {
+          "source_id": "mlh",
+          "status": "SKIPPED",
+          "items": 0,
+          "error_code": "REQUEST_BUDGET",
+          "detail": ""
+        },
+        {
+          "source_id": "cursor",
+          "status": "SKIPPED",
+          "items": 0,
+          "error_code": "REQUEST_BUDGET",
+          "detail": ""
+        }
+      ]
+    },
+    "twitter-monitor": {
+      "node": "twitter-monitor",
+      "finished_at": "2026-10-14T15:08:53Z",
+      "candidate_count": 0,
+      "sources": [
+        {
+          "source_id": "x-browser",
+          "status": "SKIPPED",
+          "items": 0,
+          "error_code": "SOURCE_DISABLED",
+          "detail": "Disabled by configuration; no request attempted"
+        }
+      ]
+    }
+  },
+  "notification_channels": [
+    {
+      "channel": "local-discovery",
+      "result": "SENT",
+      "count": 11
+    },
+    {
+      "channel": "local-health",
+      "result": "SENT",
+      "count": 123
+    }
+  ],
+  "proofs": {
+    "production-tests": {
+      "local_artifact_name": "lowend-cues-deployment-20261014.json",
+      "sha256": "34c88906aa4ad9543d122cc8a6f344feaab89662b1fd95e52f97af818d8659c0",
+      "checked_at": "2026-10-14T09:55:49.005075+00:00",
+      "tests": {
+        "exit_code": 0,
+        "stdout": "node=openmagpie candidates=1 failed_sources=0\nitems=C:\\WoolRadar\\.test-tmp\\tmpz2mb01pv\\data\\inbox\\openmagpie.jsonl\nstatus=C:\\WoolRadar\\.test-tmp\\tmpz2mb01pv\\data\\status\\openmagpie.json\n",
+        "stderr": "....................................................................................................................................................\n----------------------------------------------------------------------\nRan 148 tests in 9.224s\n\nOK\n"
+      },
+      "config_unchanged": true,
+      "newly_recovered_leads": [
+        {
+          "index": 3,
+          "title": "Exclusive LowEndBox Pricing: 2GB KVM VPS for $1.83/Month First Year!  Godlike.Host is Back!",
+          "original": false,
+          "replayed": true
+        },
+        {
+          "index": 16,
+          "title": "Let’s Try ServerCrate!  Restic-Based Backups You Can Start Using for FREE!",
+          "original": false,
+          "replayed": true
+        }
+      ]
+    },
+    "hidden-tasks": {
+      "local_artifact_name": "hidden-task-fix-20261014/verification.json",
+      "sha256": "871a0dafcad96e74a7fd16c75d1e510b406e129b3fb1c87d4c180a1e3810a1c0",
+      "checked_at": "2026-10-14T01:36:12.212003+00:00",
+      "task_count": 6,
+      "all_exit_zero": true,
+      "all_three_layers_console_false": true,
+      "binary_sha256": "94cb26a0098a2b2165533ca0c8cd20336c99b3ced4364f19a21d755660d06646",
+      "source_sha256": "67848c5b0600dc181d4869b7e000559cc911e1e580f7bd0e5f9108c5ee7bcf2d",
+      "limits": [
+        "One actual scheduled run per task; not long-term desktop observation",
+        "Task exit success is not source availability or full original acceptance"
+      ]
+    },
+    "corpus-deployment": {
+      "local_artifact_name": "public-corpus-deployment-20261014.json",
+      "sha256": "4049ed79d3625fabc65aefc6a704128caea6aefcdb3a2f3104bbda2648ecbd89",
+      "checked_at": "2026-10-14T01:34:35.158103+00:00"
+    },
+    "corpus-live": {
+      "local_artifact_name": "public-corpus-live-20261014.json",
+      "sha256": "17d65f76e05865041cfe6292563429b2789c8f6c13e8b9e1b48185c45e9a7924",
+      "checked_at": "2026-10-14T01:36:46.896749+00:00"
+    },
+    "directory-scope": {
+      "local_artifact_name": "directory-scope-deployment-20261014.json",
+      "sha256": "243ef9de30c2d0be59d7d9b357dc7b9e5b3bb4d65f0439ea8dee5a9d223d8060",
+      "checked_at": "2026-10-14T01:43:26.937523+00:00"
+    },
+    "sample-review": {
+      "local_artifact_name": "public-sample-review-20261014.json",
+      "sha256": "5864e5cda61a4584e27eeab1bca9acf15667073ee3b36c34f9b5a948b8b0ef98",
+      "checked_at": "2026-10-14T01:41:34.822932+00:00"
+    },
+    "next-sample-review": {
+      "local_artifact_name": "public-next-sample-review-20261014.json",
+      "sha256": "8cc0f4780f69152d03fde5b809353b00622985611dc2c2b34b6170043c36619c",
+      "checked_at": "2026-10-14T09:59:10.551199+00:00"
+    },
+    "report-update": {
+      "local_artifact_name": "report-update-proof-20261014.json",
+      "sha256": "66bff1ea0d79dc710c7455d3e0305238d2173def138af58fdf472e0f18f48bca",
+      "checked_at": "2026-10-14T10:01:04.040957+00:00",
+      "event_count": 103,
+      "states": {
+        "OFFICIAL_VERIFIED": 19,
+        "EXPIRED": 1,
+        "UNKNOWN": 83
+      },
+      "database_quick_check": "ok"
+    },
+    "backend-readiness": {
+      "local_artifact_name": "openmagpie-backend-readiness.json",
+      "sha256": "34dd23ff4e1fa645bcf9e209878aa9bfcebe468d2f4af220002ce24272e306de",
+      "checked_at": "2026-10-12T11:14:15.201809+00:00",
+      "checks": {
+        "pip_check": {
+          "exit_code": 0,
+          "stdout": "No broken requirements found.\n",
+          "stderr": ""
+        },
+        "django_system_check_no_network": {
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (engine.W001) ENGINE_MODEL is not set; semantic-filter actions can't run until it is.\n\tHINT: Set ENGINE_MODEL to a model your LLM serves. List a backend's models with: uv run --package openmagpie-core python -m engine.scripts.probe <ENGINE_BASE_URL> [api_key]\n\nSystem check identified 1 issue (0 silenced).\n"
+        },
+        "upstream_ssrf_tests_no_network": {
+          "exit_code": 0,
+          "stdout": "Found 7 test(s).\n",
+          "stderr": "System check identified some issues:\n\nWARNINGS:\n?: (engine.W001) ENGINE_MODEL is not set; semantic-filter actions can't run until it is.\n\tHINT: Set ENGINE_MODEL to a model your LLM serves. List a backend's models with: uv run --package openmagpie-core python -m engine.scripts.probe <ENGINE_BASE_URL> [api_key]\n\nSystem check identified 1 issue (0 silenced).\n.......\n----------------------------------------------------------------------\nRan 7 tests in 0.220s\n\nOK\n"
+        }
+      },
+      "full_backend_complete": false
+    },
+    "backend-advisories": {
+      "local_artifact_name": "backend-package-advisories.json",
+      "sha256": "f011787321866c712df14d189374f958d375cbdd049bfae97b81fc17a52f84b0",
+      "checked_at": "2026-10-12T11:14:32.254762+00:00"
+    },
+    "cloudflare-review": {
+      "source_id": "cloudflare-cold-start-official-browser",
+      "method": "normal_work_browser_read",
+      "url": "https://blog.cloudflare.com/introducing-the-cold-start/",
+      "publication_date": "2026-09-28",
+      "observed_date": "2026-10-14",
+      "title": "Introducing The Cold Start: pitch your startup live at Cloudflare Connect",
+      "excerpts": [
+        "The judges will select one startup to win $500,000 in Cloudflare credits",
+        "The Cold Start is open to ambitious early-stage startups, based in the US and Canada, that have raised less than $10 million.",
+        "Applications are open now and close Friday, October 2, 2026."
+      ],
+      "facts": {
+        "award": "One winning startup: $500,000 Cloudflare credits; not a cash payment or award to every applicant",
+        "application_deadline_date": "2026-10-02",
+        "deadline_exact_time_and_timezone": "unknown",
+        "eligible_region": [
+          "US",
+          "Canada"
+        ],
+        "funding_limit": "less than $10 million",
+        "event_date": "2026-10-19",
+        "event_time": "16:00-17:00 PDT",
+        "event_location": "Moscone West, San Francisco"
+      },
+      "conclusion": "Application deadline has passed as of October14 in every time zone; competition event is later. Not a currently available application or personal qualification proof.",
+      "excluded": [
+        "No account/application/form submission",
+        "No inferred personal region, funding, or eligibility",
+        "Separate general startup program not merged into this competition"
+      ],
+      "browser_limit": "Chrome inventory failed request-header-policy loading; user-authorized Work browser loaded official visible page successfully",
+      "confidence": "high for publication and stated deadline; personal qualification unknown"
+    },
+    "gemini-review": {
+      "source_id": "gemini-free-tier-official-browser",
+      "method": "normal_work_browser_read",
+      "url": "https://ai.google.dev/gemini-api/docs/pricing",
+      "observed_date": "2026-10-14",
+      "page_last_updated_utc": "2026-10-13",
+      "language": "English verified after reading AI translated Chinese page",
+      "excerpts": [
+        "Limited access to certain models",
+        "Free input & output tokens",
+        "Content used to improve our products"
+      ],
+      "facts": {
+        "free_tier_exists": true,
+        "scope": "Certain models and features only, subject to limits",
+        "free_content_product_improvement": true,
+        "excluded_model_example": "Gemini 4 Argon: not available on Free tier",
+        "free_model_example": "Gemini3.8Flash standard input/output columns marked Free of charge",
+        "paid_tier_distinct": true,
+        "region": "unknown",
+        "personal_account_access": "unknown",
+        "personal_rate_limits": "unknown",
+        "card_required": "unknown",
+        "auto_renew": "unknown"
+      },
+      "blocked_detail_page": {
+        "url": "https://ai.google.dev/gemini-api/docs/available-regions",
+        "visible_heading": "Service Unavailable",
+        "no_retry_or_bypass": true
+      },
+      "conclusion": "Official free tier established, but account/region/quotas and full terms unresolved; OFFICIAL_VERIFIED only, no personal entitlement claim.",
+      "excluded": [
+        "No API key creation",
+        "No paid upgrade",
+        "No acceptance or account form submission",
+        "No billing/profile/cookie reads",
+        "No actual authenticated API request"
+      ],
+      "confidence": "high for explicitly displayed pricing; unresolved eligibility unknown"
+    },
+    "servercrate-review": {
+      "source_id": "servercrate-official-browser",
+      "method": "normal_work_browser_read",
+      "official_url": "https://servercrate.net/pricing/",
+      "community_url": "https://lowendbox.com/blog/lets-try-servercrate-restic-based-backups-you-can-start-using-for-free/",
+      "community_publication_date": "2026-09-27",
+      "observed_date": "2026-10-14",
+      "official_last_updated": "unknown",
+      "official_excerpts": [
+        "10 GB storage",
+        "2 devices",
+        "7-day snapshot history",
+        "No credit card. Never expires."
+      ],
+      "facts": {
+        "plan": "Free backup vault; $0/month",
+        "capacity_gb": 10,
+        "devices": 2,
+        "snapshot_history_days": 7,
+        "card_required": false,
+        "stated_expiry": "never expires",
+        "stated_egress_and_restore_fees": "none",
+        "data_location": "Los Angeles hardware, as advertised",
+        "personal_account_access": "unknown",
+        "region_eligibility": "unknown",
+        "actual_backup_and_restore_quality": "not tested",
+        "security_properties": "Provider marketing claims, not an independent security assessment"
+      },
+      "source_difference": {
+        "older_community_article": "10GB, 1 device",
+        "current_official_page": "10GB, 2 devices",
+        "decision": "Use current official plan specification, retain earlier statement as historical difference"
+      },
+      "conclusion": "Real free backup lead confirmed by current official pricing; account and complete eligibility conditions remain unknown. No registration, payment, installation, upload, or external notification.",
+      "confidence": "high for currently displayed plan specification; personal access/security quality unknown"
+    },
+    "browser-environment": {
+      "local_artifact_name": "woolradar-browser-environment-difference-20261012.json",
+      "sha256": "09021a592de02c194055560417753acd1a225bfd34d409db17e97114b05d0280",
+      "date": "2026-10-12",
+      "summary": "Different tool/host DNS/control results, cause not fully established"
+    },
+    "public-fallback": {
+      "local_artifact_name": "woolradar-reddit-rss-no-browser-probe-20261012.json",
+      "sha256": "23e18367145494342026d4a3006894802ad5f91eb2aa397d3f9ed2177fce0730",
+      "date": "2026-10-12T04:51:53Z",
+      "summary": "PublicRSS25 historical success, no OAuth proof"
+    },
+    "x-known-post-probe": {
+      "local_artifact_name": "woolradar-x-public-embed-no-browser-probe-20261012.json",
+      "sha256": "a3c4f1ec6c60e7d373c60038a04abaf82b0d4c1d6edd642765daffdacc1e4e7e",
+      "date": "2026-10-12T04:56:15Z",
+      "summary": "One known publicpost body fetched, no search/following discovery"
+    }
+  },
+  "limits": [
+    "Historical dates retained; live state changes",
+    "No claim of full original acceptance",
+    "Only redacted selected evidence; originals local"
+  ]
+}

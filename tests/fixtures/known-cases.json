@@ -1,0 +1,30 @@
+[
+  {
+    "id": "racknerd-adminbolt-free-vps",
+    "title": "RackNerd × AdminBolt 免费 VPS",
+    "expected_primary_url": "https://lowendtalk.com/discussion/221872/giveaway-by-adminbolt-racknerd-100x-free-vps-for-a-year-20x-lifetime-licenses-lets-talk",
+    "validation_status": "ORGANIZER_POST_VERIFIED_CURRENT_OPEN_UNKNOWN"
+  },
+  {
+    "id": "mlh-global-hack-week-cursor",
+    "title": "MLH Global Hack Week × Cursor 福利",
+    "expected_primary_url": null,
+    "related_official_url": "https://events.mlh.com/events/15319-ghw-hacktoberfest-sponsor-stream",
+    "validation_status": "CURSOR_GROK_LECTURE_CONFIRMED_FREE_PRO_BENEFIT_NOT_CONFIRMED"
+  },
+  {
+    "id": "reddit-uptimerobot-giveaway",
+    "title": "Reddit UptimeRobot 赠送活动",
+    "expected_primary_url": null,
+    "validation_status": "REDDIT_HUMAN_CHALLENGE_EXACT_PERMALINK_UNKNOWN"
+  },
+  {
+    "id": "linuxdo-third-party-free-api",
+    "title": "Linux.do 第三方免费 API 额度活动",
+    "expected_primary_url": null,
+    "sample_url": "https://linux.do/t/topic/444882",
+    "sample_title": "算能SophNet 免费DeepSeek R1 满血API",
+    "validation_status": "SAMPLE_URL_LOCATED_NORMAL_BROWSER_TIMEOUT_BODY_UNVERIFIED",
+    "sample_identity": "用户未提供精确案例链接；这是定位到的同类样本，不认定与用户原案例相同"
+  }
+]

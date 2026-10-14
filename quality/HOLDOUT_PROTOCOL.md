@@ -52,3 +52,8 @@ Run `python -X utf8 -m unittest tests.test_holdout_eval` for synthetic metric-re
 - `OFFICIAL_VERIFIED`, `CLAIMABLE`, personal qualifications and actual redemption are **not** evaluated by this lead-only instrument. They require independently timestamped official proof and explicit eligibility checks.
 
 The fixture in `tests/test_holdout_eval.py` deliberately includes two *different* campaigns with the same title and two posts from one campaign with different titles. It demonstrates both false-merge and false-split measurement without claiming those synthetic counts are production estimates.
+
+
+## Code provenance gate (review candidate)
+
+An independently inspected, clean Git checkout is required. `frozen_code_ref` inside the label manifest is only an **assertion**, not proof of which Python implementation ran. Obtain the full commit ID from the isolated checkout, inspect `git status --porcelain` for uncommitted tracked/untracked files, and pass the verified commit through `--expected-code-ref`. The evaluator rejects malformed or mismatched identifiers. **This argument does not itself check Git HEAD or a dirty worktree** and must never be presented as an end-to-end attestation. Keep checkout audit and executable source hashes with the private evaluation receipt.

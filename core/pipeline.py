@@ -1,0 +1,116 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from urllib.parse import urlsplit
+
+from .db import Database
+from .dedup import canonical_key, reviewed_campaign_url
+from .models import Candidate, Evidence
+from .verifier import VerificationEngine
+from .notify import NotificationQueue
+
+
+class Pipeline:
+    def __init__(self, root: Path):
+        self.root = Path(root)
+        self.db = Database(self.root / 'data' / 'woolradar.db')
+        self.verifier = VerificationEngine()
+        self.notifications = NotificationQueue(self.db)
+
+    def notification_policy(self) -> dict:
+        path = self.root / 'config' / 'security-policy.json'
+        return json.loads(path.read_text(encoding='utf-8')) if path.exists() else {}
+
+    def queue_verified(self, event_id: int, status: str):
+        if status != 'CLAIMABLE':
+            return
+        event = self.db.get_event(event_id)
+        message = f"【官方证据支持公开申请，非个人资格保证】{event['title']}\n{event['primary_url']}\n范围：{event['claim_scope']}"
+        self.notifications.enqueue(event_id, event['batch_id'], 'local-verified', message)
+        if self.notification_policy().get('telegram_send_enabled', False):
+            self.notifications.enqueue(event_id, event['batch_id'], 'telegram-verified', message)
+
+    def ingest_node(self, node: str) -> dict:
+        items_path = self.root / 'data' / 'inbox' / f'{node}.jsonl'
+        status_path = self.root / 'data' / 'status' / f'{node}.json'
+        candidates: list[Candidate] = []
+        if items_path.exists():
+            for line in items_path.read_text(encoding='utf-8').splitlines():
+                if line.strip():
+                    candidates.append(Candidate.from_dict(json.loads(line)))
+
+        notify_count = 0
+        official_ids = []
+        for candidate in candidates:
+            stored = self.db.upsert_candidate(candidate)
+            if candidate.source_kind == 'official' and stored.event_id not in official_ids:
+                official_ids.append(stored.event_id)
+            if stored.notify:
+                notify_count += 1
+                self.notifications.enqueue(stored.event_id, candidate.batch_id, 'local-discovery',
+                    f"【新发现，尚未核实】{candidate.title}\n{candidate.url}")
+            provenance = candidate.metadata.get('provenance_key') or 'unverified-campaign:' + canonical_key(candidate)
+            reviewed = reviewed_campaign_url(candidate.metadata.get('campaign_review'), candidate.url, candidate.title)
+            if reviewed:
+                provenance = 'reviewed-campaign:' + reviewed
+            claims = candidate.metadata.get('evidence_claims', {})
+            self.db.add_evidence(stored.event_id, Evidence(
+                candidate.source_kind, candidate.url, provenance, excerpt=candidate.summary[:1000], claims=claims))
+            evidence = self.db.get_evidence(stored.event_id)
+            result = self.verifier.evaluate(candidate, evidence)
+            self.db.set_status(stored.event_id, result.status, result.reason, result.claim_scope)
+            self.queue_verified(stored.event_id, result.status.value)
+
+        trace_config = self.root / 'config' / 'official-trace.json'
+        if trace_config.exists():
+            trace_policy = json.loads(trace_config.read_text(encoding='utf-8'))
+            if trace_policy.get('enabled', False) and official_ids:
+                from .official_trace import OfficialTracer
+                tracer = OfficialTracer(self.root)
+                for event_id in official_ids[:max(0, min(2, int(trace_policy.get('max_per_node_run', 1))))]:
+                    tracer.trace(event_id)
+
+        source_statuses = []
+        if status_path.exists():
+            source_statuses = json.loads(status_path.read_text(encoding='utf-8')).get('sources', [])
+        failed = [item for item in source_statuses if item.get('status') == 'FAILED']
+        paused = [item for item in source_statuses if item.get('status') == 'PAUSED']
+        if (failed or paused) and candidates:
+            run_status = 'PARTIAL'
+        elif failed:
+            run_status = 'FAILED'
+        elif paused and not candidates:
+            run_status = 'PAUSED'
+        elif source_statuses and all(item.get('status') == 'SKIPPED' for item in source_statuses):
+            run_status = 'SKIPPED'
+        else:
+            run_status = 'OK'
+        error_code = ','.join(sorted({item.get('error_code', '') for item in failed + paused if item.get('error_code')}))
+        self.db.record_node_run(node, run_status, len(candidates), error_code,
+                                json.dumps(source_statuses, ensure_ascii=False)[:4000])
+        self.notifications.record_health(node, run_status, error_code)
+        self.notifications.flush(self.notification_policy(), local_dir=self.root / 'reports' / 'notifications')
+        return {'node': node, 'ingested': len(candidates), 'notify': notify_count,
+                'status': run_status, 'error_code': error_code}
+
+    def apply_evidence(self, event_id: int, evidence_items: list[Evidence]) -> dict:
+        event = self.db.get_event(event_id)
+        for item in evidence_items:
+            self.db.add_evidence(event_id, item)
+        candidate = Candidate(
+            node=event['node'], source=event['source'], title=event['title'],
+            url=event['primary_url'], published_at=event['published_at'] or '',
+            batch_id=event['batch_id'] or '',
+        )
+        result = self.verifier.evaluate(candidate, self.db.get_evidence(event_id))
+        self.db.set_status(event_id, result.status, result.reason, result.claim_scope)
+        self.queue_verified(event_id, result.status.value)
+        return {
+            'event_id': event_id,
+            'status': result.status.value,
+            'reason': result.reason,
+            'claim_scope': result.claim_scope,
+            'independent_evidence_count': result.independent_evidence_count,
+            'unknown_capacity': result.unknown_capacity,
+        }

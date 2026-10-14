@@ -1,0 +1,279 @@
+{
+  "schema_version": 1,
+  "sources": [
+    {
+      "id": "x-browser",
+      "platform": "X / Twitter",
+      "owner_node": "twitter-monitor",
+      "kind": "browser",
+      "endpoint": "https://x.com/home",
+      "enabled": false,
+      "auth": "manual_browser_login",
+      "interval_minutes": 30,
+      "official": false,
+      "challenge_bypass": false
+    },
+    {
+      "id": "reddit-oauth",
+      "platform": "Reddit",
+      "owner_node": "clawradar",
+      "kind": "reddit_oauth",
+      "endpoint": "https://oauth.reddit.com/search",
+      "enabled": false,
+      "auth": "oauth_required",
+      "interval_minutes": 30,
+      "official": false,
+      "challenge_bypass": false
+    },
+    {
+      "id": "reddit-hot-rss",
+      "platform": "Reddit",
+      "owner_node": "clawradar",
+      "kind": "rss",
+      "endpoint": "https://www.reddit.com/r/freebies+vps+webhosting/hot/.rss",
+      "enabled": true,
+      "auth": "public_feed",
+      "interval_minutes": 60,
+      "official": false,
+      "challenge_bypass": false,
+      "allowed_hosts": [
+        "www.reddit.com",
+        "reddit.com"
+      ],
+      "allowed_schemes": [
+        "https"
+      ],
+      "required_text_regex": "\\b(?:vps|hosting|cloud|api|developer|github|software|server|ai|saas|database|domain)\\b|开发者|云服务|服务器|学生包|模型额度"
+    },
+    {
+      "id": "reddit-rss",
+      "platform": "Reddit",
+      "owner_node": "digest-ai-agent",
+      "kind": "rss",
+      "endpoint": "https://www.reddit.com/r/freebies+vps+webhosting/new/.rss",
+      "enabled": true,
+      "auth": "public_feed",
+      "interval_minutes": 720,
+      "official": false,
+      "challenge_bypass": false
+    },
+    {
+      "id": "linuxdo",
+      "platform": "Linux.do",
+      "owner_node": "linuxdo-monitor",
+      "kind": "rss",
+      "endpoint": "https://linux.do/latest.rss",
+      "enabled": true,
+      "auth": "public_feed",
+      "interval_minutes": 30,
+      "official": false,
+      "challenge_bypass": false
+    },
+    {
+      "id": "nodeseek",
+      "platform": "NodeSeek",
+      "owner_node": "linuxdo-monitor",
+      "kind": "rss",
+      "endpoint": "https://rss.nodeseek.com",
+      "enabled": true,
+      "auth": "public_feed",
+      "interval_minutes": 30,
+      "official": false,
+      "challenge_bypass": false
+    },
+    {
+      "id": "v2ex",
+      "platform": "V2EX",
+      "owner_node": "linuxdo-monitor",
+      "kind": "rss",
+      "endpoint": "https://www.v2ex.com/index.xml",
+      "enabled": true,
+      "auth": "public_feed",
+      "interval_minutes": 30,
+      "official": false,
+      "challenge_bypass": false
+    },
+    {
+      "id": "lowendtalk-giveaways",
+      "platform": "LowEndTalk Giveaways",
+      "owner_node": "linuxdo-monitor",
+      "kind": "rss",
+      "endpoint": "https://lowendtalk.com/categories/giveaways-freebies/feed.rss",
+      "enabled": true,
+      "auth": "public_feed",
+      "interval_minutes": 60,
+      "official": false,
+      "challenge_bypass": false
+    },
+    {
+      "id": "lowendbox",
+      "platform": "LowEndBox",
+      "owner_node": "linuxdo-monitor",
+      "kind": "rss",
+      "endpoint": "https://lowendbox.com/feed/",
+      "enabled": true,
+      "auth": "public_feed",
+      "interval_minutes": 60,
+      "official": false,
+      "challenge_bypass": false
+    },
+    {
+      "id": "hostloc",
+      "platform": "Hostloc",
+      "owner_node": "linuxdo-monitor",
+      "kind": "rss",
+      "endpoint": "https://hostloc.com/forum.php?mod=rss",
+      "enabled": true,
+      "auth": "public_feed",
+      "interval_minutes": 60,
+      "official": false,
+      "challenge_bypass": false
+    },
+    {
+      "id": "hackernews",
+      "platform": "Hacker News",
+      "owner_node": "openmagpie",
+      "kind": "hn_api",
+      "endpoint": "https://hacker-news.firebaseio.com/v0/newstories.json",
+      "enabled": true,
+      "auth": "public_api",
+      "interval_minutes": 60,
+      "official": false,
+      "challenge_bypass": false
+    },
+    {
+      "id": "producthunt",
+      "platform": "Product Hunt",
+      "owner_node": "openmagpie",
+      "kind": "rss",
+      "endpoint": "https://www.producthunt.com/feed",
+      "enabled": true,
+      "auth": "public_feed",
+      "interval_minutes": 60,
+      "official": false,
+      "challenge_bypass": false
+    },
+    {
+      "id": "devhunt",
+      "platform": "DevHunt Perks",
+      "owner_node": "openmagpie",
+      "kind": "html",
+      "endpoint": "https://devhunt.org/perks",
+      "enabled": true,
+      "auth": "public_page",
+      "interval_minutes": 720,
+      "official": false,
+      "challenge_bypass": false,
+      "exclude_path_regex": "^/(advertise|tools|all-dev-tools|upcoming)(/|$)",
+      "exclude_hosts": [
+        "devhunt.org",
+        "www.devhunt.org"
+      ]
+    },
+    {
+      "id": "freestuff",
+      "platform": "FreeStuff.dev",
+      "owner_node": "openmagpie",
+      "kind": "html",
+      "endpoint": "https://freestuff.dev/",
+      "enabled": true,
+      "auth": "public_page",
+      "interval_minutes": 360,
+      "official": false,
+      "challenge_bypass": false
+    },
+    {
+      "id": "free-for-dev",
+      "platform": "GitHub free-for-dev",
+      "owner_node": "digest-ai-agent",
+      "kind": "rss",
+      "endpoint": "https://github.com/ripienaar/free-for-dev/commits/master.atom",
+      "enabled": true,
+      "auth": "public_feed",
+      "interval_minutes": 720,
+      "official": false,
+      "challenge_bypass": false
+    },
+    {
+      "id": "github-education",
+      "platform": "GitHub Education",
+      "owner_node": "openmagpie",
+      "kind": "rss",
+      "endpoint": "https://github.blog/tag/github-education/feed/",
+      "enabled": true,
+      "auth": "public_feed",
+      "interval_minutes": 360,
+      "official": true,
+      "challenge_bypass": false
+    },
+    {
+      "id": "mlh",
+      "platform": "MLH",
+      "owner_node": "openmagpie",
+      "kind": "rss",
+      "endpoint": "https://news.mlh.io/feed",
+      "enabled": true,
+      "auth": "public_feed",
+      "interval_minutes": 360,
+      "official": true,
+      "challenge_bypass": false
+    },
+    {
+      "id": "google-cloud",
+      "platform": "Google Cloud",
+      "owner_node": "digest-ai-agent",
+      "kind": "html",
+      "endpoint": "https://cloud.google.com/blog/topics/inside-google-cloud/whats-new-google-cloud",
+      "enabled": true,
+      "auth": "public_page",
+      "interval_minutes": 720,
+      "official": true,
+      "challenge_bypass": false,
+      "allowed_hosts": [
+        "cloud.google.com",
+        "console.cloud.google.com"
+      ]
+    },
+    {
+      "id": "aws",
+      "platform": "AWS",
+      "owner_node": "digest-ai-agent",
+      "kind": "rss",
+      "endpoint": "https://aws.amazon.com/about-aws/whats-new/recent/feed/",
+      "enabled": true,
+      "auth": "public_feed",
+      "interval_minutes": 720,
+      "official": true,
+      "challenge_bypass": false
+    },
+    {
+      "id": "cursor",
+      "platform": "Cursor",
+      "owner_node": "openmagpie",
+      "kind": "html",
+      "endpoint": "https://www.cursor.com/changelog",
+      "enabled": true,
+      "auth": "public_page",
+      "interval_minutes": 360,
+      "official": true,
+      "challenge_bypass": false,
+      "allowed_hosts": [
+        "cursor.com",
+        "www.cursor.com"
+      ],
+      "include_path_regex": "^/changelog/"
+    },
+    {
+      "id": "cloudflare-dev",
+      "platform": "Cloudflare Developer Platform",
+      "owner_node": "digest-ai-agent",
+      "kind": "rss",
+      "endpoint": "https://blog.cloudflare.com/tag/developers/rss/",
+      "enabled": true,
+      "auth": "public_feed",
+      "interval_minutes": 720,
+      "official": true,
+      "challenge_bypass": false
+    }
+  ]
+}

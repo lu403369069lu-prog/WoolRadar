@@ -1,0 +1,10 @@
+{
+  "profile_directory": "C:\\WoolRadar\\nodes\\twitter-monitor\\chrome-profile",
+  "cdp_port": 9222,
+  "scan_urls": [
+    "https://x.com/home",
+    "https://x.com/home?feed=following",
+    "https://x.com/search?q=%22free%20VPS%22%20OR%20%22AI%20credits%22%20OR%20giveaway&src=typed_query&f=live"
+  ],
+  "note": "仅使用本系统独立配置；遇到登录、风控、人机验证时暂停。"
+}

@@ -1,0 +1,39 @@
+{
+  "checked_at": "2026-10-14T15:42:06.207913+00:00",
+  "files_scanned": 85,
+  "bytes": 328624,
+  "hard_pattern_findings": [],
+  "synthetic_fixture_findings": [
+    {
+      "path": "tests/test_official_trace.py",
+      "line": 51,
+      "kind": "dummy URL credentials rejection fixture"
+    },
+    {
+      "path": "tests/test_reddit_hot_scope.py",
+      "line": 25,
+      "kind": "dummy URL credentials rejection fixture"
+    }
+  ],
+  "credential_templates": "Only FILL_LOCALLY/YOUR placeholders",
+  "blocked_directories_excluded": [
+    ".codex",
+    ".git",
+    ".test-tmp",
+    ".venv",
+    "__pycache__",
+    "backups",
+    "chrome-profile",
+    "data",
+    "logs",
+    "node_modules",
+    "reports",
+    "upstream"
+  ],
+  "max_file_bytes": 33298,
+  "history_policy": "Existing private GitHub base retained as parent; no local upstream histories imported or force rewritten",
+  "limits": [
+    "Pattern scanning is not a guarantee against every unknown secret; manual review also required",
+    "No credential/profile/.env contents read for upload"
+  ]
+}

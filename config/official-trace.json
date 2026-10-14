@@ -1,0 +1,6 @@
+{
+  "enabled": true,
+  "max_per_node_run": 1,
+  "allowed_hosts": ["cursor.com", "www.cursor.com", "mlh.com", "www.mlh.com", "news.mlh.io", "blog.mlh.com", "cloud.google.com", "aws.amazon.com", "blog.cloudflare.com", "github.blog"],
+  "note": "HTTPS公开源参考追踪，不登录、不带Cookie、不访问领取/结账/授权路由；社区链接仅记录official_reference，人工确认同活动后才能升级。"
+}

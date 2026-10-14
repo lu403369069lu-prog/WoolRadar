@@ -22,6 +22,11 @@ def parse_pr_event(payload: dict, *, signature_verified: bool) -> list[dict]:
     """
     if not signature_verified:
         raise ValueError("UNVERIFIED_GITHUB_WEBHOOK")
+    return preview_pr_event(payload)
+
+
+def preview_pr_event(payload: dict) -> list[dict]:
+    """For deterministic simulation only; caller may NOT dispatch its results."""
     if not isinstance(payload, dict) or payload.get("action") not in ALLOWED_ACTIONS:
         return []
     repository = payload.get("repository")
@@ -59,11 +64,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Validate a captured GitHub PR event")
     parser.add_argument("--input", type=Path, required=True)
     args = parser.parse_args()
-    # A local JSON file cannot prove that a webhook was signed. CLI is
-    # deliberately simulation-only: never sends authenticated=True.
+    # Local JSON cannot prove webhook authenticity. Preview only, no execution.
     payload = json.loads(args.input.read_text(encoding="utf8"))
-    print(json.dumps({"simulation_only": True, "events": parse_pr_event(
-        payload, signature_verified=False)}, indent=2))
+    print(json.dumps({"simulation_only": True, "events": preview_pr_event(payload)}, indent=2))
     return 0
 
 

@@ -1,0 +1,29 @@
+name: Offline dispatcher self-test (manual only)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: offline-dispatcher-selftest
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Run offline regression tests
+        shell: bash
+        run: |
+          python3 -m unittest discover -s tests -p 'test_dispatcher.py' -v
+      - name: Run sample dry-run with temporary state
+        shell: bash
+        run: |
+          python3 -m coordination.dispatcher --input coordination/sample-events.json --state "${RUNNER_TEMP}/dispatch.sqlite3" --dry-run
+
+# No cron schedule, secrets, API calls, issue comments, code edits or deployment.

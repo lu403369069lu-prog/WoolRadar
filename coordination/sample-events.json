@@ -1,0 +1,20 @@
+[
+  {
+    "project": "SAM",
+    "repository": "lu403369069lu-prog/YinQieJi",
+    "issue": 1,
+    "task_id": "S-01",
+    "head_sha": "c281c784a1433b24d1697a39ac86cb192ff0edb5",
+    "event_type": "review_requested",
+    "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1"
+  },
+  {
+    "project": "WoolRadar",
+    "repository": "lu403369069lu-prog/WoolRadar",
+    "issue": 2,
+    "task_id": "W-02",
+    "head_sha": "a7a0ccd24f0715543799a8698ce398285296119d",
+    "event_type": "evidence_ready",
+    "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/5"
+  }
+]

@@ -21,7 +21,7 @@ def fraction(numerator: int, denominator: int) -> float | None:
     return numerator / denominator if denominator else None
 
 
-def evaluate(root: Path, labels_path: Path) -> dict:
+def evaluate(root: Path, labels_path: Path, expected_code_ref: str | None = None) -> dict:
     from .collector import build_candidate
     from .config import load_sources
     from .dedup import canonical_key
@@ -29,8 +29,17 @@ def evaluate(root: Path, labels_path: Path) -> dict:
     labels = json.loads(Path(labels_path).read_text(encoding='utf-8'))
     if labels.get('schema_version') != 1 or labels.get('split') != 'holdout':
         raise ValueError('HOLDOUT_SCHEMA_OR_SPLIT_REQUIRED')
-    if not isinstance(labels.get('frozen_code_ref'), str) or not labels['frozen_code_ref'].strip():
+    declared_ref = labels.get('frozen_code_ref')
+    if not isinstance(declared_ref, str) or not declared_ref.strip():
         raise ValueError('FROZEN_CODE_REF_REQUIRED')
+    # A human-readable declaration is not an attestation of the executed code.
+    # Callers seeking a frozen-code evaluation must supply an independently
+    # verified checkout commit; do not silently trust labels alone.
+    if expected_code_ref is not None:
+        if not re.fullmatch(r'[0-9a-fA-F]{40}', expected_code_ref):
+            raise ValueError('EXPECTED_CODE_REF_MUST_BE_FULL_SHA')
+        if declared_ref.lower() != expected_code_ref.lower():
+            raise ValueError('FROZEN_CODE_REF_MISMATCH')
     snapshots = labels.get('snapshots')
     if not isinstance(snapshots, list) or not snapshots:
         raise ValueError('NONEMPTY_HOLDOUT_SNAPSHOTS_REQUIRED')
@@ -123,8 +132,9 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', required=True, type=Path, help='isolated snapshot root, not production')
     parser.add_argument('--labels', required=True, type=Path, help='locally curated holdout labels JSON')
+    parser.add_argument('--expected-code-ref', required=True, help='independently verified full checkout commit SHA; a clean checkout must be checked separately')
     args = parser.parse_args()
-    print(json.dumps(evaluate(args.root, args.labels), ensure_ascii=False, indent=2))
+    print(json.dumps(evaluate(args.root, args.labels, expected_code_ref=args.expected_code_ref), ensure_ascii=False, indent=2))
     return 0
 
 

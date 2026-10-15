@@ -56,7 +56,6 @@ class ConcurrentUpsertTests(unittest.TestCase):
                 sightings = conn.execute('SELECT node FROM sightings ORDER BY node').fetchall()
             self.assertEqual([row[0] for row in sightings], ['node0', 'node1'])
 
-
     def test_concurrent_cross_vendor_generic_title_stays_separate(self):
         with TemporaryDirectory() as root:
             db = DatabaseWithInsertBarrier(Path(root) / 'synthetic.db', Barrier(2))
@@ -98,7 +97,6 @@ class ConcurrentUpsertTests(unittest.TestCase):
             self.assertNotEqual(a.event_id, b.event_id)
             self.assertTrue(a.notify and b.notify)
             self.assertEqual(len(db.list_events()), 2)
-
 
 if __name__ == '__main__':
     unittest.main()

@@ -52,12 +52,26 @@ GENERIC_RESOURCE_UNITS = {'gb', 'mb', 'tb'}
 
 
 def _generic_resource_title(tokens: set[str]) -> bool:
-    if not tokens & GENERIC_RESOURCE_UNITS or not tokens & GENERIC_OFFER_TOKENS:
+    # Title normalization intentionally preserves compact specs such as 1GB.
+    # Decode those only for generic-offer classification so branded keys keep
+    # their historical spelling and cross-post identity.
+    expanded = set()
+    for token in tokens:
+        compact = re.fullmatch(r'([0-9]+)(gb|mb|tb)', token)
+        if compact:
+            expanded.update(compact.groups())
+        else:
+            expanded.add(token)
+    if not expanded & GENERIC_OFFER_TOKENS:
         return False
-    if any(token.isdigit() and 1900 <= int(token) <= 2100 for token in tokens):
+    # Generic numeric credits and resource quantities are not campaign
+    # identities either. Keep 4-digit year/batch headlines title-based.
+    if not any(token.isdigit() or token in GENERIC_RESOURCE_UNITS for token in expanded):
+        return False
+    if any(token.isdigit() and 1900 <= int(token) <= 2100 for token in expanded):
         return False
     return all(token in GENERIC_OFFER_TOKENS or token in GENERIC_RESOURCE_UNITS
-               or token.isdigit() for token in tokens)
+               or token.isdigit() for token in expanded)
 
 
 def canonical_key(candidate: Candidate) -> str:

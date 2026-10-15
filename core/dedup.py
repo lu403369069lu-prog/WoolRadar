@@ -18,7 +18,7 @@ STOP_TOKENS = {
 # fallback avoids joining unrelated offers solely on an uninformative title.
 GENERIC_OFFER_TOKENS = {
     'api', 'credit', 'credits', 'cloud', 'vps', 'server', 'servers', 'hosting',
-    'developer', 'developers', 'perk', 'perks', 'offer', 'offers', 'trial', 'plan',
+    'developer', 'developers', 'perk', 'perks', 'offer', 'offers', 'trial', 'plan', 'ai',
     '额度', '赠金', '服务器', '优惠',
 }
 
@@ -40,13 +40,34 @@ def normalize_title(title: str) -> str:
     return ' '.join(kept)
 
 
+# A resource size is not a vendor or a campaign identifier. Only treat sizes
+# as generic when every other word is a generic benefit term. A year-like
+# number can identify a particular promotion batch and must not be erased.
+GENERIC_RESOURCE_UNITS = {'gb', 'mb', 'tb'}
+
+
+def _generic_resource_title(tokens: set[str]) -> bool:
+    if not tokens & GENERIC_RESOURCE_UNITS or not tokens & GENERIC_OFFER_TOKENS:
+        return False
+    if any(token.isdigit() and 1900 <= int(token) <= 2100 for token in tokens):
+        return False
+    return all(token in GENERIC_OFFER_TOKENS or token in GENERIC_RESOURCE_UNITS
+               or token.isdigit() for token in tokens)
+
+
 def canonical_key(candidate: Candidate) -> str:
     reviewed = reviewed_campaign_url(candidate.metadata.get('campaign_review'), candidate.url, candidate.title)
     if reviewed:
         return hashlib.sha256(('reviewed-public-campaign:' + reviewed).encode('utf-8')).hexdigest()[:24]
     normalized = normalize_title(candidate.metadata.get('campaign_title', candidate.title))
-    if not normalized or set(normalized.split()) <= GENERIC_OFFER_TOKENS:
+    tokens = set(normalized.split())
+    if not normalized or tokens <= GENERIC_OFFER_TOKENS:
+        # Preserve the legacy key for old URL-only generic titles.
         normalized = normalize_url(candidate.url)
+    elif _generic_resource_title(tokens):
+        # Preserve distinct resource sizes on the same offer page as well as
+        # vendor identity. Tracking-only URL variants remain equivalent.
+        normalized = normalized + '|' + normalize_url(candidate.url)
     return hashlib.sha256(normalized.encode('utf-8')).hexdigest()[:24]
 
 

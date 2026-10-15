@@ -1,0 +1,10 @@
+{
+  "checked_at": "2026-10-15T13:24:15.452693+00:00",
+  "command": "python -X utf8 -m unittest discover -s tests",
+  "exit_code": 0,
+  "wall_seconds": 13.0,
+  "stdout": "node=openmagpie candidates=1 failed_sources=0\nitems=[workspace]\\_work\\compatibility-c1c8adc\\.test-tmp\\tmphd2phdz_\\data\\inbox\\openmagpie.jsonl\nstatus=[workspace]\\_work\\compatibility-c1c8adc\\.test-tmp\\tmphd2phdz_\\data\\status\\openmagpie.json\n",
+  "stderr": "....................................................................................................................................................................................................................................\n----------------------------------------------------------------------\nRan 228 tests in 12.718s\n\nOK\n",
+  "qualification": "Composed source vector plus two fixture-only repairs",
+  "production_changed": false
+}

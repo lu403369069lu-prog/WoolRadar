@@ -1,0 +1,50 @@
+{
+  "reviewer": "independent budget_review agent",
+  "kind": "Windows fixture resource lifecycle review",
+  "fixture_verification": [
+    {
+      "file": "tests/test_reindex_key_upgrade.py",
+      "assertions_unchanged": true,
+      "assertion_count": 14,
+      "sha256": "9cc85168821ede47ecf138aeac0979c063aad1c3a4e7ef072d14d6944f076876"
+    },
+    {
+      "file": "tests/test_reindex_snapshot.py",
+      "assertions_unchanged": true,
+      "assertion_count": 5,
+      "sha256": "070cd7d7aa3fc1114754e8b134f918edd81db9fe5ff8d1f0eace42a023ed741d"
+    }
+  ],
+  "focused_methods_run": 2,
+  "test_output": "..\n----------------------------------------------------------------------\nRan 2 tests in 0.151s\n\nOK\n",
+  "semantic_checks": [
+    {
+      "name": "successful-writer-commits-before-close",
+      "passed": true
+    },
+    {
+      "name": "failed-writer-rolls-back-before-close",
+      "passed": true
+    },
+    {
+      "name": "file-immediately-removable-after-success-and-exception",
+      "passed": true
+    }
+  ],
+  "conclusion": "Original assertions preserved. Read-only backup uses explicit closing; writer inner connection context commits or rolls back before outer closing releases the handle. No source or behavior assertion weakening found.",
+  "exit_code": 0,
+  "limits": [
+    "Only two modified fixture tests plus focused context-manager semantics rerun, not full regression.",
+    "Original compatibility P1 independent-review.json remains untouched."
+  ],
+  "race_reproducer": {
+    "path": "reproduce_ingest_merge_race.py",
+    "sha256": "1f11fbbaa74f8b78930c6bce202cfcd43a3c257c87ca27c8c4688286aa1938be",
+    "command_baseline": "python -B _outbox/compatibility-20261015/reproduce_ingest_merge_race.py --repo-root _work/compatibility-c1c8adc",
+    "default_exit_code": 1,
+    "baseline_expected_vulnerable_exit_code": 0,
+    "baseline_flag": "--expect-vulnerable",
+    "actual": "IntegrityError FOREIGN KEY constraint failed; official_zero_saved=false; integrity=ok",
+    "limits": "Schedule wrapper targets current upsert API. If fix changes persistence API, adapt scheduling hook without weakening evidence preservation assertions."
+  }
+}

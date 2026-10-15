@@ -1,0 +1,10 @@
+{
+  "checked_at": "2026-10-15T13:23:54.534695+00:00",
+  "command": "python -X utf8 -m unittest discover -s tests",
+  "exit_code": 0,
+  "wall_seconds": 11.172,
+  "stdout": "node=openmagpie candidates=1 failed_sources=0\nitems=[workspace]\\_work\\windows-fixtures-c1c8adc\\.test-tmp\\tmpl_q_efnh\\data\\inbox\\openmagpie.jsonl\nstatus=[workspace]\\_work\\windows-fixtures-c1c8adc\\.test-tmp\\tmpl_q_efnh\\data\\status\\openmagpie.json\n",
+  "stderr": "................................................................................................................................................................................................................\n----------------------------------------------------------------------\nRan 208 tests in 10.900s\n\nOK\n",
+  "qualification": "Pinned PR19 runtime with fixture-only repairs",
+  "production_changed": false
+}

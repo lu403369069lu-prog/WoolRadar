@@ -1,0 +1,90 @@
+{
+  "reviewer": "independent budget_review agent",
+  "kind": "combined source-vector compatibility, not single-PR exact-head",
+  "source_vector": {
+    "identity_capacity_merge": "c1c8adc2022ef634b266299d7d81a5e4d0353a68",
+    "noise_cli_report": "f4cf71ef5df5c3ee6b2c70b46c29cb6bd4bb650d",
+    "diagnostic_collector": "b18619212b0a760b2200f0f2e2b01adf603cbe83"
+  },
+  "fingerprints": {
+    "core/db.py": {
+      "git_blob": "8bc6c898a6ae523939f8a6ab8ac04f440bbdd25b",
+      "sha256": "eb9114e72f65bd9ee939a73440ceee6c03143037f4a5dac52f3e34dbd064b600"
+    },
+    "core/pipeline.py": {
+      "git_blob": "86abccdfde78fbcabf2e7b19d6ce25b681860ca6",
+      "sha256": "9a2d11927d2049b69bb65553c55a0325ea5733a838b200d38be2cac005026b71"
+    },
+    "core/noise_audit.py": {
+      "git_blob": "68afb78d5d74674857858e954550d007831c6f54",
+      "sha256": "4593eb3f163ab62627d5686d1d98b78f5d158aee0261ef33de1b9208343bf352"
+    },
+    "core/report.py": {
+      "git_blob": "3e4fb1f3790c286f338dbb1f2680e9b2241f8779",
+      "sha256": "d4090099a4b96e3cdb42a4be1185b6c541070012f36cdd9119b0564915ccd8ee"
+    },
+    "core/verifier.py": {
+      "git_blob": "a54dd2c138002005539c7524b3481d07b068b3ee",
+      "sha256": "73e62a4bf72b685b3a00dbfba2fb824e6c427ca0f137a4b5353611c95c7c769d"
+    },
+    "core/dedup.py": {
+      "git_blob": "61f8f6eee57f2c8f4472ef7707851a5109788e6c",
+      "sha256": "ac0b5c53827d92a0114453c98fbf7d375a90623ce814dc4fc253235cd16ef86b"
+    }
+  },
+  "command": "PowerShell here-string | python -B -; tempfile.tempdir explicitly set to review temp; one focused serialization unittest plus four disposable DB scenarios",
+  "exit_code": 0,
+  "focused_unittest_methods": 1,
+  "test_output": ".\n----------------------------------------------------------------------\nRan 1 test in 0.250s\n\nOK\n",
+  "checks": [
+    {
+      "name": "merged-zero-capacity-preserved-in-report-and-old-noise-exclusion-invalidated",
+      "passed": true,
+      "noise_state": "unreviewed"
+    },
+    {
+      "name": "key-only-migration-does-not-transfer-noise-exclusion",
+      "passed": true
+    },
+    {
+      "name": "time-only-evidence-refresh-preserves-exclusion",
+      "passed": true
+    },
+    {
+      "name": "deterministic-real-pipeline-post-upsert-merge-interleaving",
+      "reproduced": true,
+      "error": {
+        "type": "IntegrityError",
+        "message": "FOREIGN KEY constraint failed"
+      }
+    }
+  ],
+  "findings": [
+    {
+      "priority": "P1",
+      "title": "Per-candidate ingest remains unprotected after upsert commits",
+      "schedule": [
+        "Real upsert(existing B) commits and returns id2",
+        "Real review_campaign merges id2 into id1 and deletes id2",
+        "Pipeline.add_evidence(id2) fails FOREIGN KEY; new official zero proof not persisted"
+      ],
+      "error": {
+        "type": "IntegrityError",
+        "message": "FOREIGN KEY constraint failed"
+      },
+      "recommendation": "Serialize full per-candidate persistence against reindex (one transaction or common ingest/reindex lock), including evidence/status/notification/trace references. Protecting only upsert is insufficient."
+    }
+  ],
+  "P2_observations": [
+    {
+      "topic": "noise-key-migration",
+      "observation": "Old exclusion becomes unreviewed after canonical key change; safely restores visibility but may require explicit re-review. No stale exclusion transfer seen."
+    }
+  ],
+  "limits": [
+    "No full suite repeated; no production/source modifications or network.",
+    "Deterministic interleaving proves existence, not frequency.",
+    "Report multi-connection DB reads not claimed globally atomic."
+  ],
+  "harness_note": "First focused test attempt used default sandbox TEMP and failed unable-to-open DB; rerun with review temp succeeded. Not a source defect."
+}

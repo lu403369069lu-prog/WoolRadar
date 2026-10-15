@@ -65,8 +65,23 @@ class OfficialTracer:
         if sources_path.exists():
             self.budget.sync_host_pauses(load_sources(sources_path))
 
+    def _write_record(self, event_id: int, record: dict) -> None:
+        destination = self.root / 'evidence' / 'official-trace'
+        destination.mkdir(parents=True, exist_ok=True)
+        (destination / f'{event_id}.json').write_text(
+            json.dumps(record, ensure_ascii=False, indent=2), encoding='utf-8')
+
     def trace(self, event_id: int) -> dict:
-        event = self.pipeline.db.get_event(event_id)
+        # Ingest releases its candidate transaction before network tracing.
+        # A concurrent reindex may have merged this ID in the meantime.
+        try:
+            event = self.pipeline.db.get_event(event_id)
+        except KeyError:
+            record = {'checked_at': utc_now(), 'event_id': event_id,
+                      'references': [], 'status': 'STALE_EVENT_ID',
+                      'error_code': 'EVENT_MERGED_OR_REMOVED'}
+            self._write_record(event_id, record)
+            return record
         metadata = json.loads(event['metadata_json'])
         references = list(metadata.get('official_references', []))
         direct_official = bool(metadata.get('official'))
@@ -118,9 +133,16 @@ class OfficialTracer:
                     exc.close()
             except Exception as exc:
                 results.append({'url': url, 'status': 'FAILED', 'error_code': classify_exception(exc)})
-        record = {'checked_at': utc_now(), 'event_id': event_id, 'references': results,
-                  'status': self.pipeline.db.get_event(event_id)['status']}
-        destination = self.root / 'evidence' / 'official-trace'
-        destination.mkdir(parents=True, exist_ok=True)
-        (destination / f'{event_id}.json').write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding='utf-8')
+        # A campaign may also merge the event after a permitted page fetch or
+        # after apply_evidence() commits. Never present a missing event as
+        # verified, and keep an auditable result instead of crashing ingest.
+        try:
+            current_status = self.pipeline.db.get_event(event_id)['status']
+        except KeyError:
+            current_status = 'STALE_EVENT_ID'
+        record = {'checked_at': utc_now(), 'event_id': event_id,
+                  'references': results, 'status': current_status}
+        if current_status == 'STALE_EVENT_ID':
+            record['error_code'] = 'EVENT_MERGED_OR_REMOVED'
+        self._write_record(event_id, record)
         return record

@@ -1,0 +1,55 @@
+[
+  {
+    "event_key": "WoolRadar/WOOL-NOISE-AUDIT/cbe18d7f058563a5aef1fb46b8d2820095f15c06/recover:3",
+    "event": {
+      "project": "WoolRadar",
+      "task_id": "WOOL-NOISE-AUDIT",
+      "head_sha": "cbe18d7f058563a5aef1fb46b8d2820095f15c06",
+      "event_type": "recover",
+      "actor": "codex-coordinator",
+      "expected_version": 3,
+      "fencing_token": 1,
+      "lease_seconds": 900,
+      "now": 1792046030,
+      "data": {
+        "observed_head_sha": "cbe18d7f058563a5aef1fb46b8d2820095f15c06"
+      }
+    },
+    "before": "648c852d6a3b31db7d412f47f3cb6d02b781118c",
+    "confirmed_sha": "fafbcd6c7ba05d692f101137c2aed38a65d356b7"
+  },
+  {
+    "event_key": "WoolRadar/WOOL-NOISE-AUDIT/cbe18d7f058563a5aef1fb46b8d2820095f15c06/claim:4",
+    "event": {
+      "project": "WoolRadar",
+      "task_id": "WOOL-NOISE-AUDIT",
+      "head_sha": "cbe18d7f058563a5aef1fb46b8d2820095f15c06",
+      "event_type": "claim",
+      "actor": "codex-coordinator",
+      "expected_version": 4,
+      "fencing_token": 2,
+      "lease_seconds": 900,
+      "now": 1792046042,
+      "data": {}
+    },
+    "before": "fafbcd6c7ba05d692f101137c2aed38a65d356b7",
+    "confirmed_sha": "31451095a59231a45629b30efa0ae3f9ace4e355"
+  },
+  {
+    "event_key": "WoolRadar/WOOL-NOISE-AUDIT/cbe18d7f058563a5aef1fb46b8d2820095f15c06/start:5",
+    "event": {
+      "project": "WoolRadar",
+      "task_id": "WOOL-NOISE-AUDIT",
+      "head_sha": "cbe18d7f058563a5aef1fb46b8d2820095f15c06",
+      "event_type": "start",
+      "actor": "codex-coordinator",
+      "expected_version": 5,
+      "fencing_token": 3,
+      "lease_seconds": 900,
+      "now": 1792046053,
+      "data": {}
+    },
+    "before": "31451095a59231a45629b30efa0ae3f9ace4e355",
+    "confirmed_sha": "5ddd89bcd416f511520be2d1a6ce2d439d8db96a"
+  }
+]

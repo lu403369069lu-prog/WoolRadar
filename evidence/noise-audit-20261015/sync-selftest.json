@@ -1,0 +1,150 @@
+{
+  "at": "2026-10-15T13:14:34.652700+08:00",
+  "before": "757253dbe13fac78c5e7e6b950ce90cfc97f851a",
+  "confirmed_sha": "3240a1d47546553ad2b8e466ad692b4dc75ff050",
+  "revision": 33,
+  "task": {
+    "allowed_files": [
+      "core/noise_audit.py",
+      "core/report.py",
+      "core/cli.py",
+      "tests/test_noise_audit.py",
+      "HANDOFF.md",
+      "docs/noise-audit.md",
+      "evidence/noise-audit-20261015/"
+    ],
+    "base_branch": "codex/agent-knowledge-sync-20261014",
+    "base_sha": "cbe18d7f058563a5aef1fb46b8d2820095f15c06",
+    "blockers": [],
+    "change_summary": "Avoids active WOOL-QUALITY-20261015 collector/quality scope; holdout task claim was safely rejected FILE_CONFLICT and retained unowned",
+    "checkpoint_at": 1792041269,
+    "claimed_at": 1792041263,
+    "definition_of_done": "Evidence at current SHA and independent review; no deployment",
+    "dependencies": [],
+    "error_type": null,
+    "evidence": [],
+    "executor": "codex-coordinator",
+    "fencing_token": 1,
+    "head_sha": "cbe18d7f058563a5aef1fb46b8d2820095f15c06",
+    "last_sync_at": null,
+    "lease_until": 1792042163,
+    "next_action": "Implement existing P06 historical-noise audit/report exclusion TODO; preserve original evidence, invalidate exclusion on fresh evidence/reopening; isolated tests only",
+    "owner": "codex-coordinator",
+    "previous_owner": null,
+    "priority": "P1",
+    "project": "WoolRadar",
+    "remote_takeover_allowed": false,
+    "requires_windows": true,
+    "restrictions": [
+      "no_production",
+      "no_merge",
+      "no_credentials",
+      "no_paid_api"
+    ],
+    "reviews": [],
+    "status": "in_progress",
+    "task_id": "WOOL-NOISE-AUDIT",
+    "version": 3,
+    "work_branch": "codex/wool-noise-audit-20261015",
+    "worktree_clean": true
+  },
+  "events": [
+    {
+      "event": {
+        "project": "WoolRadar",
+        "task_id": "WOOL-NOISE-AUDIT",
+        "head_sha": "cbe18d7f058563a5aef1fb46b8d2820095f15c06",
+        "event_type": "register",
+        "actor": "codex-coordinator",
+        "expected_version": 0,
+        "fencing_token": null,
+        "lease_seconds": 900,
+        "now": 1792041254,
+        "data": {
+          "task": {
+            "project": "WoolRadar",
+            "task_id": "WOOL-NOISE-AUDIT",
+            "version": 0,
+            "status": "ready",
+            "owner": null,
+            "previous_owner": null,
+            "executor": null,
+            "claimed_at": 0,
+            "lease_until": 0,
+            "fencing_token": 0,
+            "priority": "P1",
+            "dependencies": [],
+            "base_branch": "codex/agent-knowledge-sync-20261014",
+            "base_sha": "cbe18d7f058563a5aef1fb46b8d2820095f15c06",
+            "work_branch": "codex/wool-noise-audit-20261015",
+            "head_sha": "cbe18d7f058563a5aef1fb46b8d2820095f15c06",
+            "worktree_clean": true,
+            "allowed_files": [
+              "core/noise_audit.py",
+              "core/report.py",
+              "core/cli.py",
+              "tests/test_noise_audit.py",
+              "HANDOFF.md",
+              "docs/noise-audit.md",
+              "evidence/noise-audit-20261015/"
+            ],
+            "change_summary": "Avoids active WOOL-QUALITY-20261015 collector/quality scope; holdout task claim was safely rejected FILE_CONFLICT and retained unowned",
+            "evidence": [],
+            "reviews": [],
+            "blockers": [],
+            "error_type": null,
+            "checkpoint_at": 0,
+            "last_sync_at": null,
+            "next_action": "Implement existing P06 historical-noise audit/report exclusion TODO; preserve original evidence, invalidate exclusion on fresh evidence/reopening; isolated tests only",
+            "definition_of_done": "Evidence at current SHA and independent review; no deployment",
+            "requires_windows": true,
+            "remote_takeover_allowed": false,
+            "restrictions": [
+              "no_production",
+              "no_merge",
+              "no_credentials",
+              "no_paid_api"
+            ]
+          }
+        }
+      },
+      "event_key": "WoolRadar/WOOL-NOISE-AUDIT/cbe18d7f058563a5aef1fb46b8d2820095f15c06/register:0"
+    },
+    {
+      "event": {
+        "project": "WoolRadar",
+        "task_id": "WOOL-NOISE-AUDIT",
+        "head_sha": "cbe18d7f058563a5aef1fb46b8d2820095f15c06",
+        "event_type": "claim",
+        "actor": "codex-coordinator",
+        "expected_version": 1,
+        "fencing_token": null,
+        "lease_seconds": 900,
+        "now": 1792041254,
+        "data": {}
+      },
+      "event_key": "WoolRadar/WOOL-NOISE-AUDIT/cbe18d7f058563a5aef1fb46b8d2820095f15c06/claim:1"
+    },
+    {
+      "event": {
+        "project": "WoolRadar",
+        "task_id": "WOOL-NOISE-AUDIT",
+        "head_sha": "cbe18d7f058563a5aef1fb46b8d2820095f15c06",
+        "event_type": "start",
+        "actor": "codex-coordinator",
+        "expected_version": 2,
+        "fencing_token": 1,
+        "lease_seconds": 900,
+        "now": 1792041254,
+        "data": {}
+      },
+      "event_key": "WoolRadar/WOOL-NOISE-AUDIT/cbe18d7f058563a5aef1fb46b8d2820095f15c06/start:2"
+    }
+  ],
+  "replay": {
+    "attempted": 3,
+    "pending": 0,
+    "blocked": null
+  },
+  "model_calls": 0
+}

@@ -1,0 +1,60 @@
+{
+  "date": "2026-10-15",
+  "timezone": "Asia/Shanghai",
+  "events": [
+    {
+      "id": 1,
+      "canonical_key": "7155fdbd4625ddaada4bfe72",
+      "batch_id": "",
+      "title": "Synthetic diagnostic noise",
+      "primary_url": "https://example.test/noise",
+      "source": "fixture",
+      "node": "fixture",
+      "published_at": "",
+      "first_seen": "2026-10-15T01:00:00Z",
+      "last_seen": "2026-10-15T01:00:00Z",
+      "status": "DISCOVERED",
+      "claim_scope": "NONE",
+      "metadata_json": "{}",
+      "evidence": [
+        {
+          "kind": "community",
+          "url": "https://example.test/noise",
+          "checked_at": "2026-10-15T01:00:00Z",
+          "excerpt": "Synthetic example only",
+          "claims": {},
+          "provenance_key": "fixture"
+        },
+        {
+          "kind": "official",
+          "url": "https://example.test/new",
+          "checked_at": "2026-10-15T02:00:00Z",
+          "excerpt": "",
+          "claims": {
+            "public": true,
+            "open": true
+          },
+          "provenance_key": "new-fixture"
+        }
+      ],
+      "report_audit": {
+        "excluded": false,
+        "state": "stale",
+        "event_key": "c5f4532553afdabf23375f4fda11a5343be02e5b3f55bfb6f788b4df9ab906f8",
+        "fingerprint": "cef90ba9178d689e5e472137f2fc2256cae64a1efe4279c0ebbf3fe166c68765",
+        "decision": "exclude",
+        "reason": "Synthetic diagnostic; not an offer",
+        "reviewer": "fixture-reviewer",
+        "reviewed_at": "2026-10-15T06:41:53Z"
+      }
+    }
+  ],
+  "node_runs": [],
+  "notifications": [],
+  "noise_audit": {
+    "excluded": 0,
+    "visible": 1,
+    "events_preserved": 1,
+    "ledger_sha256": "01524ca3f76374307c3470e2b04d1ceab543ce7eda74db01e90164d49ceac653"
+  }
+}

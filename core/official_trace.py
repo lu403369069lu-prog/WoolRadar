@@ -71,12 +71,22 @@ class OfficialTracer:
         (destination / f'{event_id}.json').write_text(
             json.dumps(record, ensure_ascii=False, indent=2), encoding='utf-8')
 
-    def trace(self, event_id: int) -> dict:
+    def trace(self, event_id: int, expected_event: dict | None = None) -> dict:
         # Ingest releases its candidate transaction before network tracing.
         # A concurrent reindex may have merged this ID in the meantime.
         try:
             event = self.pipeline.db.get_event(event_id)
         except KeyError:
+            record = {'checked_at': utc_now(), 'event_id': event_id,
+                      'references': [], 'status': 'STALE_EVENT_ID',
+                      'error_code': 'EVENT_MERGED_OR_REMOVED'}
+            self._write_record(event_id, record)
+            return record
+        # A merge may delete this numeric ID and the next insert can recycle
+        # it. The upstream ingestion snapshot is authoritative for identity.
+        identity_fields = ('canonical_key', 'batch_id', 'primary_url', 'first_seen')
+        if expected_event is not None and any(
+                event[field] != expected_event[field] for field in identity_fields):
             record = {'checked_at': utc_now(), 'event_id': event_id,
                       'references': [], 'status': 'STALE_EVENT_ID',
                       'error_code': 'EVENT_MERGED_OR_REMOVED'}
@@ -119,7 +129,8 @@ class OfficialTracer:
                     'body_sha256': hashlib.sha256(payload).hexdigest(),
                     'method': 'public_reference_fetch', 'requires_campaign_review': kind == 'official_reference'})
                 try:
-                    verified = self.pipeline.apply_evidence(event_id, [evidence])
+                    verified = self.pipeline.apply_evidence(event_id, [evidence],
+                                                            expected_event=event)
                 except KeyError:
                     # The page may have been read successfully just as a
                     # review merged away the old event ID. It is not a fetch
@@ -150,7 +161,10 @@ class OfficialTracer:
             current_status = 'STALE_EVENT_ID'
         else:
             try:
-                current_status = self.pipeline.db.get_event(event_id)['status']
+                current = self.pipeline.db.get_event(event_id)
+                current_status = (current['status'] if all(
+                    current[field] == event[field] for field in identity_fields)
+                    else 'STALE_EVENT_ID')
             except KeyError:
                 current_status = 'STALE_EVENT_ID'
         record = {'checked_at': utc_now(), 'event_id': event_id,

@@ -189,8 +189,10 @@ class WoolRadarCoreTests(unittest.TestCase):
     def test_reindex_preserves_evidence_and_creates_backup(self):
         with tempfile.TemporaryDirectory(dir=TEST_TMP) as td:
             db = Database(Path(td) / 'radar.db')
-            a = Candidate('a', 'forum', 'Free API credits', 'https://a.example/1')
-            b = Candidate('b', 'forum', 'Free API credits', 'https://b.example/2')
+            # This tests evidence/backup preservation for a known same-campaign
+            # fixture; generic cross-vendor headlines are tested separately.
+            a = Candidate('a', 'forum', 'RackNerd StudentPack Launch 2026', 'https://a.example/1')
+            b = Candidate('b', 'forum', 'RackNerd StudentPack Launch 2026', 'https://b.example/2')
             first = db.upsert_candidate(a).event_id
             with db.connect() as conn:
                 conn.execute('UPDATE events SET canonical_key=? WHERE id=?', ('old-key', first))

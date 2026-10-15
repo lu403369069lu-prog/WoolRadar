@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-10-15T06:59:25.994389+00:00",
+  "command": "python -X utf8 -m unittest discover -s tests",
+  "working_root": "isolated_woolradar_stage",
+  "exit_code": 1,
+  "stdout": "node=openmagpie candidates=1 failed_sources=0\nitems=[isolated test output path]\nstatus=[isolated test output path]\n",
+  "stderr": ".............................................................................F............................................................................................\n======================================================================\nFAIL: test_reindex_preserves_evidence_and_creates_backup (test_core.WoolRadarCoreTests.test_reindex_preserves_evidence_and_creates_backup)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"[local workspace]\\_work\\generic-identity-64889e4\\tests\\test_core.py\", line 200, in test_reindex_preserves_evidence_and_creates_backup\n    self.assertEqual(result['merged'], 1)\nAssertionError: 0 != 1\n\n----------------------------------------------------------------------\nRan 170 tests in 10.435s\n\nFAILED (failures=1)\n",
+  "python_version": "3.12.14",
+  "code_hashes": {
+    "core/dedup.py": "c3350a9525dc770b21554ef5859fe0706a1663b7cfd85173b19bd6724694c590",
+    "tests/test_generic_identity.py": "a1e82470ec51e23dba5c90868032a05e2780ace7085fdb48b5775bdb1d9f5cb5"
+  },
+  "production_changed": false,
+  "limits": "Windows regression tests; Digest bridge uses installed local upstream runtime. Not full upstream or95% business acceptance.",
+  "sharing_normalization": "Local workspace prefix redacted; test/source hashes unchanged."
+}

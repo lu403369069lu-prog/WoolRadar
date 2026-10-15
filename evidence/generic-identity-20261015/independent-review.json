@@ -1,0 +1,151 @@
+{
+  "reviewer": "independent budget_review agent",
+  "reviewed_at_utc": "2026-10-15T07:04:28.109176+00:00",
+  "scope": "Finite generic-title URL fallback only; no production migration/deployment",
+  "source_sha256": {
+    "core/dedup.py": "c3350a9525dc770b21554ef5859fe0706a1663b7cfd85173b19bd6724694c590",
+    "tests/test_generic_identity.py": "a1e82470ec51e23dba5c90868032a05e2780ace7085fdb48b5775bdb1d9f5cb5",
+    "tests/test_batches.py": "1388dcad604463d726fcd99ece553354c24c6bd55c024d5092aeb5280d4c799c",
+    "tests/test_campaign_review.py": "ee2ce2dfc3d12b580069330b6264f03ffde7e5912ef8f75165539867093648e7",
+    "tests/test_core.py": "77c47a8d086d5f604ccc7601e53f2d9a6a9720eb8cf1477666e09e76bf39ae47"
+  },
+  "test_methods_by_file": {
+    "test_generic_identity.py": 8,
+    "test_batches.py": 8,
+    "test_campaign_review.py": 6,
+    "test_core.py": 22
+  },
+  "methods_run": 44,
+  "methods_passed": 44,
+  "failure_count": 0,
+  "implementation_blockers_in_limited_rule": [],
+  "test_contract_conflicts": [],
+  "additional_checks": [
+    {
+      "title": "Free cloud hosting",
+      "urls": [
+        "https://a.example/p",
+        "https://b.example/p"
+      ],
+      "same_key": false,
+      "expected": false,
+      "passed": true
+    },
+    {
+      "title": "免费 API 额度",
+      "urls": [
+        "https://a.example/p",
+        "https://b.example/p"
+      ],
+      "same_key": false,
+      "expected": false,
+      "passed": true
+    },
+    {
+      "title": "Free API credits",
+      "urls": [
+        "https://vendor.example/p?utm_source=a#top",
+        "https://vendor.example/p?ref=b"
+      ],
+      "same_key": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "title": "Free API credits",
+      "urls": [
+        "https://vendor.example/p?campaign=a",
+        "https://vendor.example/p?campaign=b"
+      ],
+      "same_key": false,
+      "expected": false,
+      "passed": true
+    },
+    {
+      "title": "RackNerd Free VPS Giveaway",
+      "urls": [
+        "https://a.example/p",
+        "https://b.example/p"
+      ],
+      "same_key": true,
+      "expected": true,
+      "passed": true
+    },
+    {
+      "titles": [
+        "Free API credits 100",
+        "Free API credits 200"
+      ],
+      "same_key": false,
+      "passed": true
+    },
+    {
+      "titles": [
+        "RackNerd Free VPS 1 GB",
+        "RackNerd Free VPS 2 GB"
+      ],
+      "same_key": false,
+      "passed": true
+    }
+  ],
+  "known_residual_risks": [
+    {
+      "title": "Free AI credits",
+      "normalized": "ai credits",
+      "different_vendor_same_key": true,
+      "classification": "retained prior-algorithm limitation outside finite generic token rule"
+    },
+    {
+      "title": "免费服务器优惠",
+      "normalized": "服务器优惠",
+      "different_vendor_same_key": true,
+      "classification": "retained prior-algorithm limitation outside finite generic token rule"
+    },
+    {
+      "title": "Free VPS 1 GB",
+      "normalized": "1 gb vps",
+      "different_vendor_same_key": true,
+      "classification": "retained prior-algorithm limitation outside finite generic token rule"
+    }
+  ],
+  "conclusion": "44 focused methods and seven additional checks pass. Fixture changes only two title values plus explanation comments; all original assertions unchanged. No blocker found for finite generic-token fallback. Three prior residual collisions remain.",
+  "diff_against_previous_reviewed_baseline": "--- PR16-baseline\n+++ candidate\n@@ -12,6 +12,14 @@\n     'a', 'an', 'and', 'the', 'for', 'to', 'of', 'free', 'giveaway', 'promo', 'promotion',\n     '福利', '活动', '免费', '抽奖', '赠送', '限量', '的', '与', '和', 'x',\n     'by', 'are', 'giving', 'away', 'lets', 'let', 'talk',\n+}\n+\n+# Generic benefit words do not identify a provider or a campaign. A bounded\n+# fallback avoids joining unrelated offers solely on an uninformative title.\n+GENERIC_OFFER_TOKENS = {\n+    'api', 'credit', 'credits', 'cloud', 'vps', 'server', 'servers', 'hosting',\n+    'developer', 'developers', 'perk', 'perks', 'offer', 'offers', 'trial', 'plan',\n+    '额度', '赠金', '服务器', '优惠',\n }\n \n \n@@ -37,7 +45,7 @@\n     if reviewed:\n         return hashlib.sha256(('reviewed-public-campaign:' + reviewed).encode('utf-8')).hexdigest()[:24]\n     normalized = normalize_title(candidate.metadata.get('campaign_title', candidate.title))\n-    if not normalized:\n+    if not normalized or set(normalized.split()) <= GENERIC_OFFER_TOKENS:\n         normalized = normalize_url(candidate.url)\n     return hashlib.sha256(normalized.encode('utf-8')).hexdigest()[:24]\n \n",
+  "test_output": "............................................\n----------------------------------------------------------------------\nRan 44 tests in 0.772s\n\nOK\n",
+  "limitations": [
+    "No production key migration, production writes, deployment, network or PR5 evaluator fixture changes.",
+    "Finite vocabulary does not cover all generic English or contiguous Chinese titles.",
+    "Numbers and specific tokens retain old title-based identity, including possible cross-provider collisions."
+  ],
+  "prior_review_history": [
+    {
+      "reviewed_at_utc": "2026-10-15T07:01:03.765251+00:00",
+      "source_sha256": {
+        "core/dedup.py": "c3350a9525dc770b21554ef5859fe0706a1663b7cfd85173b19bd6724694c590",
+        "tests/test_generic_identity.py": "a1e82470ec51e23dba5c90868032a05e2780ace7085fdb48b5775bdb1d9f5cb5",
+        "tests/test_batches.py": "1388dcad604463d726fcd99ece553354c24c6bd55c024d5092aeb5280d4c799c",
+        "tests/test_campaign_review.py": "ee2ce2dfc3d12b580069330b6264f03ffde7e5912ef8f75165539867093648e7",
+        "tests/test_core.py": "624654c2d13104c2f911cec21fb35cc20f1ab3c5cfe236dff048b5ec0be06d90"
+      },
+      "methods_run": 44,
+      "methods_passed": 43,
+      "failure_count": 1,
+      "test_contract_conflicts": [
+        {
+          "test": "test_core.WoolRadarCoreTests.test_reindex_preserves_evidence_and_creates_backup",
+          "actual": "merged=0",
+          "old_expectation": "merged=1 for same generic title Free API credits at two different hosts",
+          "recommendation": "Use a specifically identified same-campaign pair or explicit reviewed campaign in this evidence-preservation test; do not restore generic cross-vendor false merge to satisfy old fixture."
+        }
+      ],
+      "test_output": "....................................F.......\n======================================================================\nFAIL: test_reindex_preserves_evidence_and_creates_backup (test_core.WoolRadarCoreTests.test_reindex_preserves_evidence_and_creates_backup)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"[local workspace]\\_work\\generic-identity-64889e4\\tests\\test_core.py\", line 200, in test_reindex_preserves_evidence_and_creates_backup\n    self.assertEqual(result['merged'], 1)\n    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1\n\n----------------------------------------------------------------------\nRan 44 tests in 0.741s\n\nFAILED (failures=1)\n"
+    }
+  ],
+  "aligned_fixture_review": {
+    "diff": "--- previous-reviewed-baseline\n+++ aligned-fixture\n@@ -189,8 +189,10 @@\n     def test_reindex_preserves_evidence_and_creates_backup(self):\n         with tempfile.TemporaryDirectory(dir=TEST_TMP) as td:\n             db = Database(Path(td) / 'radar.db')\n-            a = Candidate('a', 'forum', 'Free API credits', 'https://a.example/1')\n-            b = Candidate('b', 'forum', 'Free API credits', 'https://b.example/2')\n+            # This tests evidence/backup preservation for a known same-campaign\n+            # fixture; generic cross-vendor headlines are tested separately.\n+            a = Candidate('a', 'forum', 'RackNerd StudentPack Launch 2026', 'https://a.example/1')\n+            b = Candidate('b', 'forum', 'RackNerd StudentPack Launch 2026', 'https://b.example/2')\n             first = db.upsert_candidate(a).event_id\n             with db.connect() as conn:\n                 conn.execute('UPDATE events SET canonical_key=? WHERE id=?', ('old-key', first))\n",
+    "only_executable_change_two_fixture_title_replacements": true,
+    "two_explanatory_comment_lines_added": true,
+    "all_original_assertions_unchanged": true,
+    "purpose": "Specific same-campaign fixture tests backup/evidence/sightings preservation; generic cross-vendor separation independently covered by new contracts."
+  },
+  "sharing_normalization": "Local workspace prefix redacted; test/source hashes unchanged."
+}

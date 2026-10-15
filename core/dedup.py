@@ -14,6 +14,14 @@ STOP_TOKENS = {
     'by', 'are', 'giving', 'away', 'lets', 'let', 'talk',
 }
 
+# Generic benefit words do not identify a provider or a campaign. A bounded
+# fallback avoids joining unrelated offers solely on an uninformative title.
+GENERIC_OFFER_TOKENS = {
+    'api', 'credit', 'credits', 'cloud', 'vps', 'server', 'servers', 'hosting',
+    'developer', 'developers', 'perk', 'perks', 'offer', 'offers', 'trial', 'plan',
+    '额度', '赠金', '服务器', '优惠',
+}
+
 
 def normalize_url(url: str) -> str:
     parts = urlsplit(url.strip())
@@ -37,7 +45,7 @@ def canonical_key(candidate: Candidate) -> str:
     if reviewed:
         return hashlib.sha256(('reviewed-public-campaign:' + reviewed).encode('utf-8')).hexdigest()[:24]
     normalized = normalize_title(candidate.metadata.get('campaign_title', candidate.title))
-    if not normalized:
+    if not normalized or set(normalized.split()) <= GENERIC_OFFER_TOKENS:
         normalized = normalize_url(candidate.url)
     return hashlib.sha256(normalized.encode('utf-8')).hexdigest()[:24]
 

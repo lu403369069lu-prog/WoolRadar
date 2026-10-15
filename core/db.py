@@ -346,6 +346,35 @@ class Database:
                 keep, old = groups[identity], row['id']
                 merged_survivors.add(keep)
                 self._merge_evidence(conn, keep, old)
+                # A duplicate channel key can exist on both campaign members.
+                # Plain INSERT OR IGNORE would discard a confirmed SENT notice
+                # from the losing event and leave the survivor PENDING, so the
+                # same grant could be announced twice after this merge.
+                # Preserve historical delivery and in-flight claims before the
+                # loser rows are deleted. Never upgrade a status to SENT unless
+                # a sender actually recorded SENT on one of the two events.
+                old_notices = conn.execute(
+                    "SELECT batch_id,channel,result,payload,attempts,next_attempt "
+                    "FROM notifications WHERE event_id=? AND result IN ('SENT','CLAIMED')",
+                    (old,)).fetchall()
+                for notice in old_notices:
+                    survivor = conn.execute(
+                        'SELECT id,result FROM notifications '
+                        'WHERE event_id=? AND batch_id=? AND channel=?',
+                        (keep, notice['batch_id'], notice['channel'])).fetchone()
+                    if survivor is None or survivor['result'] == 'SENT':
+                        continue  # A unique-key-free notice is copied below.
+                    if notice['result'] == 'SENT':
+                        conn.execute(
+                            "UPDATE notifications SET result='SENT',payload=?,"
+                            "attempts=max(attempts,?),next_attempt=0 WHERE id=?",
+                            (notice['payload'], notice['attempts'], survivor['id']))
+                    elif notice['result'] == 'CLAIMED' and survivor['result'] != 'CLAIMED':
+                        conn.execute(
+                            "UPDATE notifications SET result='CLAIMED',payload=?,"
+                            "attempts=max(attempts,?),next_attempt=max(next_attempt,?) WHERE id=?",
+                            (notice['payload'], notice['attempts'],
+                             notice['next_attempt'], survivor['id']))
                 for table, columns in (
                     ('sightings', 'node,source,url,discovered_at'),
                     ('notifications', 'batch_id,channel,created_at,result,payload,attempts,next_attempt')):

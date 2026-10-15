@@ -106,7 +106,7 @@ def build_preview(report: dict, report_hash: str, now: datetime | None = None) -
         url = public_url(row.get('primary_url'))
         title = public_title(row.get('title'))
         status = row.get('status')
-        if url is None or title is None or status not in ALLOWED_STATUS:
+        if url is None or title is None or not isinstance(status, str) or status not in ALLOWED_STATUS:
             continue
         batch_id = row.get('batch_id', '')
         if not isinstance(batch_id, str) or len(batch_id) > 128:

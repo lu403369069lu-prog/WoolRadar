@@ -26,3 +26,9 @@ C. Investigate **remaining** race: event ID can merge between the initial `Offic
 D. Confirm historical SQLite copy-only reindex/backup/rollback, notification idempotency, held-out business precision/recall and end-to-end original task goals. Treat these as open; no 95% claim.
 
 **Milestone**: M1_WOOLRADAR_INTEGRATION; status=IN_PROGRESS. New PR #22 is one coherent post-ingest continuation, not a release claim.
+
+## Continuation — official page fetch versus merge exact classification
+
+A further review followed the rare boundary where `fetch_public_page()` succeeds and `Pipeline.apply_evidence()` raises `KeyError` because `review_campaign/reindex` removed the old event ID while HTTP was in progress. The prior generic `except Exception` would misclassify that as a fetch failure, and a mocked but still present ID could lead to an incorrectly ordinary final status. The current code catches `KeyError` **only around supplemental evidence application**, appends a `STALE_EVENT_ID` reference entry, stops further page reads, and guarantees final status `STALE_EVENT_ID/EVENT_MERGED_OR_REMOVED`. It never invents evidence on a replacement ID or turns a real HTTP error into a stale event.
+
+Added another formal in-repo regression test for successful mocked public fetch with `apply_evidence` rejecting a merged ID, including audited persistent report and no stored proof. **Formal regression definitions are now 9 in total (3 supplemental + 6 tracer/node)**, none has been run on exact complete repo SHA. The independently run 2/2 WAL SQL behavior model remains the only claimed executable check for this draft until the full test run occurs.

@@ -58,8 +58,23 @@ def contains_keyword(text: str, keywords: list[str]) -> bool:
     trial_offer = re.search(r'\bfree\s+trial\b|\b\d+[\s-]*(?:hours?|days?|weeks?|months?|years?)'
                             r'[\s-]+(?:[a-z0-9]+(?:-[a-z0-9]+)*\s+){0,3}trial\b|'
                             r'\bstart\s+(?:your\s+|a\s+)?trial\b|\btrial\s+(?:credits?|offer|available)\b', value)
-    if any(matches(keyword) and (keyword != 'trial' or trial_offer) for keyword in strong):
-        return True
+    # A benefit keyword must belong to a clause asserting an available
+    # offer. Requests, denials and already-closed promotions are not freebies.
+    negative_offer = re.compile(
+        r'\b(?:i|we)\s+(?:want|need|am\s+looking|are\s+looking|searching)\b|'
+        r'\b(?:can|could|may|would)\s+(?:i|we)\b|'
+        r'\bwhere\s+(?:can|do)\s+(?:i|we)\b|'
+        r'\b(?:does?\s+anyone\s+know|is\s+there|are\s+there)\b|'
+        r'\b(?:no\s+longer|not\s+available|discontinued|expired|has\s+ended|have\s+ended|is\s+over|are\s+over|entries\s+closed)\b|'
+        r'\b(?:do|does|did)\s+not\s+(?:offer|provide|have)\b|'
+        r'\b(?:don[\x27’]t|doesn[\x27’]t|didn[\x27’]t)\s+(?:offer|provide|have)\b|'
+        r'\b(?:requires?|only\s+with|included\s+only\s+with)\b.{0,55}\bpaid\b')
+    for clause in re.split(r'[!?;\n]|\.(?=\s|$)', value):
+        if negative_offer.search(clause):
+            continue
+        if any(matches(keyword, clause) and (keyword != 'trial' or trial_offer)
+               for keyword in strong):
+            return True
     # A stated monetary credit award is a lead; it proves no personal eligibility.
     for clause in re.split(r'[!?\n]|\.(?=\s|$)', value):
         award = re.search(r'\b(?:receives?|awarded|grants?|offers?|claim|get)\s+(?:up\s+to\s+)?'

@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+import sqlite3
 from pathlib import Path
 from coordination.dispatcher import dispatch
 
@@ -86,6 +87,11 @@ class DispatcherTests(unittest.TestCase):
         result = dispatch(self.db, [event(event_type='review_requested')])
         self.assertTrue(result['quota_paused'])
         self.assertEqual(result['decisions'][0]['action'], 'defer_local_execution')
+
+    def test_corrupt_database_preserves_original_error(self):
+        self.db.write_bytes(b'corrupt sqlite database' * 40)
+        with self.assertRaisesRegex(sqlite3.DatabaseError, 'not a database'):
+            dispatch(self.db, [event()])
 
 
 if __name__ == '__main__':

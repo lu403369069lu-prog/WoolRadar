@@ -115,6 +115,8 @@ class RelayContractTests(unittest.TestCase):
         task = self.state['tasks']['SAM/S-RELAY']
         self.assertIsNone(task['owner'])
         self.assertEqual(task['status'], 'quota_paused')
+        with self.assertRaisesRegex(ValueError,'QUOTA_RESTORATION'):
+            relay.apply_event(self.state,self.event(expected_version=2))
         with self.assertRaises(ValueError):
             relay.apply_event(self.state, self.event(event_type='start',
                               expected_version=2, fencing_token=token))
@@ -139,6 +141,8 @@ class RelayContractTests(unittest.TestCase):
             raise relay.RemoteError(403)
         self.assertEqual(q.replay(denied, now=20)['blocked'], 'permission_denied')
         self.assertEqual(q.replay(send, now=200)['attempted'], 0)
+        q.enqueue(self.event(event_type='start',expected_version=2))
+        self.assertEqual(q.replay(send, now=300)['attempted'], 0)
 
     def test_retry_ceiling_and_changed_queue_content(self):
         q = relay.Outbox(self.root / 'queue', max_attempts=2)
@@ -198,6 +202,20 @@ class RelayContractTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'STALE'):
             relay.apply_event(self.state, self.event(event_type='heartbeat', expected_version=3,
                               fencing_token=token))
+
+    def test_register_new_task_without_reinitializing_remote(self):
+        task=relay.new_task('SAM','S-NEW','b'*40,['SAM/review/'],'New independently scoped task')
+        proposed=dict(task,status='proposed')
+        with self.assertRaisesRegex(ValueError,'INVALID_REGISTRATION'):
+            relay.apply_event(self.state,self.event(task_id='S-NEW',head_sha='b'*40,
+                              event_type='register',data={'task':proposed}))
+        self.state,receipt=relay.apply_event(self.state,self.event(task_id='S-NEW',head_sha='b'*40,
+                               event_type='register',data={'task':task}))
+        self.assertEqual(receipt['version'],1)
+        self.assertEqual(self.state['tasks']['SAM/S-RELAY']['version'],0)
+        self.state,_=relay.apply_event(self.state,self.event(task_id='S-NEW',head_sha='b'*40,
+                           expected_version=1,event_type='claim'))
+        self.assertEqual(self.state['tasks']['SAM/S-NEW']['owner'],'codex-local')
 
 
 if __name__ == '__main__':

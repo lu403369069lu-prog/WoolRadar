@@ -19,7 +19,7 @@
       "base_sha": "6d0373326b624c0103a7e7294509a5be0ae37996",
       "work_branch": "unassigned",
       "head_sha": "6d0373326b624c0103a7e7294509a5be0ae37996",
-      "worktree_clean": true,
+      "worktree_clean": false,
       "allowed_files": [
         "SAM/coordination-review/"
       ],
@@ -58,7 +58,7 @@
       "base_sha": "73214fd39840f7cb1971c25f0dce1c932f9b027b",
       "work_branch": "unassigned",
       "head_sha": "73214fd39840f7cb1971c25f0dce1c932f9b027b",
-      "worktree_clean": true,
+      "worktree_clean": false,
       "allowed_files": [
         "coordination/reviews/"
       ],

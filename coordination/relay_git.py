@@ -11,9 +11,10 @@ import json
 import os
 import re
 import subprocess
+import time
 from pathlib import Path
 from coordination.relay import (RemoteError, apply_event, canonical, digest,
-                                validate_state)
+                                validate_state, Outbox, atomic_checkpoint)
 
 
 class GitStateStore:
@@ -51,7 +52,7 @@ class GitStateStore:
     def read(self):
         fetched = self.git('fetch', '--no-tags', self.remote, self.ref)
         if fetched.returncode:
-            raise RemoteError(0)
+            self._transport_failure(fetched)
         sha = self.git('rev-parse', 'FETCH_HEAD').stdout.decode().strip()
         raw = self.git('show', sha + ':state.json')
         if raw.returncode:
@@ -96,24 +97,67 @@ class GitStateStore:
     def _push(self, sha):
         result = self.git('push', self.remote, sha + ':' + self.ref)
         if result.returncode:
-            raise ValueError('REMOTE_CONFLICT_OR_WRITE_DENIED')
+            details = (result.stdout + result.stderr).lower()
+            if any(x in details for x in (b'non-fast-forward', b'fetch first', b'stale info')):
+                raise ValueError('REMOTE_CONFLICT')
+            self._transport_failure(result)
         return sha
 
-    def publish(self, expected_sha, state):
+    def _transport_failure(self, result):
+        details = (result.stdout + result.stderr).lower()
+        for code in (429, 503, 502, 500):
+            if str(code).encode() in details:
+                raise RemoteError(code)
+        if b'403' in details or b'authentication failed' in details or b'permission denied' in details:
+            raise RemoteError(403, rate_limited=b'rate limit' in details)
+        raise RemoteError(0)  # unknown transport failures must not be mislabelled as success
+
+    def publish(self, expected_sha, state, *, event=None):
         if not isinstance(expected_sha, str) or not re.fullmatch('[0-9a-f]{40}', expected_sha):
             raise ValueError('EXPECTED_FULL_SHA_REQUIRED')
         validate_state(state)
         parent = self.git('cat-file', '-e', expected_sha + '^{commit}')
         if parent.returncode:
             raise ValueError('EXPECTED_PARENT_NOT_READ')
+        old = self.git('show', expected_sha + ':state.json')
+        try:
+            envelope = json.loads(old.stdout)
+            previous = envelope['payload']
+            if envelope['format'] != 1 or envelope['sha256'] != digest(previous):
+                raise ValueError('CHECKPOINT_DIGEST')
+            validate_state(previous)
+        except (KeyError, TypeError, ValueError) as error:
+            raise ValueError('EXPECTED_PARENT_INVALID') from error
+        if state['revision'] != previous['revision'] + 1:
+            raise ValueError('REVISION_MUST_ADVANCE_ONCE')
+        if any(state['events'].get(key) != value for key, value in previous['events'].items()):
+            raise ValueError('EVENT_HISTORY_REWRITE_DENIED')
+        if event is None:
+            raise ValueError('EVENT_REQUIRED')
+        key = event['project'] + '/' + event['task_id']
+        receiver_time = state['tasks'].get(key, {}).get('checkpoint_at')
+        actual_now = int(time.time())
+        if type(receiver_time) is not int or receiver_time > actual_now:
+            raise ValueError('INVALID_RECEIVER_TIME')
+        # Recheck authorization against the live receiver clock. The stored timestamp
+        # is used only for deterministic reconstruction, never for lease validity.
+        apply_event(previous, event, observed_now=actual_now)
+        expected, _ = apply_event(previous, event, observed_now=receiver_time)
+        if expected != state:
+            raise ValueError('INVALID_TRANSITION_RESULT')
         return self._push(self._commit(state, expected_sha))
 
     def deliver(self, event):
         sha, state = self.read()
-        updated, receipt = apply_event(state, event)
+        updated, receipt = apply_event(state, event, observed_now=int(time.time()))
         if receipt['result'] == 'duplicate_noop':
             return dict(receipt, sha=sha)
-        return dict(receipt, sha=self.publish(sha, updated))
+        try:
+            return dict(receipt, sha=self.publish(sha, updated, event=event))
+        except ValueError as error:
+            if str(error) == 'REMOTE_CONFLICT':
+                raise RemoteError(409) from error
+            raise
 
 
 def main():
@@ -124,13 +168,34 @@ def main():
     commands.add_parser('read')
     deliver = commands.add_parser('deliver')
     deliver.add_argument('--event', type=Path, required=True)
+    enqueue = commands.add_parser('enqueue')
+    enqueue.add_argument('--event', type=Path, required=True)
+    enqueue.add_argument('--outbox',type=Path,required=True)
+    sync = commands.add_parser('sync')
+    sync.add_argument('--outbox',type=Path,required=True)
     args = parser.parse_args()
+    if args.operation == 'enqueue':
+        Outbox(args.outbox).enqueue(json.loads(args.event.read_bytes()))
+        print(json.dumps({'queued':True,'remote_write':False}))
+        return
     store = GitStateStore(args.workspace, args.remote)
     if args.operation == 'read':
         sha, state = store.read()
         print(json.dumps({'sha': sha, 'state': state}, indent=2))
-    else:
+    elif args.operation == 'deliver':
         print(json.dumps(store.deliver(json.loads(args.event.read_bytes())), indent=2))
+    else:
+        # Each sender invocation cold-reads the remote and performs the state transition there.
+        report=Outbox(args.outbox).replay(store.deliver,now=int(time.time()))
+        try:
+            sha,state=store.read()
+            atomic_checkpoint(args.outbox/'last-good-state.json.cache',state)
+            atomic_checkpoint(args.outbox/'last-sync.json.cache',
+                              {'sha':sha,'confirmed_at':int(time.time())})
+            report['last_confirmed_sha']=sha
+        except RemoteError:
+            report['remote_read']='unavailable; preserve previous sync receipt'
+        print(json.dumps(report,indent=2))
 
 
 if __name__ == '__main__':

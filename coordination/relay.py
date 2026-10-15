@@ -13,7 +13,7 @@ PROJECTS = {'SAM': 'lu403369069lu-prog/YinQieJi', 'WoolRadar': 'lu403369069lu-pr
 STATUSES = ['proposed', 'ready', 'claimed', 'in_progress', 'evidence_ready',
             'review_pending', 'reviewed', 'done', 'blocked_local', 'quota_paused',
             'network_blocked', 'conflict', 'failed', 'needs_approval']
-KINDS = {'claim', 'heartbeat', 'start', 'evidence', 'request_review', 'review',
+KINDS = {'register', 'claim', 'heartbeat', 'start', 'evidence', 'request_review', 'review',
          'done', 'quota_pause', 'release', 'recover', 'block', 'checkpoint'}
 SHA = r'^[0-9a-f]{40}$'
 ID = r'^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$'
@@ -176,7 +176,7 @@ def new_task(project, task_id, head_sha, files, next_action):
     task = dict(project=project, task_id=task_id, version=0, status='ready', owner=None,
                 previous_owner=None, executor=None, claimed_at=0, lease_until=0, fencing_token=0,
                 priority='P1', dependencies=[], base_branch='unassigned', base_sha=head_sha,
-                work_branch='unassigned', head_sha=head_sha, worktree_clean=True,
+                work_branch='unassigned', head_sha=head_sha, worktree_clean=False,
                 allowed_files=files, change_summary='', evidence=[], reviews=[], blockers=[],
                 error_type=None, checkpoint_at=0, last_sync_at=None, next_action=next_action,
                 definition_of_done='Evidence at current SHA and independent review; no deployment',
@@ -193,7 +193,7 @@ def event_key(event):
     return '{project}/{task_id}/{head_sha}/{event_type}:{expected_version}'.format(**event)
 
 
-def apply_event(state, event):
+def apply_event(state, event, *, observed_now=None):
     validate_state(state)
     required = {'project', 'task_id', 'head_sha', 'event_type', 'actor', 'expected_version',
                 'lease_seconds', 'now', 'fencing_token', 'data'}
@@ -211,7 +211,7 @@ def apply_event(state, event):
     if not isinstance(event['data'], dict):
         raise ValueError('INVALID_EVENT_DATA')
     kind = event['event_type']
-    extras = {'evidence': {'evidence'}, 'review': {'review'}, 'block': {'status'},
+    extras = {'register': {'task'}, 'evidence': {'evidence'}, 'review': {'review'}, 'block': {'status'},
               'recover': {'observed_head_sha'},
               'checkpoint': {'new_head_sha','change_summary','worktree_clean','work_branch'}}
     allowed = {'observed_head_sha','changed_files'} | extras.get(kind, set())
@@ -226,12 +226,34 @@ def apply_event(state, event):
             raise ValueError('EVENT_KEY_PAYLOAD_CHANGED')
         return copy.deepcopy(state), dict(prior['receipt'], result='duplicate_noop')
     result = copy.deepcopy(state)
+    if kind == 'register':
+        task = copy.deepcopy(event['data'].get('task'))
+        validate_schema(task, TASK_SCHEMA)
+        identity = event['project'] + '/' + event['task_id']
+        if (identity in result['tasks'] or event['expected_version'] != 0 or
+                event['fencing_token'] is not None or
+                task['project'] != event['project'] or task['task_id'] != event['task_id'] or
+                task['head_sha'] != event['head_sha'] or task['version'] != 0 or
+                task['status'] != 'ready' or task['owner'] is not None or
+                task['previous_owner'] is not None or task['executor'] is not None or
+                task['fencing_token'] != 0 or task['evidence'] or task['reviews']):
+            raise ValueError('INVALID_REGISTRATION')
+        now = event['now'] if observed_now is None else observed_now
+        validate_schema(now, INTEGER)
+        task.update(version=1, checkpoint_at=now)
+        result['tasks'][identity] = task
+        receipt = {'result': 'applied', 'version': 1, 'fencing_token': 0}
+        result['events'][key] = {'payload_hash': fingerprint, 'receipt': receipt}
+        result['revision'] += 1
+        validate_state(result)
+        return result, receipt
     task = result['tasks'].get(event['project'] + '/' + event['task_id'])
     if task is None or task['version'] != event['expected_version']:
         raise ValueError('TASK_VERSION_CONFLICT')
     if task['head_sha'] != event['head_sha']:
         raise ValueError('STALE_CODE_SHA')
-    now, kind, data, actor = event['now'], event['event_type'], event['data'], event['actor']
+    now, kind, data, actor = (event['now'] if observed_now is None else observed_now), event['event_type'], event['data'], event['actor']
+    validate_schema(now, INTEGER)
     if now < task['checkpoint_at']:
         raise ValueError('CLOCK_MOVED_BACKWARDS')
     if data.get('observed_head_sha', task['head_sha']) != task['head_sha']:
@@ -240,6 +262,8 @@ def apply_event(state, event):
         if not in_scope(path, task['allowed_files']):
             raise ValueError('FILE_SCOPE_DENIED')
     if kind == 'claim':
+        if task['status'] == 'quota_paused' and actor.startswith('codex'):
+            raise ValueError('QUOTA_RESTORATION_REQUIRED')
         if task['owner']:
             raise ValueError('TASK_OWNED' if task['lease_until'] > now else 'EXPIRED_REQUIRES_RECOVERY')
         if task['status'] not in {'ready', 'quota_paused', 'blocked_local', 'network_blocked'}:
@@ -333,6 +357,13 @@ def apply_event(state, event):
 def atomic_checkpoint(path, payload):
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists():
+        previous = read_checkpoint(path)  # refuse to silently replace a corrupt checkpoint
+        if previous == payload:
+            return
+        history = path.parent / '.versions' / path.name / (digest(previous) + '.json')
+        if not history.exists():
+            atomic_checkpoint(history, previous)
     envelope = {'format': 1, 'sha256': digest(payload), 'payload': payload}
     fd, name = tempfile.mkstemp(prefix=path.name + '.', dir=path.parent)
     try:
@@ -390,7 +421,7 @@ class Outbox:
                 continue
             if item['status'] != 'pending':
                 blocked = item['status']
-                continue
+                break
             if item['next_at'] > now:
                 pending += 1
                 break

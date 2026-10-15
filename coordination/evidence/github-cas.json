@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "remote": "WoolRadar/codex/relay-cas-acceptance-20261015",
+  "parent": "6d7db4a71647cfe96cac4baf2f09c3d425ada981",
+  "contenders": [
+    "6971a4f07cb7abbb5ebce3a773b8df2162bb4ab9",
+    "1631e7895596cec9d7554dfcbdfaa6c8296aefab"
+  ],
+  "accepted_sha": "6971a4f07cb7abbb5ebce3a773b8df2162bb4ab9",
+  "second_update": "rejected UNKNOWN GraphQL error",
+  "readback_preserved_first": true,
+  "result": "partial",
+  "limitation": "No typed CAS/non-fast-forward cause returned by connector; do not infer cause from generic rejection. Real local Git conflict tests establish non-fast-forward behavior."
+}

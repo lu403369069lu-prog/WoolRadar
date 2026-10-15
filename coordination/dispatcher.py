@@ -112,7 +112,8 @@ def dispatch(db_path: Path, events: list[dict], dry_run: bool = False) -> dict:
         conn.execute("ROLLBACK" if dry_run else "COMMIT")
         return {"quota_paused": quota_paused, "dry_run": dry_run, "decisions": decisions}
     except Exception:
-        conn.execute("ROLLBACK")
+        if conn.in_transaction:
+            conn.execute("ROLLBACK")
         raise
     finally:
         conn.close()

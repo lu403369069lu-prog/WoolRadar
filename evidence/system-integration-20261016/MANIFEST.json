@@ -7,6 +7,10 @@
       "git_blob": "aff03dff5c172c94c737a8c76b400a8f6efd1f0d"
     },
     {
+      "path": "core/collector.py",
+      "git_blob": "15dab2a4c4dc10a91c0b20ddc86b0282fe83fa20"
+    },
+    {
       "path": "core/db.py",
       "git_blob": "9773d91e1d903eba73dff945a4afaf5b6b04376e"
     },
@@ -35,6 +39,14 @@
       "git_blob": "ac5ec3b2dd253faeebc9eb64ef8bbbdbf9eb91ce"
     },
     {
+      "path": "tests/test_offer_clause_consistency.py",
+      "git_blob": "98785c8e2db194b2060a54571fc4a067e8937a04"
+    },
+    {
+      "path": "tests/test_offer_fallback_boundaries.py",
+      "git_blob": "46f6e29d2d1bb90856045dc2514ca64a69cd79a0"
+    },
+    {
       "path": "tests/test_official_trace_stale_event.py",
       "git_blob": "69ea3c21944210aa42858627fd3693fafeb99e49"
     },
@@ -56,7 +68,7 @@
     },
     {
       "path": "evidence/system-integration-20261016/CHECKPOINT.md",
-      "git_blob": "7d62730b7fc6efcbb266993bd801d648997d0c09"
+      "git_blob": "4d6dce65e9d644ccb16b1eb15001422224ccb9dd"
     },
     {
       "path": "HANDOFF.md",
@@ -129,6 +141,42 @@
     {
       "path": "evidence/system-integration-20261016/lease-after.json",
       "git_blob": "3738a54e768e72e8aa537810075c245f41e0f5a8"
+    },
+    {
+      "path": "evidence/system-integration-20261016/offer-fallback-before.json",
+      "git_blob": "7d34b5b649cb59c5cd20ea8ac448d55c6786ea38"
+    },
+    {
+      "path": "evidence/system-integration-20261016/offer-fallback-after.json",
+      "git_blob": "39f0b1b19ef252f392f0cf25c3d4dc3e155b1d3c"
+    },
+    {
+      "path": "evidence/system-integration-20261016/offer-fallback-review.json",
+      "git_blob": "49cfeb9b2ed24ab61d2af7ca417f50ce1dba1968"
+    },
+    {
+      "path": "evidence/system-integration-20261016/system-offer-fallback-fixed.json",
+      "git_blob": "a81698534e9d5c3ffff0274df8ec3c7f1862b0f3"
+    },
+    {
+      "path": "evidence/system-integration-20261016/clause-consistency-before.json",
+      "git_blob": "fa4540d680c8d200d3e10441ea92a832a606a777"
+    },
+    {
+      "path": "evidence/system-integration-20261016/clause-consistency-after.json",
+      "git_blob": "dfc35eae2268b92cba668a3e41ab19d129e1339e"
+    },
+    {
+      "path": "evidence/system-integration-20261016/clause-consistency-review.json",
+      "git_blob": "b6feaf3150965c91584b10231b532e3f9db7fb0f"
+    },
+    {
+      "path": "evidence/system-integration-20261016/system-clause-consistency-fixed.json",
+      "git_blob": "a8cc6c4a9748a509b59ed88cbe563279eccdbd79"
+    },
+    {
+      "path": "evidence/system-integration-20261016/BARRIER_HANDOFF.json",
+      "git_blob": "a8e6d8e66641133e5fa7f9f49cd144502917aa61"
     }
   ],
   "production_changed": false,

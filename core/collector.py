@@ -69,14 +69,35 @@ def contains_keyword(text: str, keywords: list[str]) -> bool:
         r'\b(?:do|does|did)\s+not\s+(?:offer|provide|have)\b|'
         r'\b(?:don[\x27’]t|doesn[\x27’]t|didn[\x27’]t)\s+(?:offer|provide|have)\b|'
         r'\b(?:requires?|only\s+with|included\s+only\s+with)\b.{0,55}\bpaid\b')
-    for clause in re.split(r'[!?;\n]|\.(?=\s|$)', value):
+    def available_clauses(sample: str) -> list[str]:
+        clauses = []
+        for sentence in re.split(r'[!?\n]|\.(?=\s|$)', sample):
+            parts = sentence.split(';')
+            if not negative_offer.search(sentence):
+                clauses.extend(parts)
+                continue
+            # A trailing closure/paid restriction qualifies the same statement.
+            # Only an explicit new campaign after a semicolon resets that scope.
+            for part in parts[1:]:
+                if (re.search(r'\b(?:new|another|replacement|different)\s+'
+                              r'(?:program|campaign|promotion|offer|grant)\b', part)
+                        and not negative_offer.search(part)):
+                    clauses.append(part)
+        return clauses
+
+    offer_clauses = available_clauses(value)
+    for clause in offer_clauses:
         if negative_offer.search(clause):
             continue
         if any(matches(keyword, clause) and (keyword != 'trial' or trial_offer)
                for keyword in strong):
             return True
     # A stated monetary credit award is a lead; it proves no personal eligibility.
-    for clause in re.split(r'[!?\n]|\.(?=\s|$)', value):
+    for clause in offer_clauses:
+        # Fallback recognition must honor the same closed/request/paid guard
+        # as direct keyword and branded matching. It cannot revive a denial.
+        if negative_offer.search(clause):
+            continue
         award = re.search(r'\b(?:receives?|awarded|grants?|offers?|claim|get)\s+(?:up\s+to\s+)?'
                           r'\$\s*\d[\d,]*(?:\.\d{1,2})?\s+(?:in\s+)?(?:cloud\s+|ai\s+)?credits\b', clause)
         free_start = re.search(r'\bstart\s+using\s+for\s+free\b', clause)
@@ -120,7 +141,7 @@ def contains_keyword(text: str, keywords: list[str]) -> bool:
     return any(
         any(matches(cue, clause) and (cue != 'trial' or trial_offer)
             for cue in promo_cues)
-        for clause in re.split(r'[!?;\n]|\.(?=\s|$)', promotion_text)
+        for clause in available_clauses(promotion_text)
         if not negative_offer.search(clause))
 
 

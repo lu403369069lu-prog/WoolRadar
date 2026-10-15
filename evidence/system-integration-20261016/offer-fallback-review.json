@@ -1,0 +1,137 @@
+{
+  "reviewer": "independent budget_review agent",
+  "command": "PowerShell here-string | python -B -; AST function with isolated test namespaces",
+  "exit_code": 0,
+  "source_sha256": "08b7230a9de679810e7da7bab667f563db08abe1912a8711d8fa488027c8cee0",
+  "focused_methods": {
+    "test_offer_fallback_boundaries.py": 6,
+    "test_offer_keyword_context.py": 13,
+    "test_free_hosting_diagnostics.py": 10,
+    "test_offer_negative_intent.py": 10
+  },
+  "focused_methods_run": 39,
+  "test_output": ".......................................\n----------------------------------------------------------------------\nRan 39 tests in 0.005s\n\nOK\n",
+  "cases": [
+    {
+      "text": "The startup grant offers $500 cloud credits but the program has ended.",
+      "expected": false,
+      "actual": false,
+      "passed": true,
+      "without_only_new_fallback_guard": true
+    },
+    {
+      "text": "Is there any provider that offers $100 cloud credits?",
+      "expected": false,
+      "actual": false,
+      "passed": true,
+      "without_only_new_fallback_guard": true
+    },
+    {
+      "text": "Start using for free is no longer available.",
+      "expected": false,
+      "actual": false,
+      "passed": true,
+      "without_only_new_fallback_guard": true
+    },
+    {
+      "text": "Use coupon code WELCOME; this campaign has ended.",
+      "expected": false,
+      "actual": false,
+      "passed": true,
+      "without_only_new_fallback_guard": true
+    },
+    {
+      "text": "The startup grant offers $500 cloud credits to new developers.",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "without_only_new_fallback_guard": true
+    },
+    {
+      "text": "Start using for free; paid upgrades are optional.",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "without_only_new_fallback_guard": true
+    },
+    {
+      "text": "Our email testing tool is free; paid upgrades are optional.",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "without_only_new_fallback_guard": true
+    },
+    {
+      "text": "We no longer provide a free email testing tool.",
+      "expected": false,
+      "actual": false,
+      "passed": true,
+      "without_only_new_fallback_guard": false
+    },
+    {
+      "text": "Free API access; this campaign has ended.",
+      "expected": false,
+      "actual": true,
+      "passed": false,
+      "without_only_new_fallback_guard": true
+    },
+    {
+      "text": "GitHub promotion; this campaign has ended.",
+      "expected": false,
+      "actual": true,
+      "passed": false,
+      "without_only_new_fallback_guard": true
+    },
+    {
+      "text": "The old program has ended; our new program offers $500 cloud credits to new developers.",
+      "expected": true,
+      "actual": false,
+      "passed": false,
+      "without_only_new_fallback_guard": true
+    }
+  ],
+  "findings": [
+    {
+      "priority": "P2",
+      "title": "Semicolon boundary differs between direct/branded and fallback branches",
+      "cases": [
+        {
+          "text": "Free API access; this campaign has ended.",
+          "expected": false,
+          "actual": true,
+          "passed": false,
+          "without_only_new_fallback_guard": true
+        },
+        {
+          "text": "GitHub promotion; this campaign has ended.",
+          "expected": false,
+          "actual": true,
+          "passed": false,
+          "without_only_new_fallback_guard": true
+        }
+      ],
+      "detail": "Direct/branded loops split semicolons; fallback does not. Equivalent ended offer statements still differ by recognizer. This direct/branded behavior predates the added fallback guard."
+    },
+    {
+      "priority": "P2",
+      "title": "New whole-statement guard rejects a distinct new live offer following an ended old program",
+      "cases": [
+        {
+          "text": "The old program has ended; our new program offers $500 cloud credits to new developers.",
+          "expected": true,
+          "actual": false,
+          "passed": false,
+          "without_only_new_fallback_guard": true
+        }
+      ],
+      "detail": "Explicit old/new contrast changes True to False with only the new guard inserted; bounded recall limitation, not independently measured holdout performance."
+    }
+  ],
+  "conclusion": "Requested six fallback regressions and old focused contracts pass. Guard is shared by all four fallback recognizers. Two remaining semantic boundary limitations documented.",
+  "limits": [
+    "Development regression only; no frozen holdout metrics or precision/recall claim.",
+    "No production, network, worktree edit or full regression.",
+    "Ablation removes only the new guard; not a separate historical release result."
+  ],
+  "harness_note": "Initial guard-ablation text assertion hit CRLF/LF mismatch; rerun normalized source newlines without changing code."
+}

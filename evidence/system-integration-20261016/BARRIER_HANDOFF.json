@@ -1,0 +1,44 @@
+{
+  "cycle": 1792107327,
+  "actor": "codex-woolradar",
+  "phase": "uploading",
+  "remaining_percent_at_trigger": 18,
+  "repo": "lu403369069lu-prog/WoolRadar",
+  "branch": "chatgpt/wool-system-integration-20261015",
+  "expected_parent": "c7aec3704f9c900d06c8e79733afd8e7f5ae976b",
+  "last_verified_parent_blobs": 33,
+  "code_sha256": {
+    "collector": "17f2ed0553bc93b8028fd54a0f3733d53803a021695e97ff6ec0821af1ef9f14"
+  },
+  "formal_test": {
+    "command": "python -X utf8 -m unittest discover -s tests -v",
+    "exit_code": 0,
+    "total": 280,
+    "skipped": 0,
+    "seconds": 15.984
+  },
+  "next_commands_after_coordinated_resume": [
+    "Cold-read Issue2/3 and PR23 currentHEAD; read V3 owner/lease before claim/start.",
+    "Recover exact latest committed source into existing managed worktree; verify blobs/HEAD and do not discard unknown edits.",
+    "Freeze NEW public raw samples plus code ref before labels/predictions; old45-row set is development only.",
+    "Evaluate precision/recall/FP/FN/pairwise dedup with real denominators and unknowns.",
+    "Review final report truth/capacity/date/region/payment restrictions and noise; read-only five-node/scheduler现场 checks.",
+    "Only after core gates complete, execute3 independent final rounds."
+  ],
+  "not_done": [
+    "OriginalP06 full upstream and real source/eligibility coverage",
+    "New independent frozen real holdout (not started)",
+    "Five-node Windows physical/long-run recovery acceptance",
+    "Real external notification authorization/delivery",
+    "Three final independent rounds"
+  ],
+  "local_only": [
+    "raw/sanitized SQLite and backups",
+    "raw copied reports",
+    "all production roots unchanged",
+    "managed worktree currently HEAD22 plus published integration edits; do not claim clean current integrationHEAD"
+  ],
+  "production_changed": false,
+  "goal_complete": false,
+  "wait_policy": "After verified upload, normal V3 release->ready; wait for all3 uploaded receipts and coordinator resume, once per quota cycle. Do not use quota_paused preventatively, reset limits, paid APIs, new services or tasks."
+}

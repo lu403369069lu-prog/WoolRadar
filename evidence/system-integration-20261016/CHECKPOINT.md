@@ -19,6 +19,12 @@ Original P06 and release readiness remain IN_PROGRESS. The three required final 
 
 ## Next executable work
 
+### Subsequent screening corrections
+
+The fallback award/free-start/coupon branch could revive ended offers or requests. Six new contracts first showed4 failures. Its guard repair then exposed two documented P2 boundaries: direct/brand semicolon clauses could ignore a trailing closure, and an explicit new credit program after an old program ended was rejected. Six additional contracts first showed3 failures. All matching branches now share statement qualification and permit a clearly explicit new-program transition after a semicolon. Full combined Windows suite280/0 skipped/exit0/15.984s; independent45 focused methods plus11 prior positive/negative cases passed. These are development regressions, not holdout or95% accuracy evidence. Source collector SHA25617f2ed0553bc93b8028fd54a0f3733d53803a021695e97ff6ec0821af1ef9f14.
+
+The user's shared5h quota rule is verified from the coordinator's current user turn: below20%, three existing sessions checkpoint/upload and verify, release to ready using the validated protocol, then wait for all three actual upload receipts and coordinator resume. Once per reset cycle1792107327; no quota reset or paid route. Current local receipt is _outbox/quota-barrier-1792107327.json. Do not start a large new unit near the threshold or call a preventative release quota_paused. Independent real holdout has not started; raw source metadata inventory is not an evaluation.
+
 1. Independent fix review is complete for the repaired concurrency boundaries. Publish checkpoint to existing PR23 with CAS and record exact SHA/commands/exit in Issue2 and V3. Never overwrite a newer remote head. A new report test initially expected UNKNOWN instead of the schema default DISCOVERED; corrected that expectation while preserving identity/evidence/concurrency assertions, with the intermediate failed output retained.
 2. Freeze new real public-source samples before labels and code evaluation. The45-row October14 development set was used to fit PR13 and is NOT independent holdout. Report precision/recall/FP/FN/pairwise dedup denominators and unknown cases; no95% claim from tiny positives.
 3. Inspect report truth, availability/deadline/capacity/region/card conditions/noise and duplicates on isolated copied data; preserve unknown eligibility. Public official source proof does not establish this user's eligibility.

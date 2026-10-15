@@ -1,0 +1,98 @@
+{
+  "reviewer": "independent budget_review agent",
+  "command": "PowerShell here-string | python -B -; actual contains_keyword AST, per-file isolated unittest namespaces",
+  "exit_code": 0,
+  "source_sha256": "17f2ed0553bc93b8028fd54a0f3733d53803a021695e97ff6ec0821af1ef9f14",
+  "test_sha256": {
+    "test_offer_fallback_boundaries.py": "f82697c436607a0bcaea349ab0e22dc1f838a28beaa19d69259ba2d90d3d8c75",
+    "test_offer_keyword_context.py": "3f818dc2ad0abaf4344e51bfdd659aebade7ffe248430011cd2172c691412943",
+    "test_free_hosting_diagnostics.py": "6c79f2a257332ea243aabe33311ac070e6dbcdde50032f785a94e06cadf7cea3",
+    "test_offer_negative_intent.py": "6aea554820b72f267392d2340322bed8ad2c0c868c331311a6d8a4c6c4d237ae",
+    "test_offer_clause_consistency.py": "d40fb9e8d6a6823440863a08e2931cada52ddc1427fbad93451965d132c339ba"
+  },
+  "focused_methods": {
+    "test_offer_fallback_boundaries.py": 6,
+    "test_offer_keyword_context.py": 13,
+    "test_free_hosting_diagnostics.py": 10,
+    "test_offer_negative_intent.py": 10,
+    "test_offer_clause_consistency.py": 6
+  },
+  "focused_methods_run": 45,
+  "all_focused_methods_passed": true,
+  "test_output": ".............................................\n----------------------------------------------------------------------\nRan 45 tests in 0.006s\n\nOK\n",
+  "prior_counterexamples_and_controls": [
+    {
+      "text": "The startup grant offers $500 cloud credits but the program has ended.",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "Is there any provider that offers $100 cloud credits?",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "Start using for free is no longer available.",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "Use coupon code WELCOME; this campaign has ended.",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "The startup grant offers $500 cloud credits to new developers.",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "text": "Start using for free; paid upgrades are optional.",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "text": "Our email testing tool is free; paid upgrades are optional.",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "text": "We no longer provide a free email testing tool.",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "Free API access; this campaign has ended.",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "GitHub promotion; this campaign has ended.",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "The old program has ended; our new program offers $500 cloud credits to new developers.",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    }
+  ],
+  "findings": [],
+  "conclusion": "All 45 scoped development contracts and 11 previously recorded cases pass. Direct, monetary/CTA/coupon/diagnostic fallback and brand matching now share availability clauses. The two prior semicolon/old-new P2 examples are resolved for this exact fingerprint; diagnostic required-paid filtering remains exercised.",
+  "limits": [
+    "Scoped deterministic development regression, not independently frozen holdout or general NLP precision/recall evidence.",
+    "No full suite repeated; no production/worktree modifications, network or new unit of work.",
+    "Previous review history files remain unchanged."
+  ]
+}

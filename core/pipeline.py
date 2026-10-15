@@ -99,22 +99,28 @@ class Pipeline:
                 'status': run_status, 'error_code': error_code}
 
     def apply_evidence(self, event_id: int, evidence_items: list[Evidence]) -> dict:
-        event = self.db.get_event(event_id)
-        for item in evidence_items:
-            self.db.add_evidence(event_id, item)
-        candidate = Candidate(
-            node=event['node'], source=event['source'], title=event['title'],
-            url=event['primary_url'], published_at=event['published_at'] or '',
-            batch_id=event['batch_id'] or '',
-        )
-        result = self.verifier.evaluate(candidate, self.db.get_evidence(event_id))
-        self.db.set_status(event_id, result.status, result.reason, result.claim_scope)
-        self.queue_verified(event_id, result.status.value)
-        return {
-            'event_id': event_id,
-            'status': result.status.value,
-            'reason': result.reason,
-            'claim_scope': result.claim_scope,
-            'independent_evidence_count': result.independent_evidence_count,
-            'unknown_capacity': result.unknown_capacity,
-        }
+        # This path runs after official-page fetching as well as from direct
+        # evidence updates. A concurrent campaign reindex can otherwise merge
+        # away event_id between get_event(), add_evidence() and queue_verified().
+        # Keep only local SQLite operations under the same writer reservation;
+        # network fetches and actual notification sending remain outside.
+        with self.db.candidate_transaction():
+            event = self.db.get_event(event_id)
+            for item in evidence_items:
+                self.db.add_evidence(event_id, item)
+            candidate = Candidate(
+                node=event['node'], source=event['source'], title=event['title'],
+                url=event['primary_url'], published_at=event['published_at'] or '',
+                batch_id=event['batch_id'] or '',
+            )
+            result = self.verifier.evaluate(candidate, self.db.get_evidence(event_id))
+            self.db.set_status(event_id, result.status, result.reason, result.claim_scope)
+            self.queue_verified(event_id, result.status.value)
+            return {
+                'event_id': event_id,
+                'status': result.status.value,
+                'reason': result.reason,
+                'claim_scope': result.claim_scope,
+                'independent_evidence_count': result.independent_evidence_count,
+                'unknown_capacity': result.unknown_capacity,
+            }

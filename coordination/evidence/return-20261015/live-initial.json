@@ -1,0 +1,133 @@
+{
+  "at": "2026-10-15T02:38:27.512627+00:00",
+  "before_sha": "9b565b7959cc64bbdd43d0f45f7c15569e556581",
+  "confirmed_sha": "e028014d25d479583c147c1b9d99d1fac7f70c78",
+  "revision": 9,
+  "task": {
+    "allowed_files": [
+      "coordination/",
+      "tests/",
+      "HANDOFF.md"
+    ],
+    "base_branch": "codex/relay-v5-20261015",
+    "base_sha": "1440553f892676a938135e24938010d50cdd351a",
+    "blockers": [],
+    "change_summary": "Real user-invoked ChatGPT PR10 discovered by cold Git/API read; no ChatGPT V3 claim inferred",
+    "checkpoint_at": 1792031900,
+    "claimed_at": 1792031893,
+    "definition_of_done": "Evidence at current SHA and independent review; no deployment",
+    "dependencies": [],
+    "error_type": null,
+    "evidence": [],
+    "executor": "codex-windows",
+    "fencing_token": 1,
+    "head_sha": "1440553f892676a938135e24938010d50cdd351a",
+    "last_sync_at": null,
+    "lease_until": 1792032793,
+    "next_action": "Validate actual ChatGPT PR10 e81afca6661918b6261297f4251f413dbee09dab in Windows worktrees; fix only reproduced sync defects; publish Codex receipt and release ownership",
+    "owner": "codex-windows",
+    "previous_owner": null,
+    "priority": "P1",
+    "project": "WoolRadar",
+    "remote_takeover_allowed": false,
+    "requires_windows": true,
+    "restrictions": [
+      "no_production",
+      "no_merge",
+      "no_credentials",
+      "no_paid_api"
+    ],
+    "reviews": [],
+    "status": "in_progress",
+    "task_id": "RELAY-CODEX-RETURN",
+    "version": 3,
+    "work_branch": "codex/relay-return-20261015",
+    "worktree_clean": true
+  },
+  "events": [
+    {
+      "project": "WoolRadar",
+      "task_id": "RELAY-CODEX-RETURN",
+      "head_sha": "1440553f892676a938135e24938010d50cdd351a",
+      "event_type": "register",
+      "actor": "codex-windows",
+      "expected_version": 0,
+      "fencing_token": null,
+      "lease_seconds": 900,
+      "now": 1792031883,
+      "data": {
+        "task": {
+          "project": "WoolRadar",
+          "task_id": "RELAY-CODEX-RETURN",
+          "version": 0,
+          "status": "ready",
+          "owner": null,
+          "previous_owner": null,
+          "executor": null,
+          "claimed_at": 0,
+          "lease_until": 0,
+          "fencing_token": 0,
+          "priority": "P1",
+          "dependencies": [],
+          "base_branch": "codex/relay-v5-20261015",
+          "base_sha": "1440553f892676a938135e24938010d50cdd351a",
+          "work_branch": "codex/relay-return-20261015",
+          "head_sha": "1440553f892676a938135e24938010d50cdd351a",
+          "worktree_clean": true,
+          "allowed_files": [
+            "coordination/",
+            "tests/",
+            "HANDOFF.md"
+          ],
+          "change_summary": "Real user-invoked ChatGPT PR10 discovered by cold Git/API read; no ChatGPT V3 claim inferred",
+          "evidence": [],
+          "reviews": [],
+          "blockers": [],
+          "error_type": null,
+          "checkpoint_at": 0,
+          "last_sync_at": null,
+          "next_action": "Validate actual ChatGPT PR10 e81afca6661918b6261297f4251f413dbee09dab in Windows worktrees; fix only reproduced sync defects; publish Codex receipt and release ownership",
+          "definition_of_done": "Evidence at current SHA and independent review; no deployment",
+          "requires_windows": true,
+          "remote_takeover_allowed": false,
+          "restrictions": [
+            "no_production",
+            "no_merge",
+            "no_credentials",
+            "no_paid_api"
+          ]
+        }
+      }
+    },
+    {
+      "project": "WoolRadar",
+      "task_id": "RELAY-CODEX-RETURN",
+      "head_sha": "1440553f892676a938135e24938010d50cdd351a",
+      "event_type": "claim",
+      "actor": "codex-windows",
+      "expected_version": 1,
+      "fencing_token": null,
+      "lease_seconds": 900,
+      "now": 1792031883,
+      "data": {}
+    },
+    {
+      "project": "WoolRadar",
+      "task_id": "RELAY-CODEX-RETURN",
+      "head_sha": "1440553f892676a938135e24938010d50cdd351a",
+      "event_type": "start",
+      "actor": "codex-windows",
+      "expected_version": 2,
+      "fencing_token": 1,
+      "lease_seconds": 900,
+      "now": 1792031883,
+      "data": {}
+    }
+  ],
+  "replay": {
+    "attempted": 3,
+    "pending": 0,
+    "blocked": null
+  },
+  "model_calls": 0
+}

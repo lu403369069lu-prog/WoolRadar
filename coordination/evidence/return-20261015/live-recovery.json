@@ -1,0 +1,179 @@
+{
+  "at": "2026-10-15T02:43:30.546716+00:00",
+  "before_sha": "e028014d25d479583c147c1b9d99d1fac7f70c78",
+  "confirmed_sha": "36f756feefdf260cbb2fecc1f79250717331064b",
+  "state_revision": 10,
+  "event": {
+    "project": "WoolRadar",
+    "task_id": "RELAY-CODEX-RETURN",
+    "head_sha": "1440553f892676a938135e24938010d50cdd351a",
+    "event_type": "heartbeat",
+    "actor": "codex-windows",
+    "expected_version": 3,
+    "fencing_token": 1,
+    "lease_seconds": 900,
+    "now": 1792032183,
+    "data": {}
+  },
+  "receipt": {
+    "attempts": 2,
+    "event": {
+      "actor": "codex-windows",
+      "data": {},
+      "event_type": "heartbeat",
+      "expected_version": 3,
+      "fencing_token": 1,
+      "head_sha": "1440553f892676a938135e24938010d50cdd351a",
+      "lease_seconds": 900,
+      "now": 1792032183,
+      "project": "WoolRadar",
+      "task_id": "RELAY-CODEX-RETURN"
+    },
+    "last_error": "REMOTE_0",
+    "last_sync_at": 1792032187,
+    "next_at": 1792032185,
+    "receipt": {
+      "fencing_token": 1,
+      "result": "applied",
+      "sha": "36f756feefdf260cbb2fecc1f79250717331064b",
+      "version": 4
+    },
+    "sequence": 0,
+    "status": "acknowledged"
+  },
+  "offline_queue_preserved": true,
+  "crash_exit_code": 17,
+  "replayed_once": true,
+  "ordinary_python_only": true,
+  "model_calls": 0,
+  "observation": {
+    "changes": [
+      {
+        "ref": "refs/heads/chatgpt/relay-v5-readback-audit-20261015",
+        "before": null,
+        "after": "e81afca6661918b6261297f4251f413dbee09dab"
+      }
+    ],
+    "refs": {
+      "refs/heads/codex/relay-v5-20261015": "1440553f892676a938135e24938010d50cdd351a",
+      "refs/heads/chatgpt/relay-v5-readback-audit-20261015": "e81afca6661918b6261297f4251f413dbee09dab"
+    },
+    "model_calls": 0
+  },
+  "stable_observation": {
+    "changes": [],
+    "refs": {
+      "refs/heads/codex/relay-v5-20261015": "1440553f892676a938135e24938010d50cdd351a",
+      "refs/heads/chatgpt/relay-v5-readback-audit-20261015": "e81afca6661918b6261297f4251f413dbee09dab"
+    },
+    "model_calls": 0
+  },
+  "commands": [
+    {
+      "command": [
+        "python",
+        "-c",
+        "import json,os,sys; from pathlib import Path; from coordination.relay import Outbox; Outbox(Path(sys.argv[2])).enqueue(json.loads(Path(sys.argv[1]).read_bytes())); os._exit(17)",
+        "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\relay-return-20261015\\saved-heartbeat.json",
+        "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\relay-return-20261015\\recovery-queue-v2"
+      ],
+      "exit_code": 17,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "coordination.relay_git",
+        "--workspace",
+        "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\relay-return-20261015\\replay-object-store",
+        "--remote",
+        "https://github.com/lu403369069lu-prog/WoolRadar.git",
+        "sync",
+        "--outbox",
+        "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\relay-return-20261015\\recovery-queue-v2"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"attempted\": 1,\n  \"pending\": 1,\n  \"blocked\": null,\n  \"remote_read\": \"unavailable; preserve previous sync receipt\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "coordination.relay_git",
+        "--workspace",
+        "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\relay-return-20261015\\replay-object-store",
+        "--remote",
+        "https://github.com/lu403369069lu-prog/WoolRadar.git",
+        "sync",
+        "--outbox",
+        "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\relay-return-20261015\\recovery-queue-v2"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"attempted\": 1,\n  \"pending\": 0,\n  \"blocked\": null,\n  \"last_confirmed_sha\": \"36f756feefdf260cbb2fecc1f79250717331064b\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "coordination.relay_git",
+        "--workspace",
+        "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\relay-return-20261015\\replay-object-store",
+        "--remote",
+        "https://github.com/lu403369069lu-prog/WoolRadar.git",
+        "sync",
+        "--outbox",
+        "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\relay-return-20261015\\recovery-queue-v2"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"attempted\": 0,\n  \"pending\": 0,\n  \"blocked\": null,\n  \"last_confirmed_sha\": \"36f756feefdf260cbb2fecc1f79250717331064b\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "coordination.relay_git",
+        "--workspace",
+        "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\relay-return-20261015\\replay-object-store",
+        "--remote",
+        "https://github.com/lu403369069lu-prog/WoolRadar.git",
+        "observe",
+        "--ref",
+        "refs/heads/codex/relay-v5-20261015",
+        "--ref",
+        "refs/heads/chatgpt/relay-v5-readback-audit-20261015",
+        "--cache",
+        "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\relay-return-20261015\\known-code-refs.cache"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"changes\": [\n    {\n      \"ref\": \"refs/heads/chatgpt/relay-v5-readback-audit-20261015\",\n      \"before\": null,\n      \"after\": \"e81afca6661918b6261297f4251f413dbee09dab\"\n    }\n  ],\n  \"refs\": {\n    \"refs/heads/codex/relay-v5-20261015\": \"1440553f892676a938135e24938010d50cdd351a\",\n    \"refs/heads/chatgpt/relay-v5-readback-audit-20261015\": \"e81afca6661918b6261297f4251f413dbee09dab\"\n  },\n  \"model_calls\": 0\n}\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "python",
+        "-m",
+        "coordination.relay_git",
+        "--workspace",
+        "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\relay-return-20261015\\replay-object-store",
+        "--remote",
+        "https://github.com/lu403369069lu-prog/WoolRadar.git",
+        "observe",
+        "--ref",
+        "refs/heads/codex/relay-v5-20261015",
+        "--ref",
+        "refs/heads/chatgpt/relay-v5-readback-audit-20261015",
+        "--cache",
+        "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\relay-return-20261015\\known-code-refs.cache"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"changes\": [],\n  \"refs\": {\n    \"refs/heads/codex/relay-v5-20261015\": \"1440553f892676a938135e24938010d50cdd351a\",\n    \"refs/heads/chatgpt/relay-v5-readback-audit-20261015\": \"e81afca6661918b6261297f4251f413dbee09dab\"\n  },\n  \"model_calls\": 0\n}\n",
+      "stderr": ""
+    }
+  ],
+  "network_fault": "per-process dead loopback proxy; no system network changes"
+}

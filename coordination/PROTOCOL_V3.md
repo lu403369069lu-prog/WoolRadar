@@ -121,3 +121,33 @@ authentication is required; this machine's GitHub connector login does not prove
 PR #9 targets #6 and includes parallel #7/#8 once. Do not merge all three blindly. No main update,
 workflow activation, production DB, SAM installation/cache, devices, credentials or services are part
 of this candidate. The manual workflow remains contents:read and persist-credentials:false.
+
+
+## Verified Windows return follow-up (2026-10-15, PR11)
+
+Read reviews/CODEX-RETURN-20261015.md for current facts superseding the initial backend/readback snapshot above.
+Actual user-invoked ChatGPT advisory PR10 was independently read back by Codex; no formal ChatGPT V3 claim is inferred.
+Existing Git authentication now passed actual read/write/recovery tests. No permanent service or scheduler is enabled.
+
+Use a dedicated bare object store; ordinary checkout .git and path aliases are rejected. Authentication failures
+persist BLOCKED_AUTH; expected domain conflicts persist a terminal blocking queue item. Re-read state and reconcile
+explicitly before constructing a new event. Never clear the queue or change an existing event payload to force replay.
+Inspect sync JSON: a process exit code of zero alone does not mean every queued event was acknowledged.
+
+One bounded no-model discovery call, from the isolated repository:
+
+```powershell
+python -m coordination.relay_git --workspace .relay-object-store --remote https://github.com/lu403369069lu-prog/WoolRadar.git observe --ref refs/heads/codex/relay-v5-20261015 --ref refs/heads/chatgpt/relay-v5-readback-audit-20261015 --cache .relay-observed.cache
+```
+
+The first observation reports newly seen refs; repeating unchanged refs reports changes=[]. Review a new SHA before
+claiming any work. A changed code identity invalidates an old review for that new identity. The cache is checksummed
+and preserves prior versions; a corrupt cache fails closed. This call discovers refs only and never runs AI or claims.
+Use the existing enqueue/sync calls to persist then replay events without a model. During active work, invoke them
+on meaningful progress and at most 10–15 minutes apart; the current run recorded actual 2–5 minute checkpoints.
+No future periodic execution is claimed without a separately authorized running host.
+
+Lease validation uses trusted operator wall clocks and rejects backwards/expired outputs. There is no independent
+server clock authority: stop and investigate material clock skew; do not infer permission to reclaim early.
+Shared repository write credentials and actor strings do not prove model identity. Preserve least-privilege transport
+and trusted operator boundaries. Append deduplicated Issue comments as mirrors; Git state is the atomic record.

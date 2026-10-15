@@ -1,0 +1,40 @@
+{
+  "at": "2026-10-15T02:47:40.664597+00:00",
+  "implementation_sha": "a2a67761105d13f7b9f8063c2d1c1a68062f4803",
+  "code_files": [
+    "coordination/relay.py",
+    "coordination/relay_git.py",
+    "tests/test_return_sync.py"
+  ],
+  "state_before": "295f71fc65b2a513524d09c39dbd515617c7d3c5",
+  "state_after": "8e2784a72130a8b027f3ec080ca53876d5ffcb2a",
+  "revision": 12,
+  "event": {
+    "project": "WoolRadar",
+    "task_id": "RELAY-CODEX-RETURN",
+    "head_sha": "1440553f892676a938135e24938010d50cdd351a",
+    "event_type": "checkpoint",
+    "actor": "codex-windows",
+    "expected_version": 5,
+    "fencing_token": 1,
+    "lease_seconds": 900,
+    "now": 1792032450,
+    "data": {
+      "new_head_sha": "a2a67761105d13f7b9f8063c2d1c1a68062f4803",
+      "changed_files": [
+        "coordination/relay.py",
+        "coordination/relay_git.py",
+        "tests/test_return_sync.py"
+      ],
+      "change_summary": "57/57 Windows tests; real auth/offline replay/concurrent GitHub writes and actual PR10 cold read verified",
+      "worktree_clean": true,
+      "work_branch": "codex/relay-return-20261015"
+    }
+  },
+  "replay": {
+    "attempted": 1,
+    "pending": 0,
+    "blocked": null
+  },
+  "tests": 57
+}

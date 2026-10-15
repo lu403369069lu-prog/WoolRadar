@@ -1,0 +1,5 @@
+{"round": 1, "exit_code": 0, "status": "partial"}
+{"round": 2, "exit_code": 0, "status": "isolated_pass"}
+{"round": 3, "exit_code": 0, "status": "isolated_pass"}
+{"round": 4, "exit_code": 0, "status": "isolated_pass"}
+{"round": 5, "exit_code": 0, "status": "partial"}

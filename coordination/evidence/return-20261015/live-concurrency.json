@@ -1,0 +1,30 @@
+{
+  "at": "2026-10-15T02:45:45.717671+00:00",
+  "parent_sha": "36f756feefdf260cbb2fecc1f79250717331064b",
+  "confirmed_sha": "295f71fc65b2a513524d09c39dbd515617c7d3c5",
+  "revision": 11,
+  "actor": "codex-windows",
+  "task_id": "RELAY-CODEX-RETURN",
+  "expected_version": 4,
+  "fencing_token": 1,
+  "results": [
+    {
+      "contender": 0,
+      "result": "rejected",
+      "error": "REMOTE_CONFLICT"
+    },
+    {
+      "contender": 1,
+      "result": "accepted",
+      "sha": "295f71fc65b2a513524d09c39dbd515617c7d3c5"
+    }
+  ],
+  "payload_digests": [
+    "2093015a23c5fe086ddf4ab92e801ceaacf6be66dd83ef01417a3e75dd6d393c",
+    "25c724223a901b3932d68f3ebf9c7099b2cca36ba4f809826c56559e2ed7b11e"
+  ],
+  "real_github": true,
+  "force_push": false,
+  "model_calls": 0,
+  "limits": "Two concurrent Git clients of the same authorized Codex task; no ChatGPT identity or business code write simulated"
+}

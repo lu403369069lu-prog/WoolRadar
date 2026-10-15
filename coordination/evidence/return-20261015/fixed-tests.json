@@ -1,0 +1,9 @@
+{
+  "at": "2026-10-15T02:46:43.244576+00:00",
+  "command": "python -m unittest discover -s tests -v",
+  "exit_code": 0,
+  "tests_run": 57,
+  "basis": "PR9 1440553 + minimal return-sync fixes; exact commit assigned after verified staging",
+  "environment": "Windows / Python 3.12.14 / Git 2.53.0.windows.3",
+  "implementation_sha": "a2a67761105d13f7b9f8063c2d1c1a68062f4803"
+}

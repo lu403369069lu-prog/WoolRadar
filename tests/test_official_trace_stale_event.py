@@ -102,6 +102,50 @@ class StaleOfficialTraceTests(unittest.TestCase):
             self.assertEqual(result, self.report(root, first))
 
 
+class ReusedEventIdentityTests(unittest.TestCase):
+    seed = StaleOfficialTraceTests.seed
+
+    def test_old_merged_id_reused_before_trace_start_is_not_treated_as_original(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            db, _, second = self.seed(root)
+            original = db.get_event(second)
+            self.assertEqual(db.review_campaign(REVIEW)['merged'], 1)
+            replacement = db.upsert_candidate(Candidate(
+                'n', 's', 'Unrelated campaign C', 'https://publisher.example/c')).event_id
+            self.assertEqual(replacement, second)  # INTEGER PRIMARY KEY reuse
+            with mock.patch('core.official_trace.fetch_public_page',
+                            side_effect=AssertionError('no network allowed')):
+                result = OfficialTracer(root, hosts=set()).trace(
+                    second, expected_event=original)
+            self.assertEqual(result['status'], 'STALE_EVENT_ID')
+            self.assertEqual(db.get_evidence(second), [])
+
+    def test_old_merged_id_reused_after_public_fetch_cannot_receive_old_proof(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            db = Database(root / 'data' / 'woolradar.db')
+            db.upsert_candidate(Candidate('n', 's', TITLES[A], A))
+            second = db.upsert_candidate(Candidate('n', 's', TITLES[B], B,
+                metadata={'official': True})).event_id
+            tracer = OfficialTracer(root, hosts={'publisher.example'})
+
+            def fetch_and_replace(*_args):
+                self.assertEqual(db.review_campaign(REVIEW)['merged'], 1)
+                replacement = db.upsert_candidate(Candidate(
+                    'n', 's', 'Unrelated campaign C', 'https://publisher.example/c')).event_id
+                self.assertEqual(replacement, second)
+                return b'A synthetic public page with visible offer details for testing.'
+
+            with mock.patch.object(tracer.budget, 'acquire', return_value=True), \
+                 mock.patch('core.official_trace.fetch_public_page',
+                            side_effect=fetch_and_replace):
+                result = tracer.trace(second)
+            self.assertEqual(result['status'], 'STALE_EVENT_ID')
+            self.assertEqual(result['references'][0]['status'], 'STALE_EVENT_ID')
+            self.assertEqual(db.get_evidence(second), [])
+
+
 class NodeRunTraceStatusTests(unittest.TestCase):
     def ingest_with_trace_status(self, trace_status):
         with tempfile.TemporaryDirectory() as tmp:

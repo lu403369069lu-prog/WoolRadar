@@ -41,7 +41,8 @@ class Pipeline:
                     candidates.append(Candidate.from_dict(json.loads(line)))
 
         notify_count = 0
-        official_ids = []
+        # Pin identity while ingest still holds the SQLite writer reservation.
+        official_events = {}
         trace_errors = []
         for candidate in candidates:
             # Reserve the writer through every event-ID reference; upsert alone
@@ -62,19 +63,21 @@ class Pipeline:
                 result = self.verifier.evaluate(candidate, evidence)
                 self.db.set_status(stored.event_id, result.status, result.reason, result.claim_scope)
                 self.queue_verified(stored.event_id, result.status.value)
+                if candidate.source_kind == 'official':
+                    official_snapshot = self.db.get_event(stored.event_id)
             if stored.notify:
                 notify_count += 1
-            if candidate.source_kind == 'official' and stored.event_id not in official_ids:
-                official_ids.append(stored.event_id)
+            if candidate.source_kind == 'official':
+                official_events.setdefault(stored.event_id, official_snapshot)
 
         trace_config = self.root / 'config' / 'official-trace.json'
         if trace_config.exists():
             trace_policy = json.loads(trace_config.read_text(encoding='utf-8'))
-            if trace_policy.get('enabled', False) and official_ids:
+            if trace_policy.get('enabled', False) and official_events:
                 from .official_trace import OfficialTracer
                 tracer = OfficialTracer(self.root)
-                for event_id in official_ids[:max(0, min(2, int(trace_policy.get('max_per_node_run', 1))))]:
-                    trace_result = tracer.trace(event_id)
+                for event_id, snapshot in list(official_events.items())[:max(0, min(2, int(trace_policy.get('max_per_node_run', 1))))]:
+                    trace_result = tracer.trace(event_id, expected_event=snapshot)
                     if isinstance(trace_result, dict) and trace_result.get('status') == 'STALE_EVENT_ID':
                         trace_errors.append({'source': f'official-trace:{event_id}',
                             'status': 'FAILED', 'error_code': 'STALE_EVENT_ID'})
@@ -105,7 +108,8 @@ class Pipeline:
         return {'node': node, 'ingested': len(candidates), 'notify': notify_count,
                 'status': run_status, 'error_code': error_code}
 
-    def apply_evidence(self, event_id: int, evidence_items: list[Evidence]) -> dict:
+    def apply_evidence(self, event_id: int, evidence_items: list[Evidence],
+                       expected_event: dict | None = None) -> dict:
         # This path runs after official-page fetching as well as from direct
         # evidence updates. A concurrent campaign reindex can otherwise merge
         # away event_id between get_event(), add_evidence() and queue_verified().
@@ -113,6 +117,12 @@ class Pipeline:
         # network fetches and actual notification sending remain outside.
         with self.db.candidate_transaction():
             event = self.db.get_event(event_id)
+            # A deleted INTEGER PRIMARY KEY can be reused for another campaign.
+            # Refuse evidence if the row no longer matches the ingestion snapshot.
+            identity_fields = ('canonical_key', 'batch_id', 'primary_url', 'first_seen')
+            if expected_event is not None and any(
+                    event[field] != expected_event[field] for field in identity_fields):
+                raise KeyError(event_id)
             for item in evidence_items:
                 self.db.add_evidence(event_id, item)
             candidate = Candidate(

@@ -68,8 +68,22 @@ class OfficialTracer:
     def _write_record(self, event_id: int, record: dict) -> None:
         destination = self.root / 'evidence' / 'official-trace'
         destination.mkdir(parents=True, exist_ok=True)
+        serialized = json.dumps(record, ensure_ascii=False, indent=2)
+        # This integer event ID can be recycled after a campaign merge. Keep
+        # an immutable content-addressed audit copy for every distinct result;
+        # retain the original event-id filename as the latest-result view.
+        history = destination / 'history'
+        history.mkdir(parents=True, exist_ok=True)
+        digest = hashlib.sha256(serialized.encode('utf-8')).hexdigest()
+        archived = history / f'{event_id}-{digest}.json'
+        try:
+            with archived.open('x', encoding='utf-8') as output:
+                output.write(serialized)
+        except FileExistsError:
+            if archived.read_text(encoding='utf-8') != serialized:
+                raise ValueError('OFFICIAL_TRACE_AUDIT_HASH_COLLISION')
         (destination / f'{event_id}.json').write_text(
-            json.dumps(record, ensure_ascii=False, indent=2), encoding='utf-8')
+            serialized, encoding='utf-8')
 
     def trace(self, event_id: int, expected_event: dict | None = None) -> dict:
         # Ingest releases its candidate transaction before network tracing.

@@ -65,6 +65,8 @@ class Contract(unittest.TestCase):
     def test_invalid_dates_and_status_fail_closed(self):
         with self.assertRaises(ValueError):build_preview({'date':'2026-02-30','events':[]},'abc',NOW)
         self.assertEqual(self.preview([row(status='CLAIM_NOW')])['count']['exported_events'],0)
+        self.assertEqual(self.preview([row(status=['CLAIMABLE'])])['count']['exported_events'],0)
+        self.assertEqual(self.preview([row(status={'unexpected':'object'})])['count']['exported_events'],0)
         self.assertEqual(self.preview([row(first_seen='invalid')])['events'][0]['first_seen'],None)
 
     def test_claim_types_are_strict(self):

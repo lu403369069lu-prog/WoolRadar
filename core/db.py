@@ -3,6 +3,7 @@ from __future__ import annotations
 import json
 import sqlite3
 import hashlib
+import threading
 from datetime import datetime
 from contextlib import contextmanager, closing
 from dataclasses import dataclass
@@ -21,11 +22,17 @@ class UpsertResult:
 class Database:
     def __init__(self, path: Path):
         self.path = Path(path)
+        self._transaction_state = threading.local()
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self._init_schema()
 
     @contextmanager
     def connect(self):
+        active = getattr(self._transaction_state, 'connection', None)
+        if active is not None:
+            # The enclosing candidate transaction owns commit/rollback/close.
+            yield active
+            return
         conn = sqlite3.connect(self.path, timeout=30)
         conn.row_factory = sqlite3.Row
         conn.execute('PRAGMA journal_mode=WAL')
@@ -38,6 +45,24 @@ class Database:
             raise
         finally:
             conn.close()
+
+    @contextmanager
+    def candidate_transaction(self):
+        """Keep one candidate's related writes atomic against other SQLite writers.
+
+        This reservation is database-backed, so it also covers other processes.
+        Only this Database instance in this thread reuses the connection. Never
+        perform network I/O or reindex/backup inside the reserved transaction.
+        """
+        if getattr(self._transaction_state, 'connection', None) is not None:
+            raise RuntimeError('CANDIDATE_TRANSACTION_ALREADY_ACTIVE')
+        with self.connect() as conn:
+            conn.execute('BEGIN IMMEDIATE')
+            self._transaction_state.connection = conn
+            try:
+                yield
+            finally:
+                del self._transaction_state.connection
 
     def _init_schema(self) -> None:
         with self.connect() as conn:
@@ -124,7 +149,8 @@ class Database:
         with self.connect() as conn:
             # Prevent review/reindex from committing between the campaign lookup
             # and event insertion: both operations use BEGIN IMMEDIATE.
-            conn.execute('BEGIN IMMEDIATE')
+            if not conn.in_transaction:
+                conn.execute('BEGIN IMMEDIATE')
             link = conn.execute('SELECT review_json FROM campaign_links WHERE url=?', (normalize_url(candidate.url),)).fetchone()
             if link:
                 candidate.metadata = {**candidate.metadata, 'campaign_review': json.loads(link[0])}

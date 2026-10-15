@@ -43,24 +43,28 @@ class Pipeline:
         notify_count = 0
         official_ids = []
         for candidate in candidates:
-            stored = self.db.upsert_candidate(candidate)
-            if candidate.source_kind == 'official' and stored.event_id not in official_ids:
-                official_ids.append(stored.event_id)
+            # Reserve the writer through every event-ID reference; upsert alone
+            # cannot stop a concurrent reindex deleting its returned event.
+            with self.db.candidate_transaction():
+                stored = self.db.upsert_candidate(candidate)
+                if stored.notify:
+                    self.notifications.enqueue(stored.event_id, candidate.batch_id, 'local-discovery',
+                        f"【新发现，尚未核实】{candidate.title}\n{candidate.url}")
+                provenance = candidate.metadata.get('provenance_key') or 'unverified-campaign:' + canonical_key(candidate)
+                reviewed = reviewed_campaign_url(candidate.metadata.get('campaign_review'), candidate.url, candidate.title)
+                if reviewed:
+                    provenance = 'reviewed-campaign:' + reviewed
+                claims = candidate.metadata.get('evidence_claims', {})
+                self.db.add_evidence(stored.event_id, Evidence(
+                    candidate.source_kind, candidate.url, provenance, excerpt=candidate.summary[:1000], claims=claims))
+                evidence = self.db.get_evidence(stored.event_id)
+                result = self.verifier.evaluate(candidate, evidence)
+                self.db.set_status(stored.event_id, result.status, result.reason, result.claim_scope)
+                self.queue_verified(stored.event_id, result.status.value)
             if stored.notify:
                 notify_count += 1
-                self.notifications.enqueue(stored.event_id, candidate.batch_id, 'local-discovery',
-                    f"【新发现，尚未核实】{candidate.title}\n{candidate.url}")
-            provenance = candidate.metadata.get('provenance_key') or 'unverified-campaign:' + canonical_key(candidate)
-            reviewed = reviewed_campaign_url(candidate.metadata.get('campaign_review'), candidate.url, candidate.title)
-            if reviewed:
-                provenance = 'reviewed-campaign:' + reviewed
-            claims = candidate.metadata.get('evidence_claims', {})
-            self.db.add_evidence(stored.event_id, Evidence(
-                candidate.source_kind, candidate.url, provenance, excerpt=candidate.summary[:1000], claims=claims))
-            evidence = self.db.get_evidence(stored.event_id)
-            result = self.verifier.evaluate(candidate, evidence)
-            self.db.set_status(stored.event_id, result.status, result.reason, result.claim_scope)
-            self.queue_verified(stored.event_id, result.status.value)
+            if candidate.source_kind == 'official' and stored.event_id not in official_ids:
+                official_ids.append(stored.event_id)
 
         trace_config = self.root / 'config' / 'official-trace.json'
         if trace_config.exists():

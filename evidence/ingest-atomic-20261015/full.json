@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-10-15T13:29:37.731505+00:00",
+  "command": "python -X utf8 -m unittest discover -s tests",
+  "exit_code": 0,
+  "wall_seconds": 11.593,
+  "stdout": "node=openmagpie candidates=1 failed_sources=0\nitems=[workspace]\\_work\\ingest-atomic-79b867e\\.test-tmp\\tmp926saj6g\\data\\inbox\\openmagpie.jsonl\nstatus=[workspace]\\_work\\ingest-atomic-79b867e\\.test-tmp\\tmp926saj6g\\data\\status\\openmagpie.json\n",
+  "stderr": "...................................................................................................................................................................................................................\n----------------------------------------------------------------------\nRan 211 tests in 11.290s\n\nOK\n",
+  "hashes": {
+    "core/db.py": "4d550751b56ad48eb24663dd01390c2d14fa7f9778937a91830294494ba6c1e7",
+    "core/pipeline.py": "da11ffba976ad305dc09c491e6d19358aab8090158f29801493227a5db121e95",
+    "tests/test_ingest_transaction.py": "3da9c26ba220eb5ddf27bdeb9fc763a6d10f8c4fc459d43f69ddd13635cabdb2"
+  },
+  "base_sha": "79b867e48be303a00290598393e5ae7681fcc67f",
+  "production_changed": false,
+  "limits": "Synthetic integration and rollback contracts, not full upstream or physical/95% acceptance"
+}

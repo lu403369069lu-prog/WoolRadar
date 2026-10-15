@@ -1,0 +1,16 @@
+{
+  "checked_at": "2026-10-15T13:28:55.737274+00:00",
+  "command": "python -X utf8 -m unittest discover -s tests -p test_ingest_transaction.py",
+  "exit_code": 1,
+  "wall_seconds": 0.437,
+  "stdout": "",
+  "stderr": "FFF\n======================================================================\nFAIL: test_completed_candidate_survives_later_candidate_failure (test_ingest_transaction.IngestTransactionTests.test_completed_candidate_survives_later_candidate_failure)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"[workspace]\\_work\\ingest-atomic-79b867e\\tests\\test_ingest_transaction.py\", line 88, in test_completed_candidate_survives_later_candidate_failure\n    events=pipeline.db.list_events();self.assertEqual(len(events),1)\n                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 2 != 1\n\n======================================================================\nFAIL: test_failure_rolls_back_event_sighting_evidence_history_and_notice (test_ingest_transaction.IngestTransactionTests.test_failure_rolls_back_event_sighting_evidence_history_and_notice)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"[workspace]\\_work\\ingest-atomic-79b867e\\tests\\test_ingest_transaction.py\", line 71, in test_failure_rolls_back_event_sighting_evidence_history_and_notice\n    self.assertEqual(conn.execute('SELECT count(*) FROM '+table).fetchone()[0],0,table)\nAssertionError: 1 != 0 : events\n\n======================================================================\nFAIL: test_review_waits_until_evidence_and_status_are_committed (test_ingest_transaction.IngestTransactionTests.test_review_waits_until_evidence_and_status_are_committed)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"[workspace]\\_work\\ingest-atomic-79b867e\\tests\\test_ingest_transaction.py\", line 53, in test_review_waits_until_evidence_and_status_are_committed\n    self.assertTrue(blocked,'review committed after upsert but before evidence persistence')\nAssertionError: False is not true : review committed after upsert but before evidence persistence\n\n----------------------------------------------------------------------\nRan 3 tests in 0.204s\n\nFAILED (failures=3)\n",
+  "hashes": {
+    "core/db.py": "eb9114e72f65bd9ee939a73440ceee6c03143037f4a5dac52f3e34dbd064b600",
+    "core/pipeline.py": "9a2d11927d2049b69bb65553c55a0325ea5733a838b200d38be2cac005026b71",
+    "tests/test_ingest_transaction.py": "3da9c26ba220eb5ddf27bdeb9fc763a6d10f8c4fc459d43f69ddd13635cabdb2"
+  },
+  "base_sha": "79b867e48be303a00290598393e5ae7681fcc67f",
+  "production_changed": false,
+  "limits": "Synthetic integration and rollback contracts, not full upstream or physical/95% acceptance"
+}

@@ -1,0 +1,46 @@
+{
+  "base_sha": "79b867e48be303a00290598393e5ae7681fcc67f",
+  "files": [
+    {
+      "path": "core/db.py",
+      "git_blob": "ca26024eb2eef8710fcb15044bd48c093bfc4563"
+    },
+    {
+      "path": "core/pipeline.py",
+      "git_blob": "8d363cf9331c03737640e18061f17222f483357a"
+    },
+    {
+      "path": "tests/test_ingest_transaction.py",
+      "git_blob": "ab67a328aa78429136a3e60dc4f0182b6697d4e8"
+    },
+    {
+      "path": "evidence/ingest-atomic-20261015/CHECKPOINT.md",
+      "git_blob": "4ad660aafac91071a6e619d078967a855ab45910"
+    },
+    {
+      "path": "evidence/ingest-atomic-20261015/before.json",
+      "git_blob": "d2d10532c67ed6d10c0a5c70c33cbd24d62a1c00"
+    },
+    {
+      "path": "evidence/ingest-atomic-20261015/after.json",
+      "git_blob": "4fbbbf478ea11af77d7fa972df6f48d56e8cb445"
+    },
+    {
+      "path": "evidence/ingest-atomic-20261015/full.json",
+      "git_blob": "96787a22f56cff8943ab788bf149c68db7ddc98c"
+    },
+    {
+      "path": "evidence/ingest-atomic-20261015/composed.json",
+      "git_blob": "66e429c044cc0adfa00f9c0a4043915545308871"
+    },
+    {
+      "path": "evidence/ingest-atomic-20261015/independent-review.json",
+      "git_blob": "db8c39b83c094369bf1f9a9298cc7802d9f18c38"
+    },
+    {
+      "path": "evidence/ingest-atomic-20261015/independent_checks.py",
+      "git_blob": "626802cde497dc05321a56889a682ba9e2a7c6a6"
+    }
+  ],
+  "production_changed": false
+}

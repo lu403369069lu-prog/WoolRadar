@@ -1,0 +1,117 @@
+[
+  {
+    "command": [
+      "git",
+      "init",
+      "--bare",
+      "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\relay-return.git"
+    ],
+    "exit_code": 0,
+    "stdout": "Initialized empty Git repository in <USER>/Documents/ChatGPT/\u603b\u534f\u8c03/_work/relay-return.git/\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "--git-dir",
+      "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\relay-return.git",
+      "fetch",
+      "--depth=3",
+      "--no-tags",
+      "https://github.com/lu403369069lu-prog/WoolRadar.git",
+      "refs/heads/codex/relay-v5-20261015:refs/remotes/origin/codex/relay-v5-20261015"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "From https://github.com/lu403369069lu-prog/WoolRadar\n * [new branch]      codex/relay-v5-20261015 -> origin/codex/relay-v5-20261015\n"
+  },
+  {
+    "command": [
+      "git",
+      "--git-dir",
+      "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\relay-return.git",
+      "fetch",
+      "--depth=3",
+      "--no-tags",
+      "https://github.com/lu403369069lu-prog/WoolRadar.git",
+      "refs/heads/chatgpt/relay-v5-readback-audit-20261015:refs/remotes/origin/chatgpt/relay-v5-readback-audit-20261015"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "From https://github.com/lu403369069lu-prog/WoolRadar\n * [new branch]      chatgpt/relay-v5-readback-audit-20261015 -> origin/chatgpt/relay-v5-readback-audit-20261015\n"
+  },
+  {
+    "command": [
+      "git",
+      "--git-dir",
+      "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\relay-return.git",
+      "fetch",
+      "--depth=3",
+      "--no-tags",
+      "https://github.com/lu403369069lu-prog/WoolRadar.git",
+      "refs/heads/codex/relay-state-v3:refs/remotes/origin/codex/relay-state-v3"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "From https://github.com/lu403369069lu-prog/WoolRadar\n * [new branch]      codex/relay-state-v3 -> origin/codex/relay-state-v3\n"
+  },
+  {
+    "command": [
+      "git",
+      "--git-dir",
+      "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\relay-return.git",
+      "worktree",
+      "add",
+      "--detach",
+      "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\relay-pr9-exact",
+      "19826b6af9e77f650ed05e7c133dd3184f114de3"
+    ],
+    "exit_code": 0,
+    "stdout": "HEAD is now at 19826b6 feat(coordination): durable fenced relay and five-round isolated acceptance\n",
+    "stderr": "Preparing worktree (detached HEAD 19826b6)\n"
+  },
+  {
+    "command": [
+      "git",
+      "--git-dir",
+      "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\relay-return.git",
+      "worktree",
+      "add",
+      "--detach",
+      "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\relay-pr10-exact",
+      "e81afca6661918b6261297f4251f413dbee09dab"
+    ],
+    "exit_code": 0,
+    "stdout": "HEAD is now at e81afca docs(review): add independently verified V3 checkpoint SHA-256\n",
+    "stderr": "Preparing worktree (detached HEAD e81afca)\n"
+  },
+  {
+    "command": [
+      "git",
+      "--git-dir",
+      "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\relay-return.git",
+      "worktree",
+      "add",
+      "-b",
+      "codex/relay-return-20261015",
+      "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\relay-return",
+      "1440553f892676a938135e24938010d50cdd351a"
+    ],
+    "exit_code": 0,
+    "stdout": "HEAD is now at 1440553 docs(coordination): record V5 partial live acceptance and verified delivery\n",
+    "stderr": "Preparing worktree (new branch 'codex/relay-return-20261015')\n"
+  },
+  {
+    "command": [
+      "git",
+      "--git-dir",
+      "<USER>\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\relay-return.git",
+      "worktree",
+      "list",
+      "--porcelain"
+    ],
+    "exit_code": 0,
+    "stdout": "worktree <USER>/Documents/ChatGPT/\u603b\u534f\u8c03/_work/relay-return.git\nbare\n\nworktree <USER>/Documents/ChatGPT/\u603b\u534f\u8c03/_work/relay-pr10-exact\nHEAD e81afca6661918b6261297f4251f413dbee09dab\ndetached\n\nworktree <USER>/Documents/ChatGPT/\u603b\u534f\u8c03/_work/relay-pr9-exact\nHEAD 19826b6af9e77f650ed05e7c133dd3184f114de3\ndetached\n\nworktree <USER>/Documents/ChatGPT/\u603b\u534f\u8c03/_work/relay-return\nHEAD 1440553f892676a938135e24938010d50cdd351a\nbranch refs/heads/codex/relay-return-20261015\n\n",
+    "stderr": ""
+  }
+]

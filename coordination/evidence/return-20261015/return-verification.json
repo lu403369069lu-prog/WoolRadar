@@ -1,0 +1,148 @@
+{
+  "implementation_sha": "19826b6af9e77f650ed05e7c133dd3184f114de3",
+  "pr9_head": "1440553f892676a938135e24938010d50cdd351a",
+  "pr10_head": "e81afca6661918b6261297f4251f413dbee09dab",
+  "blob_checks": [
+    {
+      "path": "HANDOFF.md",
+      "expected": "59ac0b3c727deccee9b4d11a1aff394d5d61e130",
+      "actual": "59ac0b3c727deccee9b4d11a1aff394d5d61e130",
+      "match": true
+    },
+    {
+      "path": "coordination/dispatcher.py",
+      "expected": "a4c51d33f1d3be998218a46090d84a137ecd9696",
+      "actual": "a4c51d33f1d3be998218a46090d84a137ecd9696",
+      "match": true
+    },
+    {
+      "path": "coordination/relay.py",
+      "expected": "3786463420e4c5cf9012db07d032fe20f0cfe2a9",
+      "actual": "3786463420e4c5cf9012db07d032fe20f0cfe2a9",
+      "match": true
+    },
+    {
+      "path": "coordination/relay_git.py",
+      "expected": "87f80935272a7b47adfdfd6074c2b6cdddb01a9a",
+      "actual": "87f80935272a7b47adfdfd6074c2b6cdddb01a9a",
+      "match": true
+    },
+    {
+      "path": "coordination/quota.py",
+      "expected": "1bf683273851e5765fae480d947f394a6252f632",
+      "actual": "1bf683273851e5765fae480d947f394a6252f632",
+      "match": true
+    },
+    {
+      "path": "coordination/acceptance.py",
+      "expected": "855c16ee2727331aa27ab3697b50b78b51191d24",
+      "actual": "855c16ee2727331aa27ab3697b50b78b51191d24",
+      "match": true
+    },
+    {
+      "path": "coordination/PROTOCOL_V3.md",
+      "expected": "1e8c73f86201d0cbf8395f83854fc07ce9ec92e0",
+      "actual": "1e8c73f86201d0cbf8395f83854fc07ce9ec92e0",
+      "match": true
+    },
+    {
+      "path": "coordination/task-state.schema.json",
+      "expected": "138937b0695ed3a410a809469f6dca1dd4517750",
+      "actual": "138937b0695ed3a410a809469f6dca1dd4517750",
+      "match": true
+    },
+    {
+      "path": "coordination/relay-examples.json",
+      "expected": "c6730baa475ea8e74f00e6b162fd4f0b59348616",
+      "actual": "c6730baa475ea8e74f00e6b162fd4f0b59348616",
+      "match": true
+    },
+    {
+      "path": "tests/test_dispatcher.py",
+      "expected": "0565d808e63cbf84c61b7402994de8cec3821272",
+      "actual": "0565d808e63cbf84c61b7402994de8cec3821272",
+      "match": true
+    },
+    {
+      "path": "tests/test_relay.py",
+      "expected": "bffe4f5536ac6dd6ad979424870950b9e08ab66a",
+      "actual": "bffe4f5536ac6dd6ad979424870950b9e08ab66a",
+      "match": true
+    },
+    {
+      "path": "tests/test_relay_git.py",
+      "expected": "9d0f9b53d789437062eb92ae6dfa6708bf10747a",
+      "actual": "9d0f9b53d789437062eb92ae6dfa6708bf10747a",
+      "match": true
+    },
+    {
+      "path": "tests/test_relay_faults.py",
+      "expected": "82c50b0725ed2c8a7f4f8baf28e99a13f51c28ba",
+      "actual": "82c50b0725ed2c8a7f4f8baf28e99a13f51c28ba",
+      "match": true
+    },
+    {
+      "path": "tests/test_quota.py",
+      "expected": "579459ae9b54733f4339f853e35158967be724b4",
+      "actual": "579459ae9b54733f4339f853e35158967be724b4",
+      "match": true
+    },
+    {
+      "path": "coordination/evidence/relay-unit-tests.json",
+      "expected": "ccb5c39e8a643c21d40608542a9cf8c9ceb88073",
+      "actual": "ccb5c39e8a643c21d40608542a9cf8c9ceb88073",
+      "match": true
+    },
+    {
+      "path": "coordination/evidence/relay-unit-tests.log",
+      "expected": "577e9caadaf71a98aa321e6a37f97587c16098b3",
+      "actual": "577e9caadaf71a98aa321e6a37f97587c16098b3",
+      "match": true
+    },
+    {
+      "path": "coordination/evidence/five-rounds.json",
+      "expected": "1cd506c4310e64bfb11e76d705083c87fd5af0ea",
+      "actual": "1cd506c4310e64bfb11e76d705083c87fd5af0ea",
+      "match": true
+    },
+    {
+      "path": "coordination/evidence/github-cas.json",
+      "expected": "63b88d8f1ef96312a87d5b7e50914082fd566d04",
+      "actual": "63b88d8f1ef96312a87d5b7e50914082fd566d04",
+      "match": true
+    },
+    {
+      "path": "coordination/evidence/iteration-history.json",
+      "expected": "62d6377e877337e8e607a82e40b6e119692474f8",
+      "actual": "62d6377e877337e8e607a82e40b6e119692474f8",
+      "match": true
+    }
+  ],
+  "implementation_to_doc_files": [
+    "coordination/ACCEPTANCE_REPORT.md",
+    "coordination/evidence/delivery-verification.json"
+  ],
+  "pr10_added_files": [
+    "coordination/reviews/RELAY-V5-REVIEW-2-advisory.md"
+  ],
+  "independent_new_commits": [
+    "9084368f66b93187b4c81203a986654fa878a4e5",
+    "e81afca6661918b6261297f4251f413dbee09dab"
+  ],
+  "source_attribution": "User identifies ChatGPT; distinct remote commits/advisory/Issue receipt corroborate. Shared GitHub account is not cryptographic model identity.",
+  "checkpoint_sha": "9b565b7959cc64bbdd43d0f45f7c15569e556581",
+  "checkpoint_revision": 6,
+  "checkpoint_sha256": "fb152ac52ddc94365bec4b659bbcf39ab46aca3875b563d3d161893842628b96",
+  "formal_tasks": {
+    "WoolRadar/RELAY-V5-REVIEW-2": {
+      "status": "ready",
+      "owner": null
+    },
+    "SAM/RELAY-SAM-REVIEW-2": {
+      "status": "ready",
+      "owner": null
+    }
+  },
+  "advisory_claim": false,
+  "automatic_takeover": false
+}

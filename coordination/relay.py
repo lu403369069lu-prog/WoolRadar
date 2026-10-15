@@ -431,7 +431,10 @@ class Outbox:
                 item['receipt'] = sender(item['event'])
                 item.update(status='acknowledged', last_sync_at=now)
             except RemoteError as error:
-                if error.status == 403 and not error.rate_limited:
+                item['last_error'] = 'REMOTE_' + str(error.status)
+                if error.status == 401:
+                    item['status'] = 'BLOCKED_AUTH'
+                elif error.status == 403 and not error.rate_limited:
                     item['status'] = 'permission_denied'
                 elif error.status == 409:
                     item['status'] = 'conflict'
@@ -445,6 +448,14 @@ class Outbox:
                     pending += 1
                 else:
                     blocked = item['status']
+            except ValueError as error:
+                # Expected state/identity rejection is terminal until explicit reconciliation.
+                # Persist only the validator code, never arbitrary payload or credential text.
+                code = str(error).split()[0] if str(error) else 'INVALID_EVENT'
+                item['last_error'] = code if re.fullmatch('[A-Z_]+', code) else 'INVALID_EVENT'
+                item['status'] = ('conflict' if any(word in code for word in
+                    ('CONFLICT','VERSION','STALE','OWNER','FENCE','EXPIRED','CLOCK')) else 'invalid_event')
+                blocked = item['status']
             atomic_checkpoint(path, item)
             if blocked:
                 break

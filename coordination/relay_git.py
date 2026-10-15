@@ -14,12 +14,14 @@ import subprocess
 import time
 from pathlib import Path
 from coordination.relay import (RemoteError, apply_event, canonical, digest,
-                                validate_state, Outbox, atomic_checkpoint)
+                                validate_state, Outbox, atomic_checkpoint, read_checkpoint)
 
 
 class GitStateStore:
     def __init__(self, workspace, remote, branch='codex/relay-state-v3'):
         self.workspace = Path(workspace)
+        if os.path.normcase(str(self.workspace.resolve())) != os.path.normcase(str(self.workspace.absolute())):
+            raise ValueError('WORKSPACE_PATH_ALIAS_DENIED')
         if branch != 'codex/relay-state-v3':
             raise ValueError('FIXED_COORDINATION_BRANCH_REQUIRED')
         if remote.startswith('https://'):
@@ -37,9 +39,12 @@ class GitStateStore:
                            check=True, capture_output=True, timeout=30)
         elif not (self.workspace / 'objects').is_dir():
             raise ValueError('DEDICATED_BARE_STORE_REQUIRED')
+        check = self.git('rev-parse', '--is-bare-repository')
+        if check.returncode or check.stdout.strip() != b'true':
+            raise ValueError('DEDICATED_BARE_STORE_REQUIRED')
 
     def git(self, *args, data=None):
-        env = dict(os.environ, GIT_TERMINAL_PROMPT='0', GIT_AUTHOR_NAME='Relay Checkpoint',
+        env = dict(os.environ, GIT_TERMINAL_PROMPT='0', GCM_INTERACTIVE='Never', GIT_AUTHOR_NAME='Relay Checkpoint',
                    GIT_AUTHOR_EMAIL='relay@localhost', GIT_COMMITTER_NAME='Relay Checkpoint',
                    GIT_COMMITTER_EMAIL='relay@localhost')
         try:
@@ -68,6 +73,34 @@ class GitStateStore:
         except (json.JSONDecodeError, TypeError, KeyError) as error:
             raise ValueError('CORRUPT_REMOTE_STATE') from error
         return sha, state
+
+    def observe(self, refs, cache):
+        """One bounded read; persist identities, never execute or claim discovered work."""
+        if not refs or len(refs) > 20 or len(set(refs)) != len(refs):
+            raise ValueError('INVALID_OBSERVED_REFS')
+        for ref in refs:
+            if (not re.fullmatch(r'refs/heads/(?:codex|chatgpt)/[A-Za-z0-9_./-]+', ref) or
+                    '..' in ref or ref.endswith(('/', '.')) or '//' in ref):
+                raise ValueError('INVALID_OBSERVED_REF')
+        run = self.git('ls-remote', '--refs', self.remote, *refs)
+        if run.returncode:
+            self._transport_failure(run)
+        observed = dict.fromkeys(refs)
+        for line in run.stdout.decode('ascii').splitlines():
+            sha, ref = line.split('\t')
+            if ref not in observed or not re.fullmatch('[0-9a-f]{40}', sha):
+                raise ValueError('INVALID_REMOTE_REF_RESPONSE')
+            observed[ref] = sha
+        cache = Path(cache)
+        previous = read_checkpoint(cache) if cache.exists() else {}
+        if not isinstance(previous, dict) or any(not isinstance(k, str) or
+                (v is not None and (not isinstance(v, str) or not re.fullmatch('[0-9a-f]{40}', v)))
+                for k, v in previous.items()):
+            raise ValueError('INVALID_OBSERVATION_CACHE')
+        changes = [dict(ref=ref, before=previous.get(ref), after=sha)
+                   for ref, sha in observed.items() if ref not in previous or previous[ref] != sha]
+        atomic_checkpoint(cache, observed)
+        return dict(changes=changes, refs=observed, model_calls=0)
 
     def _commit(self, state, parent=None):
         validate_state(state)
@@ -98,17 +131,22 @@ class GitStateStore:
         result = self.git('push', self.remote, sha + ':' + self.ref)
         if result.returncode:
             details = (result.stdout + result.stderr).lower()
-            if any(x in details for x in (b'non-fast-forward', b'fetch first', b'stale info')):
+            if (any(x in details for x in (b'non-fast-forward', b'fetch first', b'stale info')) or
+                    (b'cannot lock ref' in details and b'expected' in details)):
                 raise ValueError('REMOTE_CONFLICT')
             self._transport_failure(result)
         return sha
 
     def _transport_failure(self, result):
         details = (result.stdout + result.stderr).lower()
-        for code in (429, 503, 502, 500):
-            if str(code).encode() in details:
-                raise RemoteError(code)
-        if b'403' in details or b'authentication failed' in details or b'permission denied' in details:
+        status = re.search(rb'(?:returned error|http(?:/[0-9.]+)?(?: error)?|status(?: code)?)\s*[:=]?\s*(401|403|429|500|502|503)\b', details)
+        code = int(status[1]) if status else None
+        if (code == 401 or b'authentication failed' in details or b'could not read username' in details or
+                b'terminal prompts disabled' in details or b'could not read password' in details):
+            raise RemoteError(401)
+        if code in (429, 503, 502, 500):
+            raise RemoteError(code)
+        if code == 403 or b'permission denied' in details:
             raise RemoteError(403, rate_limited=b'rate limit' in details)
         raise RemoteError(0)  # unknown transport failures must not be mislabelled as success
 
@@ -142,6 +180,9 @@ class GitStateStore:
         # Recheck authorization against the live receiver clock. The stored timestamp
         # is used only for deterministic reconstruction, never for lease validity.
         apply_event(previous, event, observed_now=actual_now)
+        output_task = state['tasks'].get(key, {})
+        if output_task.get('owner') and output_task.get('lease_until', 0) <= actual_now:
+            raise ValueError('EXPIRED_OUTPUT_LEASE')
         expected, _ = apply_event(previous, event, observed_now=receiver_time)
         if expected != state:
             raise ValueError('INVALID_TRANSITION_RESULT')
@@ -166,6 +207,9 @@ def main():
     parser.add_argument('--remote', required=True)
     commands = parser.add_subparsers(dest='operation', required=True)
     commands.add_parser('read')
+    observe = commands.add_parser('observe')
+    observe.add_argument('--ref',action='append',required=True)
+    observe.add_argument('--cache',type=Path,required=True)
     deliver = commands.add_parser('deliver')
     deliver.add_argument('--event', type=Path, required=True)
     enqueue = commands.add_parser('enqueue')
@@ -179,7 +223,9 @@ def main():
         print(json.dumps({'queued':True,'remote_write':False}))
         return
     store = GitStateStore(args.workspace, args.remote)
-    if args.operation == 'read':
+    if args.operation == 'observe':
+        print(json.dumps(store.observe(args.ref,args.cache),indent=2))
+    elif args.operation == 'read':
         sha, state = store.read()
         print(json.dumps({'sha': sha, 'state': state}, indent=2))
     elif args.operation == 'deliver':

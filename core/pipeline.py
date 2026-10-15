@@ -42,6 +42,7 @@ class Pipeline:
 
         notify_count = 0
         official_ids = []
+        trace_errors = []
         for candidate in candidates:
             # Reserve the writer through every event-ID reference; upsert alone
             # cannot stop a concurrent reindex deleting its returned event.
@@ -73,11 +74,17 @@ class Pipeline:
                 from .official_trace import OfficialTracer
                 tracer = OfficialTracer(self.root)
                 for event_id in official_ids[:max(0, min(2, int(trace_policy.get('max_per_node_run', 1))))]:
-                    tracer.trace(event_id)
+                    trace_result = tracer.trace(event_id)
+                    if isinstance(trace_result, dict) and trace_result.get('status') == 'STALE_EVENT_ID':
+                        trace_errors.append({'source': f'official-trace:{event_id}',
+                            'status': 'FAILED', 'error_code': 'STALE_EVENT_ID'})
 
         source_statuses = []
         if status_path.exists():
             source_statuses = json.loads(status_path.read_text(encoding='utf-8')).get('sources', [])
+        # The official trace can lose its old event ID to a concurrent reviewed
+        # campaign merge. Do not report the whole node as OK in that case.
+        source_statuses.extend(trace_errors)
         failed = [item for item in source_statuses if item.get('status') == 'FAILED']
         paused = [item for item in source_statuses if item.get('status') == 'PAUSED']
         if (failed or paused) and candidates:

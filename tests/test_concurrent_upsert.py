@@ -57,5 +57,48 @@ class ConcurrentUpsertTests(unittest.TestCase):
             self.assertEqual([row[0] for row in sightings], ['node0', 'node1'])
 
 
+    def test_concurrent_cross_vendor_generic_title_stays_separate(self):
+        with TemporaryDirectory() as root:
+            db = DatabaseWithInsertBarrier(Path(root) / 'synthetic.db', Barrier(2))
+
+            def worker(index):
+                return db.upsert_candidate(Candidate(f'node{index}', 'fixture',
+                    'Free VPS 1GB', f'https://vendor{index}.example/promo'))
+
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                answers = [f.result(timeout=20) for f in
+                           [pool.submit(worker, n) for n in range(2)]]
+            self.assertNotEqual(answers[0].event_id, answers[1].event_id)
+            self.assertTrue(all(result.notify for result in answers))
+            self.assertEqual(len(db.list_events()), 2)
+
+    def test_concurrent_title_spacing_variants_do_not_alert_twice(self):
+        with TemporaryDirectory() as root:
+            db = DatabaseWithInsertBarrier(Path(root) / 'synthetic.db', Barrier(2))
+            titles = ('Free VPS 1GB', 'Free VPS 1 GB')
+
+            def worker(index):
+                return db.upsert_candidate(Candidate(f'node{index}', 'fixture',
+                    titles[index], 'https://vendor.example/promo'))
+
+            with ThreadPoolExecutor(max_workers=2) as pool:
+                answers = [f.result(timeout=20) for f in
+                           [pool.submit(worker, n) for n in range(2)]]
+            self.assertEqual(answers[0].event_id, answers[1].event_id)
+            self.assertEqual(sum(result.notify for result in answers), 1)
+            self.assertEqual(len(db.list_events()), 1)
+
+    def test_separate_batches_keep_separate_notifications(self):
+        with TemporaryDirectory() as root:
+            db = Database(Path(root) / 'synthetic.db')
+            a = db.upsert_candidate(Candidate('node1', 'fixture', 'Free VPS 1GB',
+                'https://vendor.example/promo', batch_id='round-1'))
+            b = db.upsert_candidate(Candidate('node1', 'fixture', 'Free VPS 1GB',
+                'https://vendor.example/promo', batch_id='round-2'))
+            self.assertNotEqual(a.event_id, b.event_id)
+            self.assertTrue(a.notify and b.notify)
+            self.assertEqual(len(db.list_events()), 2)
+
+
 if __name__ == '__main__':
     unittest.main()

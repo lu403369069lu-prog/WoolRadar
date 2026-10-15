@@ -35,7 +35,7 @@ This example is **not** an instruction to install/deploy or automatically upload
 python -m unittest discover -s independent-quality/delivery-bridge-20261016 -p 'test_redact_daily.py' -v
 ```
 
-Eight standard-library unit tests cover: raw notification/metadata/excerpt non-disclosure, denial of sensitive URL forms and title markers, actual official evidence provenance field restriction, rejection of wrong types, duplicate and batch separation, invalid dates/status fail-closed, no personal eligibility upgrade, and explicit local CLI output with no overwrite. They use only synthetic fixture data. Test counts and the exact code blob hashes are recorded in the draft PR; **no Windows production report was read and no end-to-end ChatGPT consumption was executed**.
+Nine standard-library unit tests cover: raw notification/metadata/excerpt non-disclosure, denial of sensitive URL forms and title markers, actual official evidence provenance field restriction, rejection of wrong types, duplicate and batch separation, invalid dates/status fail-closed, no personal eligibility upgrade, and explicit local CLI output with no overwrite. A deterministic malformed-input matrix additionally covers 72,900 combinations of odd status/title/URL/batch/evidence types without an uncaught exception. They use only synthetic fixture data. Test counts and the exact code blob hashes are recorded in the draft PR; **no Windows production report was read and no end-to-end ChatGPT consumption was executed**.
 
 ## Remaining release gates
 

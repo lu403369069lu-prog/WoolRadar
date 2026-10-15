@@ -71,6 +71,26 @@ class StaleOfficialTraceTests(unittest.TestCase):
             self.assertEqual(result['error_code'], 'EVENT_MERGED_OR_REMOVED')
             self.assertEqual(result, self.report(root, first))
 
+    def test_concurrent_merge_after_public_fetch_is_stale_not_http_failure(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            db = Database(root / 'data' / 'woolradar.db')
+            event = db.upsert_candidate(Candidate('n', 's', TITLES[A], A,
+                metadata={'official': True})).event_id
+            tracer = OfficialTracer(root, hosts={'publisher.example'})
+            with mock.patch.object(tracer.budget, 'acquire', return_value=True):
+                with mock.patch('core.official_trace.fetch_public_page',
+                                return_value=b'A synthetic public page with visible offer details for testing.'):
+                    with mock.patch.object(tracer.pipeline, 'apply_evidence',
+                                           side_effect=KeyError(event)):
+                        result = tracer.trace(event)
+            self.assertEqual(result['status'], 'STALE_EVENT_ID')
+            self.assertEqual(result['error_code'], 'EVENT_MERGED_OR_REMOVED')
+            self.assertEqual(result['references'][0]['status'], 'STALE_EVENT_ID')
+            self.assertEqual(result['references'][0]['error_code'], 'EVENT_MERGED_OR_REMOVED')
+            self.assertEqual(result, self.report(root, event))
+            self.assertEqual(db.get_evidence(event), [])
+
     def test_existing_event_with_no_references_retains_current_status(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)

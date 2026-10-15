@@ -305,6 +305,25 @@ class Database:
             raise FileExistsError(backup)
         with self.connect() as conn:
             conn.execute('BEGIN IMMEDIATE')
+            if campaign_review is not None:
+                # review_campaign() checks these preconditions before calling
+                # reindex(), but another reviewer can commit a conflicting
+                # campaign while this caller waits for the SQLite writer lock.
+                # Recheck *inside* the same reservation before making a backup
+                # or replacing campaign_links. A second different review must
+                # never silently reassign an already reviewed campaign.
+                members = {normalize_url(url) for url in campaign_review['member_urls']}
+                seen = {normalize_url(row[0]) for row in conn.execute(
+                    'SELECT primary_url FROM events')}
+                seen.update(normalize_url(row[0]) for row in conn.execute(
+                    'SELECT url FROM sightings'))
+                if not members <= seen:
+                    raise ValueError('CAMPAIGN_MEMBER_NOT_IN_DATABASE')
+                for url in members:
+                    previous = conn.execute(
+                        'SELECT review_json FROM campaign_links WHERE url=?', (url,)).fetchone()
+                    if previous and json.loads(previous[0]).get('campaign_url') != campaign_review.get('campaign_url'):
+                        raise ValueError('CAMPAIGN_REVIEW_CONFLICT')
             # Backup through a separate read connection so WAL contents are included.
             with closing(sqlite3.connect(self.path)) as reader, closing(sqlite3.connect(backup)) as target:
                 reader.backup(target)

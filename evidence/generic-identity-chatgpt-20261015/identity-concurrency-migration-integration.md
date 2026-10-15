@@ -34,3 +34,18 @@ python -m unittest discover -s tests -p 'test_*.py' -q
 - This is a **draft implementation awaiting broader tests and safety approval**, not a claim of product release or 95% quality certification.
 
 Original evidence is in the source/test code commits and isolated receipts; no Scheduled-origin marker is claimed.
+
+## Continuation: consistent migration preview under concurrent WAL writers
+
+`Database.preview_reindex()` originally used separate SELECT statements without an explicit read transaction. Even with URI `mode=ro`, a concurrent writer can commit between `events`, `campaign_links` and `notifications` reads; preview then attributes **different moments** to one migration plan. This can over/underestimate duplicate historical notifications and makes rollback planning unreliable.
+
+Isolated Linux Python 3.13.5/SQLite actual source-method reproduction used a test-installed SQLite connection subclass. After the initial events SELECT, a second real WAL connection committed a notification for a colliding legacy/new event; no network or real user data was involved. Added `with closing(sqlite3.connect(...))` and explicit `BEGIN` before the first SELECT so all three queries share one reader snapshot, while allowing WAL writer commits.
+
+Actual before/after on the same isolated fixture:
+- Before (`test_reindex_snapshot.ReindexSnapshotTests.test_concurrent_writer_not_visible_halfway_through_preview`): **1 test / 1 failure, exit1**; `notification_conflict_count` unexpectedly observed 1 from a later transaction while event rows belonged to earlier snapshot.
+- After: **1/1 passed, exit0**; preview sees coherent historical state while actual database ends with both notification rows.
+- With all isolated tests, **22/22 passed, exit0**, command `python -m unittest discover -s tests -p 'test_*.py' -q`, elapsed 0.053s.
+- GitHub test file `tests/test_reindex_snapshot.py` remote blob `3854fcc4e003dfc54974427d66bd084acbd7941d` is **identical to the locally executed test file** (`git hash-object`).
+- Updated full GitHub `core/db.py` remote blob `6a72fd385f4db9c5b8188d05aa0bb8dadd243371`. **Full DB module is still not imported by this isolated harness**, which copies the actual schema/connection/upsert/get/list/preview methods; unrelated DB methods are not tested or claimed working.
+
+This is still only a read-only PREVIEW and **does not perform an actual copy-only historical reindex**, a release or a full-Windows suite. Next check must compare preview against `Database.reindex` on an isolated copy, including evidence, sightings, status_history, notification records, backups and rollback, then merge/acceptance decisions through existing draft chain.

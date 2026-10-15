@@ -45,7 +45,7 @@ After completing the above source review, the **actual ChatGPT executor in this 
 
 | Event | State revision | State commit | Result |
 | --- | ---: | --- | --- |
-| `claim:1` | 17 | [Revision 17](https://github.com/lu403369069lu-prog/WoolRadar/commits/codex/relay-state-v3) | owner=`chatgpt-github-review`, fencing token 1 |
+| `claim:1` | 17 | `d2061ec103ef5e10048ee374bb2df10ebdef9947` | owner=`chatgpt-github-review`, fencing token 1 |
 | `start:2` | 18 | `619a928b958a7e434a876c2ee4bb389707f815f6` | in_progress |
 | `evidence:3` | 19 | `2cf9c462507bd359ddb6db010f48bd0bc440d30c` | static GitHub checks recorded, no false claim of unittest |
 | `release:4` | 20 | `301d0f535e6ee449bbbf6215473cc912c127f51f` | task ready again, owner null, lease 0 |

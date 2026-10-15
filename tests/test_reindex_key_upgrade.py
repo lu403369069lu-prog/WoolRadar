@@ -2,6 +2,7 @@
 import hashlib
 import sqlite3
 import unittest
+from contextlib import closing
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -52,6 +53,6 @@ class HistoricalKeyUpgradeTests(unittest.TestCase):
 
             backup = Path(result['backup'])
             self.assertTrue(backup.exists())
-            with sqlite3.connect(backup) as original:
+            with closing(sqlite3.connect(backup)) as original:
                 self.assertEqual(original.execute('SELECT count(*) FROM events').fetchone()[0], 2)
                 self.assertEqual(original.execute('SELECT count(*) FROM notifications').fetchone()[0], 2)

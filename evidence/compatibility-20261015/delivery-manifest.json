@@ -1,0 +1,54 @@
+{
+  "base_sha": "c1c8adc2022ef634b266299d7d81a5e4d0353a68",
+  "files": [
+    {
+      "path": "tests/test_reindex_key_upgrade.py",
+      "git_blob": "fa33d84ba76c9a841168541f2acf99bcdbae18e6"
+    },
+    {
+      "path": "tests/test_reindex_snapshot.py",
+      "git_blob": "c24e7078158f39a53f4f2fb22ac3f51973a35352"
+    },
+    {
+      "path": "evidence/compatibility-20261015/CHECKPOINT.md",
+      "git_blob": "45c8b7830f66e42d61404b2e10cd03dbb553f4e9"
+    },
+    {
+      "path": "evidence/compatibility-20261015/pr19-runtime-identity.json",
+      "git_blob": "c630902fb963f8f56ec47fabc7cff25bfccae44f"
+    },
+    {
+      "path": "evidence/compatibility-20261015/pr19-fixture-before.json",
+      "git_blob": "3d728e6c6238bad7ed150fa65f3edbe782f53a8f"
+    },
+    {
+      "path": "evidence/compatibility-20261015/pr19-fixture-after.json",
+      "git_blob": "312b3fd1b2399481b665619530e506a0b35e2929"
+    },
+    {
+      "path": "evidence/compatibility-20261015/pr19-fixed-full.json",
+      "git_blob": "a52b7eb75cf8e322b8fbc59e55dc91b4407be24c"
+    },
+    {
+      "path": "evidence/compatibility-20261015/unit-tests.json",
+      "git_blob": "d5694ccc8e6b6bdc7de88ab453a935a56d18b708"
+    },
+    {
+      "path": "evidence/compatibility-20261015/composed-fixed.json",
+      "git_blob": "66a402536df1cb793407e2cab44c8f138148ec8a"
+    },
+    {
+      "path": "evidence/compatibility-20261015/source-vector.json",
+      "git_blob": "1328eca801ceaec43d61ec30872c85abc76c2d2d"
+    },
+    {
+      "path": "evidence/compatibility-20261015/independent-review.json",
+      "git_blob": "2ab50ccceff35794931c29a8e9def5be4f039c92"
+    },
+    {
+      "path": "evidence/compatibility-20261015/fixture-review.json",
+      "git_blob": "567a842b2a6d45a6c50d7c62a196da50e5c08d7d"
+    }
+  ],
+  "production_changed": false
+}

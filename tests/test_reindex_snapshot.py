@@ -1,6 +1,7 @@
 """Read-only migration preflight must observe one consistent WAL transaction."""
 import hashlib
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from unittest import TestCase, mock
@@ -30,7 +31,7 @@ class ReindexSnapshotTests(TestCase):
             class HookedConnection(sqlite3.Connection):
                 def execute(self, sql, parameters=()):
                     if 'SELECT url,review_json FROM campaign_links' in sql:
-                        with real_connect(db.path,timeout=5) as writer:
+                        with closing(real_connect(db.path,timeout=5)) as writer, writer:
                             writer.execute('''INSERT INTO notifications(event_id,batch_id,channel,created_at,result)
                                               VALUES(?,?,?,?,?)''',(second,'','digest','2026-01-01','sent'))
                         hook_calls.append('writer-committed')

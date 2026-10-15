@@ -1,0 +1,35 @@
+[
+  {
+    "label": "report-threaded-pr22",
+    "command": [
+      "C:\\Users\\lh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "C:\\Users\\lh\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\integration-review-20261016\\test_report_identity.py"
+    ],
+    "exit_code": 1,
+    "tests_run": 1
+  },
+  {
+    "label": "report-threaded-composed",
+    "command": [
+      "C:\\Users\\lh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "C:\\Users\\lh\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\integration-review-20261016\\test_report_identity.py"
+    ],
+    "exit_code": 1,
+    "tests_run": 1
+  },
+  {
+    "label": "offer-branch-consistency",
+    "command": [
+      "C:\\Users\\lh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "C:\\Users\\lh\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\integration-review-20261016\\test_offer_branch_consistency.py"
+    ],
+    "exit_code": 1,
+    "tests_run": 6
+  }
+]

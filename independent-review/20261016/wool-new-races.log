@@ -1,0 +1,34 @@
+
+test_merged_old_event_id_is_rejected_without_creating_orphan_evidence (tests.test_apply_evidence_transaction.ApplyEvidenceTransactionTests.test_merged_old_event_id_is_rejected_without_creating_orphan_evidence) ... ok
+test_review_waits_until_supplemental_evidence_and_status_are_committed (tests.test_apply_evidence_transaction.ApplyEvidenceTransactionTests.test_review_waits_until_supplemental_evidence_and_status_are_committed) ... ok
+test_verification_failure_rolls_back_every_supplemental_evidence_write (tests.test_apply_evidence_transaction.ApplyEvidenceTransactionTests.test_verification_failure_rolls_back_every_supplemental_evidence_write) ... ok
+test_healthy_trace_does_not_invent_node_failure (tests.test_official_trace_stale_event.NodeRunTraceStatusTests.test_healthy_trace_does_not_invent_node_failure) ... ok
+test_stale_trace_marks_node_partial_and_persists_error_code (tests.test_official_trace_stale_event.NodeRunTraceStatusTests.test_stale_trace_marks_node_partial_and_persists_error_code) ... ok
+test_audit_history_survives_event_id_reuse_after_campaign_merge (tests.test_official_trace_stale_event.ReusedEventIdentityTests.test_audit_history_survives_event_id_reuse_after_campaign_merge) ... ERROR
+test_old_merged_id_reused_after_public_fetch_cannot_receive_old_proof (tests.test_official_trace_stale_event.ReusedEventIdentityTests.test_old_merged_id_reused_after_public_fetch_cannot_receive_old_proof) ... ok
+test_old_merged_id_reused_before_trace_start_is_not_treated_as_original (tests.test_official_trace_stale_event.ReusedEventIdentityTests.test_old_merged_id_reused_before_trace_start_is_not_treated_as_original) ... ok
+test_concurrent_merge_after_public_fetch_is_stale_not_http_failure (tests.test_official_trace_stale_event.StaleOfficialTraceTests.test_concurrent_merge_after_public_fetch_is_stale_not_http_failure) ... ok
+test_existing_event_with_no_references_retains_current_status (tests.test_official_trace_stale_event.StaleOfficialTraceTests.test_existing_event_with_no_references_retains_current_status) ... ok
+test_trace_finishing_after_merge_marks_status_stale_not_verified (tests.test_official_trace_stale_event.StaleOfficialTraceTests.test_trace_finishing_after_merge_marks_status_stale_not_verified) ... ok
+test_trace_starting_after_merge_returns_auditable_stale_result (tests.test_official_trace_stale_event.StaleOfficialTraceTests.test_trace_starting_after_merge_returns_auditable_stale_result) ... ok
+test_recycled_sqlite_id_never_replaces_existing_local_receipt (tests.test_notify_reindex_transaction.LocalReceiptIdReuseTests.test_recycled_sqlite_id_never_replaces_existing_local_receipt) ... ok
+test_recycled_id_after_pending_snapshot_cannot_claim_unrelated_notice (tests.test_notify_reindex_transaction.ReusedNotificationIdTests.test_recycled_id_after_pending_snapshot_cannot_claim_unrelated_notice) ... ok
+test_recycled_id_during_send_cannot_mark_new_notice_sent (tests.test_notify_reindex_transaction.ReusedNotificationIdTests.test_recycled_id_during_send_cannot_mark_new_notice_sent) ... ok
+test_old_pending_snapshot_after_merge_does_not_abort_outbox (tests.test_notify_reindex_transaction.VerifiedOutboxReindexTests.test_old_pending_snapshot_after_merge_does_not_abort_outbox) ... ok
+test_verified_revalidation_blocks_merging_until_claim_is_decided (tests.test_notify_reindex_transaction.VerifiedOutboxReindexTests.test_verified_revalidation_blocks_merging_until_claim_is_decided) ... ok
+test_conflicting_review_cannot_replace_commit_after_precheck (tests.test_reindex_review_race.ConcurrentCampaignReviewTests.test_conflicting_review_cannot_replace_commit_after_precheck) ... ok
+test_two_reindexes_in_same_second_have_distinct_valid_backups (tests.test_reindex_review_race.ConcurrentCampaignReviewTests.test_two_reindexes_in_same_second_have_distinct_valid_backups) ... ok
+
+======================================================================
+ERROR: test_audit_history_survives_event_id_reuse_after_campaign_merge (tests.test_official_trace_stale_event.ReusedEventIdentityTests.test_audit_history_survives_event_id_reuse_after_campaign_merge)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "WORKSPACE\_work\wool-integration-review-20261016\tests\test_official_trace_stale_event.py", line 163, in test_audit_history_survives_event_id_reuse_after_campaign_merge
+    self.assertEqual(self.report(root, second), stale_audit)
+                     ^^^^^^^^^^^
+AttributeError: 'ReusedEventIdentityTests' object has no attribute 'report'
+
+----------------------------------------------------------------------
+Ran 19 tests in 2.124s
+
+FAILED (errors=1)

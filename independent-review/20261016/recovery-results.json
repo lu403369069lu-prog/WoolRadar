@@ -1,0 +1,13 @@
+{
+  "command": [
+    "C:\\Users\\lh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-X",
+    "utf8",
+    "C:\\Users\\lh\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\integration-review-20261016\\test_recovery.py"
+  ],
+  "exit_code": 0,
+  "tests_run": 3,
+  "composition_vector": "composition-vector.json",
+  "real_child_exit": 17,
+  "synthetic_database_only": true
+}

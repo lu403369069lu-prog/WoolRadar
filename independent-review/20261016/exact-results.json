@@ -1,0 +1,119 @@
+[
+  {
+    "label": "wool-new-races",
+    "command": [
+      "C:\\Users\\lh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "unittest",
+      "tests.test_apply_evidence_transaction",
+      "tests.test_official_trace_stale_event",
+      "tests.test_notify_reindex_transaction",
+      "tests.test_reindex_review_race",
+      "-v"
+    ],
+    "cwd": "C:\\Users\\lh\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\wool-integration-review-20261016",
+    "exit_code": 1,
+    "seconds": 2.294,
+    "log": "wool-new-races.log",
+    "tests_run": 19
+  },
+  {
+    "label": "wool-full",
+    "command": [
+      "C:\\Users\\lh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-v"
+    ],
+    "cwd": "C:\\Users\\lh\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\wool-integration-review-20261016",
+    "exit_code": 1,
+    "seconds": 13.471,
+    "log": "wool-full.log",
+    "tests_run": 233
+  },
+  {
+    "label": "sam-build",
+    "command": [
+      "C:\\Users\\lh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.json"
+    ],
+    "cwd": "C:\\Users\\lh\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\sam-integration-review-20261016\\SAM\\snapshot",
+    "exit_code": 0,
+    "seconds": 0.398,
+    "log": "sam-build.log",
+    "tests": null,
+    "pass": null,
+    "fail": null,
+    "skipped": null
+  },
+  {
+    "label": "sam-focused",
+    "command": [
+      "C:\\Users\\lh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "--import",
+      "tsx",
+      "--test",
+      "test/path-policy.test.ts",
+      "test/source-qualified.test.ts",
+      "test/project-routing.test.ts",
+      "test/evidence.test.ts",
+      "test/canonical-fail-closed.test.ts"
+    ],
+    "cwd": "C:\\Users\\lh\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\sam-integration-review-20261016\\SAM\\snapshot",
+    "exit_code": 1,
+    "seconds": 1.206,
+    "log": "sam-focused.log",
+    "tests": 34,
+    "pass": 31,
+    "fail": 2,
+    "skipped": 1
+  },
+  {
+    "label": "sam-full",
+    "command": [
+      "C:\\Users\\lh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "--import",
+      "tsx",
+      "--test",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/browser-init.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/canonical-fail-closed.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/card-index.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/cards.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/chapter-scope-security.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/config-byte.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/evidence.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/integrity.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/iteration-fixes.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/manifest.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/memory.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/path-policy.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/project-routing.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/prompt-enhancer.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/quality-gates.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/r2r3-additional.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/release-040.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/server.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/source-qualified.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/teacher-scenarios.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/twincat-project-index.test.ts",
+      "USER_HOME/Documents/ChatGPT/\u603b\u534f\u8c03/_work/sam-integration-review-20261016/SAM/snapshot/test/visual-assets.test.ts"
+    ],
+    "cwd": "C:\\Users\\lh\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\sam-integration-review-20261016\\SAM\\snapshot",
+    "exit_code": 1,
+    "seconds": 4.762,
+    "log": "sam-full.log",
+    "tests": 185,
+    "pass": 167,
+    "fail": 17,
+    "skipped": 1
+  }
+]

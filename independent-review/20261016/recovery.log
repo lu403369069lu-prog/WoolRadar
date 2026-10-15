@@ -1,0 +1,9 @@
+
+test_external_send_then_process_death_retains_at_least_once_uncertainty (__main__.CrashRecovery.test_external_send_then_process_death_retains_at_least_once_uncertainty) ... ok
+test_process_death_rolls_back_every_candidate_table (__main__.CrashRecovery.test_process_death_rolls_back_every_candidate_table) ... ok
+test_review_backup_restores_all_tables_and_replay_is_idempotent (__main__.CrashRecovery.test_review_backup_restores_all_tables_and_replay_is_idempotent) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.372s
+
+OK

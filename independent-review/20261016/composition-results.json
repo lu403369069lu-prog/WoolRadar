@@ -1,0 +1,43 @@
+[
+  {
+    "label": "report-identity-pr22",
+    "command": [
+      "C:\\Users\\lh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "C:\\Users\\lh\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\integration-review-20261016\\test_report_identity.py"
+    ],
+    "exit_code": 1,
+    "tests_run": 1,
+    "log": "report-identity-pr22.log"
+  },
+  {
+    "label": "composition-full",
+    "command": [
+      "C:\\Users\\lh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-v"
+    ],
+    "exit_code": 1,
+    "tests_run": 263,
+    "log": "composition-full.log"
+  },
+  {
+    "label": "report-identity-composed",
+    "command": [
+      "C:\\Users\\lh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "C:\\Users\\lh\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\integration-review-20261016\\test_report_identity.py"
+    ],
+    "exit_code": 1,
+    "tests_run": 1,
+    "log": "report-identity-composed.log"
+  }
+]

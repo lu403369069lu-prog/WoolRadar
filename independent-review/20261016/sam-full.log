@@ -1,0 +1,504 @@
+✔ verifyBrowserInit keeps verified Chrome extension records compatible (0.982ms)
+✔ verifyBrowserInit blocks a failed Chrome init (ENOTFOUND) from counting as success (0.2049ms)
+✔ verifyBrowserInit blocks unknown channels (0.0921ms)
+✔ verifyBrowserInit blocks an unauthorized builtin replacement (0.1897ms)
+✔ verifyBrowserInit rejects a self-reported boolean as builtin authorization (0.1307ms)
+✔ verifyBrowserInit rejects page text or a URL as the authorization source (0.1107ms)
+✔ verifyBrowserInit blocks builtin use when the authorized scope does not match (0.1145ms)
+✔ verifyBrowserInit blocks builtin success claims without actual body evidence (0.1024ms)
+✔ verifyBrowserInit blocks error pages presented as builtin success (0.1485ms)
+✔ verifyBrowserInit passes an explicitly authorized builtin verification with real body evidence (0.1741ms)
+✔ verifyBrowserInit reports the verified channel so results cannot be extrapolated to other channels (0.1357ms)
+✔ existing canonical path resolves normally and remains inside approved root (8.5873ms)
+✔ missing path cannot be granted authorization via lexical fallback (2.6246ms)
+✔ symlink escape is canonicalized outside approved root when supported (6.3589ms)
+✔ exact card id is always ranked first (19.9105ms)
+✔ teacher aliases route questions to their evidence cards (8.7514ms)
+✔ teacher standard answers improve paraphrase routing without the exact evaluation question (6.2983ms)
+✔ structured implementation evidence wins an otherwise equal lexical tie over declaration-only evidence (8.0076ms)
+✔ getLearningCard returns exact card with explicit missing fields (13.4659ms)
+✔ compareLearningCards preserves evidence and does not invent missing values (4.6125ms)
+✔ getLearningCard preserves explicit semantic review status (4.9401ms)
+✔ claim audit separates implementation-static and declaration-only cards (7.8734ms)
+✔ malformed learning-card JSONL fails with a bounded line-numbered error (3.9268ms)
+✔ proposeLearningCard writes a redacted candidate only inside plugin data (17.3491ms)
+✔ candidate write failure is surfaced and does not fall back outside the plugin data dir (6.1736ms)
+✔ a symlinked chapter directory cannot expose a file outside its registered parent (17.5018ms)
+✔ independent registered chapters still work when repositoryRoot points elsewhere (11.8667ms)
+✔ valid chapter search and a missing chapter folder remain isolated (10.9531ms)
+✔ inspectConfigFileBytes accepts LF-only config bytes (1.061ms)
+✔ inspectConfigFileBytes accepts valid CRLF config bytes (0.1889ms)
+✔ inspectConfigFileBytes rejects CRCRLF with a bare-CR finding (0.233ms)
+✔ inspectConfigFileBytes rejects a lone CR byte (0.1297ms)
+✔ inspectConfigFileBytes rejects a UTF-8 BOM (0.1532ms)
+✔ inspectConfigFileBytes rejects invalid UTF-8 via strict decode (0.1473ms)
+✔ verifyConfigFileWrite passes a real LF temp-file round trip under a Chinese path (14.7723ms)
+✔ verifyConfigFileWrite passes a real CRLF temp-file round trip (5.7632ms)
+✔ verifyConfigFileWrite rejects CRCRLF bytes from a real temp-file round trip (6.0645ms)
+✔ verifyConfigFileWrite rejects a forged expected hash and ignores self-reported legacy hashes (0.5983ms)
+✔ verifyConfigFileWrite rejects text-versus-bytes mismatch (0.4055ms)
+✔ verifyConfigFileWrite rejects a tampered readback (0.3199ms)
+✔ verifyConfigFileWrite reports missing byte-evidence fields precisely (0.2262ms)
+✔ verifyFileWriteEncoding keeps ordinary non-config text compatibility (0.7377ms)
+✔ searchEvidence returns bounded traceable hits (97.9813ms)
+✔ readEvidence rejects more than 200 lines and paths outside approved roots (7.4681ms)
+✔ readEvidence allows an explicitly registered source outside broad approved roots (8.9255ms)
+✔ source, symbol and conflict workflows retain provenance (172.8532ms)
+✔ readEvidence keeps an authorized source when an unrelated registered root has disappeared (9.7095ms)
+✔ inspectJsonIntegrity rejects duplicate object keys at any depth (2.2596ms)
+✔ inspectJsonIntegrity rejects non-standard numeric constants (0.1728ms)
+✔ inspectJsonIntegrity accepts ordinary JSON and keeps large numeric tokens intact (0.2049ms)
+✔ detectEncodingDamage flags replacement characters and question-mark corruption (0.2287ms)
+✔ verifyDelegatedReturn requires authentication fields and never claims completion (0.3742ms)
+✔ classifyClock separates host and executor clocks and flags mixed claims (0.3464ms)
+✔ detectUnsafeSafetyVeto flags the Gate-replaces-INTLOCK pattern (0.3472ms)
+✔ verifySearchEvidence requires tool call, cache path, URL, time and content hash (0.2479ms)
+✔ verifyConclusionChange rejects a changed conclusion without new evidence (0.1974ms)
+✔ verifyDestructiveEditPlan requires backup, hash and rollback before destructive edits (0.323ms)
+✔ verifyHandoffAcceptance requires file existence, hash and readback before claiming save (0.196ms)
+✔ verifyGitHubSourceRoute rejects browser and third-party GitMCP routes (0.1582ms)
+✔ verifyBrowserInit blocks browser search until the real Chrome path is verified (0.2364ms)
+✔ verifyFileWriteEncoding requires UTF-8 without BOM and matching readback hash (0.1981ms)
+✔ shouldNotifyHeartbeat stays silent when nothing changed (0.0839ms)
+✔ verifyDownloadCompleteness requires every expected link to be downloaded, failed or blocked (0.1663ms)
+✔ verifyConcurrentInit requires lock, owner and merge policy when other sessions are present (0.1522ms)
+✔ verifyBatchDedup rejects duplicate source hashes or content fingerprints (0.1756ms)
+✔ verifyConnectorAuthorization requires connection, user authorization and write scope (0.1496ms)
+✔ verifyDiagramDeliverable requires Mermaid source, local render and no public service (0.1266ms)
+✔ verifySessionSave rejects a zero-message archive that claims save success (0.2855ms)
+✔ verifySessionSave checks the detected KB copy against the source counts (0.1163ms)
+✔ verifyContinuationRecovery requires a failed predecessor to resolve to a verified artifact (0.1595ms)
+✔ verifyProtocolCompatibility rejects mock-only bridge claims (0.1475ms)
+✔ verifyThreadWriterLock blocks external writes while the desktop writer is held (0.1518ms)
+✔ verifyMalformedHistoryRecovery separates platform history corruption from bridge code (0.1663ms)
+✔ verifyToolCallPairing rejects orphaned assistant tool calls (0.25ms)
+✔ verifyTruncatedOutputHandling requires chunk recovery or an explicit unrecoverable marker (0.222ms)
+✔ verifyWorkerWaitPlan rejects waiting while local work is available (0.1565ms)
+✔ verifyProviderRequestSchema rejects null schema and context overflow (0.2146ms)
+✔ verifyQuotaBoundaryClaim separates subscription, API and OAuth reuse (0.1593ms)
+✔ verifyTeachingDeliverable requires beginner prerequisites, official examples and Chinese comments (0.1466ms)
+✔ verifyParallelAgentDispatch blocks overlapping writers without serialization (0.2553ms)
+✔ verifyDocumentImageLinks rejects Markdown image references without local files (0.2156ms)
+✔ verifyModelSelection rejects a model unsupported by the current account (0.2103ms)
+✔ verifyPdfExtractionCoverage rejects partial PDF reads that claim full coverage (0.1879ms)
+✔ verifyBrowserSessionCleanup requires every opened tab to be closed or explicitly kept (0.1636ms)
+✔ verifyPdfOcrFallback requires OCR or an explicit blocker when the text layer is incomplete (0.1451ms)
+✔ verifyKnowledgeBaseIntake requires source hash, frontmatter and INDEX/MOC navigation (0.2044ms)
+✔ verifySkillInstallVisibility requires cache sync, validation and new-task visibility (0.1471ms)
+✔ verifyLongTaskCheckpoint requires a hash-bound checkpoint and next action (0.1395ms)
+✔ verifySourceProjectIsolation requires unchanged source hashes and an isolated copy (0.1468ms)
+✔ verifyWorkerQuotaHandover freezes dispatch and takes over locally (0.1406ms)
+✔ verifyCoExecutionProgress requires local work to start and leave evidence (0.1418ms)
+✔ verifyStopAndFixDirective requires failure and repair evidence without completing the task (0.1788ms)
+✔ verifySkillTriggerContract requires invocation, positive triggers and boundaries (0.1369ms)
+✔ verifySkillConflictResolution requires a recorded basis and policy (0.1885ms)
+✔ verifyAutostartDeliverable requires a real shortcut and observed listener (0.1763ms)
+✔ verifyBehaviorEvolutionRecord requires evidence, scope and a verification probe (0.1565ms)
+✔ verifyComponentSelectionEvidence requires manufacturer, quantity and current evidence (0.1386ms)
+✔ verifyPermissionTimeoutRecovery never treats an approval timeout as unsafe or terminal (0.1687ms)
+✔ dead writer stale lock is preserved and the write fails controlled (takeover cancelled) (1164.0922ms)
+✔ unknown-format lock fails explicitly with the lock path instead of silent EEXIST (1012.3551ms)
+✔ fresh lock from a live writer is respected (1053.5943ms)
+✔ high-stakes calibration: sample.pl and SIL queries refuse; shared query intent agrees (25.3296ms)
+✔ freeze disclosure appends source-freeze-manifest-unavailable only when the manifest is missing (1.232ms)
+✖ stdio server drops out-of-root workbuddy hits, discloses claim filtering and missing freeze manifest (384.2621ms)
+✔ readEvidence attributes by directory boundary, not string prefix (17.755ms)
+✔ freeze binding distinguishes same-path, relocated-identical, relocated-different and unlisted sources (6.2498ms)
+✔ manifest refresh is deterministic and excludes secrets (181.0518ms)
+✔ manifest refresh fails explicitly instead of silently truncating files (80.8321ms)
+✔ candidate append is structured, redacted and does not promote (23.2419ms)
+✔ engineering claims require evidence (3.5325ms)
+✔ approved memory search returns exact provenance (108.2942ms)
+✔ rejects a path outside approved roots (10.8764ms)
+✔ allows a real file under an approved root (4.1439ms)
+✔ absolute project path resolves one SPT subproject without widening to sibling projects (10.3556ms)
+✔ project alias resolves through an explicit catalog and unknown aliases refuse (7.7159ms)
+✔ project filtering keeps exact subproject evidence and excludes siblings in one repository (12.225ms)
+✖ conflicting repository constraints reject an otherwise valid absolute project (5.2273ms)
+✖ unscoped chapter metadata cannot bypass a hard repository or project filter (8.1958ms)
+✔ untrusted corpus rows that have disappeared or escape the root are dropped while valid hits survive (10.18ms)
+✔ an unresolved authorization root remains a hard failure, not an implicit permission (5.6902ms)
+✔ repository fallback roots reject traversed, missing and symlink-escaped index rows (17.9217ms)
+✔ enhances a vague request without inventing facts or widening authority (1.8655ms)
+✔ keeps explicit constraints and output format from the original request (0.424ms)
+✔ standalone trigger rewrites only and does not resume a task (0.183ms)
+✔ bare trigger enhances an active checkpoint and resumes it (0.1784ms)
+✔ active-task enhancement merges an added constraint and resumes (0.1869ms)
+✔ explicit optimize-only instruction holds the active task (0.1566ms)
+✔ explicit replacement checkpoints and replaces the active task (0.3597ms)
+✔ permission boundary preserves active task without expanding scope (0.1661ms)
+✔ bare trigger without an active task requires an original request (0.45ms)
+✔ explicit trigger returns policy decision, sources, claim classes and quality gates (0.9221ms)
+✔ complexity detector bypasses simple requests and enhances requests with two independent signals (0.2986ms)
+✔ source IDs are registry-validated in strict and lenient modes (0.289ms)
+✔ prompt context budget is bounded and full prompt is not echoed in changes summary (0.2738ms)
+✔ structured result preserves the full user request while injected context alone is capped at 8000 characters (0.225ms)
+✔ structured claim audit preserves five entailment states and reviewed artifact SHA (10.2653ms)
+✔ teacher evaluation contract rejects missing and unknown answer status (0.6653ms)
+✔ multiple claims on one card use the least sufficient audited claim for answerability (2.9491ms)
+✔ legacy verdict no longer controls evidence tier (5.3063ms)
+✔ C104-K04 is conservatively downgraded by versioned semantic audit (5.8971ms)
+✔ random or weak queries abstain instead of returning unrelated cards (8.5488ms)
+✖ exact symbol lookup uses symbols index and returns C123-S0013 without repository scan (10.0966ms)
+✔ runtime and as-built paraphrases refuse static evidence while verification-status remains answerable (8.5815ms)
+✖ symbol lookup normalizes case, CamelCase phrases, bounded typos and Chinese aliases (5.585ms)
+✖ cross-process duplicate proposals write exactly one candidate (203.6193ms)
+✖ concurrent distinct writers all append under normal contention (154.773ms)
+✖ dead+stale lock is preserved byte-for-byte and writers fail controlled (211.4309ms)
+✔ version_or_date is null without a material version even when verification time exists (90.5259ms)
+✖ workbuddy fallback drops parent-sibling, absolute and junction escapes; keeps genuine hits (372.9293ms)
+✔ registry v2 accepts routing, access and freshness fields while v1 remains compatible (15.1982ms)
+✔ generic evidence search routes WorkBuddy FTS sources instead of scanning them with rg (2.8727ms)
+✔ learning-memory candidate rejects exact duplicate fingerprint and marks title conflicts (19.1587ms)
+✔ learning-memory candidate keeps L4/L5 facts in the isolated project-learning workflow (1.6491ms)
+✔ symbol index returns real source paths, source hashes, and cross-repository ambiguity (10.5274ms)
+✖ teacher corrections enforce T001 T062 T064 and T070 evidence boundaries (0.6265ms)
+✔ freshness audit returns stale_source for missing or expired sources (3.7995ms)
+✔ frozen source hash mismatch returns stale_source instead of a silent answer (3.9569ms)
+✔ WorkBuddy JSON parser tolerates immutable fallback diagnostics before JSON (0.5051ms)
+✔ WorkBuddy process failure and repository fallback timeout are explicit errors (40.5676ms)
+✖ formal source manifest freezes every release source, explains registry exclusions and discloses raw-corpus limits (0.5194ms)
+✖ formal claim audit has real multi-claim cards and all entailment states (0.6405ms)
+✖ knowledge release pointer names the current and verified rollback releases (0.4989ms)
+✖ release manifest pins the source manifest and release pointer byte hashes (0.6554ms)
+✖ stdio server exposes twenty-one bounded tools and persists candidates only to its data dir (443.6142ms)
+✔ reviewed document claim reaches the real direct search without relabeling a card (16.0823ms)
+✔ source drift cannot retain source-qualified answer authority (5.8366ms)
+✔ a changed answer cannot reuse an old review receipt (4.256ms)
+✔ same-topic locator and mixed runtime query do not inherit document authority (4.8745ms)
+✔ unsupported subclaim remains a whole-question refusal (4.7433ms)
+✔ reviewed source requires a valid HTTPS URL without embedded credentials (9.6979ms)
+✔ technical operators remain part of reviewed question identity (5.3056ms)
+✔ missing unrelated registry root does not reject an authorized reviewed source (6.2706ms)
+✔ missing authorization root remains a rejection even with stale registry source (3.572ms)
+✔ existing exclusion policy still rejects an otherwise qualified document (4.4927ms)
+✔ excluded sources and invalid qualification cannot fall back to existing cards (4.8742ms)
+✔ case and fullwidth characters in literal questions cannot borrow another review (4.6431ms)
+✔ registered junction root retains its exclude policy on canonical source files (4.3997ms)
+﹣ canonical approved symlink targets qualify; out-of-root targets never qualify (3.135ms) # Creating symlinks requires an OS permission absent in this runner
+✔ environment registry validates schema and cannot widen a caller boundary (16.7453ms)
+✔ real MCP direct and unified entrances share qualification and source drift refusal (434.7038ms)
+✔ teacher scenario contract covers twelve bounded visual and retrieval cases (6.43ms)
+✔ teacher skill enforces reference and capability readiness gates (2.0162ms)
+✖ 0.4.2 capability map covers ten domains with fixed regression questions (0.8137ms)
+✔ indexes TwinCAT declarations, assets and typed relations for one exact project (27.8638ms)
+✖ visual discovery classifies local assets and marks broken references (11.9168ms)
+ℹ tests 185
+ℹ suites 0
+ℹ pass 167
+ℹ fail 17
+ℹ cancelled 0
+ℹ skipped 1
+ℹ todo 0
+ℹ duration_ms 4655.1875
+
+✖ failing tests:
+
+test at test\iteration-fixes.test.ts:1:6695
+✖ stdio server drops out-of-root workbuddy hits, discloses claim filtering and missing freeze manifest (384.2621ms)
+  TypeError: Cannot read properties of undefined (reading 'length')
+      at TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\iteration-fixes.test.ts:158:53)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at test\project-routing.test.ts:1:3565
+✖ conflicting repository constraints reject an otherwise valid absolute project (5.2273ms)
+  Error: ENOENT: no such file or directory, realpath 'WORKSPACE\_outbox\integration-review-20261016\temp\sam-project-conflict-Yl0lIq\TcCommando'
+      at async realpath (node:internal/fs/promises:1241:10)
+      at async resolveProjectContext (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\src\project-routing.ts:73:33)
+      at async TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\project-routing.test.ts:84:18)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'realpath',
+    path: 'C:\\Users\\lh\\Documents\\ChatGPT\\总协调\\_outbox\\integration-review-20261016\\temp\\sam-project-conflict-Yl0lIq\\TcCommando'
+  }
+
+test at test\project-routing.test.ts:1:4241
+✖ unscoped chapter metadata cannot bypass a hard repository or project filter (8.1958ms)
+  Error: ENOENT: no such file or directory, realpath 'WORKSPACE\_outbox\integration-review-20261016\temp\sam-chapter-filter-h4eqyA\SPT_Alarms'
+      at async realpath (node:internal/fs/promises:1241:10)
+      at async Promise.all (index 0)
+      at async searchTwinCATCorpus (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\src\corpus-index.ts:156:33)
+      at async TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\project-routing.test.ts:95:20)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'realpath',
+    path: 'C:\\Users\\lh\\Documents\\ChatGPT\\总协调\\_outbox\\integration-review-20261016\\temp\\sam-chapter-filter-h4eqyA\\SPT_Alarms'
+  }
+
+test at test\quality-gates.test.ts:1:5216
+✖ exact symbol lookup uses symbols index and returns C123-S0013 without repository scan (10.0966ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'insufficient_evidence'
+  - 'answered'
+  
+      at TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\quality-gates.test.ts:108:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'insufficient_evidence',
+    expected: 'answered',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test\quality-gates.test.ts:1:7822
+✖ symbol lookup normalizes case, CamelCase phrases, bounded typos and Chinese aliases (5.585ms)
+  AssertionError [ERR_ASSERTION]: abortpreviouscommands
+  + actual - expected
+  
+  + 'insufficient_evidence'
+  - 'answered'
+  
+      at TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\quality-gates.test.ts:162:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'insufficient_evidence',
+    expected: 'answered',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test\r2r3-additional.test.ts:1:654
+✖ cross-process duplicate proposals write exactly one candidate (203.6193ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\r2r3-additional.test.ts:29:10)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test\r2r3-additional.test.ts:1:1560
+✖ concurrent distinct writers all append under normal contention (154.773ms)
+  Error: child exited 1: node:internal/modules/esm/resolve:271
+      throw new ERR_MODULE_NOT_FOUND(
+            ^
+  
+  Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\evidence\r2-dedup-child.mjs' imported from WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\
+      at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+      at moduleResolve (node:internal/modules/esm/resolve:865:10)
+      at defaultResolve (node:internal/modules/esm/resolve:992:11)
+      at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+      at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+      at nextStep (node:internal/modules/customization_hooks:189:26)
+      at resolveBaseSync (file:///USER_HOME/Documents/ChatGPT/%E6%80%BB%E5%8D%8F%E8%B0%83/_work/sam-integration-review-20261016/SAM/snapshot/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+      at resolveDirectorySync (file:///USER_HOME/Documents/ChatGPT/%E6%80%BB%E5%8D%8F%E8%B0%83/_work/sam-integration-review-20261016/SAM/snapshot/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+      at resolveTsPathsSync (file:///USER_HOME/Documents/ChatGPT/%E6%80%BB%E5%8D%8F%E8%B0%83/_work/sam-integration-review-20261016/SAM/snapshot/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+      at resolve (file:///USER_HOME/Documents/ChatGPT/%E6%80%BB%E5%8D%8F%E8%B0%83/_work/sam-integration-review-20261016/SAM/snapshot/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+    code: 'ERR_MODULE_NOT_FOUND',
+    url: 'file:///USER_HOME/Documents/ChatGPT/%E6%80%BB%E5%8D%8F%E8%B0%83/_work/sam-integration-review-20261016/SAM/snapshot/evidence/r2-dedup-child.mjs'
+  }
+  
+  Node.js v24.19.0
+  
+      at ChildProcess.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\r2r3-additional.test.ts:86:71)
+      at ChildProcess.emit (node:events:509:28)
+      at maybeClose (node:internal/child_process:1141:16)
+      at ChildProcess._handle.onexit (node:internal/child_process:306:5)
+
+test at test\r2r3-additional.test.ts:1:2287
+✖ dead+stale lock is preserved byte-for-byte and writers fail controlled (211.4309ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /candidate write lock still held/. Input:
+  
+  'Error: child exited 1: node:internal/modules/esm/resolve:271\r\n' +
+    '    throw new ERR_MODULE_NOT_FOUND(\r\n' +
+    '          ^\r\n' +
+    '\r\n' +
+    "Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'C:\\Users\\lh\\Documents\\ChatGPT\\总协调\\_work\\sam-integration-review-20261016\\SAM\\snapshot\\evidence\\r2-dedup-child.mjs' imported from C:\\Users\\lh\\Documents\\ChatGPT\\总协调\\_work\\sam-integration-review-20261016\\SAM\\snapshot\\\r\n" +
+    '    at finalizeResolution (node:internal/modules/esm/resolve:271:11)\r\n' +
+    '    at moduleResolve (node:internal/modules/esm/resolve:865:10)\r\n' +
+    '    at defaultResolve (node:internal/modules/esm/resolve:992:11)\r\n' +
+    '    at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)\r\n' +
+    '    at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)\r\n' +
+    '    at nextStep (node:internal/modules/customization_hooks:189:26)\r\n' +
+    '    at resolveBaseSync (file:///USER_HOME/Documents/ChatGPT/%E6%80%BB%E5%8D%8F%E8%B0%83/_work/sam-integration-review-20261016/SAM/snapshot/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)\r\n' +
+    '    at resolveDirectorySync (file:///USER_HOME/Documents/ChatGPT/%E6%80%BB%E5%8D%8F%E8%B0%83/_work/sam-integration-review-20261016/SAM/snapshot/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)\r\n' +
+    '    at resolveTsPathsSync (file:///USER_HOME/Documents/ChatGPT/%E6%80%BB%E5%8D%8F%E8%B0%83/_work/sam-integration-review-20261016/SAM/snapshot/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)\r\n' +
+    '    at resolve (file:///USER_HOME/Documents/ChatGPT/%E6%80%BB%E5%8D%8F%E8%B0%83/_work/sam-integration-review-20261016/SAM/snapshot/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {\r\n' +
+    "  code: 'ERR_MODULE_NOT_FOUND',\r\n" +
+    "  url: 'file:///USER_HOME/Documents/ChatGPT/%E6%80%BB%E5%8D%8F%E8%B0%83/_work/sam-integration-review-20261016/SAM/snapshot/evidence/r2-dedup-child.mjs'\r\n" +
+    '}\r\n' +
+    '\r\n' +
+    'Node.js v24.19.0\r\n'
+  
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\r2r3-additional.test.ts:74:3)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: child exited 1: node:internal/modules/esm/resolve:271
+        throw new ERR_MODULE_NOT_FOUND(
+              ^
+    
+    Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\evidence\r2-dedup-child.mjs' imported from WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\
+        at finalizeResolution (node:internal/modules/esm/resolve:271:11)
+        at moduleResolve (node:internal/modules/esm/resolve:865:10)
+        at defaultResolve (node:internal/modules/esm/resolve:992:11)
+        at #cachedDefaultResolve (node:internal/modules/esm/loader:701:20)
+        at #resolveAndMaybeBlockOnLoaderThread (node:internal/modules/esm/loader:721:38)
+        at nextStep (node:internal/modules/customization_hooks:189:26)
+        at resolveBaseSync (file:///USER_HOME/Documents/ChatGPT/%E6%80%BB%E5%8D%8F%E8%B0%83/_work/sam-integration-review-20261016/SAM/snapshot/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:11092)
+        at resolveDirectorySync (file:///USER_HOME/Documents/ChatGPT/%E6%80%BB%E5%8D%8F%E8%B0%83/_work/sam-integration-review-20261016/SAM/snapshot/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:12398)
+        at resolveTsPathsSync (file:///USER_HOME/Documents/ChatGPT/%E6%80%BB%E5%8D%8F%E8%B0%83/_work/sam-integration-review-20261016/SAM/snapshot/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:13605)
+        at resolve (file:///USER_HOME/Documents/ChatGPT/%E6%80%BB%E5%8D%8F%E8%B0%83/_work/sam-integration-review-20261016/SAM/snapshot/node_modules/tsx/dist/register-nyXW-TH3.mjs:2:16832) {
+      code: 'ERR_MODULE_NOT_FOUND',
+      url: 'file:///USER_HOME/Documents/ChatGPT/%E6%80%BB%E5%8D%8F%E8%B0%83/_work/sam-integration-review-20261016/SAM/snapshot/evidence/r2-dedup-child.mjs'
+    }
+    
+    Node.js v24.19.0
+    
+        at ChildProcess.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\r2r3-additional.test.ts:86:71)
+        at ChildProcess.emit (node:events:509:28)
+        at maybeClose (node:internal/child_process:1141:16)
+        at ChildProcess._handle.onexit (node:internal/child_process:306:5),
+    expected: /candidate write lock still held/,
+    operator: 'rejects',
+    diff: 'simple'
+  }
+
+test at test\r2r3-additional.test.ts:1:5017
+✖ workbuddy fallback drops parent-sibling, absolute and junction escapes; keeps genuine hits (372.9293ms)
+  TypeError: Cannot read properties of undefined (reading 'map')
+      at TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\r2r3-additional.test.ts:166:102)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+
+test at test\release-040.test.ts:1:6148
+✖ teacher corrections enforce T001 T062 T064 and T070 evidence boundaries (0.6265ms)
+  Error: ENOENT: no such file or directory, open 'WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\artifacts\knowledge-release\0.4.1\teacher-eval.v2.jsonl'
+      at async open (node:internal/fs/promises:697:25)
+      at async readFile (node:internal/fs/promises:1348:14)
+      at async TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\release-040.test.ts:101:18)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\lh\\Documents\\ChatGPT\\总协调\\_work\\sam-integration-review-20261016\\SAM\\snapshot\\artifacts\\knowledge-release\\0.4.1\\teacher-eval.v2.jsonl'
+  }
+
+test at test\release-040.test.ts:1:9331
+✖ formal source manifest freezes every release source, explains registry exclusions and discloses raw-corpus limits (0.5194ms)
+  Error: ENOENT: no such file or directory, open 'WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\artifacts\knowledge-release\0.4.1\source-manifest.json'
+      at async open (node:internal/fs/promises:697:25)
+      at async readFile (node:internal/fs/promises:1348:14)
+      at async TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\release-040.test.ts:153:31)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\lh\\Documents\\ChatGPT\\总协调\\_work\\sam-integration-review-20261016\\SAM\\snapshot\\artifacts\\knowledge-release\\0.4.1\\source-manifest.json'
+  }
+
+test at test\release-040.test.ts:1:10372
+✖ formal claim audit has real multi-claim cards and all entailment states (0.6405ms)
+  Error: ENOENT: no such file or directory, open 'WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\artifacts\knowledge-release\0.4.1\claim-evidence-audit.v2.jsonl'
+      at async open (node:internal/fs/promises:697:25)
+      at async readFile (node:internal/fs/promises:1348:14)
+      at async TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\release-040.test.ts:167:17)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\lh\\Documents\\ChatGPT\\总协调\\_work\\sam-integration-review-20261016\\SAM\\snapshot\\artifacts\\knowledge-release\\0.4.1\\claim-evidence-audit.v2.jsonl'
+  }
+
+test at test\release-040.test.ts:1:10967
+✖ knowledge release pointer names the current and verified rollback releases (0.4989ms)
+  Error: ENOENT: no such file or directory, open 'WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\artifacts\knowledge-release\current.json'
+      at async open (node:internal/fs/promises:697:25)
+      at async readFile (node:internal/fs/promises:1348:14)
+      at async TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\release-040.test.ts:176:30)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\lh\\Documents\\ChatGPT\\总协调\\_work\\sam-integration-review-20261016\\SAM\\snapshot\\artifacts\\knowledge-release\\current.json'
+  }
+
+test at test\release-040.test.ts:1:11422
+✖ release manifest pins the source manifest and release pointer byte hashes (0.6554ms)
+  Error: ENOENT: no such file or directory, open 'WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\release-manifest.json'
+      at async open (node:internal/fs/promises:697:25)
+      at async readFile (node:internal/fs/promises:1348:14)
+      at async TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\release-040.test.ts:184:30)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\lh\\Documents\\ChatGPT\\总协调\\_work\\sam-integration-review-20261016\\SAM\\snapshot\\release-manifest.json'
+  }
+
+test at test\server.test.ts:1:391
+✖ stdio server exposes twenty-one bounded tools and persists candidates only to its data dir (443.6142ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'insufficient_evidence'
+  - 'ambiguous'
+  
+      at TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\server.test.ts:108:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'insufficient_evidence',
+    expected: 'ambiguous',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test\teacher-scenarios.test.ts:1:1217
+✖ 0.4.2 capability map covers ten domains with fixed regression questions (0.8137ms)
+  Error: ENOENT: no such file or directory, open 'WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\artifacts\knowledge-release\0.4.2\teacher-capability-map.json'
+      at async open (node:internal/fs/promises:697:25)
+      at async readFile (node:internal/fs/promises:1348:14)
+      at async TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\teacher-scenarios.test.ts:28:26)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'C:\\Users\\lh\\Documents\\ChatGPT\\总协调\\_work\\sam-integration-review-20261016\\SAM\\snapshot\\artifacts\\knowledge-release\\0.4.2\\teacher-capability-map.json'
+  }
+
+test at test\visual-assets.test.ts:1:281
+✖ visual discovery classifies local assets and marks broken references (11.9168ms)
+  Error: ENOENT: no such file or directory, realpath 'WORKSPACE\_outbox\integration-review-20261016\temp\sam-visuals-Bz0cyc\source\missing.jpg'
+      at async realpath (node:internal/fs/promises:1241:10)
+      at async listVisualAssets (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\src\visual-assets.ts:91:32)
+      at async TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\visual-assets.test.ts:17:18)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'realpath',
+    path: 'C:\\Users\\lh\\Documents\\ChatGPT\\总协调\\_outbox\\integration-review-20261016\\temp\\sam-visuals-Bz0cyc\\source\\missing.jpg'
+  }
+

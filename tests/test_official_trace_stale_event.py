@@ -146,6 +146,32 @@ class ReusedEventIdentityTests(unittest.TestCase):
             self.assertEqual(db.get_evidence(second), [])
 
 
+    def test_audit_history_survives_event_id_reuse_after_campaign_merge(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            db, _, second = self.seed(root)
+            before = db.get_event(second)
+            tracer = OfficialTracer(root, hosts=set())
+            original_audit = tracer.trace(second, expected_event=before)
+            self.assertEqual(original_audit['status'], 'DISCOVERED')
+            self.assertEqual(db.review_campaign(REVIEW)['merged'], 1)
+            recycled_id = db.upsert_candidate(Candidate(
+                'n', 's', 'Unrelated campaign C', 'https://publisher.example/c')).event_id
+            self.assertEqual(recycled_id, second)
+            stale_audit = tracer.trace(second, expected_event=before)
+            self.assertEqual(stale_audit['status'], 'STALE_EVENT_ID')
+            self.assertEqual(self.report(root, second), stale_audit)
+            saved = sorted((root / 'evidence' / 'official-trace' / 'history')
+                           .glob(f'{second}-*.json'))
+            self.assertEqual(len(saved), 2)
+            self.assertEqual(
+                {json.loads(path.read_text(encoding='utf-8'))['status'] for path in saved},
+                {'DISCOVERED', 'STALE_EVENT_ID'})
+            # The original content-addressed record stays byte-for-byte intact.
+            self.assertIn(original_audit, [
+                json.loads(path.read_text(encoding='utf-8')) for path in saved])
+
+
 class NodeRunTraceStatusTests(unittest.TestCase):
     def ingest_with_trace_status(self, trace_status):
         with tempfile.TemporaryDirectory() as tmp:

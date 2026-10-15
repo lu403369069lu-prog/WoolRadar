@@ -48,3 +48,29 @@ python -m unittest discover -s tests -v
 ```
 
 and compare the 170 previously reported PR #17 tests, new 9 test definitions, true Windows git SHA and temporary SQLite behavior. Any deviation must be recorded honestly; synthetic 9/9 does not upgrade project-level precision, recall or 95% target.
+
+
+## Follow-up: explicit campaign query identities and stable parameter ordering
+
+At the next independent development cycle, the original `normalize_url` query predicate was found to be overly broad: removing **all** keys beginning with `ref` or `source` silently discarded `reference_id` and `source_campaign`, allowing distinct campaign links under an otherwise generic title to share a canonical key. At the same time, the unsorted query encoding split the same set of parameters in different URL order. The change is tightly scoped to the existing URL-normalization function on the same unmerged PR #18.
+
+New behavior:
+
+- Only `utm_*`, exact `ref` and exact `source` are treated as disposable tracking fields.
+- Other query identifiers are preserved conservatively.
+- Remaining pairs are sorted by key **stably**: reorder of different keys becomes equivalent, repeated values within one key retain their relative order.
+- `campaign_review` membership uses the same normalized URLs; code to validate explicit human-reviewed campaign URLs is unchanged.
+
+**Independent exact Python code runs:** baseline blob `4fd8a5998f99746f1af158a2ba623fbc39f4875f`, new blob `96da87677a3afda9dc92a88fcc65c50f6928ae92`, unchanged `core/models.py` blob `7a7af3c5b913e452526f8825eca019927e0a5c71`, and extended real repository test blob `670ec58e9576f0a0793f2b534b27dcd9e443a1e5`. All blob SHAs were recomputed locally with `git hash-object` on test-run files and matched remote GitHub exact blobs.
+
+Run from isolated Linux/Python 3.13.5 using the same committed test file:
+
+```sh
+python -m unittest discover -s tests -p test_generic_identity_extension.py -v
+```
+
+- Before this second patch: **10/14 passed, 4 failed, exit 1**. Failures: unordered query keys; `source_campaign` identifiers silently removed; `reference_id` identifiers silently removed; interleaved duplicate query keys.
+- After patch: **14/14 passed, 0 failed, exit 0**.
+
+This 14-item suite includes all 9 previously submitted tests plus 5 new regression tests. It uses exact GitHub Python modules and the exact new test file, not a translated behavioral mirror. It does **not** prove the complete WoolRadar 170-test suite, a production database migration or end-to-end notification behavior. Some servers can interpret query key order semantically; this explicit conservative limitation should be evaluated against real tracked providers before any migration of historical campaign identities. Do not merge or deploy without whole-project review.
+

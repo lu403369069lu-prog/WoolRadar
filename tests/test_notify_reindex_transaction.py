@@ -2,6 +2,7 @@
 
 Temporary SQLite only; no real HTTP, Telegram, production DB or scheduler.
 """
+import json
 import tempfile
 import threading
 import unittest
@@ -167,6 +168,37 @@ class ReusedNotificationIdTests(unittest.TestCase):
             with db.connect() as conn:
                 self.assertEqual(conn.execute('SELECT result FROM notifications').fetchone()[0], 'PENDING')
 
+
+
+class LocalReceiptIdReuseTests(unittest.TestCase):
+    def test_recycled_sqlite_id_never_replaces_existing_local_receipt(self):
+        # The filesystem is a durable delivery artifact; database row IDs
+        # alone are not globally unique after a campaign reindex/deletion.
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            db = Database(root / 'outbox.db')
+            queue = NotificationQueue(db)
+            target = root / 'receipts'
+            self.assertTrue(queue.record_health('node-one', 'FAILED', 'FIRST'))
+            self.assertEqual(queue.flush({}, local_dir=target)['local'], 1)
+            previous = sorted(target.glob('notification-*.json'))
+            self.assertEqual(len(previous), 1)
+            first_receipt = previous[0].read_bytes()
+            with db.connect() as conn:
+                conn.execute('DELETE FROM notifications')
+            # INTEGER PRIMARY KEY is reused on the newly empty table.
+            self.assertTrue(queue.record_health('node-two', 'FAILED', 'SECOND'))
+            with db.connect() as conn:
+                self.assertEqual(
+                    [row[0] for row in conn.execute('SELECT id FROM notifications')],
+                    [1])
+            self.assertEqual(queue.flush({}, local_dir=target)['local'], 1)
+            receipts = sorted(target.glob('notification-*.json'))
+            self.assertEqual(len(receipts), 2)
+            self.assertEqual(previous[0].read_bytes(), first_receipt)
+            self.assertEqual(
+                {json.loads(path.read_text(encoding='utf-8'))['batch_id']
+                 for path in receipts}, {'node-one', 'node-two'})
 
 
 if __name__ == '__main__':

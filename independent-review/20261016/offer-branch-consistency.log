@@ -1,0 +1,44 @@
+
+test_closed_coupon_is_not_an_offer (__main__.BranchConsistency.test_closed_coupon_is_not_an_offer) ... FAIL
+test_ended_monetary_grant_is_not_resurrected_by_award_fallback (__main__.BranchConsistency.test_ended_monetary_grant_is_not_resurrected_by_award_fallback) ... FAIL
+test_live_monetary_grant_is_still_a_lead (__main__.BranchConsistency.test_live_monetary_grant_is_still_a_lead) ... ok
+test_optional_paid_upgrade_does_not_remove_free_base (__main__.BranchConsistency.test_optional_paid_upgrade_does_not_remove_free_base) ... ok
+test_request_is_not_resurrected_by_award_fallback (__main__.BranchConsistency.test_request_is_not_resurrected_by_award_fallback) ... FAIL
+test_withdrawn_free_start_is_not_an_offer (__main__.BranchConsistency.test_withdrawn_free_start_is_not_an_offer) ... FAIL
+
+======================================================================
+FAIL: test_closed_coupon_is_not_an_offer (__main__.BranchConsistency.test_closed_coupon_is_not_an_offer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "WORKSPACE\_outbox\integration-review-20261016\test_offer_branch_consistency.py", line 14, in test_closed_coupon_is_not_an_offer
+    self.assertFalse(contains_keyword('Use coupon code WELCOME; this campaign has ended.',KEYWORDS))
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_ended_monetary_grant_is_not_resurrected_by_award_fallback (__main__.BranchConsistency.test_ended_monetary_grant_is_not_resurrected_by_award_fallback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "WORKSPACE\_outbox\integration-review-20261016\test_offer_branch_consistency.py", line 8, in test_ended_monetary_grant_is_not_resurrected_by_award_fallback
+    self.assertFalse(contains_keyword('The startup grant offers $500 cloud credits but the program has ended.',KEYWORDS))
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_request_is_not_resurrected_by_award_fallback (__main__.BranchConsistency.test_request_is_not_resurrected_by_award_fallback)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "WORKSPACE\_outbox\integration-review-20261016\test_offer_branch_consistency.py", line 10, in test_request_is_not_resurrected_by_award_fallback
+    self.assertFalse(contains_keyword('Is there any provider that offers $100 cloud credits?',KEYWORDS))
+AssertionError: True is not false
+
+======================================================================
+FAIL: test_withdrawn_free_start_is_not_an_offer (__main__.BranchConsistency.test_withdrawn_free_start_is_not_an_offer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "WORKSPACE\_outbox\integration-review-20261016\test_offer_branch_consistency.py", line 12, in test_withdrawn_free_start_is_not_an_offer
+    self.assertFalse(contains_keyword('Start using for free is no longer available.',KEYWORDS))
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.003s
+
+FAILED (failures=4)

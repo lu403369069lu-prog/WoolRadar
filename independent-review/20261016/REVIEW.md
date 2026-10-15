@@ -73,3 +73,17 @@ paid-model changes. Model use after quota exhaustion is not required to replay s
 +not an anonymized historical production-copy drill, not final review round3, and not
 +evidence that the independent report P1 or SAM failures are fixed.
 +
+## Fresh fallback-branch counterexamples
+
++test_offer_branch_consistency.py against exact PR23 collector in the recorded composition:
++2/6 pass, 4 fail, exit1. Ended monetary cloud-credit award, request for a provider, withdrawn
++free-start CTA, and ended coupon all incorrectly return True. Primary negative_offer logic
++does not consistently constrain the secondary award/free_start/coupon fallback. Both live
++award and optional-paid-upgrade positive controls pass. This is new synthetic contract work,
++not real independently labeled holdout precision/recall. Primary source owner notified.
++
++The report P1 reproducer now uses an actual separate Database connection/thread. It waits
++briefly for a permitted writer, then lets an atomic snapshot finish if the writer is blocked.
++This avoids same-thread nested-transaction false negatives after a correct fix. Exact PR22
++and composed variants still each 0/1 pass, exit1; writer success and true ID reuse are asserted.
++

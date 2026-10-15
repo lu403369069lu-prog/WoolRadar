@@ -61,3 +61,15 @@ SAM Issue1 and coordination Issue3 at remote-start.json. Historical descriptions
 not fresh passing evidence. Confidence high for reproduced failures, unknown for unrun live
 business and release gates. No merge/force push/production tasks/databases/PLC/credential or
 paid-model changes. Model use after quota exhaustion is not required to replay saved V3 events.
+
+## Follow-up recovery probes (same source composition, before final acceptance)
+
++python -X utf8 test_recovery.py: 3/3 pass, exit0. Actual child process os._exit(17)
++inside a multi-table candidate transaction leaves every table unchanged on reopen.
++Real campaign-review backup restores all table rows; repeated review is idempotent.
++External-send-then-process-death preserves CLAIMED and retries after lease expiry: a
++second delivery is observed, explicitly validating at-least-once ambiguity rather than
++exactly-once. Sender is a local file stub, no Telegram/network call. Synthetic DB only;
++not an anonymized historical production-copy drill, not final review round3, and not
++evidence that the independent report P1 or SAM failures are fixed.
++

@@ -84,9 +84,11 @@ def canonical_key(candidate: Candidate) -> str:
         # Preserve the legacy key for old URL-only generic titles.
         normalized = normalize_url(candidate.url)
     elif _generic_resource_title(tokens):
-        # Preserve distinct resource sizes on the same offer page as well as
-        # vendor identity. Tracking-only URL variants remain equivalent.
-        normalized = normalized + '|' + normalize_url(candidate.url)
+        # In generic offers, "1 GB" and "1GB" describe the same resource.
+        # Normalize only this path: branded cross-post historical keys stay intact.
+        raw_title = unicodedata.normalize('NFKC', candidate.metadata.get('campaign_title', candidate.title))
+        compact_specs = re.sub(r'\b([0-9]+)\s+(gb|mb|tb)\b', r'\1\2', raw_title, flags=re.I)
+        normalized = normalize_title(compact_specs) + '|' + normalize_url(candidate.url)
     return hashlib.sha256(normalized.encode('utf-8')).hexdigest()[:24]
 
 

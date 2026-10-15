@@ -98,11 +98,21 @@ def build_preview(report: dict, report_hash: str, now: datetime | None = None) -
     if now.tzinfo is None:
         raise ValueError('now must include timezone')
     now = now.astimezone(timezone.utc)
+    # The production report stores *all* events, including rows that the
+    # reviewed noise ledger deliberately suppresses from the Markdown brief.
+    # Never resurrect those rows in a downstream export.
+    audit_enabled = 'noise_audit' in report
+    if audit_enabled and not isinstance(report['noise_audit'], dict):
+        raise ValueError('invalid noise audit summary')
     records = []
     seen = set()
     for row in report['events']:
         if not isinstance(row, dict):
             continue
+        audit = row.get('report_audit')
+        if audit_enabled or 'report_audit' in row:
+            if not isinstance(audit, dict) or audit.get('excluded') is not False:
+                continue
         url = public_url(row.get('primary_url'))
         title = public_title(row.get('title'))
         status = row.get('status')

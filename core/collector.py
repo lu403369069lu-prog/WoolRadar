@@ -67,7 +67,10 @@ def contains_keyword(text: str, keywords: list[str]) -> bool:
         free_start = re.search(r'\bstart\s+using\s+for\s+free\b', clause)
         coupon = (re.search(r'\b(?:special|use|apply|redeem|exclusive)\s+coupon\s+code\b', clause)
                   if 'promo code' in strong else None)
-        offer = award or free_start or coupon
+        diagnostic = (re.search(r'\bfree\s+(?:email|dns)\s+(?:testing|diagnostic)\s+tools?\b|'
+                                r'\b(?:email|dns)\s+(?:testing|diagnostic)\s+tools?\s+(?:is|are)\s+free\b', clause)
+                      if 'developer perks' in strong else None)
+        offer = award or free_start or coupon or diagnostic
         if not offer:
             continue
         prefix, suffix = clause[:offer.start()], clause[offer.end():]
@@ -79,6 +82,15 @@ def contains_keyword(text: str, keywords: list[str]) -> bool:
             continue
         if award and (re.search(r'\bpaid\b', prefix) or re.search(r'\bfor\s+\$', suffix)):
             continue
+        if diagnostic:
+            if re.search(r'\b(?:is\s+there|does\s+anyone\s+know)\b', prefix):
+                continue
+            if (re.search(r'\bpaid\b|\b(?:buy|purchase)\b', prefix)
+                    or re.search(r'\bfor\s+\$', prefix + suffix)
+                    or re.search(r'\b(?:requires?|only\s+with)\b[^.!?;]{0,60}\bpaid\b', suffix)):
+                continue
+            if re.search(r'\b(?:no\s+longer|not\s+available|discontinued|retired)\b|\b(?:is|are)\s+not\b', suffix):
+                continue
         return True
     if not any(matches(brand) for brand in brand_only):
         return False

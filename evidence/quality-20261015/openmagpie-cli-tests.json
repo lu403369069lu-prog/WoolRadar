@@ -1,0 +1,27 @@
+{
+  "checked_at": "2026-10-14T16:04:08.884883+00:00",
+  "source_id": "woolradar-openmagpie-upstream",
+  "upstream_commit": "696e5afb1335ccf20dff534ef5ba3ee463aae2d7",
+  "scope": "Seven CLI modules: export, detail formatter, time flags, feed editing, watch action, backfill, pause/resume; mocked server, not live backend",
+  "python": "3.14.5",
+  "test_modules": [
+    "test_activity_export",
+    "test_run_formatters",
+    "test_window_flags",
+    "test_feed_edit",
+    "test_watch_action",
+    "test_backfill",
+    "test_pause_resume"
+  ],
+  "tests_run": 88,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "successful": true,
+  "external_side_effects_blocked": [],
+  "config_home_isolated": true,
+  "dotenv_loaded": false,
+  "output": ".........................................................action 01X\n  FIELD   | VALUE\n  --------+------\n  kind    | log\n  rank    | 0\n  summary | -\nThis action's stored config is unreadable (corrupt at rest); shown as null above.\n.......action 01X\n  FIELD   | VALUE\n  --------+--------------\n  kind    | custom_plugin\n  rank    | 0\n  summary | -\n..Would add this action:\n  FIELD   | VALUE\n  --------+------\n  kind    | log\n  rank    | 0\n  summary | -\n\nconfig:\n{\n  \"delivery\": \"instant\",\n  \"digest_interval_seconds\": 0,\n  \"include_fields\": [],\n  \"prefix\": \"[watch]\"\n}\nUnexpected server response: add did not confirm persistence.\n.Unexpected server response: asked for a dry run but the server reported a persisted action. A action may have been created | check id 01ABC\n.Would add this action:\n  FIELD   | VALUE\n  --------+------\n  kind    | log\n  rank    | 0\n  summary | -\n\nconfig:\n{\n  \"delivery\": \"instant\",\n  \"digest_interval_seconds\": 0,\n  \"include_fields\": [],\n  \"prefix\": \"[watch]\"\n}\nDry run only. Nothing was changed.\n.Would edit action 01ABC:\n  FIELD   | VALUE\n  --------+------\n  kind    | log\n  rank    | 0\n  summary | -\n\nconfig:\n{\n  \"delivery\": \"instant\",\n  \"digest_interval_seconds\": 0,\n  \"include_fields\": [],\n  \"prefix\": \"[watch]\"\n}\n...backfill preview\n  FIELD        | VALUE\n  -------------+------------------------\n  source       | the previous step ()\n  matched      | 5 (present 4, pruned 1)\n  would enque… | 4\n...backfill preview\n  FIELD        | VALUE\n  -------------+------------------------\n  source       | the previous step ()\n  matched      | 5 (present 4, pruned 1)\n  would delete | 2 (target + downstream)\n  would enque… | 4\n.Unexpected server response: asked for a dry run but the server did not report one.\n.  ID    | STATE | ACTION | REPLACE | MATCHED | DELETED | ENQUEUED | CREATED\n  ------+-------+--------+---------+---------+---------+----------+--------\n  01JOB | done  | 01TGT  | False   | 0       | 0       | 0        | -\n.backfill preview\n  FIELD        | VALUE\n  -------------+------------------------\n  source       | the previous step ()\n  matched      | 5 (present 4, pruned 1)\n  would delete | 2 (target + downstream)\n  would enque… | 4\n.backfill preview\n  FIELD        | VALUE\n  -------------+------------------------\n  source       | the previous step ()\n  matched      | 5 (present 4, pruned 1)\n  would delete | 2 (target + downstream)\n  would enque… | 4\n..backfill 01JOB\n  FIELD     | VALUE\n  ----------+---------------------\n  state     | done\n  action    | 01TGT\n  kind      |\n  source    | the previous step ()\n  replace   | False\n  matched   | 5\n  present   | 0\n  pruned    | 0\n  deleted   | 0\n  enqueued  | 4\n  created   | -\n  started   | -\n  completed | -\n.......\n----------------------------------------------------------------------\nRan 88 tests in 0.017s\n\nOK\n",
+  "full_backend_complete": false,
+  "goal_complete": false
+}

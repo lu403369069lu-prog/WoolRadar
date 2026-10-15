@@ -1,0 +1,13 @@
+{
+  "state_sha": "df3d95fc5b8a659f440fb66c652c75dabc904427",
+  "revision": 23,
+  "task": "WoolRadar/WOOL-QUALITY-20261015",
+  "events": [
+    "register",
+    "claim",
+    "start"
+  ],
+  "remote_readback_identical": true,
+  "original_tasks_unchanged": true,
+  "production_changed": false
+}

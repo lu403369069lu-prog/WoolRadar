@@ -71,6 +71,15 @@ class NotificationQueue:
             # event/evidence validation and the outbox claim. Network delivery
             # and local file writes happen strictly after the lock is released.
             with self.db.candidate_transaction():
+                # pending() is an unlocked snapshot. SQLite INTEGER PRIMARY KEY
+                # may recycle a deleted notice ID after campaign reindex.
+                with self.db.connect() as conn:
+                    live = conn.execute('SELECT * FROM notifications WHERE id=?',
+                                        (item['id'],)).fetchone()
+                identity = ('event_id', 'batch_id', 'channel', 'created_at',
+                            'payload', 'attempts', 'next_attempt', 'result')
+                if live is None or any(live[field] != item[field] for field in identity):
+                    continue
                 if item['channel'].endswith('-verified'):
                     try:
                         event = self.db.get_event(item['event_id'])
@@ -84,10 +93,16 @@ class NotificationQueue:
                             conn.execute("UPDATE notifications SET result='STALE' WHERE id=? "
                                 "AND result IN ('PENDING','RETRY','CLAIMED') AND next_attempt<=?", (item['id'], now))
                         continue
+                claim_deadline = now + 300
                 with self.db.connect() as conn:
                     claimed = conn.execute("""UPDATE notifications SET result='CLAIMED',
                         next_attempt=?,attempts=attempts+1 WHERE id=? AND next_attempt<=?
-                        AND result IN ('PENDING','RETRY','CLAIMED')""", (now + 300, item['id'], now)).rowcount
+                        AND result IN ('PENDING','RETRY','CLAIMED')
+                        AND event_id IS ? AND batch_id=? AND channel=? AND created_at=?
+                        AND payload=? AND attempts=? AND next_attempt=?""",
+                        (claim_deadline, item['id'], now, item['event_id'], item['batch_id'],
+                         item['channel'], item['created_at'], item['payload'],
+                         item['attempts'], item['next_attempt'])).rowcount
             if not claimed:
                 continue
             try:
@@ -107,8 +122,13 @@ class NotificationQueue:
                 result = 'FAILED'
             success = result == 'SENT'
             with self.db.connect() as conn:
-                conn.execute('UPDATE notifications SET result=?,next_attempt=? WHERE id=?',
-                    ('SENT' if success else 'RETRY', 0 if success else now + max(0, retry_seconds), item['id']))
+                # Do not mark a recycled ID as SENT after network/file I/O.
+                conn.execute('''UPDATE notifications SET result=?,next_attempt=? WHERE id=?
+                    AND result='CLAIMED' AND attempts=? AND next_attempt=?
+                    AND event_id IS ? AND batch_id=? AND channel=? AND created_at=? AND payload=?''',
+                    ('SENT' if success else 'RETRY', 0 if success else now + max(0, retry_seconds),
+                     item['id'], item['attempts'] + 1, claim_deadline, item['event_id'],
+                     item['batch_id'], item['channel'], item['created_at'], item['payload']))
             summary['local' if local and success else 'sent' if success else 'retry'] += 1
         return summary
 

@@ -1,0 +1,15 @@
+
+test_report_never_attributes_recycled_id_proof_to_old_event (__main__.ReportIdentity.test_report_never_attributes_recycled_id_proof_to_old_event) ... FAIL
+
+======================================================================
+FAIL: test_report_never_attributes_recycled_id_proof_to_old_event (__main__.ReportIdentity.test_report_never_attributes_recycled_id_proof_to_old_event)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "WORKSPACE\_outbox\integration-review-20261016\test_report_identity.py", line 29, in test_report_never_attributes_recycled_id_proof_to_old_event
+    self.assertFalse(any(e['url']=='https://unrelated.example/new' for row in old_rows for e in row['evidence']),
+AssertionError: True is not false : P1: old report event carries proof belonging to an unrelated reused SQLite ID
+
+----------------------------------------------------------------------
+Ran 1 test in 0.091s
+
+FAILED (failures=1)

@@ -1,0 +1,41 @@
+{
+  "base": "e03674ec3a4ee5df27047e91af5d972495574bde",
+  "overlays": [
+    {
+      "path": "core/collector.py",
+      "commit": "68b018965491911f2ab4943bc760eaeaa6eea710",
+      "blob": "c07a9e017c62924067b7a6e4712e295b9bd9fae8"
+    },
+    {
+      "path": "tests/test_free_hosting_diagnostics.py",
+      "commit": "68b018965491911f2ab4943bc760eaeaa6eea710",
+      "blob": "412340552e20e17030b569af1b59519b0911d121"
+    },
+    {
+      "path": "tests/test_offer_negative_intent.py",
+      "commit": "68b018965491911f2ab4943bc760eaeaa6eea710",
+      "blob": "48ea4bd10555d0c596eecd38c11b349b356d3b48"
+    },
+    {
+      "path": "core/cli.py",
+      "commit": "f4cf71ef5df5c3ee6b2c70b46c29cb6bd4bb650d",
+      "blob": "aff03dff5c172c94c737a8c76b400a8f6efd1f0d"
+    },
+    {
+      "path": "core/report.py",
+      "commit": "f4cf71ef5df5c3ee6b2c70b46c29cb6bd4bb650d",
+      "blob": "3e4fb1f3790c286f338dbb1f2680e9b2241f8779"
+    },
+    {
+      "path": "core/noise_audit.py",
+      "commit": "f4cf71ef5df5c3ee6b2c70b46c29cb6bd4bb650d",
+      "blob": "68afb78d5d74674857858e954550d007831c6f54"
+    },
+    {
+      "path": "tests/test_noise_audit.py",
+      "commit": "f4cf71ef5df5c3ee6b2c70b46c29cb6bd4bb650d",
+      "blob": "662eafbc8b7185540b10dcb1412f5e97e0880fb1"
+    }
+  ],
+  "not_git_merge": true
+}

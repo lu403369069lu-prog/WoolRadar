@@ -1,0 +1,74 @@
+✔ existing canonical path resolves normally and remains inside approved root (8.1947ms)
+✔ missing path cannot be granted authorization via lexical fallback (1.8197ms)
+✔ symlink escape is canonicalized outside approved root when supported (7.3273ms)
+✔ searchEvidence returns bounded traceable hits (70.63ms)
+✔ readEvidence rejects more than 200 lines and paths outside approved roots (4.9127ms)
+✔ readEvidence allows an explicitly registered source outside broad approved roots (5.0437ms)
+✔ source, symbol and conflict workflows retain provenance (105.8228ms)
+✔ readEvidence keeps an authorized source when an unrelated registered root has disappeared (5.0903ms)
+✔ rejects a path outside approved roots (6.3504ms)
+✔ allows a real file under an approved root (2.4318ms)
+✔ absolute project path resolves one SPT subproject without widening to sibling projects (7.6241ms)
+✔ project alias resolves through an explicit catalog and unknown aliases refuse (4.6687ms)
+✔ project filtering keeps exact subproject evidence and excludes siblings in one repository (5.9196ms)
+✖ conflicting repository constraints reject an otherwise valid absolute project (3.4577ms)
+✖ unscoped chapter metadata cannot bypass a hard repository or project filter (4.7694ms)
+✔ untrusted corpus rows that have disappeared or escape the root are dropped while valid hits survive (5.5926ms)
+✔ an unresolved authorization root remains a hard failure, not an implicit permission (3.0883ms)
+✔ repository fallback roots reject traversed, missing and symlink-escaped index rows (9.3615ms)
+✔ reviewed document claim reaches the real direct search without relabeling a card (11.3695ms)
+✔ source drift cannot retain source-qualified answer authority (4.3321ms)
+✔ a changed answer cannot reuse an old review receipt (3.319ms)
+✔ same-topic locator and mixed runtime query do not inherit document authority (3.8389ms)
+✔ unsupported subclaim remains a whole-question refusal (3.5533ms)
+✔ reviewed source requires a valid HTTPS URL without embedded credentials (6.0817ms)
+✔ technical operators remain part of reviewed question identity (3.4832ms)
+✔ missing unrelated registry root does not reject an authorized reviewed source (3.0221ms)
+✔ missing authorization root remains a rejection even with stale registry source (1.9345ms)
+✔ existing exclusion policy still rejects an otherwise qualified document (3.7643ms)
+✔ excluded sources and invalid qualification cannot fall back to existing cards (4.0007ms)
+✔ case and fullwidth characters in literal questions cannot borrow another review (3.706ms)
+✔ registered junction root retains its exclude policy on canonical source files (4.0657ms)
+﹣ canonical approved symlink targets qualify; out-of-root targets never qualify (2.6851ms) # Creating symlinks requires an OS permission absent in this runner
+✔ environment registry validates schema and cannot widen a caller boundary (12.3885ms)
+✔ real MCP direct and unified entrances share qualification and source drift refusal (436.6717ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 31
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 1
+ℹ todo 0
+ℹ duration_ms 1114.6761
+
+✖ failing tests:
+
+test at test\project-routing.test.ts:1:3565
+✖ conflicting repository constraints reject an otherwise valid absolute project (3.4577ms)
+  Error: ENOENT: no such file or directory, realpath 'WORKSPACE\_outbox\integration-review-20261016\temp\sam-project-conflict-43oHQx\TcCommando'
+      at async realpath (node:internal/fs/promises:1241:10)
+      at async resolveProjectContext (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\src\project-routing.ts:73:33)
+      at async TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\project-routing.test.ts:84:18)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'realpath',
+    path: 'C:\\Users\\lh\\Documents\\ChatGPT\\总协调\\_outbox\\integration-review-20261016\\temp\\sam-project-conflict-43oHQx\\TcCommando'
+  }
+
+test at test\project-routing.test.ts:1:4241
+✖ unscoped chapter metadata cannot bypass a hard repository or project filter (4.7694ms)
+  Error: ENOENT: no such file or directory, realpath 'WORKSPACE\_outbox\integration-review-20261016\temp\sam-chapter-filter-eLckYC\SPT_Alarms'
+      at async realpath (node:internal/fs/promises:1241:10)
+      at async Promise.all (index 0)
+      at async searchTwinCATCorpus (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\src\corpus-index.ts:156:33)
+      at async TestContext.<anonymous> (WORKSPACE\_work\sam-integration-review-20261016\SAM\snapshot\test\project-routing.test.ts:95:20)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'realpath',
+    path: 'C:\\Users\\lh\\Documents\\ChatGPT\\总协调\\_outbox\\integration-review-20261016\\temp\\sam-chapter-filter-eLckYC\\SPT_Alarms'
+  }
+

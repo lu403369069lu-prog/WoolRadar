@@ -1,0 +1,39 @@
+{
+  "reviewer": "independent budget_review agent",
+  "command": "python -B independent_checks.py --repo-root <candidate-repo>",
+  "exit_code": 0,
+  "source_sha256": {
+    "core/db.py": "4d550751b56ad48eb24663dd01390c2d14fa7f9778937a91830294494ba6c1e7",
+    "core/pipeline.py": "da11ffba976ad305dc09c491e6d19358aab8090158f29801493227a5db121e95",
+    "tests/test_ingest_transaction.py": "3da9c26ba220eb5ddf27bdeb9fc763a6d10f8c4fc459d43f69ddd13635cabdb2"
+  },
+  "focused_test_methods": 16,
+  "test_output": "................\n----------------------------------------------------------------------\nRan 16 tests in 1.292s\n\nOK\n",
+  "checks": [
+    {
+      "name": "second-notification-insert-then-failure-rolls-back-all-candidate-writes",
+      "passed": true
+    },
+    {
+      "name": "same-thread-reuse-cross-thread-isolation-and-exception-propagation",
+      "passed": true,
+      "observed": {
+        "different_connection": true,
+        "visible_rows": 0
+      }
+    },
+    {
+      "name": "real-separate-process-review-waits-for-complete-candidate-commit",
+      "passed": true,
+      "child_exit": 0,
+      "zero_evidence_saved": true
+    }
+  ],
+  "blocking_findings": [],
+  "conclusion": "No blocker found in the per-candidate transaction fix. Exception propagation, full notification-write rollback, thread isolation and real cross-process reindex exclusion verified on disposable databases.",
+  "limits": [
+    "No full suite rerun, production writes or network.",
+    "Trace, flush, report and other operations after candidate commit remain outside this reservation; no claim of universal concurrency safety.",
+    "An exception deliberately caught inside candidate_transaction is not automatically a rollback-only marker; reviewed Pipeline lets persistence exceptions escape."
+  ]
+}

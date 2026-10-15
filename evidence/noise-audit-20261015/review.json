@@ -1,0 +1,11 @@
+{
+  "reviewer": "Codex independent subagent noise_review",
+  "mode": "read-only source review",
+  "findings_fixed": [
+    "Observation timestamps incorrectly invalidated exclusion",
+    "Crash left persistent writer busy",
+    "One report mixed multiple audit ledger versions"
+  ],
+  "latest": "No new blocking defect reported after fixes; independent semantic/snapshot checks passed",
+  "limits": "Reviewer did not rerun filesystem tests; primary actually ran real CLI, process-exit and full Windows tests"
+}

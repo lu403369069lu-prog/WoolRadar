@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-15",
+  "timezone": "Asia/Shanghai",
+  "events": [
+    {
+      "id": 1,
+      "canonical_key": "7155fdbd4625ddaada4bfe72",
+      "batch_id": "",
+      "title": "Synthetic diagnostic noise",
+      "primary_url": "https://example.test/noise",
+      "source": "fixture",
+      "node": "fixture",
+      "published_at": "",
+      "first_seen": "2026-10-15T01:00:00Z",
+      "last_seen": "2026-10-15T01:00:00Z",
+      "status": "DISCOVERED",
+      "claim_scope": "NONE",
+      "metadata_json": "{}",
+      "evidence": [
+        {
+          "kind": "community",
+          "url": "https://example.test/noise",
+          "checked_at": "2026-10-15T01:00:00Z",
+          "excerpt": "Synthetic example only",
+          "claims": {},
+          "provenance_key": "fixture"
+        }
+      ],
+      "report_audit": {
+        "excluded": false,
+        "state": "unreviewed"
+      }
+    }
+  ],
+  "node_runs": [],
+  "notifications": [],
+  "noise_audit": {
+    "excluded": 0,
+    "visible": 1,
+    "events_preserved": 1,
+    "ledger_sha256": "16bf24d404b6914dd084140cfc2ff9adc145ed6a3db2fe852f20b47f5bab0d6c"
+  }
+}

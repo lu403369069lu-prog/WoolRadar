@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-15T14:37:24.780450+08:00",
+  "command": "python -X utf8 -m unittest discover -s tests -v",
+  "exit_code": 0,
+  "tests_run": 158,
+  "skipped": 0,
+  "baseline": "cbe18d7f058563a5aef1fb46b8d2820095f15c06",
+  "environment": "Windows / bundled Python 3.12.14",
+  "production_modified": false,
+  "implementation_sha": "c633cd88e45be2b4a14cccd0306ed5572159d8f6"
+}

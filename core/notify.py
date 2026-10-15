@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import time
 from pathlib import Path
@@ -109,7 +110,15 @@ class NotificationQueue:
                 if local:
                     output = Path(local_dir)
                     output.mkdir(parents=True, exist_ok=True)
-                    destination = output / f"notification-{item['id']}.json"
+                    # SQLite can recycle an integer ID after campaign reindex. Use a
+                    # stable fingerprint of the full notification identity so a
+                    # later unrelated notice never overwrites the first receipt.
+                    identity_bytes = json.dumps([
+                        item['id'], item['event_id'], item['batch_id'],
+                        item['channel'], item['created_at'], item['payload']
+                    ], ensure_ascii=False, separators=(',', ':')).encode('utf-8')
+                    receipt_id = hashlib.sha256(identity_bytes).hexdigest()[:20]
+                    destination = output / f"notification-{item['id']}-{receipt_id}.json"
                     temporary = destination.with_suffix('.tmp')
                     temporary.write_text(json.dumps({'event_id': item['event_id'], 'batch_id': item['batch_id'],
                         'created_at': item['created_at'], 'message': item['payload']}, ensure_ascii=False, indent=2), encoding='utf-8')

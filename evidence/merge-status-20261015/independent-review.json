@@ -1,0 +1,49 @@
+{
+  "reviewer": "independent budget_review agent",
+  "scope": "Focused same-transaction merged-survivor verification; no production changes",
+  "source_sha256": {
+    "core/db.py": "0c4868403ba11d7471514ea289d27e87d51026c97bab2c3699397fc1aad6afb0",
+    "core/verifier.py": "73e62a4bf72b685b3a00dbfba2fb824e6c427ca0f137a4b5353611c95c7c769d",
+    "tests/test_merge_status.py": "e020cb877c192276b35cb4fddeed4c89b63199375f2c9582993d3f23e041a538",
+    "tests/test_campaign_review.py": "ee2ce2dfc3d12b580069330b6264f03ffde7e5912ef8f75165539867093648e7"
+  },
+  "test_patterns": [
+    "test_merge_status.py",
+    "test_campaign_review.py",
+    "test_capacity_gate.py"
+  ],
+  "contract_methods_run": 20,
+  "all_passed": true,
+  "additional_checks": [
+    {
+      "name": "same-status-scope-change-recorded",
+      "passed": true
+    },
+    {
+      "name": "no-nested-Database-connection",
+      "connection_calls": 2,
+      "passed": true
+    },
+    {
+      "name": "valid-premerge-two-event-backup",
+      "passed": true
+    },
+    {
+      "name": "repeated-review-no-new-history",
+      "passed": true
+    },
+    {
+      "name": "rollback-all-seven-tables-including-collision-archive-and-history",
+      "passed": true
+    }
+  ],
+  "blocking_findings": [],
+  "conclusion": "No blocker found in this focused review. Existing connection reads merged evidence and writes state/history. Evaluation failure rolls back merge, bridge links, evidence/archive and history. Only actual merged survivors reevaluated.",
+  "limitations": [
+    "Full repository suite not independently rerun.",
+    "No production, network, architecture or notification behavior changes performed."
+  ],
+  "harness_note": "Initial extra check left a read-only backup sqlite connection open, causing temp cleanup failure; corrected with explicit closing before this final rerun. This was review harness lifecycle, not product behavior.",
+  "test_output": "....................\n----------------------------------------------------------------------\nRan 20 tests in 0.910s\n\nOK\n",
+  "sharing_normalization": "Local workspace prefix redacted; test/source hashes unchanged."
+}

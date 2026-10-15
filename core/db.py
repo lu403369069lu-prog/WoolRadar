@@ -251,6 +251,7 @@ class Database:
                     ('migration:' + str(row['id']), row['id']))
             groups = {}
             merged = 0
+            merged_survivors = set()
             for row in rows:
                 metadata = json.loads(row['metadata_json'])
                 link = conn.execute('SELECT review_json FROM campaign_links WHERE url=?', (normalize_url(row['primary_url']),)).fetchone()
@@ -267,6 +268,7 @@ class Database:
                     conn.execute('UPDATE events SET canonical_key=? WHERE id=?', (key, row['id']))
                     continue
                 keep, old = groups[identity], row['id']
+                merged_survivors.add(keep)
                 self._merge_evidence(conn, keep, old)
                 for table, columns in (
                     ('sightings', 'node,source,url,discovered_at'),
@@ -279,6 +281,24 @@ class Database:
                     (row['first_seen'], row['last_seen'], keep))
                 conn.execute('DELETE FROM events WHERE id=?', (old,))
                 merged += 1
+            # Recompute only merged survivors in this transaction: opening a
+            # second Database connection here would miss uncommitted evidence.
+            from .verifier import VerificationEngine
+            for event_id in sorted(merged_survivors):
+                current = dict(conn.execute('SELECT * FROM events WHERE id=?', (event_id,)).fetchone())
+                evidence = [Evidence(kind=item['kind'], url=item['url'],
+                    provenance_key=item['provenance_key'], checked_at=item['checked_at'],
+                    excerpt=item['excerpt'] or '', claims=json.loads(item['claims_json'] or '{}'))
+                    for item in conn.execute('SELECT * FROM evidence WHERE event_id=? ORDER BY id', (event_id,))]
+                candidate = Candidate(current['node'], current['source'], current['title'], current['primary_url'],
+                    published_at=current['published_at'] or '', batch_id=current['batch_id'],
+                    metadata=json.loads(current['metadata_json']))
+                result = VerificationEngine().evaluate(candidate, evidence)
+                if (current['status'], current['claim_scope']) != (result.status.value, result.claim_scope):
+                    conn.execute('UPDATE events SET status=?,claim_scope=? WHERE id=?',
+                        (result.status.value, result.claim_scope, event_id))
+                    conn.execute('INSERT INTO status_history(event_id,old_status,new_status,reason,changed_at) VALUES(?,?,?,?,?)',
+                        (event_id, current['status'], result.status.value, '证据归组后重新核验：' + result.reason, utc_now()))
         return {'backup': str(backup), 'merged': merged, 'remaining': len(rows) - merged}
 
     def _merge_evidence(self, conn, keep, old):

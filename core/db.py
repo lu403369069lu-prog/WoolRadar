@@ -5,6 +5,7 @@ import sqlite3
 import hashlib
 import threading
 from datetime import datetime
+from uuid import uuid4
 from contextlib import contextmanager, closing
 from dataclasses import dataclass
 from pathlib import Path
@@ -299,12 +300,33 @@ class Database:
 
     def reindex(self, campaign_review: dict | None = None) -> dict:
         """Transactional key migration; retain a consistent, recoverable SQLite backup."""
+        # utc_now() is second-granularity: two valid reviews/reindexes in the
+        # same second must never collide on an otherwise safe backup filename.
         backup = self.path.with_name(self.path.stem + '-before-reindex-' +
-            utc_now().replace(':', '').replace('-', '') + '.db')
+            utc_now().replace(':', '').replace('-', '') + '-' + uuid4().hex[:12] + '.db')
         if backup.exists():
             raise FileExistsError(backup)
         with self.connect() as conn:
             conn.execute('BEGIN IMMEDIATE')
+            if campaign_review is not None:
+                # review_campaign() checks these preconditions before calling
+                # reindex(), but another reviewer can commit a conflicting
+                # campaign while this caller waits for the SQLite writer lock.
+                # Recheck *inside* the same reservation before making a backup
+                # or replacing campaign_links. A second different review must
+                # never silently reassign an already reviewed campaign.
+                members = {normalize_url(url) for url in campaign_review['member_urls']}
+                seen = {normalize_url(row[0]) for row in conn.execute(
+                    'SELECT primary_url FROM events')}
+                seen.update(normalize_url(row[0]) for row in conn.execute(
+                    'SELECT url FROM sightings'))
+                if not members <= seen:
+                    raise ValueError('CAMPAIGN_MEMBER_NOT_IN_DATABASE')
+                for url in members:
+                    previous = conn.execute(
+                        'SELECT review_json FROM campaign_links WHERE url=?', (url,)).fetchone()
+                    if previous and json.loads(previous[0]).get('campaign_url') != campaign_review.get('campaign_url'):
+                        raise ValueError('CAMPAIGN_REVIEW_CONFLICT')
             # Backup through a separate read connection so WAL contents are included.
             with closing(sqlite3.connect(self.path)) as reader, closing(sqlite3.connect(backup)) as target:
                 reader.backup(target)
@@ -369,7 +391,9 @@ class Database:
                             "UPDATE notifications SET result='SENT',payload=?,"
                             "attempts=max(attempts,?),next_attempt=0 WHERE id=?",
                             (notice['payload'], notice['attempts'], survivor['id']))
-                    elif notice['result'] == 'CLAIMED' and survivor['result'] != 'CLAIMED':
+                    elif notice['result'] == 'CLAIMED':
+                        # Both rows can be in flight. Preserve the longest lease
+                        # and attempts even when the survivor is also CLAIMED.
                         conn.execute(
                             "UPDATE notifications SET result='CLAIMED',payload=?,"
                             "attempts=max(attempts,?),next_attempt=max(next_attempt,?) WHERE id=?",

@@ -1,0 +1,137 @@
+{
+  "parent_pr23": "68b018965491911f2ab4943bc760eaeaa6eea710",
+  "latest_pr22": "e03674ec3a4ee5df27047e91af5d972495574bde",
+  "files": [
+    {
+      "path": "core/cli.py",
+      "git_blob": "aff03dff5c172c94c737a8c76b400a8f6efd1f0d"
+    },
+    {
+      "path": "core/db.py",
+      "git_blob": "9773d91e1d903eba73dff945a4afaf5b6b04376e"
+    },
+    {
+      "path": "core/noise_audit.py",
+      "git_blob": "68afb78d5d74674857858e954550d007831c6f54"
+    },
+    {
+      "path": "core/notify.py",
+      "git_blob": "f2b33073db7f12ffd046b25f65557717ff531d7f"
+    },
+    {
+      "path": "core/official_trace.py",
+      "git_blob": "ac9fc28e3b6c88350247cd9cad3adf92b16276fb"
+    },
+    {
+      "path": "core/report.py",
+      "git_blob": "a8b111a4c977b54d37a227263a4939d1c730eecd"
+    },
+    {
+      "path": "tests/test_noise_audit.py",
+      "git_blob": "662eafbc8b7185540b10dcb1412f5e97e0880fb1"
+    },
+    {
+      "path": "tests/test_notify_reindex_transaction.py",
+      "git_blob": "ac5ec3b2dd253faeebc9eb64ef8bbbdbf9eb91ce"
+    },
+    {
+      "path": "tests/test_official_trace_stale_event.py",
+      "git_blob": "69ea3c21944210aa42858627fd3693fafeb99e49"
+    },
+    {
+      "path": "tests/test_reindex_notification_collision.py",
+      "git_blob": "ad35c1df5c23009f7f09202f27ce41d4edc5e418"
+    },
+    {
+      "path": "tests/test_reindex_review_race.py",
+      "git_blob": "50359f2abcf023c2721155145696d6326e9c467a"
+    },
+    {
+      "path": "tests/test_report_snapshot.py",
+      "git_blob": "65d3b0b923891bd89191a23e5ebdd536362a87aa"
+    },
+    {
+      "path": "tests/test_trace_audit_atomic.py",
+      "git_blob": "b2e064bd0caf9b8de64b622e415cd4405cb8ca64"
+    },
+    {
+      "path": "evidence/system-integration-20261016/CHECKPOINT.md",
+      "git_blob": "7d62730b7fc6efcbb266993bd801d648997d0c09"
+    },
+    {
+      "path": "HANDOFF.md",
+      "git_blob": "9cfb8509bef6d46ceef051057ff34288cc1d648e"
+    },
+    {
+      "path": "evidence/system-integration-20261016/pr22-baseline.json",
+      "git_blob": "085ea0c291545e60bb1cc3d1d7ec1ed9447cdcd2"
+    },
+    {
+      "path": "evidence/system-integration-20261016/pr22-helper-fixed.json",
+      "git_blob": "3826138d99590172e093644b52d0cbc4b6917dac"
+    },
+    {
+      "path": "evidence/system-integration-20261016/system-composition-first.json",
+      "git_blob": "1c6983e3d907b4a26979c6a248825a402e91b074"
+    },
+    {
+      "path": "evidence/system-integration-20261016/system-three-races-fixed.json",
+      "git_blob": "df0440efdac3cfb4955549462048d30a412b23b8"
+    },
+    {
+      "path": "evidence/system-integration-20261016/system-portable-trace-fixed.json",
+      "git_blob": "6d5a7e7a3ac1b02024b809fa2fa2dbae015e9818"
+    },
+    {
+      "path": "evidence/system-integration-20261016/historical-copy-check.json",
+      "git_blob": "847b017053b8d49ad7cbcc961666da48ed1bb4f0"
+    },
+    {
+      "path": "evidence/system-integration-20261016/pr22-independent-review.json",
+      "git_blob": "ac48cbffa92339f8ea330d705c805f8f2bac041e"
+    },
+    {
+      "path": "evidence/system-integration-20261016/integration-three-fixes-review.json",
+      "git_blob": "4d61b97900c4b2a74df505c99507a9d7a0a14c05"
+    },
+    {
+      "path": "evidence/system-integration-20261016/portable-trace-review.json",
+      "git_blob": "365a31ef9efb7cb98f7c8a00d87acc18077f5688"
+    },
+    {
+      "path": "evidence/system-integration-20261016/portable_trace_checks.py",
+      "git_blob": "5f436b5da5ea317d5d818bf5ed62f280040f72f9"
+    },
+    {
+      "path": "evidence/system-integration-20261016/trace-publication-before.json",
+      "git_blob": "7320355ed74191b975d96d5f706aa790a0a1654a"
+    },
+    {
+      "path": "evidence/system-integration-20261016/trace-publication-after.json",
+      "git_blob": "4989247e0bf51106d1991e9ac4779789c90bea12"
+    },
+    {
+      "path": "evidence/system-integration-20261016/trace-publication-portable.json",
+      "git_blob": "bf673ca96cf37221b0a13600bcea5530f14fae45"
+    },
+    {
+      "path": "evidence/system-integration-20261016/report-snapshot-before.json",
+      "git_blob": "32975c8c19e8add46fb3367a4b7d0cfba702e0fb"
+    },
+    {
+      "path": "evidence/system-integration-20261016/report-snapshot-after.json",
+      "git_blob": "fbd464f01dbe62ae91c2588f0eb8e925a15ff9cf"
+    },
+    {
+      "path": "evidence/system-integration-20261016/report-snapshot-after-default-correction.json",
+      "git_blob": "af4fcaaaeb08c1f7f27ea12dad832d1088d1318b"
+    },
+    {
+      "path": "evidence/system-integration-20261016/lease-after.json",
+      "git_blob": "3738a54e768e72e8aa537810075c245f41e0f5a8"
+    }
+  ],
+  "production_changed": false,
+  "original_goal_complete": false,
+  "final_three_rounds_started": false
+}

@@ -1,6 +1,10 @@
 """Bounded read-only official-reference checking; never infer eligibility."""
 import hashlib
 import json
+import os
+import tempfile
+import time
+from contextlib import contextmanager
 import re
 import urllib.error
 import urllib.parse
@@ -52,6 +56,40 @@ def fetch_public_page(url: str, hosts: set[str], budget: RequestBudget | None = 
     return payload
 
 
+@contextmanager
+def _trace_publication_lock(path: Path):
+    # A kernel-owned lock works without hard-link privileges. Keep the stable
+    # lock file: deleting it could let concurrent writers lock different inodes.
+    with path.open('a+b') as guard:
+        guard.seek(0, os.SEEK_END)
+        if guard.tell() == 0:
+            guard.write(b'0')
+            guard.flush()
+        deadline = time.monotonic() + 5
+        while True:
+            guard.seek(0)
+            try:
+                if os.name == 'nt':
+                    import msvcrt
+                    msvcrt.locking(guard.fileno(), msvcrt.LK_NBLCK, 1)
+                else:
+                    import fcntl
+                    fcntl.flock(guard.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except OSError:
+                if time.monotonic() >= deadline:
+                    raise OSError('TRACE_AUDIT_PUBLICATION_BUSY')
+                time.sleep(.01)
+        try:
+            yield
+        finally:
+            guard.seek(0)
+            if os.name == 'nt':
+                msvcrt.locking(guard.fileno(), msvcrt.LK_UNLCK, 1)
+            else:
+                fcntl.flock(guard.fileno(), fcntl.LOCK_UN)
+
+
 class OfficialTracer:
     def __init__(self, root: Path, hosts: set[str] | None = None):
         self.root = Path(root)
@@ -68,8 +106,42 @@ class OfficialTracer:
     def _write_record(self, event_id: int, record: dict) -> None:
         destination = self.root / 'evidence' / 'official-trace'
         destination.mkdir(parents=True, exist_ok=True)
-        (destination / f'{event_id}.json').write_text(
-            json.dumps(record, ensure_ascii=False, indent=2), encoding='utf-8')
+        serialized = json.dumps(record, ensure_ascii=False, indent=2)
+        # This integer event ID can be recycled after a campaign merge. Keep
+        # an immutable content-addressed audit copy for every distinct result;
+        # retain the original event-id filename as the latest-result view.
+        history = destination / 'history'
+        history.mkdir(parents=True, exist_ok=True)
+        digest = hashlib.sha256(serialized.encode('utf-8')).hexdigest()
+        archived = history / f'{event_id}-{digest}.json'
+        # Publish complete bytes, never an open-but-unwritten history file.
+        # Serialize the immutable existence check and atomic publication under
+        # a kernel lock; no hard-link privileges or partial archive reads.
+        fd, temporary = tempfile.mkstemp(prefix='.trace-', suffix='.tmp', dir=history)
+        try:
+            with os.fdopen(fd, 'w', encoding='utf-8', newline='') as output:
+                output.write(serialized)
+                output.flush()
+                os.fsync(output.fileno())
+            with _trace_publication_lock(destination / '.publish.lock'):
+                if archived.exists():
+                    if archived.read_text(encoding='utf-8') != serialized:
+                        raise ValueError('OFFICIAL_TRACE_AUDIT_HASH_COLLISION')
+                else:
+                    os.replace(temporary, archived)
+            # The mutable latest view also publishes a complete temporary file.
+            # Use its own temporary inode, separate from immutable history.
+            latest_fd, latest_temp = tempfile.mkstemp(prefix='.trace-', suffix='.tmp', dir=destination)
+            try:
+                with os.fdopen(latest_fd, 'w', encoding='utf-8', newline='') as output:
+                    output.write(serialized)
+                    output.flush()
+                    os.fsync(output.fileno())
+                os.replace(latest_temp, destination / f'{event_id}.json')
+            finally:
+                Path(latest_temp).unlink(missing_ok=True)
+        finally:
+            Path(temporary).unlink(missing_ok=True)
 
     def trace(self, event_id: int, expected_event: dict | None = None) -> dict:
         # Ingest releases its candidate transaction before network tracing.

@@ -1,0 +1,8 @@
+{
+  "checked_at": "2026-10-15T18:48:55.603606+00:00",
+  "command": "python -X utf8 -m unittest discover -s tests -p test_trace_audit_atomic.py -v",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "test_identical_concurrent_records_are_complete_and_idempotent (test_trace_audit_atomic.TraceAuditPublicationTests.test_identical_concurrent_records_are_complete_and_idempotent) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.024s\n\nOK\n",
+  "production_changed": false
+}

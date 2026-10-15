@@ -1,0 +1,61 @@
+{
+  "reviewer": "independent budget_review agent",
+  "python": "[independent Python runtime path redacted]",
+  "command": "python -B portable_trace_checks.py --repo-root <integration-worktree>",
+  "exit_code": 0,
+  "source_sha256": {
+    "core/db.py": "d2b13749ed41a448d150871c7550f4b23e6cbae564082867b05e70848f56ef3a",
+    "core/official_trace.py": "6afb804ead14e28f1a7dd602c7e0bb50fe50d092d7f441e3f81bfc34729c197a",
+    "core/report.py": "d536a2cef8e9caa06eb70581147cd62ea0ea96feb5d0fcbbae26927c1b0d3081",
+    "tests/test_reindex_notification_collision.py": "05dcef487b4f77aaba319fd7eef7a14b66a8d7da5e3c38b55764d653a7c11eb9",
+    "tests/test_trace_audit_atomic.py": "16ae6f819968f2bdb986f24456d8b0c2a935dc115871f36c428933b9bbe5091d",
+    "tests/test_report_snapshot.py": "fcf7b29f4866072082b7f803d721f7d7fbf0c8d5cb9712497f31d42ecf8bfb65"
+  },
+  "focused_methods": {
+    "test_reindex_notification_collision.py": 5,
+    "test_trace_audit_atomic.py": 1,
+    "test_report_snapshot.py": 2,
+    "test_notify_reindex_transaction.py": 5
+  },
+  "focused_methods_run": 13,
+  "test_output": ".............\n----------------------------------------------------------------------\nRan 13 tests in 1.718s\n\nOK\n",
+  "additional_checks": [
+    {
+      "name": "real-preexisting-different-bytes-collision-preserved",
+      "passed": true
+    },
+    {
+      "name": "history-replace-failure-cleans-temp-and-preserves-complete-views",
+      "passed": true
+    },
+    {
+      "name": "latest-replace-failure-cleans-temp-and-preserves-complete-views",
+      "passed": true
+    },
+    {
+      "name": "fsync-failure-cleans-temp-and-preserves-complete-views",
+      "passed": true
+    },
+    {
+      "name": "two-real-processes-publish-identical-record-one-complete-history",
+      "child_exit_codes": [
+        0,
+        0
+      ],
+      "passed": true
+    },
+    {
+      "name": "kernel-lock-released-after-holder-os-exit-without-finally",
+      "holder_exit": 17,
+      "publisher_exit": 0,
+      "passed": true
+    }
+  ],
+  "blocking_findings": [],
+  "conclusion": "Portable trace publisher passes on the same restricted interpreter that denied hard links, with real-process publication and crash-lock recovery.",
+  "limits": [
+    "No full regression, production, worktree edits, network or external delivery.",
+    "Old hard-link failure review retained separately.",
+    "Publication errors still propagate; no success claimed on failed file writes."
+  ]
+}

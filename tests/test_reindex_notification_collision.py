@@ -79,5 +79,42 @@ class NotificationCollisionMigrationTests(unittest.TestCase):
             self.assertEqual(notice['payload'], 'survivor already delivered')
             self.assertEqual(NotificationQueue(db).pending(), [])
 
+    def test_two_claimed_notices_keep_longest_lease_and_attempt_history(self):
+        for first_deadline, second_deadline in [(0, 9999999999), (9999999999, 0),
+                                                 (9999999999, 9999999998)]:
+            with self.subTest(first=first_deadline, second=second_deadline):
+                with tempfile.TemporaryDirectory() as tmp:
+                    db, first, second = self.seed(Path(tmp))
+                    self.set_notice(db, first, 'CLAIMED', 'first in-flight',
+                                    attempts=2, next_attempt=first_deadline)
+                    self.set_notice(db, second, 'CLAIMED', 'second in-flight',
+                                    attempts=5, next_attempt=second_deadline)
+                    self.assertEqual(db.review_campaign(REVIEW)['merged'], 1)
+                    notice = self.merged_notice(db, first)
+                    self.assertEqual(notice['result'], 'CLAIMED')
+                    self.assertEqual(notice['next_attempt'], max(first_deadline, second_deadline))
+                    self.assertEqual(notice['attempts'], 5)
+
+    def test_merge_does_not_resend_while_either_claim_is_still_active(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            db, first, second = self.seed(Path(tmp))
+            self.set_notice(db, first, 'CLAIMED', 'first in-flight',
+                            attempts=2, next_attempt=0)
+            self.set_notice(db, second, 'CLAIMED', 'second in-flight',
+                            attempts=5, next_attempt=9999999999)
+            with db.connect() as conn:
+                conn.execute("UPDATE notifications SET channel='telegram-discovery'")
+            self.assertEqual(db.review_campaign(REVIEW)['merged'], 1)
+            calls = []
+            def fake_sender(payload):
+                calls.append(payload)
+                return 'SENT'
+            result = NotificationQueue(db).flush({'telegram_send_enabled': True}, sender=fake_sender)
+            self.assertEqual(calls, [])
+            self.assertEqual(result['sent'], 0)
+            with db.connect() as conn:
+                self.assertEqual(conn.execute('SELECT result FROM notifications').fetchone()[0], 'CLAIMED')
+
+
 if __name__ == '__main__':
     unittest.main()

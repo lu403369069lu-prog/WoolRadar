@@ -132,13 +132,19 @@ class NotificationQueue:
             success = result == 'SENT'
             with self.db.connect() as conn:
                 # Do not mark a recycled ID as SENT after network/file I/O.
-                conn.execute('''UPDATE notifications SET result=?,next_attempt=? WHERE id=?
+                confirmed = conn.execute('''UPDATE notifications SET result=?,next_attempt=? WHERE id=?
                     AND result='CLAIMED' AND attempts=? AND next_attempt=?
                     AND event_id IS ? AND batch_id=? AND channel=? AND created_at=? AND payload=?''',
                     ('SENT' if success else 'RETRY', 0 if success else now + max(0, retry_seconds),
                      item['id'], item['attempts'] + 1, claim_deadline, item['event_id'],
-                     item['batch_id'], item['channel'], item['created_at'], item['payload']))
-            summary['local' if local and success else 'sent' if success else 'retry'] += 1
+                     item['batch_id'], item['channel'], item['created_at'], item['payload'])).rowcount
+            if confirmed != 1:
+                # An external send may have happened, but migration/recycling
+                # invalidated the durable outbox claim. Never count an
+                # uncommitted delivery as confirmed. At-least-once remains.
+                summary['uncertain'] = summary.get('uncertain', 0) + 1
+            else:
+                summary['local' if local and success else 'sent' if success else 'retry'] += 1
         return summary
 
 

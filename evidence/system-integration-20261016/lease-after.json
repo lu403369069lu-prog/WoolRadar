@@ -1,0 +1,8 @@
+{
+  "checked_at": "2026-10-15T18:45:50.292012+00:00",
+  "command": "python -X utf8 -m unittest discover -s tests -p test_reindex_notification_collision.py -v",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "test_already_sent_loser_must_not_become_pending_again (test_reindex_notification_collision.NotificationCollisionMigrationTests.test_already_sent_loser_must_not_become_pending_again) ... ok\ntest_existing_sent_survivor_is_never_downgraded (test_reindex_notification_collision.NotificationCollisionMigrationTests.test_existing_sent_survivor_is_never_downgraded) ... ok\ntest_in_flight_loser_cannot_be_reset_to_pending_by_merge (test_reindex_notification_collision.NotificationCollisionMigrationTests.test_in_flight_loser_cannot_be_reset_to_pending_by_merge) ... ok\ntest_merge_does_not_resend_while_either_claim_is_still_active (test_reindex_notification_collision.NotificationCollisionMigrationTests.test_merge_does_not_resend_while_either_claim_is_still_active) ... ok\ntest_two_claimed_notices_keep_longest_lease_and_attempt_history (test_reindex_notification_collision.NotificationCollisionMigrationTests.test_two_claimed_notices_keep_longest_lease_and_attempt_history) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.504s\n\nOK\n",
+  "production_changed": false
+}

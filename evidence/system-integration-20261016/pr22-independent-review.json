@@ -1,0 +1,98 @@
+{
+  "reviewer": "independent budget_review agent",
+  "command": "python -B _outbox/integration-20261016/pr22_review_checks.py --repo-root <PR22-worktree>",
+  "exit_code": 0,
+  "source_sha256": {
+    "core/db.py": "73bc43788334a64d6839526a46e6848b870c4e8bd9aa9807f1148d3fa83e1f08",
+    "core/notify.py": "1b404b3189b307f8ec35ee4b800783c84404aab4544e37d264519d4d608fb247",
+    "core/official_trace.py": "1cc2e7934075cf9e95db3f4998746bd409567e064f00c2a449a3dbf817d73785",
+    "core/pipeline.py": "453ec20e0a9c3baca802a5f1fb42d2f7f140256ba7855e0d44a33e219284bd77",
+    "tests/test_reindex_notification_collision.py": "3f5997f515a5f5d5ae436c733d3d2a65885825ba52e62db393f5d18534a6da35",
+    "tests/test_notify_reindex_transaction.py": "8c878c5daa9edac3e76e7c4ff4253b7ac1228824112d5a7534cb88c27bff90ae",
+    "tests/test_official_trace_stale_event.py": "f242817aa17ae5d86d70248d8b4d035693464386c38831bd28493b33f99dd465"
+  },
+  "test_patterns": {
+    "test_reindex_notification_collision.py": 3,
+    "test_notify_reindex_transaction.py": 5,
+    "test_official_trace_stale_event.py": 9,
+    "test_reindex_review_race.py": 2
+  },
+  "focused_methods_run": 19,
+  "focused_tests_passed": true,
+  "test_output": "...................\n----------------------------------------------------------------------\nRan 19 tests in 1.676s\n\nOK\n",
+  "checks": [
+    {
+      "survivor_before": "PENDING",
+      "loser_before": "SENT",
+      "after": "SENT",
+      "passed": true
+    },
+    {
+      "survivor_before": "SENT",
+      "loser_before": "CLAIMED",
+      "after": "SENT",
+      "passed": true
+    },
+    {
+      "survivor_before": "CLAIMED",
+      "loser_before": "SENT",
+      "after": "SENT",
+      "passed": true
+    },
+    {
+      "survivor_before": "PENDING",
+      "loser_before": "CLAIMED",
+      "after": "CLAIMED",
+      "passed": true
+    }
+  ],
+  "findings": [
+    {
+      "priority": "P1",
+      "title": "CLAIMED/CLAIMED merge discards the losing live claim lease",
+      "schedule": [
+        "Survivor notice CLAIMED with expired lease next_attempt=0",
+        "Losing same-channel notice CLAIMED with live lease next_attempt=9999999999",
+        "Real review_campaign merges both; survivor remains CLAIMED next_attempt=0",
+        "Immediate fake flush sends again although losing sender lease remains live"
+      ],
+      "actual_next_attempt_after_merge": 0.0,
+      "fake_send_count": 1,
+      "flush_summary": {
+        "sent": 1,
+        "retry": 0,
+        "local": 0
+      },
+      "location": "core/db.py CLAIMED promotion condition excludes an already-CLAIMED survivor",
+      "minimal_fix": "For CLAIMED/CLAIMED collisions retain max(next_attempt) and max(attempts), without downgrading SENT; retain uncertain-delivery accounting for old senders."
+    },
+    {
+      "priority": "P2",
+      "title": "Identical concurrent trace audits falsely report a hash collision",
+      "schedule": [
+        "First writer creates content-addressed history file with open(x), then is descheduled before writing",
+        "Second identical record gets FileExistsError, reads the unfinished file and raises hash collision",
+        "First writer completes valid identical record"
+      ],
+      "actual_second_writer_error": {
+        "type": "ValueError",
+        "message": "OFFICIAL_TRACE_AUDIT_HASH_COLLISION"
+      },
+      "impact": "Concurrent same-event traces within utc_now second can abort trace/ingest even though record bytes are identical.",
+      "minimal_fix": "Publish a fully written temporary record atomically, or serialize publication and collision checks; avoid reading in-progress history files."
+    }
+  ],
+  "confirmed": [
+    "SENT survives PENDING/CLAIMED collisions in either direction.",
+    "Pending snapshot/notification ID reuse and trace event reuse contracts exercised.",
+    "Trace stale evidence tests use synthetic page bytes, no actual HTTP or credentials.",
+    "Content-addressed trace history and stale lifecycle contracts exercised."
+  ],
+  "limits": [
+    "No full regression repeated, production writes, worktree/source edits, merge or network.",
+    "Fake sender only; this checks delivery decisions, not remote delivery.",
+    "Lease repro is deterministic with an expired keeper and an unexpired loser lease."
+  ],
+  "trace_record_race_command": "python -B pr22_trace_record_race.py --repo-root <PR22-worktree>",
+  "trace_record_race_exit_code": 0
+}

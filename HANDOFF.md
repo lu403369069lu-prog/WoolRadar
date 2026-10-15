@@ -1,3 +1,7 @@
+## Active integration checkpoint — 2026-10-16
+
+See evidence/system-integration-20261016/CHECKPOINT.md. P06 remains active; no production changes or merges. The historical sections below describe earlier snapshots and are not current locks.
+
 ---
 type: handoff
 date: 2026-10-14

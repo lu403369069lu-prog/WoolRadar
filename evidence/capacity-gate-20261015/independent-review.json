@@ -1,0 +1,196 @@
+{
+  "reviewer": "independent budget_review agent",
+  "reviewed_at_utc": "2026-10-15T06:41:47.468247+00:00",
+  "source": "[local workspace]\\_work\\capacity-gate-cbe18d7\\core\\verifier.py",
+  "source_sha256": "73e62a4bf72b685b3a00dbfba2fb824e6c427ca0f137a4b5353611c95c7c769d",
+  "test_sha256": "74426659c8ebb4125ae229a7d36c81d414aff935fad10ad3a01cae8940312cd6",
+  "contract_methods_run": 23,
+  "capacity_methods": 8,
+  "selected_original_verifier_methods": 15,
+  "all_contracts_passed": true,
+  "focused_cases": [
+    {
+      "name": "zero-now",
+      "remaining": "0",
+      "checked_at": "2026-10-15T12:00:00+00:00",
+      "status": "OFFICIAL_VERIFIED",
+      "claim_scope": "NONE",
+      "unknown_capacity": false,
+      "zero_gate_applied": true,
+      "passed": true
+    },
+    {
+      "name": "negative-zero",
+      "remaining": "-0.0",
+      "checked_at": "2026-10-15T12:00:00+00:00",
+      "status": "OFFICIAL_VERIFIED",
+      "claim_scope": "NONE",
+      "unknown_capacity": false,
+      "zero_gate_applied": true,
+      "passed": true
+    },
+    {
+      "name": "exact-24h",
+      "remaining": "0",
+      "checked_at": "2026-10-14T12:00:00+00:00",
+      "status": "OFFICIAL_VERIFIED",
+      "claim_scope": "NONE",
+      "unknown_capacity": false,
+      "zero_gate_applied": true,
+      "passed": true
+    },
+    {
+      "name": "stale-24h-microsecond",
+      "remaining": "0",
+      "checked_at": "2026-10-14T11:59:59.999999+00:00",
+      "status": "OFFICIAL_VERIFIED",
+      "claim_scope": "NONE",
+      "unknown_capacity": false,
+      "zero_gate_applied": false,
+      "passed": true
+    },
+    {
+      "name": "future",
+      "remaining": "0",
+      "checked_at": "2026-10-15T12:00:01+00:00",
+      "status": "OFFICIAL_VERIFIED",
+      "claim_scope": "NONE",
+      "unknown_capacity": false,
+      "zero_gate_applied": false,
+      "passed": true
+    },
+    {
+      "name": "naive",
+      "remaining": "0",
+      "checked_at": "2026-10-15T12:00:00",
+      "status": "OFFICIAL_VERIFIED",
+      "claim_scope": "NONE",
+      "unknown_capacity": false,
+      "zero_gate_applied": false,
+      "passed": true
+    },
+    {
+      "name": "malformed",
+      "remaining": "0",
+      "checked_at": "bad-time",
+      "status": "OFFICIAL_VERIFIED",
+      "claim_scope": "NONE",
+      "unknown_capacity": false,
+      "zero_gate_applied": false,
+      "passed": true
+    },
+    {
+      "name": "timezone-equivalent",
+      "remaining": "0",
+      "checked_at": "2026-10-15T20:00:00+08:00",
+      "status": "OFFICIAL_VERIFIED",
+      "claim_scope": "NONE",
+      "unknown_capacity": false,
+      "zero_gate_applied": true,
+      "passed": true
+    },
+    {
+      "name": "negative",
+      "remaining": "-1",
+      "checked_at": "2026-10-15T12:00:00+00:00",
+      "status": "CLAIMABLE",
+      "claim_scope": "PUBLIC_APPLICATION",
+      "unknown_capacity": true,
+      "zero_gate_applied": false,
+      "passed": true
+    },
+    {
+      "name": "numeric-string",
+      "remaining": "'0'",
+      "checked_at": "2026-10-15T12:00:00+00:00",
+      "status": "CLAIMABLE",
+      "claim_scope": "PUBLIC_APPLICATION",
+      "unknown_capacity": true,
+      "zero_gate_applied": false,
+      "passed": true
+    },
+    {
+      "name": "boolean-false",
+      "remaining": "False",
+      "checked_at": "2026-10-15T12:00:00+00:00",
+      "status": "CLAIMABLE",
+      "claim_scope": "PUBLIC_APPLICATION",
+      "unknown_capacity": true,
+      "zero_gate_applied": false,
+      "passed": true
+    },
+    {
+      "name": "nan",
+      "remaining": "nan",
+      "checked_at": "2026-10-15T12:00:00+00:00",
+      "status": "CLAIMABLE",
+      "claim_scope": "PUBLIC_APPLICATION",
+      "unknown_capacity": true,
+      "zero_gate_applied": false,
+      "passed": true
+    },
+    {
+      "name": "list",
+      "remaining": "[]",
+      "checked_at": "2026-10-15T12:00:00+00:00",
+      "status": "CLAIMABLE",
+      "claim_scope": "PUBLIC_APPLICATION",
+      "unknown_capacity": true,
+      "zero_gate_applied": false,
+      "passed": true
+    },
+    {
+      "name": "positive",
+      "remaining": "1",
+      "checked_at": "2026-10-15T12:00:00+00:00",
+      "status": "CLAIMABLE",
+      "claim_scope": "PUBLIC_APPLICATION",
+      "unknown_capacity": false,
+      "zero_gate_applied": false,
+      "passed": true
+    },
+    {
+      "name": "unknown",
+      "remaining": "None",
+      "checked_at": "2026-10-15T12:00:00+00:00",
+      "status": "CLAIMABLE",
+      "claim_scope": "PUBLIC_APPLICATION",
+      "unknown_capacity": true,
+      "zero_gate_applied": false,
+      "passed": true
+    },
+    {
+      "name": "invalid-or-stale-zero-plus-fresh-positive",
+      "checked_at": "bad-time",
+      "status": "CLAIMABLE",
+      "passed": true
+    },
+    {
+      "name": "invalid-or-stale-zero-plus-fresh-positive",
+      "checked_at": "2026-10-15T12:00:00",
+      "status": "CLAIMABLE",
+      "passed": true
+    },
+    {
+      "name": "invalid-or-stale-zero-plus-fresh-positive",
+      "checked_at": "2026-10-15T12:00:01+00:00",
+      "status": "CLAIMABLE",
+      "passed": true
+    },
+    {
+      "name": "invalid-or-stale-zero-plus-fresh-positive",
+      "checked_at": "2026-10-14T11:59:59.999999+00:00",
+      "status": "CLAIMABLE",
+      "passed": true
+    }
+  ],
+  "blocking_findings": [],
+  "conclusion": "No blocker found within numeric zero capacity gate scope. Fresh official numeric zero blocks CLAIMABLE including mixed fresh positive. Closed/conflicted precedence and normal verifier contracts preserved.",
+  "limitations": [
+    "Invalid/negative capacity remains unknown and does not itself block the existing public-offer path, preserving prior behavior.",
+    "Historical capacity freshness metadata and cross-period evidence architecture are outside this change.",
+    "No full suite rerun, production changes, network, or account operations."
+  ],
+  "method": "Read-only source review; Python -B tests; deterministic UTC clock for 24h boundary/offset checks.",
+  "sharing_normalization": "Local workspace prefix redacted; test/source hashes unchanged."
+}

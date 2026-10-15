@@ -11,6 +11,7 @@ from unittest import mock
 from core.db import Database
 from core.models import Candidate
 from core.official_trace import OfficialTracer
+from core.pipeline import Pipeline
 
 
 A = 'https://publisher.example/a'
@@ -79,6 +80,48 @@ class StaleOfficialTraceTests(unittest.TestCase):
             self.assertNotIn('error_code', result)
             self.assertEqual(result['references'], [])
             self.assertEqual(result, self.report(root, first))
+
+
+class NodeRunTraceStatusTests(unittest.TestCase):
+    def ingest_with_trace_status(self, trace_status):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / 'config').mkdir()
+            (root / 'config' / 'official-trace.json').write_text(
+                json.dumps({'enabled': True, 'max_per_node_run': 1,
+                            'allowed_hosts': []}), encoding='utf-8')
+            inbox = root / 'data' / 'inbox'
+            inbox.mkdir(parents=True)
+            item = Candidate('n', 's', 'Vendor official grant',
+                             'https://vendor.example/apply',
+                             source_kind='official')
+            (inbox / 'n.jsonl').write_text(
+                json.dumps(item.to_dict()) + '\n', encoding='utf-8')
+            pipeline = Pipeline(root)
+            with mock.patch('core.official_trace.OfficialTracer') as tracer_class:
+                tracer_class.return_value.trace.return_value = {'status': trace_status}
+                result = pipeline.ingest_node('n')
+                tracer_class.return_value.trace.assert_called_once()
+            runs = pipeline.db.latest_node_runs()
+            with pipeline.db.connect() as conn:
+                health = [dict(row) for row in conn.execute(
+                    "SELECT channel,result FROM notifications WHERE channel='local-health'")]
+            return result, runs, health
+
+    def test_stale_trace_marks_node_partial_and_persists_error_code(self):
+        result, runs, health = self.ingest_with_trace_status('STALE_EVENT_ID')
+        self.assertEqual(result['status'], 'PARTIAL')
+        self.assertEqual(result['error_code'], 'STALE_EVENT_ID')
+        self.assertEqual(runs[0]['status'], 'PARTIAL')
+        self.assertEqual(runs[0]['error_code'], 'STALE_EVENT_ID')
+        self.assertEqual(len(health), 1)
+
+    def test_healthy_trace_does_not_invent_node_failure(self):
+        result, runs, health = self.ingest_with_trace_status('DISCOVERED')
+        self.assertEqual(result['status'], 'OK')
+        self.assertEqual(result['error_code'], '')
+        self.assertEqual(runs[0]['status'], 'OK')
+        self.assertEqual(health, [])
 
 
 if __name__ == '__main__':

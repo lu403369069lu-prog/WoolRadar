@@ -1,0 +1,26 @@
+{
+  "source_id": "official-edb-postgresql-binaries",
+  "claim_class": "mixed",
+  "checked_on": "2026-10-15 Asia/Shanghai",
+  "official_page": "https://www.enterprisedb.com/download-postgresql-binaries",
+  "observed_version": "16.15 Windows x86-64",
+  "observed_link": "https://sbp.enterprisedb.com/getfile.jsp?fileid=1260623",
+  "chrome_inventory": "Unable to load browser request-header policy",
+  "authorized_work_browser_fallback": true,
+  "work_page_visible": true,
+  "download_api": "locator.downloadMedia",
+  "requested_timeout_ms": 20000,
+  "actual_tool_wall_seconds": 852.4858,
+  "result": "Timed out after 20000ms downloading media; no saved path returned",
+  "known_local_download_directory_matching_files": 0,
+  "postgres_pg_ctl_initdb_processes_found": 0,
+  "limits": [
+    "No successful archive download, checksum, unpack, install or server start evidence",
+    "Known download folder only inspected; no claim all temporary browser storage was searched",
+    "Why wall time exceeds requested timeout remains unknown",
+    "Download failure does not prove host DNS, credentials or vendor outage as root cause"
+  ],
+  "next": "Stop repeated downloads through this failing path; retain portable PostgreSQL full-stack blocker and continue independent local sample evaluation.",
+  "permanent_network_permissions_changed": false,
+  "goal_complete": false
+}

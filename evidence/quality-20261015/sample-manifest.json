@@ -1,0 +1,30 @@
+{
+  "created_at": "2026-10-14T16:01:47.262585+00:00",
+  "claim_class": "as_built",
+  "source_id": "woolradar-local-public-corpus",
+  "files": [
+    {
+      "source_id": "hackernews",
+      "path": "hackernews.json",
+      "sha256": "4f8dfca7e366df65fb512ccc3815f5224a4be740f1bb1c468880096ac50de4dd",
+      "sampled_at": "2026-10-14T14:09:53Z",
+      "rows": 20
+    },
+    {
+      "source_id": "reddit-hot-rss",
+      "path": "reddit-hot-rss.json",
+      "sha256": "1074ae6b01aa89cf4f23b06046179cd8d986b90eb5b992d846519faa3cf7c1aa",
+      "sampled_at": "2026-10-14T15:08:54Z",
+      "rows": 25
+    }
+  ],
+  "blinded_rows": 45,
+  "overlap_rows": 0,
+  "scope": "Explicit free/credit/trial/perk/coupon/giveaway lead for developer, AI or hosting tools, snippet only; generic announcements, requests, consumer meals/photos/pets and ordinary paid service pricing excluded. Actual availability/eligibility not inferred. Free tool vs promotional event is recorded as a scope dispute when appropriate.",
+  "limits": [
+    "Same collector and reviewer, not globally independent random sample",
+    "No full-page or platform recall denominator",
+    "Previously seen overlap excluded from held-out metrics",
+    "No code changes made against this set"
+  ]
+}

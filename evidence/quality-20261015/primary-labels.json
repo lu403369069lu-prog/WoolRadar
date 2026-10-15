@@ -1,0 +1,227 @@
+[
+  {
+    "id": "hackernews:0",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:1",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:2",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:3",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:4",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:5",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:6",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:7",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:8",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:9",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:10",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:11",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:12",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:13",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:14",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:15",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:16",
+    "label": "scope_disputed",
+    "reason": "明确免费且免账号的发帖分析工具；是否纳入开发者/AI权益而非普通消费工具需要范围裁定"
+  },
+  {
+    "id": "hackernews:17",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:18",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "hackernews:19",
+    "label": "negative",
+    "reason": "存储标题/摘要没有明确目标权益承诺；不判断完整正文是否另有优惠"
+  },
+  {
+    "id": "reddit-hot-rss:0",
+    "label": "negative",
+    "reason": "线索属于照片/食品/宠物消费权益，排除本轮开发者/AI/托管目标；不能断言不存在实际消费优惠"
+  },
+  {
+    "id": "reddit-hot-rss:1",
+    "label": "negative",
+    "reason": "迁移经验/投诉/普通自建工具介绍，无摘要中明确目标免费权益承诺"
+  },
+  {
+    "id": "reddit-hot-rss:2",
+    "label": "negative",
+    "reason": "迁移经验/投诉/普通自建工具介绍，无摘要中明确目标免费权益承诺"
+  },
+  {
+    "id": "reddit-hot-rss:3",
+    "label": "negative",
+    "reason": "推荐求助/运维讨论/已付费配置，不是供给方明确目标免费权益公告"
+  },
+  {
+    "id": "reddit-hot-rss:4",
+    "label": "lead",
+    "reason": "开发者发布托管邮件诊断工具，明确3次/24h免账号、认证免费账号20次；真实可用与个人资格未验证"
+  },
+  {
+    "id": "reddit-hot-rss:5",
+    "label": "negative",
+    "reason": "线索属于照片/食品/宠物消费权益，排除本轮开发者/AI/托管目标；不能断言不存在实际消费优惠"
+  },
+  {
+    "id": "reddit-hot-rss:6",
+    "label": "negative",
+    "reason": "推荐求助/运维讨论/已付费配置，不是供给方明确目标免费权益公告"
+  },
+  {
+    "id": "reddit-hot-rss:7",
+    "label": "negative",
+    "reason": "迁移经验/投诉/普通自建工具介绍，无摘要中明确目标免费权益承诺"
+  },
+  {
+    "id": "reddit-hot-rss:8",
+    "label": "negative",
+    "reason": "推荐求助/运维讨论/已付费配置，不是供给方明确目标免费权益公告"
+  },
+  {
+    "id": "reddit-hot-rss:9",
+    "label": "negative",
+    "reason": "推荐求助/运维讨论/已付费配置，不是供给方明确目标免费权益公告"
+  },
+  {
+    "id": "reddit-hot-rss:10",
+    "label": "negative",
+    "reason": "推荐求助/运维讨论/已付费配置，不是供给方明确目标免费权益公告"
+  },
+  {
+    "id": "reddit-hot-rss:11",
+    "label": "negative",
+    "reason": "推荐求助/运维讨论/已付费配置，不是供给方明确目标免费权益公告"
+  },
+  {
+    "id": "reddit-hot-rss:12",
+    "label": "negative",
+    "reason": "迁移经验/投诉/普通自建工具介绍，无摘要中明确目标免费权益承诺"
+  },
+  {
+    "id": "reddit-hot-rss:13",
+    "label": "negative",
+    "reason": "推荐求助/运维讨论/已付费配置，不是供给方明确目标免费权益公告"
+  },
+  {
+    "id": "reddit-hot-rss:14",
+    "label": "negative",
+    "reason": "线索属于照片/食品/宠物消费权益，排除本轮开发者/AI/托管目标；不能断言不存在实际消费优惠"
+  },
+  {
+    "id": "reddit-hot-rss:15",
+    "label": "negative",
+    "reason": "2000CAD建站和80CAD月费商业方案附带服务，非独立免费目标权益"
+  },
+  {
+    "id": "reddit-hot-rss:16",
+    "label": "negative",
+    "reason": "线索属于照片/食品/宠物消费权益，排除本轮开发者/AI/托管目标；不能断言不存在实际消费优惠"
+  },
+  {
+    "id": "reddit-hot-rss:17",
+    "label": "negative",
+    "reason": "推荐求助/运维讨论/已付费配置，不是供给方明确目标免费权益公告"
+  },
+  {
+    "id": "reddit-hot-rss:18",
+    "label": "negative",
+    "reason": "推荐求助/运维讨论/已付费配置，不是供给方明确目标免费权益公告"
+  },
+  {
+    "id": "reddit-hot-rss:19",
+    "label": "negative",
+    "reason": "迁移经验/投诉/普通自建工具介绍，无摘要中明确目标免费权益承诺"
+  },
+  {
+    "id": "reddit-hot-rss:20",
+    "label": "negative",
+    "reason": "迁移经验/投诉/普通自建工具介绍，无摘要中明确目标免费权益承诺"
+  },
+  {
+    "id": "reddit-hot-rss:21",
+    "label": "negative",
+    "reason": "推荐求助/运维讨论/已付费配置，不是供给方明确目标免费权益公告"
+  },
+  {
+    "id": "reddit-hot-rss:22",
+    "label": "negative",
+    "reason": "推荐求助/运维讨论/已付费配置，不是供给方明确目标免费权益公告"
+  },
+  {
+    "id": "reddit-hot-rss:23",
+    "label": "negative",
+    "reason": "线索属于照片/食品/宠物消费权益，排除本轮开发者/AI/托管目标；不能断言不存在实际消费优惠"
+  },
+  {
+    "id": "reddit-hot-rss:24",
+    "label": "negative",
+    "reason": "线索属于照片/食品/宠物消费权益，排除本轮开发者/AI/托管目标；不能断言不存在实际消费优惠"
+  }
+]

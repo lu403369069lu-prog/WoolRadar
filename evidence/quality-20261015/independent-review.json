@@ -1,0 +1,207 @@
+{
+  "reviewer": "independent budget_review agent",
+  "reviewed_at_utc": "2026-10-15T05:13:46.619293+00:00",
+  "scope": "Focused review of free email/DNS diagnostic candidate and previously reported counterexamples; stage only",
+  "source": "[local workspace]\\_work\\woolradar-stage\\core\\collector.py",
+  "source_sha256": "e7de33d0bf1c7e203e6608e0ed2c50f6be70e65b7fdc138ead8e370b92482cc3",
+  "test_file_sha256": {
+    "test_free_hosting_diagnostics.py": "6c79f2a257332ea243aabe33311ac070e6dbcdde50032f785a94e06cadf7cea3",
+    "test_offer_keyword_context.py": "468eec3af58cd1e794aea69fa240b7c64d1cdff52f11f6130751b583d09273ff"
+  },
+  "method": "AST-extracted actual contains_keyword executed in memory; unittest test files executed in separate namespaces to preserve their individual KEYWORDS constants; no module import or network",
+  "contract_methods_by_file": {
+    "test_free_hosting_diagnostics.py": 10,
+    "test_offer_keyword_context.py": 13
+  },
+  "contract_methods_run": 23,
+  "contract_methods_passed": true,
+  "focused_cases": [
+    {
+      "text": "Is there a free email testing tool for my VPS?",
+      "keywords": [
+        "free VPS",
+        "giveaway",
+        "AI credits",
+        "free API",
+        "Cursor Pro",
+        "Claude",
+        "Gemini",
+        "GitHub",
+        "developer perks",
+        "trial",
+        "promo code"
+      ],
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "Does anyone know a free DNS diagnostic tool?",
+      "keywords": [
+        "free VPS",
+        "giveaway",
+        "AI credits",
+        "free API",
+        "Cursor Pro",
+        "Claude",
+        "Gemini",
+        "GitHub",
+        "developer perks",
+        "trial",
+        "promo code"
+      ],
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "A free email testing tool is not something we offer.",
+      "keywords": [
+        "free VPS",
+        "giveaway",
+        "AI credits",
+        "free API",
+        "Cursor Pro",
+        "Claude",
+        "Gemini",
+        "GitHub",
+        "developer perks",
+        "trial",
+        "promo code"
+      ],
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "Our free email testing tool requires a paid subscription.",
+      "keywords": [
+        "free VPS",
+        "giveaway",
+        "AI credits",
+        "free API",
+        "Cursor Pro",
+        "Claude",
+        "Gemini",
+        "GitHub",
+        "developer perks",
+        "trial",
+        "promo code"
+      ],
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "A free DNS diagnostic tool is included only with our paid plan.",
+      "keywords": [
+        "free VPS",
+        "giveaway",
+        "AI credits",
+        "free API",
+        "Cursor Pro",
+        "Claude",
+        "Gemini",
+        "GitHub",
+        "developer perks",
+        "trial",
+        "promo code"
+      ],
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "Our email testing tool is free; paid upgrades are optional.",
+      "keywords": [
+        "free VPS",
+        "giveaway",
+        "AI credits",
+        "free API",
+        "Cursor Pro",
+        "Claude",
+        "Gemini",
+        "GitHub",
+        "developer perks",
+        "trial",
+        "promo code"
+      ],
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "text": "Our free email testing tool is no longer available.",
+      "keywords": [
+        "free VPS",
+        "giveaway",
+        "AI credits",
+        "free API",
+        "Cursor Pro",
+        "Claude",
+        "Gemini",
+        "GitHub",
+        "developer perks",
+        "trial",
+        "promo code"
+      ],
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "The free DNS diagnostic tool has been discontinued.",
+      "keywords": [
+        "free VPS",
+        "giveaway",
+        "AI credits",
+        "free API",
+        "Cursor Pro",
+        "Claude",
+        "Gemini",
+        "GitHub",
+        "developer perks",
+        "trial",
+        "promo code"
+      ],
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "A free DNS diagnostic tool for VPS operators.",
+      "keywords": [],
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "A free DNS diagnostic tool for VPS operators.",
+      "keywords": [
+        "photo coupon"
+      ],
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "text": "A free DNS diagnostic tool for VPS operators.",
+      "keywords": [
+        "free VPS"
+      ],
+      "expected": false,
+      "actual": false,
+      "passed": true
+    }
+  ],
+  "blocking_findings": [],
+  "conclusion": "Previously reported request, suffix negation, paid dependency and keyword opt-in counterexamples resolved for this exact fingerprint. No blocker found within this focused review.",
+  "limitations": [
+    "Full 158-test suite not independently rerun in this review; parent reported result is separate.",
+    "No claim of complete natural-language semantic accuracy or 95% recall.",
+    "Original 45-item blind evaluation remains frozen pre-fix; this is regression verification, not independent holdout evidence.",
+    "No production files changed and no production deployment authorized by this review."
+  ],
+  "review_harness_note": "An initial combined test namespace overwrote the diagnostic test KEYWORDS constant with the older test constant, producing 4 harness-only failures. Corrected to isolated file namespaces before recording these results.",
+  "sharing_normalization": "Local workspace prefix redacted; test/source hashes unchanged."
+}

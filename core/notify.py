@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import hashlib
 import os
 import time
 from pathlib import Path
@@ -64,28 +65,60 @@ class NotificationQueue:
                 continue
             if not local and not policy.get('telegram_send_enabled', False):
                 continue
-            if item['channel'].endswith('-verified'):
-                event = self.db.get_event(item['event_id'])
-                validation = VerificationEngine().evaluate(Candidate(event['node'], event['source'],
-                    event['title'], event['primary_url']), self.db.get_evidence(event['id']))
-                if validation.status.value != 'CLAIMABLE':
-                    with self.db.connect() as conn:
-                        conn.execute("UPDATE notifications SET result='STALE' WHERE id=? "
-                            "AND result IN ('PENDING','RETRY','CLAIMED') AND next_attempt<=?", (item['id'], time.time()))
-                    continue
             now = time.time()
-            with self.db.connect() as conn:
-                conn.execute('BEGIN IMMEDIATE')
-                claimed = conn.execute("""UPDATE notifications SET result='CLAIMED',
-                    next_attempt=?,attempts=attempts+1 WHERE id=? AND next_attempt<=?
-                    AND result IN ('PENDING','RETRY','CLAIMED')""", (now + 300, item['id'], now)).rowcount
+            # pending() is a snapshot. A campaign reindex may merge away its
+            # event before this worker claims the notice. Hold the same SQLite
+            # writer reservation used by ingestion/reindex across *both* the
+            # event/evidence validation and the outbox claim. Network delivery
+            # and local file writes happen strictly after the lock is released.
+            with self.db.candidate_transaction():
+                # pending() is an unlocked snapshot. SQLite INTEGER PRIMARY KEY
+                # may recycle a deleted notice ID after campaign reindex.
+                with self.db.connect() as conn:
+                    live = conn.execute('SELECT * FROM notifications WHERE id=?',
+                                        (item['id'],)).fetchone()
+                identity = ('event_id', 'batch_id', 'channel', 'created_at',
+                            'payload', 'attempts', 'next_attempt', 'result')
+                if live is None or any(live[field] != item[field] for field in identity):
+                    continue
+                if item['channel'].endswith('-verified'):
+                    try:
+                        event = self.db.get_event(item['event_id'])
+                    except KeyError:
+                        validation = None  # The snapshot refers to a merged event.
+                    else:
+                        validation = VerificationEngine().evaluate(Candidate(event['node'], event['source'],
+                            event['title'], event['primary_url']), self.db.get_evidence(event['id']))
+                    if validation is None or validation.status.value != 'CLAIMABLE':
+                        with self.db.connect() as conn:
+                            conn.execute("UPDATE notifications SET result='STALE' WHERE id=? "
+                                "AND result IN ('PENDING','RETRY','CLAIMED') AND next_attempt<=?", (item['id'], now))
+                        continue
+                claim_deadline = now + 300
+                with self.db.connect() as conn:
+                    claimed = conn.execute("""UPDATE notifications SET result='CLAIMED',
+                        next_attempt=?,attempts=attempts+1 WHERE id=? AND next_attempt<=?
+                        AND result IN ('PENDING','RETRY','CLAIMED')
+                        AND event_id IS ? AND batch_id=? AND channel=? AND created_at=?
+                        AND payload=? AND attempts=? AND next_attempt=?""",
+                        (claim_deadline, item['id'], now, item['event_id'], item['batch_id'],
+                         item['channel'], item['created_at'], item['payload'],
+                         item['attempts'], item['next_attempt'])).rowcount
             if not claimed:
                 continue
             try:
                 if local:
                     output = Path(local_dir)
                     output.mkdir(parents=True, exist_ok=True)
-                    destination = output / f"notification-{item['id']}.json"
+                    # SQLite can recycle an integer ID after campaign reindex. Use a
+                    # stable fingerprint of the full notification identity so a
+                    # later unrelated notice never overwrites the first receipt.
+                    identity_bytes = json.dumps([
+                        item['id'], item['event_id'], item['batch_id'],
+                        item['channel'], item['created_at'], item['payload']
+                    ], ensure_ascii=False, separators=(',', ':')).encode('utf-8')
+                    receipt_id = hashlib.sha256(identity_bytes).hexdigest()[:20]
+                    destination = output / f"notification-{item['id']}-{receipt_id}.json"
                     temporary = destination.with_suffix('.tmp')
                     temporary.write_text(json.dumps({'event_id': item['event_id'], 'batch_id': item['batch_id'],
                         'created_at': item['created_at'], 'message': item['payload']}, ensure_ascii=False, indent=2), encoding='utf-8')
@@ -98,9 +131,20 @@ class NotificationQueue:
                 result = 'FAILED'
             success = result == 'SENT'
             with self.db.connect() as conn:
-                conn.execute('UPDATE notifications SET result=?,next_attempt=? WHERE id=?',
-                    ('SENT' if success else 'RETRY', 0 if success else now + max(0, retry_seconds), item['id']))
-            summary['local' if local and success else 'sent' if success else 'retry'] += 1
+                # Do not mark a recycled ID as SENT after network/file I/O.
+                confirmed = conn.execute('''UPDATE notifications SET result=?,next_attempt=? WHERE id=?
+                    AND result='CLAIMED' AND attempts=? AND next_attempt=?
+                    AND event_id IS ? AND batch_id=? AND channel=? AND created_at=? AND payload=?''',
+                    ('SENT' if success else 'RETRY', 0 if success else now + max(0, retry_seconds),
+                     item['id'], item['attempts'] + 1, claim_deadline, item['event_id'],
+                     item['batch_id'], item['channel'], item['created_at'], item['payload'])).rowcount
+            if confirmed != 1:
+                # An external send may have happened, but migration/recycling
+                # invalidated the durable outbox claim. Never count an
+                # uncommitted delivery as confirmed. At-least-once remains.
+                summary['uncertain'] = summary.get('uncertain', 0) + 1
+            else:
+                summary['local' if local and success else 'sent' if success else 'retry'] += 1
         return summary
 
 

@@ -65,8 +65,47 @@ class OfficialTracer:
         if sources_path.exists():
             self.budget.sync_host_pauses(load_sources(sources_path))
 
-    def trace(self, event_id: int) -> dict:
-        event = self.pipeline.db.get_event(event_id)
+    def _write_record(self, event_id: int, record: dict) -> None:
+        destination = self.root / 'evidence' / 'official-trace'
+        destination.mkdir(parents=True, exist_ok=True)
+        serialized = json.dumps(record, ensure_ascii=False, indent=2)
+        # This integer event ID can be recycled after a campaign merge. Keep
+        # an immutable content-addressed audit copy for every distinct result;
+        # retain the original event-id filename as the latest-result view.
+        history = destination / 'history'
+        history.mkdir(parents=True, exist_ok=True)
+        digest = hashlib.sha256(serialized.encode('utf-8')).hexdigest()
+        archived = history / f'{event_id}-{digest}.json'
+        try:
+            with archived.open('x', encoding='utf-8') as output:
+                output.write(serialized)
+        except FileExistsError:
+            if archived.read_text(encoding='utf-8') != serialized:
+                raise ValueError('OFFICIAL_TRACE_AUDIT_HASH_COLLISION')
+        (destination / f'{event_id}.json').write_text(
+            serialized, encoding='utf-8')
+
+    def trace(self, event_id: int, expected_event: dict | None = None) -> dict:
+        # Ingest releases its candidate transaction before network tracing.
+        # A concurrent reindex may have merged this ID in the meantime.
+        try:
+            event = self.pipeline.db.get_event(event_id)
+        except KeyError:
+            record = {'checked_at': utc_now(), 'event_id': event_id,
+                      'references': [], 'status': 'STALE_EVENT_ID',
+                      'error_code': 'EVENT_MERGED_OR_REMOVED'}
+            self._write_record(event_id, record)
+            return record
+        # A merge may delete this numeric ID and the next insert can recycle
+        # it. The upstream ingestion snapshot is authoritative for identity.
+        identity_fields = ('canonical_key', 'batch_id', 'primary_url', 'first_seen')
+        if expected_event is not None and any(
+                event[field] != expected_event[field] for field in identity_fields):
+            record = {'checked_at': utc_now(), 'event_id': event_id,
+                      'references': [], 'status': 'STALE_EVENT_ID',
+                      'error_code': 'EVENT_MERGED_OR_REMOVED'}
+            self._write_record(event_id, record)
+            return record
         metadata = json.loads(event['metadata_json'])
         references = list(metadata.get('official_references', []))
         direct_official = bool(metadata.get('official'))
@@ -75,6 +114,7 @@ class OfficialTracer:
             direct_urls.add(event['primary_url'])
         references = sorted(direct_urls) + references
         results = []
+        stale_during_apply = False
         for url in list(dict.fromkeys(references))[:2]:
             if not validate_public_reference(url, self.hosts):
                 results.append({'status': 'SKIPPED', 'error_code': 'UNAPPROVED_REFERENCE_URL'})
@@ -102,7 +142,17 @@ class OfficialTracer:
                     'card_required': 'unknown', 'auto_renew': 'unknown',
                     'body_sha256': hashlib.sha256(payload).hexdigest(),
                     'method': 'public_reference_fetch', 'requires_campaign_review': kind == 'official_reference'})
-                verified = self.pipeline.apply_evidence(event_id, [evidence])
+                try:
+                    verified = self.pipeline.apply_evidence(event_id, [evidence],
+                                                            expected_event=event)
+                except KeyError:
+                    # The page may have been read successfully just as a
+                    # review merged away the old event ID. It is not a fetch
+                    # failure, and none of this proof reached a live event.
+                    stale_during_apply = True
+                    results.append({'url': url, 'status': 'STALE_EVENT_ID',
+                                    'error_code': 'EVENT_MERGED_OR_REMOVED'})
+                    break
                 results.append({'url': url, 'status': 'FETCHED', 'classification': verified['status']})
             except (SourcePaused, urllib.error.HTTPError) as exc:
                 code = str(exc) if isinstance(exc, SourcePaused) else VerificationEngine.classify_fetch_failure(exc.code, '')
@@ -118,9 +168,22 @@ class OfficialTracer:
                     exc.close()
             except Exception as exc:
                 results.append({'url': url, 'status': 'FAILED', 'error_code': classify_exception(exc)})
-        record = {'checked_at': utc_now(), 'event_id': event_id, 'references': results,
-                  'status': self.pipeline.db.get_event(event_id)['status']}
-        destination = self.root / 'evidence' / 'official-trace'
-        destination.mkdir(parents=True, exist_ok=True)
-        (destination / f'{event_id}.json').write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding='utf-8')
+        # A campaign may also merge the event after a permitted page fetch or
+        # after apply_evidence() commits. Never present a missing event as
+        # verified, and keep an auditable result instead of crashing ingest.
+        if stale_during_apply:
+            current_status = 'STALE_EVENT_ID'
+        else:
+            try:
+                current = self.pipeline.db.get_event(event_id)
+                current_status = (current['status'] if all(
+                    current[field] == event[field] for field in identity_fields)
+                    else 'STALE_EVENT_ID')
+            except KeyError:
+                current_status = 'STALE_EVENT_ID'
+        record = {'checked_at': utc_now(), 'event_id': event_id,
+                  'references': results, 'status': current_status}
+        if current_status == 'STALE_EVENT_ID':
+            record['error_code'] = 'EVENT_MERGED_OR_REMOVED'
+        self._write_record(event_id, record)
         return record

@@ -5,6 +5,7 @@ import sqlite3
 import hashlib
 import threading
 from datetime import datetime
+from uuid import uuid4
 from contextlib import contextmanager, closing
 from dataclasses import dataclass
 from pathlib import Path
@@ -299,12 +300,33 @@ class Database:
 
     def reindex(self, campaign_review: dict | None = None) -> dict:
         """Transactional key migration; retain a consistent, recoverable SQLite backup."""
+        # utc_now() is second-granularity: two valid reviews/reindexes in the
+        # same second must never collide on an otherwise safe backup filename.
         backup = self.path.with_name(self.path.stem + '-before-reindex-' +
-            utc_now().replace(':', '').replace('-', '') + '.db')
+            utc_now().replace(':', '').replace('-', '') + '-' + uuid4().hex[:12] + '.db')
         if backup.exists():
             raise FileExistsError(backup)
         with self.connect() as conn:
             conn.execute('BEGIN IMMEDIATE')
+            if campaign_review is not None:
+                # review_campaign() checks these preconditions before calling
+                # reindex(), but another reviewer can commit a conflicting
+                # campaign while this caller waits for the SQLite writer lock.
+                # Recheck *inside* the same reservation before making a backup
+                # or replacing campaign_links. A second different review must
+                # never silently reassign an already reviewed campaign.
+                members = {normalize_url(url) for url in campaign_review['member_urls']}
+                seen = {normalize_url(row[0]) for row in conn.execute(
+                    'SELECT primary_url FROM events')}
+                seen.update(normalize_url(row[0]) for row in conn.execute(
+                    'SELECT url FROM sightings'))
+                if not members <= seen:
+                    raise ValueError('CAMPAIGN_MEMBER_NOT_IN_DATABASE')
+                for url in members:
+                    previous = conn.execute(
+                        'SELECT review_json FROM campaign_links WHERE url=?', (url,)).fetchone()
+                    if previous and json.loads(previous[0]).get('campaign_url') != campaign_review.get('campaign_url'):
+                        raise ValueError('CAMPAIGN_REVIEW_CONFLICT')
             # Backup through a separate read connection so WAL contents are included.
             with closing(sqlite3.connect(self.path)) as reader, closing(sqlite3.connect(backup)) as target:
                 reader.backup(target)
@@ -346,6 +368,35 @@ class Database:
                 keep, old = groups[identity], row['id']
                 merged_survivors.add(keep)
                 self._merge_evidence(conn, keep, old)
+                # A duplicate channel key can exist on both campaign members.
+                # Plain INSERT OR IGNORE would discard a confirmed SENT notice
+                # from the losing event and leave the survivor PENDING, so the
+                # same grant could be announced twice after this merge.
+                # Preserve historical delivery and in-flight claims before the
+                # loser rows are deleted. Never upgrade a status to SENT unless
+                # a sender actually recorded SENT on one of the two events.
+                old_notices = conn.execute(
+                    "SELECT batch_id,channel,result,payload,attempts,next_attempt "
+                    "FROM notifications WHERE event_id=? AND result IN ('SENT','CLAIMED')",
+                    (old,)).fetchall()
+                for notice in old_notices:
+                    survivor = conn.execute(
+                        'SELECT id,result FROM notifications '
+                        'WHERE event_id=? AND batch_id=? AND channel=?',
+                        (keep, notice['batch_id'], notice['channel'])).fetchone()
+                    if survivor is None or survivor['result'] == 'SENT':
+                        continue  # A unique-key-free notice is copied below.
+                    if notice['result'] == 'SENT':
+                        conn.execute(
+                            "UPDATE notifications SET result='SENT',payload=?,"
+                            "attempts=max(attempts,?),next_attempt=0 WHERE id=?",
+                            (notice['payload'], notice['attempts'], survivor['id']))
+                    elif notice['result'] == 'CLAIMED' and survivor['result'] != 'CLAIMED':
+                        conn.execute(
+                            "UPDATE notifications SET result='CLAIMED',payload=?,"
+                            "attempts=max(attempts,?),next_attempt=max(next_attempt,?) WHERE id=?",
+                            (notice['payload'], notice['attempts'],
+                             notice['next_attempt'], survivor['id']))
                 for table, columns in (
                     ('sightings', 'node,source,url,discovered_at'),
                     ('notifications', 'batch_id,channel,created_at,result,payload,attempts,next_attempt')):

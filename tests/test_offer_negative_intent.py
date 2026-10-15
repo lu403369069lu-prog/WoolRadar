@@ -29,5 +29,15 @@ class OfferIntentBoundaryTests(unittest.TestCase):
             'The earlier promotion ended. New free VPS offer is available now.', KEYWORDS))
 
 
+
+    def test_brand_name_does_not_resurrect_closed_giveaway(self):
+        self.assertFalse(contains_keyword('The GitHub giveaway has ended.', KEYWORDS))
+
+    def test_brand_name_does_not_resurrect_expired_free_trial(self):
+        self.assertFalse(contains_keyword('Claude free trial is no longer available.', KEYWORDS))
+
+    def test_brand_live_giveaway_still_found(self):
+        self.assertTrue(contains_keyword('GitHub giveaway is now open for applications.', KEYWORDS))
+
 if __name__ == '__main__':
     unittest.main()

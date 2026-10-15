@@ -90,6 +90,7 @@ class OfficialTracer:
             direct_urls.add(event['primary_url'])
         references = sorted(direct_urls) + references
         results = []
+        stale_during_apply = False
         for url in list(dict.fromkeys(references))[:2]:
             if not validate_public_reference(url, self.hosts):
                 results.append({'status': 'SKIPPED', 'error_code': 'UNAPPROVED_REFERENCE_URL'})
@@ -117,7 +118,16 @@ class OfficialTracer:
                     'card_required': 'unknown', 'auto_renew': 'unknown',
                     'body_sha256': hashlib.sha256(payload).hexdigest(),
                     'method': 'public_reference_fetch', 'requires_campaign_review': kind == 'official_reference'})
-                verified = self.pipeline.apply_evidence(event_id, [evidence])
+                try:
+                    verified = self.pipeline.apply_evidence(event_id, [evidence])
+                except KeyError:
+                    # The page may have been read successfully just as a
+                    # review merged away the old event ID. It is not a fetch
+                    # failure, and none of this proof reached a live event.
+                    stale_during_apply = True
+                    results.append({'url': url, 'status': 'STALE_EVENT_ID',
+                                    'error_code': 'EVENT_MERGED_OR_REMOVED'})
+                    break
                 results.append({'url': url, 'status': 'FETCHED', 'classification': verified['status']})
             except (SourcePaused, urllib.error.HTTPError) as exc:
                 code = str(exc) if isinstance(exc, SourcePaused) else VerificationEngine.classify_fetch_failure(exc.code, '')
@@ -136,10 +146,13 @@ class OfficialTracer:
         # A campaign may also merge the event after a permitted page fetch or
         # after apply_evidence() commits. Never present a missing event as
         # verified, and keep an auditable result instead of crashing ingest.
-        try:
-            current_status = self.pipeline.db.get_event(event_id)['status']
-        except KeyError:
+        if stale_during_apply:
             current_status = 'STALE_EVENT_ID'
+        else:
+            try:
+                current_status = self.pipeline.db.get_event(event_id)['status']
+            except KeyError:
+                current_status = 'STALE_EVENT_ID'
         record = {'checked_at': utc_now(), 'event_id': event_id,
                   'references': results, 'status': current_status}
         if current_status == 'STALE_EVENT_ID':

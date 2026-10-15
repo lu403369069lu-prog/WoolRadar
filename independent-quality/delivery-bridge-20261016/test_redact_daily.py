@@ -1,4 +1,5 @@
 import json
+from itertools import product
 import os
 import tempfile
 import unittest
@@ -71,6 +72,16 @@ class Contract(unittest.TestCase):
 
     def test_claim_types_are_strict(self):
         self.assertEqual(public_claims({'public':'true','remaining':False,'region':'sensitive@example.com','expires_at':'2026-10-16'}),{})
+
+    def test_malformed_field_matrix_no_uncaught_errors(self):
+        kinds = [None, False, 0, 2.4, [], {}, ['bad'], {'bad': 1}, 'bad', 'CLAIMABLE']
+        checked = 0
+        for status, title, url, batch, evidence in product(kinds, kinds, kinds[:9], kinds[:9], kinds[:9]):
+            result = self.preview([row(status=status, title=title,
+                                       primary_url=url, batch_id=batch, evidence=evidence)])
+            self.assertEqual(result['source_type'], 'LOCAL_REDACTED_PREVIEW_NOT_PUBLISHED')
+            checked += 1
+        self.assertEqual(checked, 72900)
 
     def test_cli_explicit_local_new_file_and_no_overwrite(self):
         with tempfile.TemporaryDirectory() as d:

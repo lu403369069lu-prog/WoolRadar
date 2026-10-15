@@ -122,13 +122,15 @@ class Database:
 
     def upsert_candidate(self, candidate: Candidate) -> UpsertResult:
         with self.connect() as conn:
+            # Prevent review/reindex from committing between the campaign lookup
+            # and event insertion: both operations use BEGIN IMMEDIATE.
+            conn.execute('BEGIN IMMEDIATE')
             link = conn.execute('SELECT review_json FROM campaign_links WHERE url=?', (normalize_url(candidate.url),)).fetchone()
-        if link:
-            candidate.metadata = {**candidate.metadata, 'campaign_review': json.loads(link[0])}
-        key = canonical_key(candidate)
-        batch = candidate.batch_id or ''
-        now = candidate.discovered_at or utc_now()
-        with self.connect() as conn:
+            if link:
+                candidate.metadata = {**candidate.metadata, 'campaign_review': json.loads(link[0])}
+            key = canonical_key(candidate)
+            batch = candidate.batch_id or ''
+            now = candidate.discovered_at or utc_now()
             # The lookup and insertion must not race across collection nodes.
             # SQLite resolves the unique-key conflict atomically, and rowcount
             # distinguishes the first sighting from concurrent duplicates.

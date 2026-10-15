@@ -98,5 +98,6 @@ class ConcurrentUpsertTests(unittest.TestCase):
             self.assertTrue(a.notify and b.notify)
             self.assertEqual(len(db.list_events()), 2)
 
+
 if __name__ == '__main__':
     unittest.main()

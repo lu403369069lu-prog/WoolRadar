@@ -5,6 +5,7 @@ import sqlite3
 import hashlib
 import threading
 from datetime import datetime
+from uuid import uuid4
 from contextlib import contextmanager, closing
 from dataclasses import dataclass
 from pathlib import Path
@@ -299,8 +300,10 @@ class Database:
 
     def reindex(self, campaign_review: dict | None = None) -> dict:
         """Transactional key migration; retain a consistent, recoverable SQLite backup."""
+        # utc_now() is second-granularity: two valid reviews/reindexes in the
+        # same second must never collide on an otherwise safe backup filename.
         backup = self.path.with_name(self.path.stem + '-before-reindex-' +
-            utc_now().replace(':', '').replace('-', '') + '.db')
+            utc_now().replace(':', '').replace('-', '') + '-' + uuid4().hex[:12] + '.db')
         if backup.exists():
             raise FileExistsError(backup)
         with self.connect() as conn:

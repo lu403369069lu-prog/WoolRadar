@@ -223,6 +223,50 @@ class Database:
                 return {'unchanged': True, 'merged': 0}
         return self.reindex(campaign_review=review)
 
+    def preview_reindex(self) -> dict:
+        """Read-only inspection of current-key migration, without merging or backing up.
+
+        Does not reconstruct campaigns already incorrectly merged under older
+        algorithms or predict a not-yet-stored manual campaign review.
+        """
+        uri = self.path.resolve().as_uri() + '?mode=ro'
+        with sqlite3.connect(uri, uri=True) as conn:
+            conn.row_factory = sqlite3.Row
+            rows = [dict(item) for item in conn.execute('SELECT * FROM events ORDER BY id')]
+            links = {item['url']: json.loads(item['review_json']) for item in
+                     conn.execute('SELECT url,review_json FROM campaign_links')}
+            notifications = [dict(item) for item in
+                             conn.execute('SELECT event_id,batch_id,channel FROM notifications')]
+        groups = {}
+        changed = 0
+        for row in rows:
+            metadata = json.loads(row['metadata_json'] or '{}')
+            review = links.get(normalize_url(row['primary_url']))
+            if review:
+                metadata['campaign_review'] = review
+            candidate = Candidate(row['node'], row['source'], row['title'], row['primary_url'],
+                                  published_at=row['published_at'] or '',
+                                  batch_id=row['batch_id'], metadata=metadata)
+            key = canonical_key(candidate)
+            changed += key != row['canonical_key']
+            groups.setdefault((key, row['batch_id']), []).append(row['id'])
+        collisions = [ids for ids in groups.values() if len(ids) > 1]
+        notification_index = {}
+        for notice in notifications:
+            notice_key = (notice['batch_id'], notice['channel'])
+            notification_index.setdefault(notice_key, set()).add(notice['event_id'])
+        conflict_count = sum(
+            sum(len(set(group) & event_ids) - 1 for event_ids in notification_index.values()
+                if len(set(group) & event_ids) > 1)
+            for group in collisions)
+        return {
+            'total_events': len(rows), 'changed_keys': changed,
+            'would_merge_events': sum(len(ids) - 1 for ids in collisions),
+            'collision_groups': [sorted(ids) for ids in collisions],
+            'notification_conflict_count': conflict_count,
+            'unrecoverable_prior_merges': 'cannot infer from current event rows',
+        }
+
     def reindex(self, campaign_review: dict | None = None) -> dict:
         """Transactional key migration; retain a consistent, recoverable SQLite backup."""
         backup = self.path.with_name(self.path.stem + '-before-reindex-' +

@@ -6,6 +6,7 @@ import hashlib
 import json
 import re
 import sqlite3
+from contextlib import closing
 from pathlib import Path
 
 SHA = re.compile(r"[0-9a-f]{40}\Z")
@@ -69,8 +70,22 @@ def dispatch(db_path: Path, events: list[dict], dry_run: bool = False) -> dict:
         if key in seen and seen[key] != digest:
             raise ValueError("CONFLICTING_DUPLICATE_EVENT_KEY")
         seen[key] = digest
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(str(db_path), timeout=10, isolation_level=None)
+    if dry_run:
+        # A preview must not create a database or even its parent directory.
+        # Clone existing state into memory using a read-only connection, so
+        # duplicate checks match the real run without touching persistent data.
+        conn = sqlite3.connect(":memory:", timeout=10, isolation_level=None)
+        if db_path.exists():
+            try:
+                source_uri = db_path.resolve().as_uri() + "?mode=ro"
+                with closing(sqlite3.connect(source_uri, uri=True, timeout=10)) as source:
+                    source.backup(conn)
+            except Exception:
+                conn.close()
+                raise
+    else:
+        db_path.parent.mkdir(parents=True, exist_ok=True)
+        conn = sqlite3.connect(str(db_path), timeout=10, isolation_level=None)
     try:
         conn.execute("PRAGMA busy_timeout=10000")
         conn.execute("BEGIN IMMEDIATE")
@@ -97,7 +112,8 @@ def dispatch(db_path: Path, events: list[dict], dry_run: bool = False) -> dict:
         conn.execute("ROLLBACK" if dry_run else "COMMIT")
         return {"quota_paused": quota_paused, "dry_run": dry_run, "decisions": decisions}
     except Exception:
-        conn.execute("ROLLBACK")
+        if conn.in_transaction:
+            conn.execute("ROLLBACK")
         raise
     finally:
         conn.close()

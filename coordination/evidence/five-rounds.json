@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "at": "2026-10-15T02:00:31.944529+00:00",
+  "environment": "Windows / isolated synthetic data",
+  "rounds": [
+    {
+      "round": 1,
+      "name": "normal_collaboration",
+      "command": "python -m unittest -v test_relay.RelayContractTests.test_transition_needs_evidence_and_independent_review",
+      "exit_code": 0,
+      "tests": 1,
+      "status": "partial",
+      "limitations": "Live independent ChatGPT read and draft PR are separate pending evidence",
+      "log": "test_transition_needs_evidence_and_independent_review (test_relay.RelayContractTests.test_transition_needs_evidence_and_independent_review) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 0.005s\n\nOK\n"
+    },
+    {
+      "round": 2,
+      "name": "quota_unavailable",
+      "command": "python -m unittest -v test_relay_faults.FaultRecoveryTests.test_quota_unavailable_cold_recovery_uses_no_model test_relay_faults.FaultRecoveryTests.test_process_exit_preserves_last_checkpoint_and_queue",
+      "exit_code": 0,
+      "tests": 2,
+      "status": "isolated_pass",
+      "limitations": "Model unavailability is injected; no AI calls occur in this runner",
+      "log": "test_quota_unavailable_cold_recovery_uses_no_model (test_relay_faults.FaultRecoveryTests.test_quota_unavailable_cold_recovery_uses_no_model) ... ok\ntest_process_exit_preserves_last_checkpoint_and_queue (test_relay_faults.FaultRecoveryTests.test_process_exit_preserves_last_checkpoint_and_queue) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.096s\n\nOK\n"
+    },
+    {
+      "round": 3,
+      "name": "concurrency",
+      "command": "python -m unittest -v test_relay_git.GitConcurrencyTests.test_two_real_writers_and_crash_replay test_relay.RelayContractTests.test_exclusive_claim_and_fenced_old_owner",
+      "exit_code": 0,
+      "tests": 2,
+      "status": "isolated_pass",
+      "limitations": "Real local Git non-fast-forward conflict; live GitHub CAS reported separately",
+      "log": "test_two_real_writers_and_crash_replay (test_relay_git.GitConcurrencyTests.test_two_real_writers_and_crash_replay) ... ok\ntest_exclusive_claim_and_fenced_old_owner (test_relay.RelayContractTests.test_exclusive_claim_and_fenced_old_owner) ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 2.639s\n\nOK\n"
+    },
+    {
+      "round": 4,
+      "name": "fault_recovery",
+      "command": "python -m unittest -v test_relay_faults test_relay.RelayContractTests.test_outbox_stops_after_transient_failure test_relay.RelayContractTests.test_replay_queue_retries_permission_rate_and_crash_after_ack test_relay.RelayContractTests.test_retry_ceiling_and_changed_queue_content test_dispatcher.DispatcherTests.test_corrupt_database_preserves_original_error",
+      "exit_code": 0,
+      "tests": 9,
+      "status": "isolated_pass",
+      "limitations": "Network/API faults injected; process interruption and Git operations are real local commands",
+      "log": "test_local_version_retention_and_failed_replace (test_relay_faults.FaultRecoveryTests.test_local_version_retention_and_failed_replace) ... ok\ntest_process_exit_preserves_last_checkpoint_and_queue (test_relay_faults.FaultRecoveryTests.test_process_exit_preserves_last_checkpoint_and_queue) ... ok\ntest_quota_unavailable_cold_recovery_uses_no_model (test_relay_faults.FaultRecoveryTests.test_quota_unavailable_cold_recovery_uses_no_model) ... ok\ntest_retries_403_rate_limit_429_5xx_and_network (test_relay_faults.FaultRecoveryTests.test_retries_403_rate_limit_429_5xx_and_network) ... ok\ntest_windows_aliases_and_stale_recovered_evidence_denied (test_relay_faults.FaultRecoveryTests.test_windows_aliases_and_stale_recovered_evidence_denied) ... ok\ntest_outbox_stops_after_transient_failure (test_relay.RelayContractTests.test_outbox_stops_after_transient_failure) ... ok\ntest_replay_queue_retries_permission_rate_and_crash_after_ack (test_relay.RelayContractTests.test_replay_queue_retries_permission_rate_and_crash_after_ack) ... ok\ntest_retry_ceiling_and_changed_queue_content (test_relay.RelayContractTests.test_retry_ceiling_and_changed_queue_content) ... ok\ntest_corrupt_database_preserves_original_error (test_dispatcher.DispatcherTests.test_corrupt_database_preserves_original_error) ... ok\n\n----------------------------------------------------------------------\nRan 9 tests in 0.262s\n\nOK\n"
+    },
+    {
+      "round": 5,
+      "name": "closed_loop",
+      "command": "python -m unittest -v test_relay_git.GitConcurrencyTests.test_synthetic_closed_loop_with_new_sha_and_local_conflict",
+      "exit_code": 0,
+      "tests": 1,
+      "status": "partial",
+      "limitations": "Remote actor is ordinary Python, not ChatGPT; synthetic SHAs are fixtures, not real business commits",
+      "log": "test_synthetic_closed_loop_with_new_sha_and_local_conflict (test_relay_git.GitConcurrencyTests.test_synthetic_closed_loop_with_new_sha_and_local_conflict) ... ok\n\n----------------------------------------------------------------------\nRan 1 test in 10.901s\n\nOK\n"
+    }
+  ],
+  "overall": "partial",
+  "live_chatgpt_takeover": "unverified",
+  "deployed": false
+}

@@ -20,7 +20,7 @@ jobs:
       - name: Run offline regression tests
         shell: bash
         run: |
-          python3 -m unittest discover -s tests -p 'test_dispatcher.py' -v
+          python3 -m unittest discover -s tests -p 'test_*.py' -v
       - name: Run sample dry-run with temporary state
         shell: bash
         run: |

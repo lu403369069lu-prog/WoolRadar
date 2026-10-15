@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+import sqlite3
 from pathlib import Path
 from coordination.dispatcher import dispatch
 
@@ -58,6 +59,25 @@ class DispatcherTests(unittest.TestCase):
         self.assertTrue(dispatch(self.db, [event()], dry_run=True)['dry_run'])
         self.assertEqual(dispatch(self.db, [event()])['decisions'][0]['result'], 'new')
 
+    def test_dry_run_on_missing_db_has_no_filesystem_side_effects(self):
+        missing = self.db.parent / 'nonexistent-directory' / 'new-state.sqlite3'
+        self.assertFalse(missing.parent.exists())
+        result = dispatch(missing, [event()], dry_run=True)
+        self.assertEqual(result['decisions'][0]['result'], 'new')
+        self.assertFalse(missing.exists())
+        self.assertFalse(missing.parent.exists())
+
+    def test_dry_run_on_existing_db_reads_state_without_writing(self):
+        dispatch(self.db, [event()])
+        original = self.db.read_bytes()
+        before = {p.name for p in self.db.parent.iterdir()}
+        second = event(task_id='S-02')
+        preview = dispatch(self.db, [event(), second], dry_run=True)
+        self.assertEqual([d['result'] for d in preview['decisions']], ['duplicate_noop', 'new'])
+        self.assertEqual(self.db.read_bytes(), original)
+        self.assertEqual({p.name for p in self.db.parent.iterdir()}, before)
+        self.assertEqual(dispatch(self.db, [second])['decisions'][0]['result'], 'new')
+
     def test_batch_atomicity(self):
         with self.assertRaises(ValueError):
             dispatch(self.db, [event(), event(task_id='bad/unsafe')])
@@ -67,6 +87,11 @@ class DispatcherTests(unittest.TestCase):
         result = dispatch(self.db, [event(event_type='review_requested')])
         self.assertTrue(result['quota_paused'])
         self.assertEqual(result['decisions'][0]['action'], 'defer_local_execution')
+
+    def test_corrupt_database_preserves_original_error(self):
+        self.db.write_bytes(b'corrupt sqlite database' * 40)
+        with self.assertRaisesRegex(sqlite3.DatabaseError, 'not a database'):
+            dispatch(self.db, [event()])
 
 
 if __name__ == '__main__':

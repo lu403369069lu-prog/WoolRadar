@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "at": "2026-10-15T01:59:39Z",
+  "scope": "isolated Windows acceptance",
+  "observed_failure": "Round 3 first local Git writer push returned unclassified REMOTE_0; rounds 1,2,4,5 exited 0",
+  "interpretation": "No root cause inferred without Git stderr; previous full suite 50/50 passed. Retain this failure even if rerun passes.",
+  "prior_fixed_regressions": ["Windows SQLite connection handle leak", "corrupt database rollback masking original error", "causal outbox ordering and blocked successor replay", "state replacement outside a single validated event", "Windows path aliases", "expired lease accepted by direct publish"]
+}

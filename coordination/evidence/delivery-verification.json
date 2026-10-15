@@ -1,0 +1,193 @@
+{
+  "schema_version": 1,
+  "implementation_sha": "19826b6af9e77f650ed05e7c133dd3184f114de3",
+  "remote_blobs": [
+    {
+      "path": "HANDOFF.md",
+      "expected": "59ac0b3c727deccee9b4d11a1aff394d5d61e130",
+      "actual": "59ac0b3c727deccee9b4d11a1aff394d5d61e130",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "coordination/dispatcher.py",
+      "expected": "a4c51d33f1d3be998218a46090d84a137ecd9696",
+      "actual": "a4c51d33f1d3be998218a46090d84a137ecd9696",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "coordination/relay.py",
+      "expected": "3786463420e4c5cf9012db07d032fe20f0cfe2a9",
+      "actual": "3786463420e4c5cf9012db07d032fe20f0cfe2a9",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "coordination/relay_git.py",
+      "expected": "87f80935272a7b47adfdfd6074c2b6cdddb01a9a",
+      "actual": "87f80935272a7b47adfdfd6074c2b6cdddb01a9a",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "coordination/quota.py",
+      "expected": "1bf683273851e5765fae480d947f394a6252f632",
+      "actual": "1bf683273851e5765fae480d947f394a6252f632",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "coordination/acceptance.py",
+      "expected": "855c16ee2727331aa27ab3697b50b78b51191d24",
+      "actual": "855c16ee2727331aa27ab3697b50b78b51191d24",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "coordination/PROTOCOL_V3.md",
+      "expected": "1e8c73f86201d0cbf8395f83854fc07ce9ec92e0",
+      "actual": "1e8c73f86201d0cbf8395f83854fc07ce9ec92e0",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "coordination/task-state.schema.json",
+      "expected": "138937b0695ed3a410a809469f6dca1dd4517750",
+      "actual": "138937b0695ed3a410a809469f6dca1dd4517750",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "coordination/relay-examples.json",
+      "expected": "c6730baa475ea8e74f00e6b162fd4f0b59348616",
+      "actual": "c6730baa475ea8e74f00e6b162fd4f0b59348616",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "tests/test_dispatcher.py",
+      "expected": "0565d808e63cbf84c61b7402994de8cec3821272",
+      "actual": "0565d808e63cbf84c61b7402994de8cec3821272",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "tests/test_relay.py",
+      "expected": "bffe4f5536ac6dd6ad979424870950b9e08ab66a",
+      "actual": "bffe4f5536ac6dd6ad979424870950b9e08ab66a",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "tests/test_relay_git.py",
+      "expected": "9d0f9b53d789437062eb92ae6dfa6708bf10747a",
+      "actual": "9d0f9b53d789437062eb92ae6dfa6708bf10747a",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "tests/test_relay_faults.py",
+      "expected": "82c50b0725ed2c8a7f4f8baf28e99a13f51c28ba",
+      "actual": "82c50b0725ed2c8a7f4f8baf28e99a13f51c28ba",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "tests/test_quota.py",
+      "expected": "579459ae9b54733f4339f853e35158967be724b4",
+      "actual": "579459ae9b54733f4339f853e35158967be724b4",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "coordination/evidence/relay-unit-tests.json",
+      "expected": "ccb5c39e8a643c21d40608542a9cf8c9ceb88073",
+      "actual": "ccb5c39e8a643c21d40608542a9cf8c9ceb88073",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "coordination/evidence/relay-unit-tests.log",
+      "expected": "577e9caadaf71a98aa321e6a37f97587c16098b3",
+      "actual": "577e9caadaf71a98aa321e6a37f97587c16098b3",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "coordination/evidence/five-rounds.json",
+      "expected": "1cd506c4310e64bfb11e76d705083c87fd5af0ea",
+      "actual": "1cd506c4310e64bfb11e76d705083c87fd5af0ea",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "coordination/evidence/github-cas.json",
+      "expected": "63b88d8f1ef96312a87d5b7e50914082fd566d04",
+      "actual": "63b88d8f1ef96312a87d5b7e50914082fd566d04",
+      "match": true,
+      "error": false
+    },
+    {
+      "path": "coordination/evidence/iteration-history.json",
+      "expected": "62d6377e877337e8e607a82e40b6e119692474f8",
+      "actual": "62d6377e877337e8e607a82e40b6e119692474f8",
+      "match": true,
+      "error": false
+    }
+  ],
+  "state_sha": "9b565b7959cc64bbdd43d0f45f7c15569e556581",
+  "state_payload_matches": true,
+  "state_revision": 6,
+  "state_tasks": [
+    {
+      "project": "SAM",
+      "task_id": "RELAY-SAM-REVIEW",
+      "status": "conflict",
+      "owner": null,
+      "head_sha": "6d0373326b624c0103a7e7294509a5be0ae37996",
+      "version": 2,
+      "worktree_clean": true
+    },
+    {
+      "project": "WoolRadar",
+      "task_id": "RELAY-V5-REVIEW",
+      "status": "conflict",
+      "owner": null,
+      "head_sha": "95574f90a3b5c966e03678ee30c8449387f2ee19",
+      "version": 2,
+      "worktree_clean": true
+    },
+    {
+      "project": "WoolRadar",
+      "task_id": "RELAY-V5-REVIEW-2",
+      "status": "ready",
+      "owner": null,
+      "head_sha": "19826b6af9e77f650ed05e7c133dd3184f114de3",
+      "version": 1,
+      "worktree_clean": false
+    },
+    {
+      "project": "SAM",
+      "task_id": "RELAY-SAM-REVIEW-2",
+      "status": "ready",
+      "owner": null,
+      "head_sha": "6d0373326b624c0103a7e7294509a5be0ae37996",
+      "version": 1,
+      "worktree_clean": false
+    }
+  ],
+  "independent_review": {
+    "actor": "review_relay",
+    "latest": "prior P1 expired-lease publish and P2 proposed registration fixed; no new reproducible issues reported",
+    "limits": "Independent reviewer local push constrained by sandbox; primary ran full real local Git suite"
+  },
+  "backend": {
+    "existing_chat_preserved": true,
+    "message_delivery": true,
+    "actual_takeover_ack": false,
+    "new_artifact": false,
+    "automatic_execution": "unverified"
+  },
+  "deployed": false
+}

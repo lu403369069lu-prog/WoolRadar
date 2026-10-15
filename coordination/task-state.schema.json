@@ -1,0 +1,364 @@
+{
+  "type": "object",
+  "required": [
+    "schema_version",
+    "revision",
+    "tasks",
+    "events"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 3
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "tasks": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "project",
+          "task_id",
+          "version",
+          "status",
+          "owner",
+          "previous_owner",
+          "executor",
+          "claimed_at",
+          "lease_until",
+          "fencing_token",
+          "priority",
+          "dependencies",
+          "base_branch",
+          "base_sha",
+          "work_branch",
+          "head_sha",
+          "worktree_clean",
+          "allowed_files",
+          "change_summary",
+          "evidence",
+          "reviews",
+          "blockers",
+          "error_type",
+          "checkpoint_at",
+          "last_sync_at",
+          "next_action",
+          "definition_of_done",
+          "requires_windows",
+          "remote_takeover_allowed",
+          "restrictions"
+        ],
+        "properties": {
+          "project": {
+            "enum": [
+              "SAM",
+              "WoolRadar"
+            ]
+          },
+          "task_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "status": {
+            "enum": [
+              "proposed",
+              "ready",
+              "claimed",
+              "in_progress",
+              "evidence_ready",
+              "review_pending",
+              "reviewed",
+              "done",
+              "blocked_local",
+              "quota_paused",
+              "network_blocked",
+              "conflict",
+              "failed",
+              "needs_approval"
+            ]
+          },
+          "owner": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2048,
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "previous_owner": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2048,
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "executor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2048,
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "claimed_at": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "lease_until": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "fencing_token": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "priority": {
+            "enum": [
+              "P0",
+              "P1",
+              "P2"
+            ]
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048
+            }
+          },
+          "base_branch": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "base_sha": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "work_branch": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "head_sha": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "worktree_clean": {
+            "type": "boolean"
+          },
+          "allowed_files": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048
+            }
+          },
+          "change_summary": {
+            "type": "string"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "command",
+                "exit_code",
+                "passed",
+                "failed",
+                "head_sha",
+                "artifact"
+              ],
+              "properties": {
+                "command": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2048
+                },
+                "exit_code": {
+                  "type": "integer"
+                },
+                "passed": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "failed": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "head_sha": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2048,
+                  "pattern": "^[0-9a-f]{40}$"
+                },
+                "artifact": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2048
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "reviews": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "reviewer",
+                "head_sha",
+                "artifact"
+              ],
+              "properties": {
+                "reviewer": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2048,
+                  "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}$"
+                },
+                "head_sha": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2048,
+                  "pattern": "^[0-9a-f]{40}$"
+                },
+                "artifact": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2048
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "blockers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048
+            }
+          },
+          "error_type": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "checkpoint_at": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "last_sync_at": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "next_action": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "definition_of_done": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "requires_windows": {
+            "type": "boolean"
+          },
+          "remote_takeover_allowed": {
+            "type": "boolean"
+          },
+          "restrictions": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "events": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "payload_hash",
+          "receipt"
+        ],
+        "properties": {
+          "payload_hash": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "receipt": {
+            "type": "object",
+            "required": [
+              "result",
+              "version",
+              "fencing_token"
+            ],
+            "properties": {
+              "result": {
+                "enum": [
+                  "applied"
+                ]
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "fencing_token": {
+                "type": "integer",
+                "minimum": 0
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sam-woolradar:relay-state:v3"
+}

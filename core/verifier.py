@@ -60,6 +60,19 @@ class VerificationEngine:
             return VerificationResult(Status.EXPIRED, '官方证据显示活动已结束', len(provenance),
                                       unknown_capacity=unknown_capacity)
         for item in official:
+            remaining = item.claims.get('remaining')
+            if isinstance(remaining, bool) or not isinstance(remaining, (int, float)) or remaining != 0:
+                continue
+            try:
+                checked = datetime.fromisoformat(item.checked_at.replace('Z', '+00:00'))
+                age = now - checked
+                fresh_zero = timedelta(0) <= age <= timedelta(hours=24)
+            except (ValueError, TypeError, AttributeError):
+                fresh_zero = False
+            if fresh_zero:
+                return VerificationResult(Status.OFFICIAL_VERIFIED, '近期官方证据显示剩余名额为0，尚无可领取库存',
+                                          len(provenance), unknown_capacity=False)
+        for item in official:
             try:
                 checked = datetime.fromisoformat(item.checked_at.replace('Z', '+00:00'))
                 age = datetime.now(timezone.utc) - checked

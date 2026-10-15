@@ -1,0 +1,15 @@
+{
+  "checked_at": "2026-10-15T06:40:03.449791+00:00",
+  "command": "python -X utf8 -m unittest discover -s tests",
+  "working_root": "isolated_woolradar_stage",
+  "exit_code": 0,
+  "stdout": "node=openmagpie candidates=1 failed_sources=0\nitems=[isolated test output path]\nstatus=[isolated test output path]\n",
+  "stderr": "............................................................................................................................................................\n----------------------------------------------------------------------\nRan 156 tests in 9.572s\n\nOK\n",
+  "python_version": "3.12.14",
+  "code_hashes": {
+    "core/verifier.py": "73e62a4bf72b685b3a00dbfba2fb824e6c427ca0f137a4b5353611c95c7c769d",
+    "tests/test_capacity_gate.py": "74426659c8ebb4125ae229a7d36c81d414aff935fad10ad3a01cae8940312cd6"
+  },
+  "production_changed": false,
+  "limits": "Windows regression tests; Digest bridge uses installed local upstream runtime. Not full upstream or95% business acceptance."
+}

@@ -7,7 +7,7 @@ Review mode: **user-invoked read-only independent review**. No V3 task `claim` e
 
 - Review target: draft [WoolRadar PR #9](https://github.com/lu403369069lu-prog/WoolRadar/pull/9), head `1440553f892676a938135e24938010d50cdd351a` at last pre-write check; open, unmerged.
 - Tested implementation reported by Codex: `19826b6af9e77f650ed05e7c133dd3184f114de3`. Independent GitHub compare to PR head: **ahead by 1 commit, only** `coordination/ACCEPTANCE_REPORT.md` and `coordination/evidence/delivery-verification.json` changed. No implementation edits in that additional commit.
-- State branch `codex/relay-state-v3`, commit `9b565b7959cc64bbdd43d0f45f7c15569e556581`, `state.json` reports envelope `format=1`, `schema_version=3`, `revision=6`. `WoolRadar/RELAY-V5-REVIEW-2` and `SAM/RELAY-SAM-REVIEW-2` are `ready`, with `owner=null`; superseded bootstrap review tasks remain `conflict`. **The checksum was not independently recomputed or validated by the exact Python validator in this review.**
+- State branch `codex/relay-state-v3`, commit `9b565b7959cc64bbdd43d0f45f7c15569e556581`, `state.json` reports envelope `format=1`, `schema_version=3`, `revision=6`. `WoolRadar/RELAY-V5-REVIEW-2` and `SAM/RELAY-SAM-REVIEW-2` are `ready`, with `owner=null`; superseded bootstrap review tasks remain `conflict`. **Independently recomputed the envelope SHA-256** using a separate JavaScript SHA-256 implementation (self-tested against the standard `abc` digest), with Python-compatible sorted compact ASCII JSON canonicalization: calculated `fb152ac52ddc94365bec4b659bbcf39ab46aca3875b563d3d161893842628b96` = stored envelope SHA-256. This verifies payload integrity; the exact Python semantic validator was **not** independently executed.
 - The three project/coordination Issues **were updated by appending a V5 delivery section to the Issue body**. No new Issue comments appeared in the GitHub API results at review time. This resolves the apparent mismatch between Codex's delivery statement and comments-only lookups.
 
 ## Independently executed checks
@@ -15,8 +15,9 @@ Review mode: **user-invoked read-only independent review**. No V3 task `claim` e
 1. Queried PR metadata and latest SHA, compared tested implementation SHA to current PR head.
 2. Parsed Codex's `coordination/evidence/delivery-verification.json` (19 named files and expected Git blob SHA).
 3. Fetched **all 19 named files again** from GitHub at the fixed tested implementation SHA through the connected GitHub interface, and compared each returned Git blob SHA to its recorded expected SHA: **19/19 exact matches, 0 mismatches**. This independently validates remote artifact identity; it is **not** an independent test execution or a proof of semantic correctness.
-4. Read `coordination/relay.py`, `relay_git.py`, `PROTOCOL_V3.md`, the state branch, `ACCEPTANCE_REPORT.md`, `five-rounds.json`, `relay-unit-tests.json`, and `github-cas.json`; inspected latest Issue bodies and comments.
-5. Checked GitHub combined commit status for PR #9 head: no status contexts returned. This is not proof that every GitHub Actions trigger has never run.
+4. Independently checked the V3 envelope format, schema version, revision and SHA-256 digest against the GitHub-read state payload.
+5. Read `coordination/relay.py`, `relay_git.py`, `PROTOCOL_V3.md`, the state branch, `ACCEPTANCE_REPORT.md`, `five-rounds.json`, `relay-unit-tests.json`, and `github-cas.json`; inspected latest Issue bodies and comments.
+6. Checked GitHub combined commit status for PR #9 head: no status contexts returned. This is not proof that every GitHub Actions trigger has never run.
 
 ## Codex evidence evaluated, **not independently rerun**
 

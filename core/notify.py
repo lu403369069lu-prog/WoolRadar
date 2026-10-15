@@ -64,21 +64,30 @@ class NotificationQueue:
                 continue
             if not local and not policy.get('telegram_send_enabled', False):
                 continue
-            if item['channel'].endswith('-verified'):
-                event = self.db.get_event(item['event_id'])
-                validation = VerificationEngine().evaluate(Candidate(event['node'], event['source'],
-                    event['title'], event['primary_url']), self.db.get_evidence(event['id']))
-                if validation.status.value != 'CLAIMABLE':
-                    with self.db.connect() as conn:
-                        conn.execute("UPDATE notifications SET result='STALE' WHERE id=? "
-                            "AND result IN ('PENDING','RETRY','CLAIMED') AND next_attempt<=?", (item['id'], time.time()))
-                    continue
             now = time.time()
-            with self.db.connect() as conn:
-                conn.execute('BEGIN IMMEDIATE')
-                claimed = conn.execute("""UPDATE notifications SET result='CLAIMED',
-                    next_attempt=?,attempts=attempts+1 WHERE id=? AND next_attempt<=?
-                    AND result IN ('PENDING','RETRY','CLAIMED')""", (now + 300, item['id'], now)).rowcount
+            # pending() is a snapshot. A campaign reindex may merge away its
+            # event before this worker claims the notice. Hold the same SQLite
+            # writer reservation used by ingestion/reindex across *both* the
+            # event/evidence validation and the outbox claim. Network delivery
+            # and local file writes happen strictly after the lock is released.
+            with self.db.candidate_transaction():
+                if item['channel'].endswith('-verified'):
+                    try:
+                        event = self.db.get_event(item['event_id'])
+                    except KeyError:
+                        validation = None  # The snapshot refers to a merged event.
+                    else:
+                        validation = VerificationEngine().evaluate(Candidate(event['node'], event['source'],
+                            event['title'], event['primary_url']), self.db.get_evidence(event['id']))
+                    if validation is None or validation.status.value != 'CLAIMABLE':
+                        with self.db.connect() as conn:
+                            conn.execute("UPDATE notifications SET result='STALE' WHERE id=? "
+                                "AND result IN ('PENDING','RETRY','CLAIMED') AND next_attempt<=?", (item['id'], now))
+                        continue
+                with self.db.connect() as conn:
+                    claimed = conn.execute("""UPDATE notifications SET result='CLAIMED',
+                        next_attempt=?,attempts=attempts+1 WHERE id=? AND next_attempt<=?
+                        AND result IN ('PENDING','RETRY','CLAIMED')""", (now + 300, item['id'], now)).rowcount
             if not claimed:
                 continue
             try:

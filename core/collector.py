@@ -116,7 +116,12 @@ def contains_keyword(text: str, keywords: list[str]) -> bool:
         'free', 'giveaway', 'credit', 'credits', 'perk', 'perks', 'trial', 'promo', 'promotion', 'coupon', 'redeem',
         '免费', '赠金', '兑换码', '限量', '抽奖', '羊毛', '送码', '优惠',
     )
-    return any(matches(cue, promotion_text) and (cue != 'trial' or trial_offer) for cue in promo_cues)
+    # Brand-only matching must not undo the same closed/request/paid gate.
+    return any(
+        any(matches(cue, clause) and (cue != 'trial' or trial_offer)
+            for cue in promo_cues)
+        for clause in re.split(r'[!?;\n]|\.(?=\s|$)', promotion_text)
+        if not negative_offer.search(clause))
 
 
 def _local_name(tag: str) -> str:

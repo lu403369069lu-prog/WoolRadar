@@ -116,5 +116,58 @@ class VerifiedOutboxReindexTests(unittest.TestCase):
                 self.assertEqual(conn.execute('PRAGMA foreign_key_check').fetchall(), [])
 
 
+
+class ReusedNotificationIdTests(unittest.TestCase):
+    def seed(self, root, channel):
+        db = Database(root / 'isolated.db')
+        first = db.upsert_candidate(Candidate('n', 'rss', 'Old grant',
+            'https://publisher.example/old')).event_id
+        second = db.upsert_candidate(Candidate('n', 'rss', 'New grant',
+            'https://publisher.example/new')).event_id
+        queue = NotificationQueue(db)
+        self.assertTrue(queue.enqueue(first, '', channel, 'OLD payload'))
+        return db, queue, second
+
+    def recycle(self, db, old_id, second, channel):
+        with db.connect() as conn:
+            conn.execute('DELETE FROM notifications WHERE id=?', (old_id,))
+            conn.execute('INSERT INTO notifications(event_id,batch_id,channel,created_at,result,payload) '
+                         'VALUES(?,?,?,?,?,?)',
+                         (second, '', channel, '2026-10-15T00:00:01Z', 'PENDING', 'NEW payload'))
+            row = conn.execute('SELECT id,result,payload FROM notifications').fetchone()
+            self.assertEqual(row['id'], old_id)  # SQLite rowid reuse
+
+    def test_recycled_id_after_pending_snapshot_cannot_claim_unrelated_notice(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            db, queue, second = self.seed(root, 'local-discovery')
+            original = queue.pending
+            def pending_then_recycle():
+                snapshot = original()
+                self.recycle(db, snapshot[0]['id'], second, 'local-discovery')
+                return snapshot
+            with mock.patch.object(queue, 'pending', side_effect=pending_then_recycle):
+                result = queue.flush({}, local_dir=root / 'out')
+            self.assertEqual(result['local'], 0)
+            with db.connect() as conn:
+                self.assertEqual(conn.execute('SELECT result FROM notifications').fetchone()[0], 'PENDING')
+            self.assertFalse(list((root / 'out').glob('*.json')))
+
+    def test_recycled_id_during_send_cannot_mark_new_notice_sent(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            db, queue, second = self.seed(root, 'telegram')
+            old_id = queue.pending()[0]['id']
+            def sender(payload):
+                self.assertEqual(payload, 'OLD payload')
+                self.recycle(db, old_id, second, 'telegram')
+                return 'SENT'
+            result = queue.flush({'telegram_send_enabled': True}, sender=sender)
+            self.assertEqual(result['sent'], 1)  # external send did occur
+            with db.connect() as conn:
+                self.assertEqual(conn.execute('SELECT result FROM notifications').fetchone()[0], 'PENDING')
+
+
+
 if __name__ == '__main__':
     unittest.main()

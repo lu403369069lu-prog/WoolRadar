@@ -230,8 +230,10 @@ class Database:
         algorithms or predict a not-yet-stored manual campaign review.
         """
         uri = self.path.resolve().as_uri() + '?mode=ro'
-        with sqlite3.connect(uri, uri=True) as conn:
+        with closing(sqlite3.connect(uri, uri=True)) as conn:
             conn.row_factory = sqlite3.Row
+            # Stable WAL read snapshot across events, campaign reviews and notices.
+            conn.execute('BEGIN')
             rows = [dict(item) for item in conn.execute('SELECT * FROM events ORDER BY id')]
             links = {item['url']: json.loads(item['review_json']) for item in
                      conn.execute('SELECT url,review_json FROM campaign_links')}

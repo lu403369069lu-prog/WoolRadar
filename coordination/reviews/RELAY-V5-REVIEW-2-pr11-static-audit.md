@@ -37,3 +37,23 @@ Date: 2026-10-15. Reviewer: ChatGPT in this conversation, using connected GitHub
 The next isolated, authorized work is to demonstrate genuine V3 events from an actual ChatGPT executor (claim/start/evidence, with atomic ref CAS), with an artifact under `coordination/reviews/` and a genuine GitHub SHA. If claim/release cannot be completed safely, do not leave an indefinite owned task; disclose exact state.
 
 No main/production merge, background agent install, paid API, Windows scheduler, credentials or business database modified.
+
+
+## Addendum — real on-demand V3 claim/start/evidence/release (not unattended)
+
+After completing the above source review, the **actual ChatGPT executor in this conversation** used the connected GitHub repository writer and the validated V3 event structure to publish the following sequential, non-force, compare-and-swap checkpoint commits to `codex/relay-state-v3`. This was not a Codex-side simulation and was not a forged message to another historical chat:
+
+| Event | State revision | State commit | Result |
+| --- | ---: | --- | --- |
+| `claim:1` | 17 | [Revision 17](https://github.com/lu403369069lu-prog/WoolRadar/commits/codex/relay-state-v3) | owner=`chatgpt-github-review`, fencing token 1 |
+| `start:2` | 18 | `619a928b958a7e434a876c2ee4bb389707f815f6` | in_progress |
+| `evidence:3` | 19 | `2cf9c462507bd359ddb6db010f48bd0bc440d30c` | static GitHub checks recorded, no false claim of unittest |
+| `release:4` | 20 | `301d0f535e6ee449bbbf6215473cc912c127f51f` | task ready again, owner null, lease 0 |
+
+The first two writes were followed by a local tool-call-limit interruption. The assistant read the authoritative branch again at revision 18 and resumed from that exact state rather than recreating or force-updating it. Each later write used the current commit SHA for CAS, and the final revision 20 branch state was read back and verified for the expected event receipts, retained evidence and released owner.
+
+**Boundaries:** The evidence command is a real static GitHub review with two source/readback checks, `exit_code=0`, `passed=2`, and an explicitly non-unittest command. It remains anchored to the existing task's frozen implementation SHA `19826b6af9e77f650ed05e7c133dd3184f114de3`; the new PR #11 review artifact references later code separately. No code-identity substitution or test passing claim is implied. No independent `review` event or `done` transition was submitted by the same actor; the task was intentionally released for an independent reviewer to continue.
+
+**New proven capability:** user-triggered actual ChatGPT GitHub V3 task claim, start, evidence and safe release with a real checkpoint revision sequence, in addition to code-review PR output.
+
+**Still missing:** unattended scheduled/triggered model execution; cryptographically authenticated independent actor identity; independent reviewer completion of this V3 task; production deployment and long-term autonomous operation. Overall V5 continues to be **partial**.

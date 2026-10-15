@@ -17,11 +17,13 @@ class ReportPaths:
 
 
 class ReportGenerator:
-    def __init__(self, db: Database, report_dir: Path):
+    def __init__(self, db: Database, report_dir: Path, noise_audit=None):
         self.db = db
         self.report_dir = Path(report_dir)
+        self.noise_audit = noise_audit
 
     def generate(self, date: str) -> ReportPaths:
+        audit_snapshot = self.noise_audit.snapshot() if self.noise_audit is not None else None
         self.report_dir.mkdir(parents=True, exist_ok=True)
         events = self.db.list_events()
         runs = self.db.latest_node_runs()
@@ -37,12 +39,22 @@ class ReportGenerator:
                  'excerpt': item.excerpt, 'claims': item.claims, 'provenance_key': item.provenance_key}
                 for item in self.db.get_evidence(event['id'])
             ]
+        all_events = events
+        excluded = []
+        if self.noise_audit is not None:
+            for event in all_events:
+                event['report_audit'] = audit_snapshot.decision(event)
+            excluded = [e for e in all_events if e['report_audit']['excluded']]
+            events = [e for e in all_events if not e['report_audit']['excluded']]
         today_events = [event for event in events if datetime.fromisoformat(
             event['first_seen'].replace('Z', '+00:00')).astimezone(
                 timezone(timedelta(hours=8))).date().isoformat() == date]
         with self.db.connect() as conn:
             notices = [dict(row) for row in conn.execute('SELECT id,event_id,batch_id,channel,created_at,result,attempts FROM notifications ORDER BY id DESC LIMIT 100')]
-        payload = {'date': date, 'timezone': 'Asia/Shanghai', 'events': events, 'node_runs': runs, 'notifications': notices}
+        payload = {'date': date, 'timezone': 'Asia/Shanghai', 'events': all_events, 'node_runs': runs, 'notifications': notices}
+        if self.noise_audit is not None:
+            payload['noise_audit'] = {'excluded': len(excluded), 'visible': len(events),
+                                     'events_preserved': len(all_events), 'ledger_sha256': audit_snapshot.digest}
         json_path = self.report_dir / f'{date}-daily.json'
         md_path = self.report_dir / f'{date}-daily.md'
         json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
@@ -72,6 +84,17 @@ class ReportGenerator:
                     if evidence['claims']:
                         lines.append(f"  - 核验时间：{evidence['checked_at']}；证据：{evidence['url']}")
                         lines.append('  - 条件与未知项：' + json.dumps(evidence['claims'], ensure_ascii=False))
+        if self.noise_audit is not None:
+            lines.extend(['## 历史噪声审计（原事件与证据保留）', ''])
+            if not excluded:
+                lines.append('- 无当前有效的排除记录')
+            for row in excluded:
+                audit = row['report_audit']
+                lines.append(f"- [{row['title']}]({row['primary_url']})：仅排除报告正文，事件 #{row['id']}")
+                lines.append('  - 审核人：' + json.dumps(audit['reviewer'], ensure_ascii=False) +
+                             '；时间：' + audit['reviewed_at'] +
+                             '；原因：' + json.dumps(audit['reason'], ensure_ascii=False))
+            lines.append('')
         lines.extend(['## 采集节点故障与漏报情况', ''])
         if not runs:
             lines.append('- 尚无节点运行记录')

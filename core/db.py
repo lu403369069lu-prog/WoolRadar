@@ -129,17 +129,19 @@ class Database:
         batch = candidate.batch_id or ''
         now = candidate.discovered_at or utc_now()
         with self.connect() as conn:
+            # The lookup and insertion must not race across collection nodes.
+            # SQLite resolves the unique-key conflict atomically, and rowcount
+            # distinguishes the first sighting from concurrent duplicates.
+            cursor = conn.execute(
+                '''INSERT INTO events(canonical_key,batch_id,title,primary_url,source,node,published_at,first_seen,last_seen,metadata_json)
+                   VALUES(?,?,?,?,?,?,?,?,?,?)
+                   ON CONFLICT(canonical_key,batch_id) DO NOTHING''',
+                (key, batch, candidate.title, candidate.url, candidate.source, candidate.node,
+                 candidate.published_at, now, now, json.dumps(candidate.metadata, ensure_ascii=False)))
+            notify = cursor.rowcount == 1
             row = conn.execute('SELECT id FROM events WHERE canonical_key=? AND batch_id=?', (key, batch)).fetchone()
-            notify = row is None
-            if row is None:
-                cursor = conn.execute(
-                    '''INSERT INTO events(canonical_key,batch_id,title,primary_url,source,node,published_at,first_seen,last_seen,metadata_json)
-                       VALUES(?,?,?,?,?,?,?,?,?,?)''',
-                    (key, batch, candidate.title, candidate.url, candidate.source, candidate.node,
-                     candidate.published_at, now, now, json.dumps(candidate.metadata, ensure_ascii=False)))
-                event_id = cursor.lastrowid
-            else:
-                event_id = int(row['id'])
+            event_id = int(row['id'])
+            if not notify:
                 conn.execute('UPDATE events SET last_seen=? WHERE id=?', (now, event_id))
             conn.execute(
                 'INSERT OR IGNORE INTO sightings(event_id,node,source,url,discovered_at) VALUES(?,?,?,?,?)',

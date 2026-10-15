@@ -10,7 +10,7 @@ from core.db import Database
 from core.models import Candidate
 
 
-class InsertBarrierConnection:
+class StartBarrierConnection:
     def __init__(self, conn, barrier):
         self.conn = conn
         self.barrier = barrier
@@ -19,12 +19,12 @@ class InsertBarrierConnection:
         return getattr(self.conn, name)
 
     def execute(self, query, args=()):
-        if 'INSERT INTO events(' in query:
+        if query.strip().upper() == 'BEGIN IMMEDIATE':
             self.barrier.wait(timeout=10)
         return self.conn.execute(query, args)
 
 
-class DatabaseWithInsertBarrier(Database):
+class DatabaseWithStartBarrier(Database):
     def __init__(self, path, barrier):
         self.barrier = barrier
         super().__init__(path)
@@ -32,13 +32,13 @@ class DatabaseWithInsertBarrier(Database):
     @contextmanager
     def connect(self):
         with super().connect() as conn:
-            yield InsertBarrierConnection(conn, self.barrier)
+            yield StartBarrierConnection(conn, self.barrier)
 
 
 class ConcurrentUpsertTests(unittest.TestCase):
     def test_two_nodes_same_event_insert_once_preserve_sightings(self):
         with TemporaryDirectory() as root:
-            db = DatabaseWithInsertBarrier(Path(root) / 'synthetic.db', Barrier(2))
+            db = DatabaseWithStartBarrier(Path(root) / 'synthetic.db', Barrier(2))
 
             def worker(index):
                 return db.upsert_candidate(
@@ -58,7 +58,7 @@ class ConcurrentUpsertTests(unittest.TestCase):
 
     def test_concurrent_cross_vendor_generic_title_stays_separate(self):
         with TemporaryDirectory() as root:
-            db = DatabaseWithInsertBarrier(Path(root) / 'synthetic.db', Barrier(2))
+            db = DatabaseWithStartBarrier(Path(root) / 'synthetic.db', Barrier(2))
 
             def worker(index):
                 return db.upsert_candidate(Candidate(f'node{index}', 'fixture',
@@ -73,7 +73,7 @@ class ConcurrentUpsertTests(unittest.TestCase):
 
     def test_concurrent_title_spacing_variants_do_not_alert_twice(self):
         with TemporaryDirectory() as root:
-            db = DatabaseWithInsertBarrier(Path(root) / 'synthetic.db', Barrier(2))
+            db = DatabaseWithStartBarrier(Path(root) / 'synthetic.db', Barrier(2))
             titles = ('Free VPS 1GB', 'Free VPS 1 GB')
 
             def worker(index):

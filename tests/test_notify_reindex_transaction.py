@@ -112,6 +112,7 @@ class VerifiedOutboxReindexTests(unittest.TestCase):
             self.assertFalse(migrator.is_alive())
             self.assertEqual(errors, [])
             self.assertEqual(observed[0]['local'], 1)
+            self.assertNotIn('uncertain', observed[0])
             self.assertEqual(len(db.list_events()), 1)
             with db.connect() as conn:
                 self.assertEqual(conn.execute('PRAGMA foreign_key_check').fetchall(), [])
@@ -164,7 +165,11 @@ class ReusedNotificationIdTests(unittest.TestCase):
                 self.recycle(db, old_id, second, 'telegram')
                 return 'SENT'
             result = queue.flush({'telegram_send_enabled': True}, sender=sender)
-            self.assertEqual(result['sent'], 1)  # external send did occur
+            # The external send happened, but the original outbox row was
+            # replaced before the confirmation CAS. Never report it as a
+            # durably confirmed delivery (nor mark the replacement as sent).
+            self.assertEqual(result['sent'], 0)
+            self.assertEqual(result['uncertain'], 1)
             with db.connect() as conn:
                 self.assertEqual(conn.execute('SELECT result FROM notifications').fetchone()[0], 'PENDING')
 

@@ -95,3 +95,18 @@ Actual command: `PYTHONPATH=<isolated temp root> python -B -m unittest discover 
 Runtime emitted a separate spreadsheet-package warmup warning during interpreter startup; the subprocess still returned exit0 and unittest reported all 11 pass, so the result pertains only to those actual test methods. This is a real formal producer→sampler focused suite, **not** the full WoolRadar Windows integrated suite or fresh unseen real-world independent holdout. Neither production reports nor private content were accessed.
 
 **Next minimal task**: check percent-encoded query key collisions (`?ba%74ch=...` versus `?batch=...`) at the exact original producer/sampler boundary before claiming public campaign identity. No merge, deployment or external publication occurred.
+
+
+## Smallest item #5: percent-encoded business query key identity — 2026-10-17
+**Verified red at original complete exact source**: `https://example.org/view?ba%74ch=alpha` and `https://example.org/view?batch=alpha` produced two rows with the same stored canonical URL and **both** `url_identity_preserved=True`. Actual real `record_public_sample`→`freeze_public_sources` generated 1 downstream blind candidate and identity loss count 0. Some origins may distinguish raw selector name spellings, so declaring identity proven was unsafe.
+
+**Minimal source change** in `core/public_corpus.py`: before parsing query pairs, inspect each raw selector key. If it contains percent encoding or literal `+`, do not certify identity unless the decoded key is a known disposable marketing tracker. Existing allowlisted `batch` still works. Both query strings and supported SPA route queries traverse the same `_semantic_query` contract. Added 2 actual new `unittest` methods for encoded functional key collision and a safely dropped encoded `utm_source` key; the latter is a positive anti-overblocking control.
+
+**Actual complete source and formal suite execution**:
+- Exact full producer Git blob `412a41db4c445a6df69f0c85c082c57abc1ffd5f`, exact full sampler blob `c090c6885c22fe73b876de994a1c79714c0e7051`, and exact *new* full formal test blob `e4e9d815b364fd95aa7e9db35574988555a25271`: all SHA1(Git blob envelope + UTF8 content) matched the GitHub readback. None of these 3 file contents were patched locally after SHA check.
+- Isolated Python 3.13.5, fixed synthetic `core.models.utc_now` external stub only (not part of the above three production/test blobs).
+- Actual command: `PYTHONPATH=<isolated root> python -B -m unittest discover -s <isolated root>/tests -p test_public_corpus_identity.py -v`.
+- **Exit0; total 13 / pass 13 / fail0 / error0 / skip0**. Included all original 11 with new encoded key collision and encoded tracker controls. No public crawler/network, private report or production database was accessed.
+- Interpreter emitted unrelated optional spreadsheet warmup stderr, but unittest TAP/text results were 13 methods, all passed and process exit0.
+
+**Residual acceptance**: full Windows collector plus unified 396+ suite at a single integrated SHA (main PR23 has not yet incorporated PR36), fresh never-before-used real source gold adjudicated before tuning, five source nodes, mainland China/card/fee official qualification, live report-to-09:30 consumed same SHA. `OUTPUT_NOT_CONNECTED`, integration=NOT_DONE. No auto merge or deployment.

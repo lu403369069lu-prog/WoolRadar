@@ -91,7 +91,7 @@ def freeze_public_sources(sources: list[tuple[dict, str]], limit: int = 8) -> di
                        'candidate_unique_urls': len(candidates), 'duplicate_within_source': duplicate_within,
                        'duplicate_across_source': duplicate_between, 'invalid_rows': invalid,
                        'selected_rows': len([r for r in picked if r['source_id'] == ident])})
-    return {'schema_version': 1, 'purpose': 'UNSEEN_LOCAL_ONLY_REVIEW_CANDIDATES',
+    return {'schema_version': 1, 'purpose': 'LOCAL_ONLY_REVIEW_CANDIDATES_HOLDOUT_UNVERIFIED',
             'no_truth_labels': True, 'not_independent_if_used_for_tuning': True,
             'exact_url_dedup_only': True, 'sources': audits, 'rows': picked,
             'limits': 'Public title/snippet may contain private text; manually review before sharing. Different URLs may be the same campaign. No availability or eligibility claims.'}

@@ -57,3 +57,14 @@ Independent exact-source execution after this update:
 - Formal `tests/test_developer_grant_negations.py` now includes all six brand-fallback adversarial statements plus unrelated GitHub free VPS and open/no-application-fee positive controls. This **updated test file is committed, not itself executed by importing the full collector and its dependencies here**. Full Windows unified suite is still not run and original business/source P06/holdout/delivery gaps remain.
 
 **No production deployment, V3 state mutation, user accounts, paid model APIs, Work, Codex or auto merge.** The existing 09:30 ChatGPT scheduled report is enabled independently but local daily report consumer remains `OUTPUT_NOT_CONNECTED`.
+
+
+## Smallest item #2: case-folded public offer selector identity — 2026-10-16
+
+**Actual bug in exact upstream `core/public_corpus.py`**: `_semantic_query` lowercased *all* functional query keys before preserving identity. An origin may distinguish `?Batch=alpha` from `?batch=alpha`, but both normalized to the same `?batch=alpha` and were flagged `url_identity_preserved=True`. They could be treated as one campaign by future blind selection. This is not merely cosmetic when the query key names a program batch.
+
+**Small fix uploaded on existing Draft PR36**: retain original key while normalizing display; if `original_key != original_key.lower()` for a nontracker key, set `preserved=False`. Continue dropping known tracking-only keys (even uppercase `UTM_SOURCE`) without poisoning a valid lowercase business selector. Do not change canonical keys/URL display or auto-infer claimability.
+
+**Actually executed**: isolated Python 3.13 `python -B wool_query_identity_check.py` reproducing the exact current `_semantic_query` logic and constants. **5/5 pass exit0**: uppercase functional key now loses identity, lowercase counterpart preserves, uppercase tracking key safely removed, conflicting batches denied, sensitive token query denied. The command used a local scratch extraction, not an import of the entire repository module. A new real formal `tests/test_public_corpus_identity.py` pair is committed for producer/sampler integration: one ensures only lower-case-identity row reaches downstream blind sample, the other checks uppercase tracker removal. **Formal complete source checkout/Windows unified suite at latest PR HEAD remains unexecuted**; these narrow isolated passes must not be used to inflate the final full regression denominator.
+
+Current code blobs should be freshly checked; no unseen real-source batch, cross-URL campaign gold, real 09:30 report consumption or user approval occurred. `DELIVERY_BRIDGE=OUTPUT_NOT_CONNECTED` unchanged.

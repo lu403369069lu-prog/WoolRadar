@@ -32,12 +32,12 @@ entry or a user-specific China residency determination.
 ## Actual tests and limits
 
 Executed Linux Python3.13 standard-library
-`python -B -m unittest -v test_developer_grants.py`: **10/10 PASS, exit0**.
+`python -B -m unittest -v test_developer_grants.py`: **11/11 PASS, exit0**.
 Cases cover active/rolling maintainer award, closed program, fee, donation,
-historical award, generic article, question, generic startup investment
+historical award, generic article, question, official-style funding amount with rolling applications, generic startup investment
 and open program with no cash award. GitHub and locally executed
-`core/developer_grants.py` blob match `97da800bda098166b08394462ceb2d1831544dd3`; test
-matches `3bafd60ab8866a3ba17e0d041706170d0c535af2`.
+`core/developer_grants.py` blob match `678b9447d238c8f96a4e727a02719725be1cd837`; test
+matches `8a538a11e549df41398e2ae0aa44dac839fa207f`.
 
 A further `tests/test_developer_grant_discovery.py` imports the real
 `core.collector.contains_keyword` for five integration cases, including
@@ -61,3 +61,7 @@ conditional funding application lead and does not prove claimability.
 and no authenticated ChatGPT daily brief consumption receipt exists.
 Do not deploy, merge, auto-register, claim, pay, access X credentials
 or modify the Windows runtime or SQLite.
+
+## Actual official FAQ expression red/green follow-up
+
+GitHub's official Secure Open Source Fund page lists rolling applications and the funding amount in separate FAQ/benefits sections. A constructed combined title+summary with `rolling applications are open; Funding: $10,000 per project` failed the first narrow candidate (10/11 tests passed). A small explicit funding-table pattern now permits this valid formulation only with all developer-program/application/denial gates still in force. New isolated Python tests: **11/11 PASS, exit0**. These are synthetic sentence strings grounded in provider wording, not the frozen original public-corpus rows or live eligibility verification. The matcher and formal unit test blobs matched their local Git object IDs at the new head. See the actual official terms for current program scope: https://github.com/open-source/github-secure-open-source-fund .

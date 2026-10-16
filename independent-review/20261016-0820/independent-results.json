@@ -1,0 +1,23 @@
+[
+  {
+    "label": "preview-independent",
+    "command": [
+      "USER_HOME\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "COORDINATOR_WORKSPACE\\_outbox\\acceptance-20261016-0820\\test_preview_boundary.py"
+    ],
+    "exit_code": 1,
+    "log": "preview-independent.log"
+  },
+  {
+    "label": "sam-line-locator",
+    "command": [
+      "USER_HOME/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+      "--test",
+      "COORDINATOR_WORKSPACE\\_outbox\\acceptance-20261016-0820\\sam_line_locator.mjs"
+    ],
+    "exit_code": 1,
+    "log": "sam-line-locator.log"
+  }
+]

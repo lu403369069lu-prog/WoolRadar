@@ -1,0 +1,58 @@
+
+test_clean_public_route_remains_allowed (__main__.PreviewBoundary.test_clean_public_route_remains_allowed) ... ok
+test_consumer_rejects_credential_bearing_public_url (__main__.PreviewBoundary.test_consumer_rejects_credential_bearing_public_url) ... FAIL
+test_consumer_rejects_nested_private_claim_fields (__main__.PreviewBoundary.test_consumer_rejects_nested_private_claim_fields) ... FAIL
+test_encoded_account_route_is_not_public (__main__.PreviewBoundary.test_encoded_account_route_is_not_public) ... FAIL
+test_extreme_timestamp_is_controlled_invalid_input (__main__.PreviewBoundary.test_extreme_timestamp_is_controlled_invalid_input) ... ERROR
+test_percent_encoded_denied_route_is_not_public (__main__.PreviewBoundary.test_percent_encoded_denied_route_is_not_public) ... FAIL
+
+======================================================================
+ERROR: test_extreme_timestamp_is_controlled_invalid_input (__main__.PreviewBoundary.test_extreme_timestamp_is_controlled_invalid_input)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_outbox\acceptance-20261016-0820\test_preview_boundary.py", line 24, in test_extreme_timestamp_is_controlled_invalid_input
+    self.assertIsNone(timestamp('0001-01-01T00:00:00+14:00'))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "COORDINATOR_WORKSPACE\_work\wool-qa-20261016-0820\independent-quality\delivery-bridge-20261016\redact_daily.py", line 68, in timestamp
+    return dt.astimezone(timezone.utc).isoformat().replace('+00:00', 'Z')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+OverflowError: date value out of range
+
+======================================================================
+FAIL: test_consumer_rejects_credential_bearing_public_url (__main__.PreviewBoundary.test_consumer_rejects_credential_bearing_public_url)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_outbox\acceptance-20261016-0820\test_preview_boundary.py", line 22, in test_consumer_rejects_credential_bearing_public_url
+    with self.assertRaises(UnsafePreview):validate(raw,hashlib.sha256(raw).hexdigest(),now=NOW)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: UnsafePreview not raised
+
+======================================================================
+FAIL: test_consumer_rejects_nested_private_claim_fields (__main__.PreviewBoundary.test_consumer_rejects_nested_private_claim_fields)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_outbox\acceptance-20261016-0820\test_preview_boundary.py", line 19, in test_consumer_rejects_nested_private_claim_fields
+    with self.assertRaises(UnsafePreview):validate(raw,hashlib.sha256(raw).hexdigest(),now=NOW)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: UnsafePreview not raised
+
+======================================================================
+FAIL: test_encoded_account_route_is_not_public (__main__.PreviewBoundary.test_encoded_account_route_is_not_public)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_outbox\acceptance-20261016-0820\test_preview_boundary.py", line 13, in test_encoded_account_route_is_not_public
+    self.assertIsNone(public_url('https://vendor.example/%61ccount/profile'))
+AssertionError: 'https://vendor.example/%61ccount/profile' is not None
+
+======================================================================
+FAIL: test_percent_encoded_denied_route_is_not_public (__main__.PreviewBoundary.test_percent_encoded_denied_route_is_not_public)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_outbox\acceptance-20261016-0820\test_preview_boundary.py", line 11, in test_percent_encoded_denied_route_is_not_public
+    self.assertIsNone(public_url('https://vendor.example/log%69n/promo'))
+AssertionError: 'https://vendor.example/log%69n/promo' is not None
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.009s
+
+FAILED (failures=4, errors=1)

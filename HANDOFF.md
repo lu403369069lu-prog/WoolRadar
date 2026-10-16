@@ -31,3 +31,12 @@
 
 ## Next actions
 - Import local source and document exact current task and unfinished work.
+
+
+## 2026-10-16 — Proposed repository-side recurring read-only checkpoint (not deployed)
+
+- Dedicated branch `chatgpt/scheduled-checkpoint-contract-20261016` with `.github/workflows/read-only-checkpoint.yml` and `coordination/SCHEDULED_TASKS.md`. This independent review branch does not alter project code or V3 owner/lease/fence and will be submitted as a **Draft PR**.
+- Scope: scheduled, metadata-only repository Issue/PR inspection via default GitHub token with read permissions. GitHub Step Summary is the only output. **No AI task execution, unattended source-code modification, private report forwarding, or GitHub Issue writes**.
+- Critical limitation: the existing `main` was still handoff scaffolding; actual candidate code is on unmerged Draft PRs. Thus this branch is **not** a production release or complete project integration. Cron is inert until an explicitly reviewed/default-branch merge. Private Actions minutes/billing and timing variance must be verified first.
+- Exact active engineering checkpoints and remaining business gates are tracked in [WoolRadar Issue #2](https://github.com/lu403369069lu-prog/WoolRadar/issues/2), [cross-project Issue #3](https://github.com/lu403369069lu-prog/WoolRadar/issues/3), and [SAM Issue #1](https://github.com/lu403369069lu-prog/YinQieJi/issues/1). Read those and latest PR HEADs afresh. `DELIVERY_BRIDGE=OUTPUT_NOT_CONNECTED` (as of this handoff); no verified 09:30 same-SHA delivery. Neither project has passed final independent acceptance.
+- Actual isolated validation done in this ChatGPT turn: GitHub connector successfully created the two new files; readback follows. No workflow run, Windows test, source crawl, user-approved publication, or scheduled execution has been performed.

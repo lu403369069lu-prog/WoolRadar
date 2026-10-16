@@ -84,10 +84,10 @@ class PreviewGuard(unittest.TestCase):
         p = payload(dict(ROW, official_evidence=[{
             'url': 'https://example.org/official',
             'checked_at': '2026-10-16T00:00:00Z',
-            'claims': {'amount': '$100'}}]))
-        data = json.dumps(p).replace('"amount": "$100"',
-                                     '"amount": "$999", "amount": "$100"')
-        self.assertIn('"amount": "$999"', data)
+            'claims': {'public': True}}]))
+        data = json.dumps(p).replace('"public": true',
+                                     '"public": false, "public": true')
+        self.assertIn('"public": false', data)
         raw = data.encode()
         with self.assertRaises(UnsafePreview):
             validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)

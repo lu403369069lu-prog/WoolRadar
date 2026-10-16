@@ -32,7 +32,6 @@ jobs:
             for n in 2 3; do
               gh api "repos/$GITHUB_REPOSITORY/issues/$n" --jq '"- Issue #\(.number): state=\(.state); updated=\(.updated_at)"'
             done
-            for n in 23 32 33 34; do
-              gh api "repos/$GITHUB_REPOSITORY/pulls/$n" --jq '"- PR #\(.number): state=\(.state); draft=\(.draft); head=\(.head.sha)"'
-            done
+            echo "- Open PRs (dynamic, repository API pages):"
+            gh api --paginate "repos/$GITHUB_REPOSITORY/pulls?state=open&per_page=100" --jq '.[] | "- PR #\\(.number): state=\\(.state); draft=\\(.draft); head=\\(.head.sha)"'
           } >> "$GITHUB_STEP_SUMMARY"

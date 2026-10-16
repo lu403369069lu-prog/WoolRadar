@@ -141,8 +141,7 @@ that the omitted opportunities are false or unimportant.
 
 Actual follow-up executed: six targeted Python URL properties passed
 on the patched normalizer; before-fix and upstream-producer example
-confirmed business-batch collision. Formal updated repository tests
-have been COMMITTED but NOT EXECUTED at the new SHA in this turn.
+confirmed business-batch collision. Formal updated tests have now been independently EXECUTED on the exact current sampler/test blobs (17/17 PASS exit0); see the latest exact-source verification section below.
 The prior 12/12 PASS was on a different older SHA and must not be
 reused as a current regression result.
 
@@ -152,3 +151,35 @@ identifiers, without leaking tokens or raw userinfo, then test real
 producer -> independent selector on two DISTINCT campaigns and
 marketing-only tracking duplicates. Until then a new truly independent
 56+-row or 95%-quality benchmark cannot be certified from this source.
+
+
+## Verified newest candidate: exact-source 17/17 bridge tests
+
+**Actual 2026-10-16 test run after conservative batch-identity updates:**
+Isolated Linux Python **3.13.5**, `python3 -B -m unittest discover
+-s . -p 'test_*.py' -v`, **17 tests, 17 pass, 0 fail, 0 error,
+exit0**. 16 direct selector/privacy/URL identity assertions plus one
+real `core.public_corpus.record_public_sample` producer-to-selector
+synthetic on-disk roundtrip. No network, genuine customer data, or
+production Windows files used.
+
+All five local test inputs exactly matched current GitHub git blobs:
+
+- `freeze_public_sample_dedup.py`: `725bea4b20ae0d38b76781a25a02447026908380`
+- `test_freeze_public_sample_dedup.py`: `b5df1465e200360692bd3df5e2220fdc66f0705b`
+- `test_public_corpus_real_schema.py`: `8358e448da69a8ec01dcbf7c2f0ef3d7052d383b`
+- Main producer `core/public_corpus.py`: `fb1921e5935660eaa29b53a6f8033e7b4b52febf`
+- Main dependency `core/models.py`: `f471c178d6adbad1ad85ee4ac3f99a47b231d861`
+
+The completed producer-level synthetic test intentionally used two
+different `?ref=` offer identity links plus one plain URL. The producer
+irreversibly removed the first two query values and marked the source
+rows `url_sanitized=true`; the revised reviewer excluded both, kept the
+unambiguous plain URL and reported `upstream_url_identity_lost=2`,
+`upstream_identity_fully_preserved=false`.
+
+**This is a verified fail-closed diagnostic, not a fix to the actual
+upstream producer.** Codex main still needs a privacy-reviewed
+producer-level semantic query/batch identity fix plus a fresh real
+source period and separate gold labeling. No benchmark acceptance
+or same-hash 09:30 real brief delivery is proven.

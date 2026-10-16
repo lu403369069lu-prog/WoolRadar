@@ -70,6 +70,18 @@ class Contract(unittest.TestCase):
         self.assertEqual(self.preview([row(status={'unexpected':'object'})])['count']['exported_events'],0)
         self.assertEqual(self.preview([row(first_seen='invalid')])['events'][0]['first_seen'],None)
 
+    def test_invalid_unicode_surrogates_fail_closed_per_event(self):
+        for field, value in (
+            ('title', 'Unsafe ' + chr(0xD800) + ' free offer'),
+            ('primary_url', 'https://example.org/' + chr(0xD800) + '/offer'),
+            ('batch_id', 'bad-' + chr(0xD800)),
+        ):
+            with self.subTest(field=field):
+                p = self.preview([row(**{field: value}), row(batch_id='legitimate')])
+                self.assertEqual(p['count']['exported_events'], 1)
+                self.assertEqual(p['count']['skipped_or_duplicate'], 1)
+                json.dumps(p, ensure_ascii=False).encode('utf-8')
+
     def test_claim_types_are_strict(self):
         self.assertEqual(public_claims({'public':'true','remaining':False,'region':'sensitive@example.com','expires_at':'2026-10-16'}),{})
 

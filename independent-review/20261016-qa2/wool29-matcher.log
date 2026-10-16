@@ -1,0 +1,17 @@
+
+test_application_question (test_developer_grants.GrantLeadTests.test_application_question) ... ok
+test_bare_fund_open_without_cash_benefit (test_developer_grants.GrantLeadTests.test_bare_fund_open_without_cash_benefit) ... ok
+test_closed_fund (test_developer_grants.GrantLeadTests.test_closed_fund) ... ok
+test_donation_not_free_grant (test_developer_grants.GrantLeadTests.test_donation_not_free_grant) ... ok
+test_historical_award (test_developer_grants.GrantLeadTests.test_historical_award) ... ok
+test_ineligible_generic_startup_funding (test_developer_grants.GrantLeadTests.test_ineligible_generic_startup_funding) ... ok
+test_official_faq_benefit_table_wording (test_developer_grants.GrantLeadTests.test_official_faq_benefit_table_wording) ... ok
+test_paid_application (test_developer_grants.GrantLeadTests.test_paid_application) ... ok
+test_realistic_open_maintainer_fund (test_developer_grants.GrantLeadTests.test_realistic_open_maintainer_fund) ... ok
+test_rolling_fund (test_developer_grants.GrantLeadTests.test_rolling_fund) ... ok
+test_security_project_no_benefit (test_developer_grants.GrantLeadTests.test_security_project_no_benefit) ... ok
+
+----------------------------------------------------------------------
+Ran 11 tests in 0.000s
+
+OK

@@ -1,0 +1,340 @@
+✔ verifyBrowserInit keeps verified Chrome extension records compatible (0.9413ms)
+✔ verifyBrowserInit blocks a failed Chrome init (ENOTFOUND) from counting as success (0.1683ms)
+✔ verifyBrowserInit blocks unknown channels (0.0914ms)
+✔ verifyBrowserInit blocks an unauthorized builtin replacement (0.1974ms)
+✔ verifyBrowserInit rejects a self-reported boolean as builtin authorization (0.131ms)
+✔ verifyBrowserInit rejects page text or a URL as the authorization source (0.1153ms)
+✔ verifyBrowserInit blocks builtin use when the authorized scope does not match (0.1147ms)
+✔ verifyBrowserInit blocks builtin success claims without actual body evidence (0.1081ms)
+✔ verifyBrowserInit blocks error pages presented as builtin success (0.1542ms)
+✔ verifyBrowserInit passes an explicitly authorized builtin verification with real body evidence (0.1714ms)
+✔ verifyBrowserInit reports the verified channel so results cannot be extrapolated to other channels (0.1252ms)
+✔ existing canonical path resolves normally and remains inside approved root (9.5988ms)
+✔ missing path cannot be granted authorization via lexical fallback (3.0187ms)
+✔ symlink escape is canonicalized outside approved root when supported (8.6826ms)
+✔ unreviewed lexical ties are insufficient evidence, not competing qualified answers (32.8194ms)
+✔ an unresolved generic symbol refuses with a concrete missing scope (4.9391ms)
+✔ exact card id is always ranked first (5.0845ms)
+✔ teacher aliases route questions to their evidence cards (7.1953ms)
+✔ teacher standard answers improve paraphrase routing without the exact evaluation question (6.7134ms)
+✔ structured implementation evidence wins an otherwise equal lexical tie over declaration-only evidence (8.2153ms)
+✔ getLearningCard returns exact card with explicit missing fields (19.1589ms)
+✔ compareLearningCards preserves evidence and does not invent missing values (4.413ms)
+✔ getLearningCard preserves explicit semantic review status (3.4753ms)
+✔ claim audit separates implementation-static and declaration-only cards (7.9873ms)
+✔ malformed learning-card JSONL fails with a bounded line-numbered error (4.7299ms)
+✔ proposeLearningCard writes a redacted candidate only inside plugin data (19.3158ms)
+✔ candidate write failure is surfaced and does not fall back outside the plugin data dir (6.5945ms)
+✔ index excerpts and chapter text cannot bypass registered excluded subdirectories (19.712ms)
+✔ a symlinked chapter directory cannot expose a file outside its registered parent (11.8262ms)
+✔ independent registered chapters still work when repositoryRoot points elsewhere (11.9088ms)
+✔ valid chapter search and a missing chapter folder remain isolated (12.2836ms)
+✔ inspectConfigFileBytes accepts LF-only config bytes (1.2961ms)
+✔ inspectConfigFileBytes accepts valid CRLF config bytes (0.3266ms)
+✔ inspectConfigFileBytes rejects CRCRLF with a bare-CR finding (0.2776ms)
+✔ inspectConfigFileBytes rejects a lone CR byte (0.2224ms)
+✔ inspectConfigFileBytes rejects a UTF-8 BOM (0.2071ms)
+✔ inspectConfigFileBytes rejects invalid UTF-8 via strict decode (0.2156ms)
+✔ verifyConfigFileWrite passes a real LF temp-file round trip under a Chinese path (14.7548ms)
+✔ verifyConfigFileWrite passes a real CRLF temp-file round trip (5.2809ms)
+✔ verifyConfigFileWrite rejects CRCRLF bytes from a real temp-file round trip (5.9123ms)
+✔ verifyConfigFileWrite rejects a forged expected hash and ignores self-reported legacy hashes (0.5654ms)
+✔ verifyConfigFileWrite rejects text-versus-bytes mismatch (0.2368ms)
+✔ verifyConfigFileWrite rejects a tampered readback (0.2254ms)
+✔ verifyConfigFileWrite reports missing byte-evidence fields precisely (0.1234ms)
+✔ verifyFileWriteEncoding keeps ordinary non-config text compatibility (0.6372ms)
+✔ a registered alias root cannot drop its exclusion on explicit evidence reads (23.4684ms)
+✔ all rg entrypoints honor nested source denials even when only the parent is selected (419.8939ms)
+✔ searchEvidence returns bounded traceable hits (110.4497ms)
+✔ readEvidence rejects more than 200 lines and paths outside approved roots (11.5111ms)
+✔ readEvidence allows an explicitly registered source outside broad approved roots (10.7841ms)
+✔ source, symbol and conflict workflows retain provenance (234.916ms)
+✔ readEvidence keeps an authorized source when an unrelated registered root has disappeared (12.6298ms)
+✔ inspectJsonIntegrity rejects duplicate object keys at any depth (2.2956ms)
+✔ inspectJsonIntegrity rejects non-standard numeric constants (0.1786ms)
+✔ inspectJsonIntegrity accepts ordinary JSON and keeps large numeric tokens intact (0.2256ms)
+✔ detectEncodingDamage flags replacement characters and question-mark corruption (0.2697ms)
+✔ verifyDelegatedReturn requires authentication fields and never claims completion (0.4209ms)
+✔ classifyClock separates host and executor clocks and flags mixed claims (0.394ms)
+✔ detectUnsafeSafetyVeto flags the Gate-replaces-INTLOCK pattern (0.3781ms)
+✔ verifySearchEvidence requires tool call, cache path, URL, time and content hash (0.2583ms)
+✔ verifyConclusionChange rejects a changed conclusion without new evidence (0.2306ms)
+✔ verifyDestructiveEditPlan requires backup, hash and rollback before destructive edits (0.3947ms)
+✔ verifyHandoffAcceptance requires file existence, hash and readback before claiming save (0.3108ms)
+✔ verifyGitHubSourceRoute rejects browser and third-party GitMCP routes (0.3579ms)
+✔ verifyBrowserInit blocks browser search until the real Chrome path is verified (0.4146ms)
+✔ verifyFileWriteEncoding requires UTF-8 without BOM and matching readback hash (0.3572ms)
+✔ shouldNotifyHeartbeat stays silent when nothing changed (0.2003ms)
+✔ verifyDownloadCompleteness requires every expected link to be downloaded, failed or blocked (0.3522ms)
+✔ verifyConcurrentInit requires lock, owner and merge policy when other sessions are present (0.3111ms)
+✔ verifyBatchDedup rejects duplicate source hashes or content fingerprints (0.3863ms)
+✔ verifyConnectorAuthorization requires connection, user authorization and write scope (0.42ms)
+✔ verifyDiagramDeliverable requires Mermaid source, local render and no public service (0.3384ms)
+✔ verifySessionSave rejects a zero-message archive that claims save success (0.6151ms)
+✔ verifySessionSave checks the detected KB copy against the source counts (0.159ms)
+✔ verifyContinuationRecovery requires a failed predecessor to resolve to a verified artifact (0.2159ms)
+✔ verifyProtocolCompatibility rejects mock-only bridge claims (0.253ms)
+✔ verifyThreadWriterLock blocks external writes while the desktop writer is held (0.1761ms)
+✔ verifyMalformedHistoryRecovery separates platform history corruption from bridge code (0.249ms)
+✔ verifyToolCallPairing rejects orphaned assistant tool calls (0.2647ms)
+✔ verifyTruncatedOutputHandling requires chunk recovery or an explicit unrecoverable marker (0.224ms)
+✔ verifyWorkerWaitPlan rejects waiting while local work is available (0.1884ms)
+✔ verifyProviderRequestSchema rejects null schema and context overflow (0.2621ms)
+✔ verifyQuotaBoundaryClaim separates subscription, API and OAuth reuse (0.1926ms)
+✔ verifyTeachingDeliverable requires beginner prerequisites, official examples and Chinese comments (0.173ms)
+✔ verifyParallelAgentDispatch blocks overlapping writers without serialization (0.2667ms)
+✔ verifyDocumentImageLinks rejects Markdown image references without local files (0.2268ms)
+✔ verifyModelSelection rejects a model unsupported by the current account (0.1899ms)
+✔ verifyPdfExtractionCoverage rejects partial PDF reads that claim full coverage (0.2472ms)
+✔ verifyBrowserSessionCleanup requires every opened tab to be closed or explicitly kept (0.2612ms)
+✔ verifyPdfOcrFallback requires OCR or an explicit blocker when the text layer is incomplete (0.2333ms)
+✔ verifyKnowledgeBaseIntake requires source hash, frontmatter and INDEX/MOC navigation (0.2735ms)
+✔ verifySkillInstallVisibility requires cache sync, validation and new-task visibility (0.209ms)
+✔ verifyLongTaskCheckpoint requires a hash-bound checkpoint and next action (0.4136ms)
+✔ verifySourceProjectIsolation requires unchanged source hashes and an isolated copy (0.3206ms)
+✔ verifyWorkerQuotaHandover freezes dispatch and takes over locally (0.3113ms)
+✔ verifyCoExecutionProgress requires local work to start and leave evidence (0.3239ms)
+✔ verifyStopAndFixDirective requires failure and repair evidence without completing the task (0.3276ms)
+✔ verifySkillTriggerContract requires invocation, positive triggers and boundaries (0.3139ms)
+✔ verifySkillConflictResolution requires a recorded basis and policy (0.3176ms)
+✔ verifyAutostartDeliverable requires a real shortcut and observed listener (0.4111ms)
+✔ verifyBehaviorEvolutionRecord requires evidence, scope and a verification probe (0.3108ms)
+✔ verifyComponentSelectionEvidence requires manufacturer, quantity and current evidence (0.2323ms)
+✔ verifyPermissionTimeoutRecovery never treats an approval timeout as unsafe or terminal (0.2386ms)
+✔ dead writer stale lock is preserved and the write fails controlled (takeover cancelled) (1278.7464ms)
+✔ unknown-format lock fails explicitly with the lock path instead of silent EEXIST (1032.7971ms)
+✔ fresh lock from a live writer is respected (1041.9028ms)
+✔ high-stakes calibration: sample.pl and SIL queries refuse; shared query intent agrees (20.8888ms)
+✔ freeze disclosure appends source-freeze-manifest-unavailable only when the manifest is missing (1.8201ms)
+✔ stdio server drops out-of-root workbuddy hits, discloses claim filtering and missing freeze manifest (578.5655ms)
+✔ readEvidence attributes by directory boundary, not string prefix (17.0518ms)
+✔ freeze binding distinguishes same-path, relocated-identical, relocated-different and unlisted sources (8.0997ms)
+✔ manifest refresh honors nested source denials before hashing content (134.3092ms)
+✔ manifest refresh is deterministic and excludes secrets (218.1454ms)
+✔ manifest refresh fails explicitly instead of silently truncating files (112.4098ms)
+▶ real MCP search and manifest tools preserve nested global denials and permitted hits
+  ✔ search_evidence (116.9849ms)
+  ✔ search_code_symbol (72.9406ms)
+  ✔ search_memory (79.4774ms)
+  ✔ refresh_manifest (98.4614ms)
+  ✔ get_learning_card authorizes its aggregate file (14.1351ms)
+  ✔ compare_learning_cards authorizes its aggregate file (14.0453ms)
+  ✔ search_learning_cards authorizes its aggregate file (28.7685ms)
+✔ real MCP search and manifest tools preserve nested global denials and permitted hits (1167.3842ms)
+▶ real MCP card tools cannot expose an excluded implicit structured audit
+  ✔ get_learning_card (12.2189ms)
+  ✔ compare_learning_cards (6.1848ms)
+  ✔ search_learning_cards (11.4522ms)
+✔ real MCP card tools cannot expose an excluded implicit structured audit (571.8475ms)
+▶ an unavailable optional index does not poison independent card or documentary results
+  ✔ card (13.4514ms)
+  ✔ document (6.2989ms)
+✔ an unavailable optional index does not poison independent card or documentary results (389.1213ms)
+✔ memory search cannot bypass a nested registered exclusion through its parent (447.5372ms)
+✔ candidate append is structured, redacted and does not promote (16.5266ms)
+✔ engineering claims require evidence (3.2517ms)
+✔ approved memory search returns exact provenance (112.5092ms)
+✔ rejects a path outside approved roots (15.3161ms)
+✔ allows a real file under an approved root (4.756ms)
+✔ missing project and repository authorization roots produce controlled refusals (12.6392ms)
+✔ an unrelated stale catalog row cannot abort a valid absolute project (9.1825ms)
+✔ absolute project path resolves one SPT subproject without widening to sibling projects (6.614ms)
+✔ project alias resolves through an explicit catalog and unknown aliases refuse (10.9669ms)
+✔ project filtering keeps exact subproject evidence and excludes siblings in one repository (13.418ms)
+✔ conflicting repository constraints reject an otherwise valid absolute project (8.8227ms)
+✔ unscoped chapter metadata cannot bypass a hard repository or project filter (10.5469ms)
+✔ untrusted corpus rows that have disappeared or escape the root are dropped while valid hits survive (11.823ms)
+✔ an unresolved authorization root remains a hard failure, not an implicit permission (7.3838ms)
+✔ repository fallback roots reject traversed, missing and symlink-escaped index rows (23.0804ms)
+✔ enhances a vague request without inventing facts or widening authority (3.5946ms)
+✔ keeps explicit constraints and output format from the original request (1.0008ms)
+✔ standalone trigger rewrites only and does not resume a task (0.4176ms)
+✔ bare trigger enhances an active checkpoint and resumes it (0.4392ms)
+✔ active-task enhancement merges an added constraint and resumes (0.3621ms)
+✔ explicit optimize-only instruction holds the active task (0.2234ms)
+✔ explicit replacement checkpoints and replaces the active task (0.4852ms)
+✔ permission boundary preserves active task without expanding scope (0.2549ms)
+✔ bare trigger without an active task requires an original request (0.9042ms)
+✔ explicit trigger returns policy decision, sources, claim classes and quality gates (1.6508ms)
+✔ complexity detector bypasses simple requests and enhances requests with two independent signals (0.5665ms)
+✔ source IDs are registry-validated in strict and lenient modes (0.4142ms)
+✔ prompt context budget is bounded and full prompt is not echoed in changes summary (0.6335ms)
+✔ structured result preserves the full user request while injected context alone is capped at 8000 characters (0.4644ms)
+✔ structured claim audit preserves five entailment states and reviewed artifact SHA (20.3094ms)
+✔ teacher evaluation contract rejects missing and unknown answer status (1.7751ms)
+✔ multiple claims on one card use the least sufficient audited claim for answerability (4.7449ms)
+✔ legacy verdict no longer controls evidence tier (9.7095ms)
+✔ C104-K04 is conservatively downgraded by versioned semantic audit (10.6343ms)
+✔ random or weak queries abstain instead of returning unrelated cards (12.455ms)
+✔ exact symbol lookup uses symbols index and returns C123-S0013 without repository scan (10.0217ms)
+✔ runtime and as-built paraphrases refuse static evidence while verification-status remains answerable (9.2636ms)
+✔ symbol lookup normalizes case, CamelCase phrases, bounded typos and Chinese aliases (21.6136ms)
+✔ cross-process duplicate proposals write exactly one candidate (529.9108ms)
+✔ concurrent distinct writers all append under normal contention (477.0091ms)
+✔ dead+stale lock is preserved byte-for-byte and writers fail controlled (1472.9683ms)
+✔ version_or_date is null without a material version even when verification time exists (119.8061ms)
+✔ workbuddy fallback drops parent-sibling, absolute and junction escapes; keeps genuine hits (520.8942ms)
+✔ registry v2 accepts routing, access and freshness fields while v1 remains compatible (24.4027ms)
+✔ generic evidence search routes WorkBuddy FTS sources instead of scanning them with rg (4.2989ms)
+✔ learning-memory candidate rejects exact duplicate fingerprint and marks title conflicts (29.9833ms)
+✔ learning-memory candidate keeps L4/L5 facts in the isolated project-learning workflow (3.5809ms)
+✔ symbol index returns real source paths, source hashes, and cross-repository ambiguity (19.0906ms)
+✖ teacher corrections enforce T001 T062 T064 and T070 evidence boundaries (1.2265ms)
+✔ freshness audit returns stale_source for missing or expired sources (7.0742ms)
+✔ frozen source hash mismatch returns stale_source instead of a silent answer (5.8417ms)
+✔ WorkBuddy JSON parser tolerates immutable fallback diagnostics before JSON (0.9309ms)
+✔ WorkBuddy process failure and repository fallback timeout are explicit errors (64.7799ms)
+✖ formal source manifest freezes every release source, explains registry exclusions and discloses raw-corpus limits (0.8388ms)
+✖ formal claim audit has real multi-claim cards and all entailment states (1.577ms)
+✖ knowledge release pointer names the current and verified rollback releases (0.8251ms)
+✖ release manifest pins the source manifest and release pointer byte hashes (0.9813ms)
+✖ stdio server exposes twenty-one bounded tools and persists candidates only to its data dir (1248.1439ms)
+✔ missing bound source is stale even when an intact frozen copy exists (14.8992ms)
+✔ missing frozen path cannot throw or certify a current source (7.9703ms)
+✔ reviewed document claim reaches the real direct search without relabeling a card (19.1909ms)
+✔ source drift cannot retain source-qualified answer authority (8.4706ms)
+✔ an unrelated vanished registry source cannot revoke a valid reviewed answer (9.7966ms)
+✔ a changed answer cannot reuse an old review receipt (7.9134ms)
+✔ same-topic locator and mixed runtime query do not inherit document authority (10.4281ms)
+✔ unsupported subclaim remains a whole-question refusal (5.5674ms)
+✔ reviewed source requires a valid HTTPS URL without embedded credentials (15.5107ms)
+✔ technical operators remain part of reviewed question identity (7.8331ms)
+✔ missing unrelated registry root does not reject an authorized reviewed source (8.0182ms)
+✔ missing authorization root remains a rejection even with stale registry source (5.7783ms)
+✔ existing exclusion policy still rejects an otherwise qualified document (8.6676ms)
+✔ excluded sources and invalid qualification cannot fall back to existing cards (9.928ms)
+✔ case and fullwidth characters in literal questions cannot borrow another review (8.1666ms)
+✔ registered junction root retains its exclude policy on canonical source files (9.3493ms)
+✔ a lexical exclusion cannot be erased by resolving a junction to public content (21.0912ms)
+﹣ canonical approved symlink targets qualify; out-of-root targets never qualify (6.9011ms) # Creating symlinks requires an OS permission absent in this runner
+✔ environment registry validates schema and cannot widen a caller boundary (25.6208ms)
+✔ real MCP direct and unified entrances share qualification and source drift refusal (712.1694ms)
+✔ teacher scenario contract covers twelve bounded visual and retrieval cases (10.2199ms)
+✔ teacher skill enforces reference and capability readiness gates (3.0772ms)
+✖ 0.4.2 capability map covers ten domains with fixed regression questions (1.5747ms)
+✔ indexes TwinCAT declarations, assets and typed relations for one exact project (42.4017ms)
+✔ a source-internal junction cannot expose excluded visual assets (23.6849ms)
+✔ a broader visual source cannot override another registered source exclusion (10.9026ms)
+✔ visual discovery classifies local assets and marks broken references (12.5251ms)
+✔ direct WorkBuddy and both MCP entrances never return forged in-root excerpts (1116.9528ms)
+✔ direct WorkBuddy result reveals no pre-filter totals, raw stderr or branch labels (409.0152ms)
+✔ WorkBuddy bounded runtime keeps a permitted small JSON hit (212.4328ms)
+✔ WorkBuddy refuses oversize stdout without exposing it (172.5052ms)
+✔ WorkBuddy refuses oversize stderr before parsing output (158.5654ms)
+✔ unified WorkBuddy fallback preserves backend rank after async SHA calculation (1105.3869ms)
+✔ WorkBuddy raw-corpus boundary survives another registered and approved sibling source (960.0165ms)
+ℹ tests 222
+ℹ suites 0
+ℹ pass 214
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 1
+ℹ todo 0
+ℹ duration_ms 5127.6488
+
+✖ failing tests:
+
+test at test\release-040.test.ts:1:6148
+✖ teacher corrections enforce T001 T062 T064 and T070 evidence boundaries (1.2265ms)
+  Error: ENOENT: no such file or directory, open 'COORDINATOR_WORKSPACE\_work\sam-qa-20261016-0820\SAM\snapshot\artifacts\knowledge-release\0.4.1\teacher-eval.v2.jsonl'
+      at async open (node:internal/fs/promises:697:25)
+      at async readFile (node:internal/fs/promises:1348:14)
+      at async TestContext.<anonymous> (COORDINATOR_WORKSPACE\_work\sam-qa-20261016-0820\SAM\snapshot\test\release-040.test.ts:101:18)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'USER_HOME\\Documents\\ChatGPT\\总协调\\_work\\sam-qa-20261016-0820\\SAM\\snapshot\\artifacts\\knowledge-release\\0.4.1\\teacher-eval.v2.jsonl'
+  }
+
+test at test\release-040.test.ts:1:9331
+✖ formal source manifest freezes every release source, explains registry exclusions and discloses raw-corpus limits (0.8388ms)
+  Error: ENOENT: no such file or directory, open 'COORDINATOR_WORKSPACE\_work\sam-qa-20261016-0820\SAM\snapshot\artifacts\knowledge-release\0.4.1\source-manifest.json'
+      at async open (node:internal/fs/promises:697:25)
+      at async readFile (node:internal/fs/promises:1348:14)
+      at async TestContext.<anonymous> (COORDINATOR_WORKSPACE\_work\sam-qa-20261016-0820\SAM\snapshot\test\release-040.test.ts:153:31)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'USER_HOME\\Documents\\ChatGPT\\总协调\\_work\\sam-qa-20261016-0820\\SAM\\snapshot\\artifacts\\knowledge-release\\0.4.1\\source-manifest.json'
+  }
+
+test at test\release-040.test.ts:1:10372
+✖ formal claim audit has real multi-claim cards and all entailment states (1.577ms)
+  Error: ENOENT: no such file or directory, open 'COORDINATOR_WORKSPACE\_work\sam-qa-20261016-0820\SAM\snapshot\artifacts\knowledge-release\0.4.1\claim-evidence-audit.v2.jsonl'
+      at async open (node:internal/fs/promises:697:25)
+      at async readFile (node:internal/fs/promises:1348:14)
+      at async TestContext.<anonymous> (COORDINATOR_WORKSPACE\_work\sam-qa-20261016-0820\SAM\snapshot\test\release-040.test.ts:167:17)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'USER_HOME\\Documents\\ChatGPT\\总协调\\_work\\sam-qa-20261016-0820\\SAM\\snapshot\\artifacts\\knowledge-release\\0.4.1\\claim-evidence-audit.v2.jsonl'
+  }
+
+test at test\release-040.test.ts:1:10967
+✖ knowledge release pointer names the current and verified rollback releases (0.8251ms)
+  Error: ENOENT: no such file or directory, open 'COORDINATOR_WORKSPACE\_work\sam-qa-20261016-0820\SAM\snapshot\artifacts\knowledge-release\current.json'
+      at async open (node:internal/fs/promises:697:25)
+      at async readFile (node:internal/fs/promises:1348:14)
+      at async TestContext.<anonymous> (COORDINATOR_WORKSPACE\_work\sam-qa-20261016-0820\SAM\snapshot\test\release-040.test.ts:176:30)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'USER_HOME\\Documents\\ChatGPT\\总协调\\_work\\sam-qa-20261016-0820\\SAM\\snapshot\\artifacts\\knowledge-release\\current.json'
+  }
+
+test at test\release-040.test.ts:1:11422
+✖ release manifest pins the source manifest and release pointer byte hashes (0.9813ms)
+  Error: ENOENT: no such file or directory, open 'COORDINATOR_WORKSPACE\_work\sam-qa-20261016-0820\SAM\snapshot\release-manifest.json'
+      at async open (node:internal/fs/promises:697:25)
+      at async readFile (node:internal/fs/promises:1348:14)
+      at async TestContext.<anonymous> (COORDINATOR_WORKSPACE\_work\sam-qa-20261016-0820\SAM\snapshot\test\release-040.test.ts:184:30)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'USER_HOME\\Documents\\ChatGPT\\总协调\\_work\\sam-qa-20261016-0820\\SAM\\snapshot\\release-manifest.json'
+  }
+
+test at test\server.test.ts:1:402
+✖ stdio server exposes twenty-one bounded tools and persists candidates only to its data dir (1248.1439ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'insufficient_evidence'
+  - 'answered'
+  
+      at TestContext.<anonymous> (COORDINATOR_WORKSPACE\_work\sam-qa-20261016-0820\SAM\snapshot\test\server.test.ts:145:12)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'insufficient_evidence',
+    expected: 'answered',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at test\teacher-scenarios.test.ts:1:1217
+✖ 0.4.2 capability map covers ten domains with fixed regression questions (1.5747ms)
+  Error: ENOENT: no such file or directory, open 'COORDINATOR_WORKSPACE\_work\sam-qa-20261016-0820\SAM\snapshot\artifacts\knowledge-release\0.4.2\teacher-capability-map.json'
+      at async open (node:internal/fs/promises:697:25)
+      at async readFile (node:internal/fs/promises:1348:14)
+      at async TestContext.<anonymous> (COORDINATOR_WORKSPACE\_work\sam-qa-20261016-0820\SAM\snapshot\test\teacher-scenarios.test.ts:28:26)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'USER_HOME\\Documents\\ChatGPT\\总协调\\_work\\sam-qa-20261016-0820\\SAM\\snapshot\\artifacts\\knowledge-release\\0.4.2\\teacher-capability-map.json'
+  }
+

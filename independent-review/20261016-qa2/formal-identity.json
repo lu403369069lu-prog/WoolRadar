@@ -1,0 +1,19 @@
+{
+  "command": [
+    "USER_HOME/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+    "formal_identity_probe.mjs"
+  ],
+  "exit_code": 0,
+  "result": {
+    "source_sha": "4b68619686350cbb1fe2f64753a72a654558e6ec",
+    "review_sha": "a033f86387855c0f206f67980c3c82f67ba895e5",
+    "synthetic_only": true,
+    "formal_validator_accepts_same_fold_duplicate": true,
+    "existing_four_fold_overlap_assertions_pass": true,
+    "independent_review_rejects_duplicate": true,
+    "formal_positive_denominator": 61,
+    "formal_loop_positive_or_ambiguous": 62,
+    "full_formal_evaluator_executed": false,
+    "real_61_questions_read": false
+  }
+}

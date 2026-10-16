@@ -1,0 +1,53 @@
+✔ worst card audit can hide an entailed subclaim without granting answer (1.2494ms)
+✔ an all partial audit has no fully entailed generic card candidate (0.1225ms)
+✔ orphan audit rows are counted but IDs never disclosed (0.0903ms)
+✔ duplicate card IDs fail closed (0.1814ms)
+✔ unrecognized audit entailment fails closed (0.1029ms)
+✔ space/case alias duplicate card identity must be rejected (0.2032ms)
+✔ whitespace around claim cardId resolves to the audited card (0.0984ms)
+✔ 65 rows 65 unique identities pass with private text absent (1.9639ms)
+✔ two duplicates inside the same fold must fail (previous crossfold check passes) (0.3966ms)
+✔ duplicates across folds fail (0.1084ms)
+✔ whitespace/case variants of an identical QID cannot evade dedup (0.1133ms)
+✔ ambiguous teacher gold is not counted as a supported positive (0.1062ms)
+✔ without ambiguous gold the positive denominator remains stable (0.0763ms)
+✔ 61-row denominator cannot be reduced to 60 answered (0.0781ms)
+✔ missing QID is rejected (0.0931ms)
+✔ unknown answer status is rejected (0.115ms)
+✔ does not claim supported answers or 522 source gold (0.1461ms)
+✔ 65 uniquely identified synthetic gold rows accepted with a matching digest (84.794ms)
+✔ an invalid UTF8 byte in a QID cannot be silently converted to replacement characters (71.3146ms)
+✔ a BOM must be rejected even when JSON contents and sha match (70.2458ms)
+✔ nested proof key override is rejected at the actual CLI boundary (69.0863ms)
+✔ mismatching precommitted sha fails before exposing any gold output (68.121ms)
+✔ 3 of 61 real historical status pattern fails even if rankings are perfect (0.5982ms)
+✔ 95 percent review floor is ceil(61 x 0.95) equals 58 (0.1206ms)
+✔ changing denominator to 3 is rejected instead of making all answered pass (0.1752ms)
+✔ missing response is not silently dropped from denominator (0.0967ms)
+✔ unknown output label cannot masquerade as accepted evidence (0.0851ms)
+✔ fold isolation identity is required (0.0638ms)
+✔ no answer correctness is inferred by passing coverage (0.7366ms)
+✔ valid frozen teacher row keeps its fields (1.4156ms)
+✔ repeated QID cannot silently replace original teacher identity (0.2251ms)
+✔ repeated status cannot silently change the evaluation denominator (0.0791ms)
+✔ unicode-escaped duplicate key is recognized (0.0629ms)
+✔ quoted text resembling a key in a question is harmless (0.0883ms)
+✔ nested keys and arrays do not impersonate root-level duplicates (0.0605ms)
+✔ duplicate irrelevant root keys fail closed too (0.0597ms)
+✔ arrays and oversized lines cannot masquerade as a teacher row (0.0938ms)
+✔ duplicate nested source hashes cannot silently replace proof (0.0687ms)
+✔ duplicate nested approval flags including Unicode escaped key are rejected (0.1127ms)
+✔ duplicate nested evidence ID inside an array is rejected (0.0697ms)
+✔ identical key in independent child objects is valid (0.0627ms)
+✔ strings containing quoted JSON key text remain intact at depth (0.1097ms)
+✔ nested and top-level identical keys are not confused (0.0416ms)
+✔ excessively deep input is rejected before unbounded processing (0.0717ms)
+ℹ tests 44
+ℹ suites 0
+ℹ pass 44
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 522.1629
+

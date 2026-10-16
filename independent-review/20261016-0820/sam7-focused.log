@@ -1,0 +1,16 @@
+✔ direct WorkBuddy and both MCP entrances never return forged in-root excerpts (961.2764ms)
+✔ direct WorkBuddy result reveals no pre-filter totals, raw stderr or branch labels (279.0319ms)
+✔ WorkBuddy bounded runtime keeps a permitted small JSON hit (140.7722ms)
+✔ WorkBuddy refuses oversize stdout without exposing it (120.7441ms)
+✔ WorkBuddy refuses oversize stderr before parsing output (119.5256ms)
+✔ unified WorkBuddy fallback preserves backend rank after async SHA calculation (1016.0667ms)
+✔ WorkBuddy raw-corpus boundary survives another registered and approved sibling source (765.0577ms)
+ℹ tests 7
+ℹ suites 0
+ℹ pass 7
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1630.3059
+

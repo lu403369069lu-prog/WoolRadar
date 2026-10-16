@@ -1,0 +1,94 @@
+[
+  {
+    "label": "wool-return-fetch",
+    "command": [
+      "git",
+      "--git-dir",
+      "COORDINATOR_WORKSPACE\\_work\\relay-return.git",
+      "fetch",
+      "--no-tags",
+      "https://github.com/lu403369069lu-prog/WoolRadar.git",
+      "refs/pull/23/head"
+    ],
+    "exit_code": 0,
+    "source_sha": "afc24c15d9847905b6949065ee676d6e5ad8631b",
+    "log": "wool-return-fetch.log"
+  },
+  {
+    "label": "wool-return-head",
+    "command": [
+      "git",
+      "--git-dir",
+      "COORDINATOR_WORKSPACE\\_work\\relay-return.git",
+      "rev-parse",
+      "FETCH_HEAD"
+    ],
+    "exit_code": 0,
+    "source_sha": "afc24c15d9847905b6949065ee676d6e5ad8631b",
+    "log": "wool-return-head.log"
+  },
+  {
+    "label": "wool-return-lineage",
+    "command": [
+      "git",
+      "--git-dir",
+      "COORDINATOR_WORKSPACE\\_work\\relay-return.git",
+      "merge-base",
+      "--is-ancestor",
+      "45237d1fa737e722acf6d4086e6c13b6c59c713f",
+      "afc24c15d9847905b6949065ee676d6e5ad8631b"
+    ],
+    "exit_code": 0,
+    "source_sha": "afc24c15d9847905b6949065ee676d6e5ad8631b",
+    "log": "wool-return-lineage.log"
+  },
+  {
+    "label": "wool-return-worktree",
+    "command": [
+      "git",
+      "--git-dir",
+      "COORDINATOR_WORKSPACE\\_work\\relay-return.git",
+      "worktree",
+      "add",
+      "--detach",
+      "COORDINATOR_WORKSPACE\\_work\\wool-delivery-afc-qa",
+      "afc24c15d9847905b6949065ee676d6e5ad8631b"
+    ],
+    "exit_code": 0,
+    "source_sha": "afc24c15d9847905b6949065ee676d6e5ad8631b",
+    "log": "wool-return-worktree.log"
+  },
+  {
+    "label": "wool-return-independent",
+    "command": [
+      "USER_HOME\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "COORDINATOR_WORKSPACE\\_outbox\\acceptance-20261016-0820\\test_preview_boundary.py"
+    ],
+    "exit_code": 0,
+    "source_sha": "afc24c15d9847905b6949065ee676d6e5ad8631b",
+    "log": "wool-return-independent.log",
+    "tests": 6
+  },
+  {
+    "label": "wool-return-preview",
+    "command": [
+      "USER_HOME\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      ".",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "source_sha": "afc24c15d9847905b6949065ee676d6e5ad8631b",
+    "log": "wool-return-preview.log",
+    "tests": 33
+  }
+]

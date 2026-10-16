@@ -1,0 +1,101 @@
+[
+  {
+    "label": "wool26-preview",
+    "command": [
+      "USER_HOME\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      ".",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "seconds": 0.545,
+    "log": "wool26-preview.log",
+    "tests": 19
+  },
+  {
+    "label": "sam7-build",
+    "command": [
+      "USER_HOME/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+      "node_modules/typescript/bin/tsc",
+      "-p",
+      "tsconfig.json"
+    ],
+    "exit_code": 0,
+    "seconds": 0.275,
+    "log": "sam7-build.log"
+  },
+  {
+    "label": "sam7-focused",
+    "command": [
+      "USER_HOME/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+      "--import",
+      "tsx",
+      "--test",
+      "test/workbuddy-output-boundary.test.ts",
+      "test/workbuddy-rawroot.test.ts",
+      "test/workbuddy-rank-order.test.ts",
+      "test/workbuddy-process-bounds.test.ts",
+      "test/workbuddy-excerpt-integrity.test.ts"
+    ],
+    "exit_code": 0,
+    "seconds": 1.702,
+    "log": "sam7-focused.log",
+    "tests": 7,
+    "pass": 7,
+    "fail": 0,
+    "skipped": 0
+  },
+  {
+    "label": "sam7-full",
+    "command": [
+      "USER_HOME/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+      "--import",
+      "tsx",
+      "--test",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/browser-init.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/canonical-fail-closed.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/card-index.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/cards.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/chapter-scope-security.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/config-byte.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/evidence-exclusion-alias.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/evidence.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/integrity.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/iteration-fixes.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/manifest.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/mcp-global-denial.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/memory.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/path-policy.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/project-routing.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/prompt-enhancer.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/quality-gates.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/r2r3-additional.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/release-040.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/server.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/source-freeze-missing.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/source-qualified.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/teacher-scenarios.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/twincat-project-index.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/visual-assets.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/workbuddy-excerpt-integrity.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/workbuddy-output-boundary.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/workbuddy-process-bounds.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/workbuddy-rank-order.test.ts",
+      "COORDINATOR_WORKSPACE/_work/sam-qa-20261016-0820/SAM/snapshot/test/workbuddy-rawroot.test.ts"
+    ],
+    "exit_code": 1,
+    "seconds": 5.231,
+    "log": "sam7-full.log",
+    "tests": 222,
+    "pass": 214,
+    "fail": 7,
+    "skipped": 1
+  }
+]

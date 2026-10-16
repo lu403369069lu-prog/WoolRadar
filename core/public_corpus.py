@@ -25,10 +25,14 @@ _PRIVATE_VALUE = re.compile(r'(?i)(?:@|\d{13,}|token|secret|bearer|password|sess
 def _semantic_query(query: str) -> tuple[str, bool]:
     kept = {}
     preserved = True
-    for key, value in parse_qsl(query, keep_blank_values=True, max_num_fields=64):
-        key = key.lower()
+    for original_key, value in parse_qsl(query, keep_blank_values=True, max_num_fields=64):
+        key = original_key.lower()
         if key in _TRACKING_QUERY:
             continue
+        # Application selectors may be case-sensitive at the origin. We may
+        # redact/normalize their display, but may not certify URL identity.
+        if original_key != key:
+            preserved = False
         if (key not in _FUNCTIONAL_QUERY or not re.fullmatch(r'[A-Za-z0-9._~-]{1,80}', value)
                 or _PRIVATE_VALUE.search(value)):
             preserved = False

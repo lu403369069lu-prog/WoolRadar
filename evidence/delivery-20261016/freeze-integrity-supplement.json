@@ -1,0 +1,8 @@
+{
+  "checked_at": "2026-10-16T00:43:19.727753+00:00",
+  "raw_blinded_sha256": "a5182a8d6e08de2f2d0927bd951f5aba6dea5383c01d057b3dd913d298026190",
+  "canonical_lf_sha256": "e188a00ba0ac5f322978f1a12c47bb3dbc532121746599977a53a50e771da565",
+  "reason": "Original freeze manifest computed LF UTF8 text digest before Windows text-mode write produced CRLF bytes. Reviewer independently detected this before predictions. Both identities are now explicit; input and original manifest preserved.",
+  "input_modified": false,
+  "predictions_run": false
+}

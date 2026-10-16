@@ -1,0 +1,433 @@
+{
+  "checked_at": "2026-10-16T00:44:20.717611+00:00",
+  "code_sha": "afc24c15d9847905b6949065ee676d6e5ad8631b",
+  "blinded_sha256": "e188a00ba0ac5f322978f1a12c47bb3dbc532121746599977a53a50e771da565",
+  "labels_sha256": "10ce0dfbc44a740ba30cfa4ef13eed91195f878fc5fc3add86c517f2d97baddc",
+  "command": "python -B -X utf8 evaluate_frozen_quality.py",
+  "exit_code": 0,
+  "selected_rows": 56,
+  "counts": {
+    "tp": 0,
+    "fp": 0,
+    "fn": 2,
+    "tn": 47,
+    "unknown": 7
+  },
+  "precision": null,
+  "recall": 0.0,
+  "dedup_population": "conditional on selected true-positive leads only",
+  "dedup_pairs": {},
+  "dedup_precision": null,
+  "dedup_recall": null,
+  "details": [
+    {
+      "sample_id": "S001",
+      "source_id": "hackernews",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S002",
+      "source_id": "hackernews",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S003",
+      "source_id": "hackernews",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S004",
+      "source_id": "hackernews",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S005",
+      "source_id": "hackernews",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S006",
+      "source_id": "hackernews",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S007",
+      "source_id": "hackernews",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S008",
+      "source_id": "hackernews",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S009",
+      "source_id": "reddit-rss",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S010",
+      "source_id": "reddit-rss",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S011",
+      "source_id": "reddit-rss",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S012",
+      "source_id": "reddit-rss",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S013",
+      "source_id": "reddit-rss",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S014",
+      "source_id": "reddit-rss",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S015",
+      "source_id": "reddit-rss",
+      "truth": null,
+      "selected": false,
+      "result": "unknown"
+    },
+    {
+      "sample_id": "S016",
+      "source_id": "reddit-rss",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S017",
+      "source_id": "reddit-hot-rss",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S018",
+      "source_id": "reddit-hot-rss",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S019",
+      "source_id": "reddit-hot-rss",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S020",
+      "source_id": "reddit-hot-rss",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S021",
+      "source_id": "reddit-hot-rss",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S022",
+      "source_id": "reddit-hot-rss",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S023",
+      "source_id": "reddit-hot-rss",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S024",
+      "source_id": "reddit-hot-rss",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S025",
+      "source_id": "lowendbox",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S026",
+      "source_id": "lowendbox",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S027",
+      "source_id": "lowendbox",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S028",
+      "source_id": "lowendbox",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S029",
+      "source_id": "lowendbox",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S030",
+      "source_id": "lowendbox",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S031",
+      "source_id": "lowendbox",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S032",
+      "source_id": "lowendbox",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S033",
+      "source_id": "producthunt",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S034",
+      "source_id": "producthunt",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S035",
+      "source_id": "producthunt",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S036",
+      "source_id": "producthunt",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S037",
+      "source_id": "producthunt",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S038",
+      "source_id": "producthunt",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S039",
+      "source_id": "producthunt",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S040",
+      "source_id": "producthunt",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S041",
+      "source_id": "devhunt",
+      "truth": null,
+      "selected": false,
+      "result": "unknown"
+    },
+    {
+      "sample_id": "S042",
+      "source_id": "devhunt",
+      "truth": null,
+      "selected": false,
+      "result": "unknown"
+    },
+    {
+      "sample_id": "S043",
+      "source_id": "devhunt",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S044",
+      "source_id": "devhunt",
+      "truth": null,
+      "selected": false,
+      "result": "unknown"
+    },
+    {
+      "sample_id": "S045",
+      "source_id": "devhunt",
+      "truth": null,
+      "selected": false,
+      "result": "unknown"
+    },
+    {
+      "sample_id": "S046",
+      "source_id": "devhunt",
+      "truth": true,
+      "selected": false,
+      "result": "fn"
+    },
+    {
+      "sample_id": "S047",
+      "source_id": "devhunt",
+      "truth": true,
+      "selected": false,
+      "result": "fn"
+    },
+    {
+      "sample_id": "S048",
+      "source_id": "devhunt",
+      "truth": null,
+      "selected": false,
+      "result": "unknown"
+    },
+    {
+      "sample_id": "S049",
+      "source_id": "cloudflare-dev",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S050",
+      "source_id": "cloudflare-dev",
+      "truth": null,
+      "selected": false,
+      "result": "unknown"
+    },
+    {
+      "sample_id": "S051",
+      "source_id": "cloudflare-dev",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S052",
+      "source_id": "cloudflare-dev",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S053",
+      "source_id": "cloudflare-dev",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S054",
+      "source_id": "cloudflare-dev",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S055",
+      "source_id": "cloudflare-dev",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    },
+    {
+      "sample_id": "S056",
+      "source_id": "cloudflare-dev",
+      "truth": false,
+      "selected": false,
+      "result": "tn"
+    }
+  ],
+  "predictions_after_labels_frozen": true,
+  "production_changed": false,
+  "network_requests": 0,
+  "claimability_evaluated": false,
+  "limits": [
+    "Bounded cached public sample, not platform-wide recall.",
+    "Eight per source cap creates a stratified sample, not deployment prevalence.",
+    "Observed snapshot time does not prove live availability.",
+    "Known URL overlap excluded; unknown historical semantic overlap cannot be ruled out.",
+    "Snippet truth uncertainty must remain null, never forced to pass.",
+    "A future fix informed by this sample makes it development data, not a new independent acceptance set.",
+    "Single independent snippet annotator; no inter-rater adjudication.",
+    "No live official qualification or platform-wide recall.",
+    "No duplicate denominator means no dedup performance claim.",
+    "Known URL dedup exclusions intentionally reduce duplicate test power.",
+    "Snapshot encoding errors may cause additional uncertainty."
+  ]
+}

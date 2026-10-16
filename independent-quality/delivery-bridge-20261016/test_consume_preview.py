@@ -118,6 +118,21 @@ class PreviewGuard(unittest.TestCase):
         with self.assertRaises(UnsafePreview):
             validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
 
+    def test_rejects_utf8_bom_preview(self):
+        raw = json.dumps(payload(ROW)).encode('utf-8-sig')
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
+    def test_rejects_utf16_preview(self):
+        raw = json.dumps(payload(ROW)).encode('utf-16')
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
+    def test_rejects_utf32_preview(self):
+        raw = json.dumps(payload(ROW)).encode('utf-32')
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
     def test_bad_evidence_payload(self):
         p=payload(dict(ROW,official_evidence=[{'url':'https://example.org/a','checked_at':'2026-10-16T00:00:00Z','claims':{}, 'raw_content':'secret'}]))
         with self.assertRaises(UnsafePreview):check(p)

@@ -47,3 +47,36 @@ Eleven standard-library unit tests cover: raw notification/metadata/excerpt non-
 5. Independent actual business-quality holdout, P06/five-source field operation and three post-acceptance reviews remain outstanding.
 
 No paid API, Codex execution, Work, production deployment or account operation is required by these tests.
+
+
+## Read-only consumer gate (not a published brief)
+
+The additional `consume_preview.py` accepts only the local unverified preview schema.
+It requires a precommitted SHA-256 digest supplied independently of the file; the
+digest is not a runtime signature or proof of approved sharing. Production callers
+MUST NOT just copy the digest out of the untrusted file itself.
+
+Strict checks reject unknown/private extra fields, malformed counters, repeated
+event keys, falsely promoted account or runtime verification flags, stale/future
+generation times and invalid Asia/Shanghai report dates. No automatic network
+read, upload, GitHub artifact publication or ChatGPT background ingestion occurs.
+
+A first approved preview produces only `BASELINE_ONLY` with zero new candidates.
+Comparing two individually verified previews produces only changed event keys
+under `MANUAL_SOURCE_RECHECK_REQUIRED`; it deliberately never outputs
+publication-ready offers or open-now/account-eligibility assertions.
+
+Manual invocation on an already approved sanitized preview:
+
+```sh
+python independent-quality/delivery-bridge-20261016/consume_preview.py --input explicit-preview.json --sha256 INDEPENDENT_PRECOMMITTED_SHA256
+```
+
+Isolated validation: 19/19 Python standard-library tests passed, exit 0:
+11 exporter checks (including 72,900 malformed-field combinations), seven
+consumer guard tests, and one real synthetic file export-to-consumer roundtrip.
+Three new GitHub file blobs matched the local tested files' git object hashes.
+This is NOT a Windows production-data test or an authenticated trusted channel.
+Until independent approval and a read-only source are in place, keep
+`DELIVERY_BRIDGE=OUTPUT_NOT_CONNECTED` and continue verifying public links
+independently for the daily ChatGPT brief.

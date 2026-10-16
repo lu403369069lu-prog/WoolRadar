@@ -41,7 +41,9 @@ def canonical_public_url(raw: object) -> str | None:
             key = unquote_plus(part.split('=', 1)[0]).lower()
             if key in {'access_token', 'refresh_token', 'id_token', 'api_key',
                        'apikey', 'client_secret', 'password', 'session',
-                       'session_id', 'authorization', 'oauth_token', 'jwt'}:
+                       'session_id', 'authorization', 'oauth_token', 'jwt',
+                       'token', 'secret', 'auth', 'code', 'signature', 'sig',
+                       'sessionid', 'api-key', 'email', 'phone'}:
                 return None
             if key in {'utm_source', 'utm_medium', 'utm_term', 'utm_content',
                        'fbclid', 'gclid', 'msclkid', 'mc_cid', 'mc_eid'}:
@@ -49,7 +51,7 @@ def canonical_public_url(raw: object) -> str | None:
             if part:
                 retained.append(part)
         fragment = p.fragment if p.fragment.startswith(('/', '!/')) else ''
-        if re.search(r'(?i)(?:access_token|refresh_token|id_token|password|session|api_key)=',
+        if re.search(r'(?i)(?:access_token|refresh_token|id_token|password|session|api_key|token|secret|auth|code|signature|sig|email|phone)=',
                      fragment):
             return None
         port = p.port

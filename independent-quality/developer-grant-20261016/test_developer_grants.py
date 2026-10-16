@@ -6,6 +6,8 @@ class GrantLeadTests(unittest.TestCase):
         self.assertTrue(is_developer_grant_lead('GitHub Secure Open Source Fund is accepting applications from open-source maintainers; selected projects receive $10,000 in funding'))
     def test_rolling_fund(self):
         self.assertTrue(is_developer_grant_lead('Open source maintainer security grants: rolling applications are open; approved maintainers receive $5,000 per project'))
+    def test_official_faq_benefit_table_wording(self):
+        self.assertTrue(is_developer_grant_lead('GitHub Secure Open Source Fund for maintainers: rolling applications are open; Funding: $10,000 per project'))
     def test_closed_fund(self):
         self.assertFalse(is_developer_grant_lead('GitHub open source fund applications have closed. Selected projects received $10,000.'))
     def test_paid_application(self):

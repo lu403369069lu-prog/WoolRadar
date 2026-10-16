@@ -24,9 +24,11 @@ strictly (duplicate object keys, nonfinite numbers, unexpected encoding and
 reported row-count inconsistency fail closed), and reads up to 500 public
 rows per source, 20 sources and 8 MiB per file.
 
-Within each source, it canonicalizes URLs conservatively by lowercasing
-host and removing queries/fragments/default ports. It discards malformed
-URLs, credentials and rows missing public title/summary. All duplicate
+Within each source, it canonicalizes hosts/default ports but strips only
+explicit marketing tracking parameters. It preserves query-based campaign/batch
+identifiers and route-like SPA fragments to avoid merging different promotions.
+If the original producer has already sanitized away some URL identity, that
+row is excluded and counted as lost identity, not called a unique blind lead. All duplicate
 URLs within a source are discarded *before* the per-source 8-row cap.
 Cross-source URL ownership is established over the **whole source's unique
 candidate URL set**, not only its chosen rows, so duplicates omitted due
@@ -93,9 +95,14 @@ The producer generated a real on-disk `data/public-corpus/publicfeed.json`
 from 3 **synthetic** public source rows: two feed URLs to the same
 campaign (differing query parameters) and one distinct URL.
 The independent selector read that producer-created file via its CLI and
-wrote a new local-only JSON review file: source input_rows=3,
-duplicate_within_source=1, retained URLs=2, no `accepted` keys or
-private account-file reads. No platform request occurred.
+wrote a new local-only JSON review file on the PRIOR code HEAD:
+source input_rows=3, duplicate_within_source=1, retained URLs=2.
+**CORRECTION:** The actual core/public_corpus producer had already removed
+business query parameters before sampling. Two distinct batches may thus be
+mistaken for duplicates. The old test was green but not a trustworthy
+business-identity acceptance. Latest code now excludes the two ambiguous
+upstream-sanitized rows (and retains the one plain URL) in the same synthetic
+roundtrip fixture. No platform request occurred.
 
 Committed formal `test_public_corpus_real_schema.py`, verified local
 git blob = GitHub blob
@@ -109,3 +116,39 @@ historical evidence at their original SHA. New file is only a
 candidate data selection mechanism; do not call it an independent
 held-out evaluation without a fresh source period, separate human
 labeling, and frozen input/label/sampler manifests.
+
+
+## 2026-10-16 correction: batch identity must not disappear during URL dedup
+
+The old selector removed *all* URL query parameters and fragments.
+An isolated Python reproduction using its exact URL-normalizer body found
+that two different `?batch=` links became the same key, and two SPA
+`#/offer/` routes likewise collapsed. The real production
+`core/public_corpus.py::_clean_url` also deletes all queries/fragments
+before writing the JSON source sample. No downstream review selector
+can recover a missing campaign identifier from that JSON artifact.
+
+Current PR32 update keeps meaningful `batch`, `offer`, and `ref` query
+pairs, plus route-like `#/offer/...` fragments; strips only recognized
+marketing trackers such as `utm_*`, `fbclid`, and `gclid`; and rejects
+known auth-bearing query parameters and unpaired Unicode.
+When `url_sanitized=true` indicates the upstream recorder has already
+removed some URL identity, the row is excluded from the blind sample
+and counted under `upstream_url_identity_lost`. A global
+`upstream_identity_fully_preserved` flag stays false until fixed.
+This is a conservative *incomplete input* marker, not an assertion
+that the omitted opportunities are false or unimportant.
+
+Actual follow-up executed: six targeted Python URL properties passed
+on the patched normalizer; before-fix and upstream-producer example
+confirmed business-batch collision. Formal updated repository tests
+have been COMMITTED but NOT EXECUTED at the new SHA in this turn.
+The prior 12/12 PASS was on a different older SHA and must not be
+reused as a current regression result.
+
+Codex owner action: fix the actual source recorder `core/public_corpus.py`
+to preserve sanitized but business-significant query and SPA-route
+identifiers, without leaking tokens or raw userinfo, then test real
+producer -> independent selector on two DISTINCT campaigns and
+marketing-only tracking duplicates. Until then a new truly independent
+56+-row or 95%-quality benchmark cannot be certified from this source.

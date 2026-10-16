@@ -38,6 +38,25 @@ class PublicCorpusIdentityTests(unittest.TestCase):
         data=produce(['https://example.org/view']);row=data['rows'][0]
         row.pop('url_identity_preserved',None);row['url_sanitized']=True
         self.assertEqual(freeze_public_sources([(data,'a'*64)])['rows'],[])
+    def test_truncated_distinct_long_urls_must_not_claim_identity(self):
+        prefix='https://example.org/'+'x'*2048
+        data=produce([prefix+'/batch-alpha',prefix+'/batch-beta'])
+        self.assertEqual(data['rows'][0]['url'],data['rows'][1]['url'])
+        self.assertTrue(all(row['content_truncated'] for row in data['rows']))
+        self.assertTrue(all(row['url_sanitized'] for row in data['rows']))
+        self.assertTrue(all(row['url_identity_preserved'] is False for row in data['rows']))
+        selected=freeze_public_sources([(data,'a'*64)],limit=8)
+        self.assertEqual(selected['rows'],[])
+        self.assertEqual(selected['sources'][0]['upstream_url_identity_lost'],2)
+
+    def test_long_tracker_removed_without_losing_resource_identity(self):
+        data=produce(['https://example.org/offer?batch=1&utm_source='+'x'*3000])
+        row=data['rows'][0]
+        self.assertEqual(row['url'],'https://example.org/offer?batch=1')
+        self.assertTrue(row['url_sanitized'])
+        self.assertTrue(row['url_identity_preserved'])
+        self.assertEqual(len(freeze_public_sources([(data,'a'*64)])['rows']),1)
+
     def test_conflicting_functional_query_keys_do_not_become_blind_gold(self):
         data=produce(['https://example.org/view?batch=1&batch=2'])
         self.assertFalse(data['rows'][0].get('url_identity_preserved',True))

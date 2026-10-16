@@ -6,7 +6,7 @@ import os
 import re
 import tempfile
 from pathlib import Path
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit, unquote_plus
 
 from .models import utc_now
 
@@ -25,15 +25,29 @@ _PRIVATE_VALUE = re.compile(r'(?i)(?:@|\d{13,}|token|secret|bearer|password|sess
 def _semantic_query(query: str) -> tuple[str, bool]:
     kept = {}
     preserved = True
-    for key, value in parse_qsl(query, keep_blank_values=True, max_num_fields=64):
-        key = key.lower()
+    # Raw encoded key spellings may be interpreted differently by an origin.
+    # Do not certify identical campaign identity after decoding a selector.
+    # Encoded names of discarded marketing trackers remain safe to discard.
+    for part in query.split('&'):
+        raw_key = part.partition('=')[0]
+        if (('%' in raw_key or '+' in raw_key)
+                and unquote_plus(raw_key).lower() not in _TRACKING_QUERY):
+            preserved = False
+    for original_key, value in parse_qsl(query, keep_blank_values=True, max_num_fields=64):
+        key = original_key.lower()
         if key in _TRACKING_QUERY:
             continue
+        # Application selectors may be case-sensitive at the origin. We may
+        # redact/normalize their display, but may not certify URL identity.
+        if original_key != key:
+            preserved = False
         if (key not in _FUNCTIONAL_QUERY or not re.fullmatch(r'[A-Za-z0-9._~-]{1,80}', value)
                 or _PRIVATE_VALUE.search(value)):
             preserved = False
             continue
-        if key in kept and kept[key] != value:
+        # Repeated selector keys may have server-specific array/first/last
+        # semantics, even if their values match. Never collapse them as gold.
+        if key in kept:
             preserved = False
         else:
             kept[key] = value
@@ -91,8 +105,8 @@ def record_public_sample(root: Path, node: str, source: dict, rows: list[dict], 
         clean_title, clean_summary = _clean_text(title), _clean_text(summary)
         sample_rows.append({'index': index, 'title': clean_title[:512], 'url': url[:2048],
                             'summary': clean_summary[:20000], 'published_at': str(row.get('published_at', ''))[:80],
-                            'accepted': bool(accepted[index]), 'url_sanitized': url != original,
-                            'url_identity_preserved': identity_preserved,
+                            'accepted': bool(accepted[index]), 'url_sanitized': url[:2048] != original,
+                            'url_identity_preserved': identity_preserved and len(url) <= 2048,
                             'text_url_redacted': clean_title != title or clean_summary != summary,
                             'content_truncated': len(clean_title) > 512 or len(clean_summary) > 20000 or len(url) > 2048})
     payload = {'schema_version': 1, 'sampled_at': utc_now(), 'node': str(node)[:64], 'source_id': source_id,

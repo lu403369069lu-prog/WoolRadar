@@ -36,7 +36,16 @@ _NEGATED_APPLICATION = re.compile(
     r'\b(?:not\s+accepting\s+applications?|'
     r'no\s+applications?\s+(?:are\s+)?(?:open|accepted)|'
     r'applications?\s+(?:are\s+)?not\s+(?:open|accepted)|'
-    r'not\s+open\s+for\s+applications?)\b', re.I)
+    r'not\s+open\s+for\s+applications?|'
+    r'applications?\s+(?:(?:have|are|were)\s+)?(?:closed|ended|expired)|'
+    r'(?:fund|grant|program)\s+(?:(?:is|was)\s+|has\s+been\s+)?'
+    r'(?:closed|cancelled|canceled|discontinued|expired)|'
+    r'(?:do|does|did|will|would|can|could|should|may)\s+not\s+accept\s+applications?|'
+    r"(?:don|doesn|didn|won|wouldn|can|couldn|shouldn)['\u2019]t\s+accept\s+applications?|"
+    r"(?:(?:isn|aren|wasn|weren)['\u2019]t|(?:is|are|was|were)\s+not)\s+accepting\s+applications?|"
+    r"applications?\s+(?:(?:is|are|was|were)\s+not\s+being|"
+    r"(?:isn|aren|wasn|weren)['\u2019]t\s+being|"
+    r"(?:will|would)\s+not\s+be)\s+accepted)\b", re.I)
 _APPLICANT_QUESTION = re.compile(
     r'(?:^|[.!?]\s+)(?:can|could|should|may|would)\b[^.!?]{0,140}'
     r'\b(?:apply|application)\b', re.I)
@@ -56,3 +65,17 @@ def is_developer_grant_lead(text: object) -> bool:
     return bool(_SCOPE.search(normalized) and _PROGRAM.search(normalized)
                 and _APPLY.search(normalized)
                 and (_AWARD.search(normalized) or _AMOUNT.search(normalized)))
+
+
+def has_grant_application_denial(text: object) -> bool:
+    """Flag explicit closed applications even if brand/free words appear elsewhere.
+
+    This is deliberately conservative for a combined source item: it prevents
+    another positive cue from reviving a denied grant. A separate newly opened
+    program should be recorded as its own independently reviewed source.
+    """
+    if not isinstance(text, str) or not text:
+        return False
+    normalized = ' '.join(text.split())
+    return bool(_SCOPE.search(normalized) and _PROGRAM.search(normalized)
+                and _NEGATED_APPLICATION.search(normalized))

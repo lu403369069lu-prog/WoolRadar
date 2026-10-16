@@ -33,7 +33,9 @@ class PreviewGuard(unittest.TestCase):
 
     def test_distinct_delta_only_ids(self):
         old=check(payload(ROW))
-        new=check(payload(ROW, dict(ROW,event_key='c'*24)))
+        newer = payload(ROW, dict(ROW,event_key='c'*24))
+        newer['generated_at'] = '2026-10-16T00:15:00Z'
+        new=check(newer)
         r=review_delta(new,old)
         self.assertEqual(r['candidate_keys'],['c'*24])
         self.assertNotIn('Example public benefit',json.dumps(r))

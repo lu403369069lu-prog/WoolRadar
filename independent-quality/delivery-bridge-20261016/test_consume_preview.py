@@ -113,6 +113,11 @@ class PreviewGuard(unittest.TestCase):
         with self.assertRaises(UnsafePreview):
             validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
 
+    def test_pathological_nesting_is_rejected_with_unsafe_preview(self):
+        raw = b'[' * 20000 + b'0' + b']' * 20000
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
     def test_bad_evidence_payload(self):
         p=payload(dict(ROW,official_evidence=[{'url':'https://example.org/a','checked_at':'2026-10-16T00:00:00Z','claims':{}, 'raw_content':'secret'}]))
         with self.assertRaises(UnsafePreview):check(p)

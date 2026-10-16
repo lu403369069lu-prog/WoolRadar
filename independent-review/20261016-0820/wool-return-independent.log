@@ -1,0 +1,12 @@
+
+test_clean_public_route_remains_allowed (__main__.PreviewBoundary.test_clean_public_route_remains_allowed) ... ok
+test_consumer_rejects_credential_bearing_public_url (__main__.PreviewBoundary.test_consumer_rejects_credential_bearing_public_url) ... ok
+test_consumer_rejects_nested_private_claim_fields (__main__.PreviewBoundary.test_consumer_rejects_nested_private_claim_fields) ... ok
+test_encoded_account_route_is_not_public (__main__.PreviewBoundary.test_encoded_account_route_is_not_public) ... ok
+test_extreme_timestamp_is_controlled_invalid_input (__main__.PreviewBoundary.test_extreme_timestamp_is_controlled_invalid_input) ... ok
+test_percent_encoded_denied_route_is_not_public (__main__.PreviewBoundary.test_percent_encoded_denied_route_is_not_public) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 0.009s
+
+OK

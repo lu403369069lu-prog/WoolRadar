@@ -1,3 +1,7 @@
+## USER STOP — 2026-10-16
+
+User requested upload then stop. See evidence/pipeline-integration-20261016/user-stop/HANDOFF.md. No automatic resumption. Current draft includes known failing grant-negation contracts and an unfixed URL-truncation finding; overall project incomplete. Historical sections below are not current authorization.
+
 ## Latest pipeline candidate — 2026-10-16
 
 See evidence/pipeline-integration-20261016/CHECKPOINT.md and MANIFEST.json. Latest PR28/29/31/32 combined; actual09:30 consumer remains OUTPUT_NOT_CONNECTED. Historical sections are not current locks.

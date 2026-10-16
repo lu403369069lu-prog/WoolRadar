@@ -24,9 +24,11 @@ strictly (duplicate object keys, nonfinite numbers, unexpected encoding and
 reported row-count inconsistency fail closed), and reads up to 500 public
 rows per source, 20 sources and 8 MiB per file.
 
-Within each source, it canonicalizes URLs conservatively by lowercasing
-host and removing queries/fragments/default ports. It discards malformed
-URLs, credentials and rows missing public title/summary. All duplicate
+Within each source, it canonicalizes hosts/default ports but strips only
+explicit marketing tracking parameters. It preserves query-based campaign/batch
+identifiers and route-like SPA fragments to avoid merging different promotions.
+If the original producer has already sanitized away some URL identity, that
+row is excluded and counted as lost identity, not called a unique blind lead. All duplicate
 URLs within a source are discarded *before* the per-source 8-row cap.
 Cross-source URL ownership is established over the **whole source's unique
 candidate URL set**, not only its chosen rows, so duplicates omitted due
@@ -93,9 +95,14 @@ The producer generated a real on-disk `data/public-corpus/publicfeed.json`
 from 3 **synthetic** public source rows: two feed URLs to the same
 campaign (differing query parameters) and one distinct URL.
 The independent selector read that producer-created file via its CLI and
-wrote a new local-only JSON review file: source input_rows=3,
-duplicate_within_source=1, retained URLs=2, no `accepted` keys or
-private account-file reads. No platform request occurred.
+wrote a new local-only JSON review file on the PRIOR code HEAD:
+source input_rows=3, duplicate_within_source=1, retained URLs=2.
+**CORRECTION:** The actual core/public_corpus producer had already removed
+business query parameters before sampling. Two distinct batches may thus be
+mistaken for duplicates. The old test was green but not a trustworthy
+business-identity acceptance. Latest code now excludes the two ambiguous
+upstream-sanitized rows (and retains the one plain URL) in the same synthetic
+roundtrip fixture. No platform request occurred.
 
 Committed formal `test_public_corpus_real_schema.py`, verified local
 git blob = GitHub blob
@@ -109,3 +116,113 @@ historical evidence at their original SHA. New file is only a
 candidate data selection mechanism; do not call it an independent
 held-out evaluation without a fresh source period, separate human
 labeling, and frozen input/label/sampler manifests.
+
+
+## 2026-10-16 correction: batch identity must not disappear during URL dedup
+
+The old selector removed *all* URL query parameters and fragments.
+An isolated Python reproduction using its exact URL-normalizer body found
+that two different `?batch=` links became the same key, and two SPA
+`#/offer/` routes likewise collapsed. The real production
+`core/public_corpus.py::_clean_url` also deletes all queries/fragments
+before writing the JSON source sample. No downstream review selector
+can recover a missing campaign identifier from that JSON artifact.
+
+Current PR32 update keeps meaningful `batch`, `offer`, `ref` and `utm_campaign` query
+pairs, plus route-like `#/offer/...` fragments; strips only recognized
+marketing trackers such as `utm_source`, `utm_medium`, `utm_term`, `utm_content`, `fbclid`, and `gclid`; preserve `utm_campaign`; and rejects
+known auth-bearing query parameters and unpaired Unicode.
+When `url_sanitized=true` indicates the upstream recorder has already
+removed some URL identity, the row is excluded from the blind sample
+and counted under `upstream_url_identity_lost`. A global
+`upstream_identity_fully_preserved` flag stays false until fixed.
+This is a conservative *incomplete input* marker, not an assertion
+that the omitted opportunities are false or unimportant.
+
+Actual follow-up executed: six targeted Python URL properties passed
+on the patched normalizer; before-fix and upstream-producer example
+confirmed business-batch collision. Formal updated tests have now been independently EXECUTED on the exact current sampler/test blobs (17/17 PASS exit0); see the latest exact-source verification section below.
+The prior 12/12 PASS was on a different older SHA and must not be
+reused as a current regression result.
+
+Codex owner action: fix the actual source recorder `core/public_corpus.py`
+to preserve sanitized but business-significant query and SPA-route
+identifiers, without leaking tokens or raw userinfo, then test real
+producer -> independent selector on two DISTINCT campaigns and
+marketing-only tracking duplicates. Until then a new truly independent
+56+-row or 95%-quality benchmark cannot be certified from this source.
+
+
+## Verified newest candidate: exact-source 17/17 bridge tests
+
+**Actual 2026-10-16 test run after conservative batch-identity updates:**
+Isolated Linux Python **3.13.5**, `python3 -B -m unittest discover
+-s . -p 'test_*.py' -v`, **17 tests, 17 pass, 0 fail, 0 error,
+exit0**. 16 direct selector/privacy/URL identity assertions plus one
+real `core.public_corpus.record_public_sample` producer-to-selector
+synthetic on-disk roundtrip. No network, genuine customer data, or
+production Windows files used.
+
+All five local test inputs exactly matched current GitHub git blobs:
+
+- `freeze_public_sample_dedup.py`: `725bea4b20ae0d38b76781a25a02447026908380`
+- `test_freeze_public_sample_dedup.py`: `b5df1465e200360692bd3df5e2220fdc66f0705b`
+- `test_public_corpus_real_schema.py`: `8358e448da69a8ec01dcbf7c2f0ef3d7052d383b`
+- Main producer `core/public_corpus.py`: `fb1921e5935660eaa29b53a6f8033e7b4b52febf`
+- Main dependency `core/models.py`: `f471c178d6adbad1ad85ee4ac3f99a47b231d861`
+
+The completed producer-level synthetic test intentionally used two
+different `?ref=` offer identity links plus one plain URL. The producer
+irreversibly removed the first two query values and marked the source
+rows `url_sanitized=true`; the revised reviewer excluded both, kept the
+unambiguous plain URL and reported `upstream_url_identity_lost=2`,
+`upstream_identity_fully_preserved=false`.
+
+**This is a verified fail-closed diagnostic, not a fix to the actual
+upstream producer.** Codex main still needs a privacy-reviewed
+producer-level semantic query/batch identity fix plus a fresh real
+source period and separate gold labeling. No benchmark acceptance
+or same-hash 09:30 real brief delivery is proven.
+
+
+## Current-HEAD exact execution checkpoint — security query red/green
+
+After the earlier 12/12 source-to-sampler run, new business-identity rules
+were added, and then the **complete updated formal 17/17 suite** was
+actually executed in Linux Python 3.13.5 against exact current PR32
+selector/test/integration files (Git blob matches known GitHub hashes):
+
+- selector before adding privacy denial: `725bea4b20ae0d38b76781a25a02447026908380`
+- unit tests: `b5df1465e200360692bd3df5e2220fdc66f0705b`
+- real core producer synthetic roundtrip test: `8358e448da69a8ec01dcbf7c2f0ef3d7052d383b`
+- result: 17/17 PASS, exit 0, 0 failures / errors.
+
+A further privacy counterexample found that the new semantic-query
+preservation would also retain common `token`, `auth`, `code`, `sig`,
+`email` and `phone` query keys, which can carry credentials or contact
+details into the local review candidate file. Before correction, **10/10
+sensitive-key subcases failed** their non-disclosure assertion. Rejected
+all such named parameters (including fragment forms), while keeping
+business-significant `batch`, `offer`, `ref`, `utm_campaign`. The revised
+formal suite **19/19 PASS, exit 0**, exact files:
+
+- selector `4ecf0bed60c7f3edd45fd8c17638fafcda085455`
+- selector tests `50d3b039aea26e494cec4330dcac64d2ba64d1e0`
+- producer roundtrip test `8358e448da69a8ec01dcbf7c2f0ef3d7052d383b`.
+
+GitHub remote file blob equality is verified. This is a **real isolated
+Python suite with synthetic inputs**, including exact `core/public_corpus.py`
+and `core/models.py` dependencies already blob verified against main PR23.
+It is NOT an end-to-end Windows, 09:30 ChatGPT, real independent new
+corpus, unknown-credential-field privacy certification, or true distinct
+campaign metric. A human still needs to inspect even public snippets for
+personal content; new samplers never auto-upload.
+
+Important: Codex main PR23 integrated an OLDER sampler revision (blob
+`03496b3a4067947e3ee5825303ae060abb369115`). Current PR32 is
+a DIVERGED review-only delta on an outdated base, not a PR that can
+blindly replace Codex's branch. The main owner must selectively integrate
+the new safe URL changes AND separately fix real `core/public_corpus.py`
+producer query/fragment identity erasure under the active V3 lease.
+Until that upstream fix, the new sampler excludes any previously
+`url_sanitized=true` records rather than inventing distinct counts.

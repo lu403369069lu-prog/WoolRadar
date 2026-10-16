@@ -1,0 +1,58 @@
+{
+  "reviewer": "independent budget_review agent",
+  "status": "STOPPED_AT_USER_REQUEST_AFTER_SAVING_COMPLETED_OBSERVATIONS",
+  "review_scope": "Current safe source read and already-executed limited synthetic reproductions only. No further tests run after stop instruction.",
+  "executed_command": "PowerShell here-string | python -B -; real record_public_sample -> JSON readback -> freeze_public_sources and direct current grant/helper calls",
+  "executed_command_exit_code": 0,
+  "completed_reproductions": [
+    {
+      "priority": "P1",
+      "title": "Long URL truncation incorrectly retains identity-preserved flag",
+      "actual": {
+        "producer_rows": 2,
+        "url_identity_preserved": [
+          true,
+          true
+        ],
+        "content_truncated": [
+          true,
+          true
+        ],
+        "distinct_input_urls_truncated_to_same_stored_url": true,
+        "sampler_selected_rows": 1
+      },
+      "mechanism": "Producer applies url[:2048] after calculating identity_preserved, without clearing the flag when URL truncation changes identity. Sampler accepts the truncated rows as identity-preserved.",
+      "status": "UNFIXED_AS_LAST_REPRODUCED",
+      "minimal_fix": "Mark URL identity lost whenever URL itself is truncated; selector must exclude it. Preserve separate handling of title/summary truncation."
+    },
+    {
+      "priority": "P2",
+      "title": "Base-verb negated grant acceptance was still accepted at the observed source revision",
+      "case_description": "Does not accept applications, followed by a synthetic developer award sentence. No amount text retained.",
+      "actual": {
+        "grant_helper_accepted": true,
+        "collector_hook_accepted": true
+      },
+      "status": "UNFIXED_AS_LAST_REPRODUCED_PATCH_NOT_EXECUTED",
+      "minimal_fix": "Cover do/does/did not accept applications alongside not accepting, preserving open/no-fee positive controls.",
+      "qualification": "Parent confirmed automatic approval blocked the product-fix command under the user stop instruction. No product patch executed; reviewer did not re-test."
+    }
+  ],
+  "source_review_only_observations": [
+    "Current source contains the second-granularity ambiguity guard; no followup runtime result claimed.",
+    "Current producer retains approved functional query/SPA identities, removes explicit trackers and marks unknown/conflicting selector loss. These paths were read, not fully retested in this interrupted followup.",
+    "Sampler rejects explicit identity loss and legacy sanitized rows lacking new identity metadata. Such flags are producer contracts, not signatures, source authentication or approval."
+  ],
+  "not_executed": [
+    "followup_checks.py was saved as a prospective reproducible script but was not executed; its assertions are not reported as test passes.",
+    "Formal producer/sampler/grant/chronology followup suites not run.",
+    "Product patch was not executed: parent confirmed automatic approval blocked it under the user stop instruction. No further verification performed."
+  ],
+  "source_fingerprint_limit": "No exact source hash was captured with the completed limited reproduction; source may now be changing. Do not attribute a pass or fail to an untested latest patch.",
+  "limits": [
+    "Only current safe code and synthetic temporary files; no old Git/cache/sensitive old fixture, real private data, new public samples or old frozen sample used.",
+    "No worktree edits, production changes, network, paid API or upload performed by this reviewer.",
+    "No full regression, accuracy, new holdout or ChatGPT connection claim."
+  ],
+  "stop_acknowledgement": "Completed observations saved and read back. No further research or tests will be started."
+}

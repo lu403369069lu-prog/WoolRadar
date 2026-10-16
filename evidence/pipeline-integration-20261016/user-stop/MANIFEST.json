@@ -1,0 +1,120 @@
+{
+  "created_at": "2026-10-16T11:03:44.882970+00:00",
+  "user_instruction": "\u4e0a\u4f20\u5de5\u4f5c\u5185\u5bb9\u540e\u505c\u6b62\u4efb\u52a1",
+  "base_main": "053fdfec1ffc22ead89928304b2ae9d3262ebac9",
+  "current_candidate_all_tests_pass": false,
+  "last_complete_suite": {
+    "passed": 396,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "scope": "before2 added grant-negation methods"
+  },
+  "subsequent_focused_test": {
+    "methods": 2,
+    "failed_subcases": 3,
+    "exit_code": 1
+  },
+  "new_full_suite_after_added_contracts_run": false,
+  "unfixed": [
+    "negated base/passive grant acceptance",
+    "URL truncation retains identity flag"
+  ],
+  "raw_data_uploaded": false,
+  "production_changed": false,
+  "goal_complete": false,
+  "files": [
+    {
+      "path": "core/developer_grants.py",
+      "git_blob": "aeaa6f5c9c196bececf49773dda76e4999e633fe"
+    },
+    {
+      "path": "core/public_corpus.py",
+      "git_blob": "a2856651ccea984f8ce807982ad73314cce71530"
+    },
+    {
+      "path": "tests/test_developer_grant_discovery.py",
+      "git_blob": "2b781d58f1227fb3d105a587e4e518a1d2ea8b73"
+    },
+    {
+      "path": "tests/test_developer_grant_negations.py",
+      "git_blob": "855d5516fda6ff91d0cd849ce8659cef2215e7d5"
+    },
+    {
+      "path": "tests/test_public_corpus_identity.py",
+      "git_blob": "28bbb56c8d3f04318a93555c27d83821bf5a5963"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/consume_preview.py",
+      "git_blob": "1bd0fb32a9710cd4646d84d27135e154dfa546c7"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/test_snapshot_chronology.py",
+      "git_blob": "694e12aa3a1b20c7bd069c847c7b5b934fd62673"
+    },
+    {
+      "path": "independent-quality/developer-grant-20261016/test_developer_grants.py",
+      "git_blob": "243f8ad7675a4a550bf2eea73164590b6d5600ef"
+    },
+    {
+      "path": "independent-quality/public-corpus-blind-dedup-20261016/freeze_public_sample_dedup.py",
+      "git_blob": "c090c6885c22fe73b876de994a1c79714c0e7051"
+    },
+    {
+      "path": "independent-quality/public-corpus-blind-dedup-20261016/README.md",
+      "git_blob": "b1ffa727af4b08078952f268f83d08bfae1cd7d8"
+    },
+    {
+      "path": "independent-quality/public-corpus-blind-dedup-20261016/test_freeze_public_sample_dedup.py",
+      "git_blob": "50d3b039aea26e494cec4330dcac64d2ba64d1e0"
+    },
+    {
+      "path": "independent-quality/public-corpus-blind-dedup-20261016/test_public_corpus_real_schema.py",
+      "git_blob": "5e5daca26df04ff27aa4c2080eb17d5925cbf404"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/user-stop/fractional-before.json",
+      "git_blob": "cea63b9eb5b24be8752effac9316d5d8b9a2226f"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/user-stop/followup-combined.json",
+      "git_blob": "905eb452f56ac849f3ef9085cb95798103fa89a0"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/user-stop/producer-identity-before.json",
+      "git_blob": "1400b3981e40de7e1342acb8aa5d97fb4f64533a"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/user-stop/producer-identity-fixed.json",
+      "git_blob": "e15bd888f4026104baa7852076e901095d2d3e74"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/user-stop/followup-identity-green.json",
+      "git_blob": "55a2faf09cecf9df1f7fe4ed36177ac2a2b09d54"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/user-stop/followup-all-green.json",
+      "git_blob": "53fc8edec764b99e8ca679a5e1b9a2e720464549"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/user-stop/grant-negations-before.json",
+      "git_blob": "aa0e876e5041365216594ce0b146a58d184dba4c"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/user-stop/followup-review.json",
+      "git_blob": "548faaf5a298f4b2c3d553a64c3149a53da6eb98"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/user-stop/followup_checks.py",
+      "git_blob": "462c284b905366c0891334fde956fd204b826dc5"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/user-stop/HANDOFF.md",
+      "git_blob": "6f7fcac846452ece1cf4ca2868d012d9d06dfec9"
+    },
+    {
+      "path": "HANDOFF.md",
+      "git_blob": "002f64bd5483893e4a7ed1dcde2268eee744da8d"
+    }
+  ]
+}

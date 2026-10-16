@@ -93,6 +93,31 @@ class ChronologyWithdrawalTests(unittest.TestCase):
         self.assertEqual(result["candidate_keys"], [])
         self.assertEqual(result["withdrawn_keys"], [])
 
+    def test_fractional_second_changed_snapshot_is_order_ambiguous(self):
+        previous = approved("2026-10-16T01:00:00.100000Z", [])
+        current = approved("2026-10-16T01:00:00.900000Z", [event(KEY_A)])
+        result = review_delta(current, previous)
+        self.assertEqual(result["status"], "SNAPSHOT_ORDER_AMBIGUOUS")
+        self.assertEqual(result["candidate_keys"], [])
+        self.assertEqual(result["withdrawn_keys"], [])
+
+    def test_fractional_second_withdrawal_does_not_claim_disappearance(self):
+        previous = approved("2026-10-16T01:00:00.100000Z", [event(KEY_A)])
+        current = approved("2026-10-16T01:00:00.900000Z", [])
+        result = review_delta(current, previous)
+        self.assertEqual(result["status"], "SNAPSHOT_ORDER_AMBIGUOUS")
+        self.assertEqual(result["candidate_keys"], [])
+        self.assertEqual(result["withdrawn_keys"], [])
+
+    def test_fractional_times_in_one_second_need_sequence_proof(self):
+        for before,after in [([], [event(KEY_A)]),([event(KEY_A)],[]),([event(KEY_A)],[event(KEY_A,'EXPIRED')])]:
+            with self.subTest(before=before,after=after):
+                previous=approved('2026-10-16T01:00:00.100000Z',before)
+                current=approved('2026-10-16T01:00:00.900000Z',after)
+                result=review_delta(current,previous)
+                self.assertEqual(result['status'],'SNAPSHOT_ORDER_AMBIGUOUS')
+                self.assertEqual(result['candidate_keys'],[])
+                self.assertEqual(result['withdrawn_keys'],[])
     def test_baseline_never_announces_old_offer(self):
         baseline = approved("2026-10-16T01:00:00Z", [event(KEY_A)])
         self.assertEqual(review_delta(baseline)["candidate_keys"], [])

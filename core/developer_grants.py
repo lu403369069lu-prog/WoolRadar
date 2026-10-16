@@ -28,12 +28,30 @@ _DENY = re.compile(
     r'\b(?:is\s+there|does\s+anyone|where\s+can\s+i|looking\s+for|i\s+want|i\s+need)\b', re.I)
 
 
+_NO_FEE = re.compile(
+    r'\b(?:no|zero)\s+application\s+fees?(?:\s+is\s+required)?\b|'
+    r'\bapplication\s+fees?\s+(?:is\s+|are\s+)?(?:not\s+required|waived)\b|'
+    r'\bwithout\s+(?:an?\s+)?application\s+fee\b', re.I)
+_NEGATED_APPLICATION = re.compile(
+    r'\b(?:not\s+accepting\s+applications?|'
+    r'no\s+applications?\s+(?:are\s+)?(?:open|accepted)|'
+    r'applications?\s+(?:are\s+)?not\s+(?:open|accepted)|'
+    r'not\s+open\s+for\s+applications?)\b', re.I)
+_APPLICANT_QUESTION = re.compile(
+    r'(?:^|[.!?]\s+)(?:can|could|should|may|would)\b[^.!?]{0,140}'
+    r'\b(?:apply|application)\b', re.I)
+
+
 def is_developer_grant_lead(text: object) -> bool:
     """True only for an explicit current-sounding developer grant application lead."""
     if not isinstance(text, str) or not text or len(text) > 6000:
         return False
     normalized = ' '.join(text.split())
-    if _DENY.search(normalized):
+    if _NEGATED_APPLICATION.search(normalized) or _APPLICANT_QUESTION.search(normalized):
+        return False
+    # Explicit fee-waiver terms are not paid-application requirements.
+    fee_scoped = _NO_FEE.sub(' ', normalized)
+    if _DENY.search(fee_scoped):
         return False
     return bool(_SCOPE.search(normalized) and _PROGRAM.search(normalized)
                 and _APPLY.search(normalized)

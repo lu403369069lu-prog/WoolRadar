@@ -20,11 +20,15 @@ class RealCorpusProducerCompatibility(unittest.TestCase):
             self.assertEqual(main(['--input',str(source_path),'--output',str(out)]),0)
             sampled=json.loads(out.read_text(encoding='utf-8'))
             self.assertEqual(sampled['sources'][0]['input_rows'],3)
-            self.assertEqual(sampled['sources'][0]['duplicate_within_source'],1)
-            self.assertEqual(len(sampled['rows']),2)
+            self.assertEqual(sampled['sources'][0]['upstream_url_identity_lost'],0)
+            self.assertEqual(len(sampled['rows']),3)
             self.assertEqual({r['url'] for r in sampled['rows']},
-                             {'https://example.org/a','https://example.org/b'})
+                             {'https://example.org/a?ref=1','https://example.org/a?ref=2','https://example.org/b'})
             self.assertTrue(all('accepted' not in r for r in sampled['rows']))
+            self.assertTrue(sampled['upstream_identity_fully_preserved'])
+            # Functional ref identities now survive the real producer.
+            # This proves URL preservation, not separate business campaigns;
+            # campaign equivalence still requires independent annotation.
             self.assertFalse((root/'raw-user-accounts.json').exists())
 
 if __name__=='__main__':unittest.main()

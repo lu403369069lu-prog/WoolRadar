@@ -180,7 +180,9 @@ def review_delta(current: dict, previous: dict | None = None) -> dict:
     # Sub-second publisher ordering is not part of schema v1. Two different
     # snapshots with the same timestamp cannot safely be ordered. A manual
     # digest approval proves bytes, not which copy came first.
-    if _time(current['generated_at']) == _time(previous['generated_at']) and (changed or withdrawn):
+    if (_time(current['generated_at']).replace(microsecond=0) ==
+            _time(previous['generated_at']).replace(microsecond=0)
+            and (changed or withdrawn)):
         return {'status': 'SNAPSHOT_ORDER_AMBIGUOUS', 'candidate_keys': [],
                 'withdrawn_keys': [],
                 'notices': ['Same-second distinct snapshots need independent publication sequence proof']}

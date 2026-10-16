@@ -77,6 +77,22 @@ class ChronologyWithdrawalTests(unittest.TestCase):
         self.assertEqual(result["status"], "OUT_OF_ORDER_IGNORED")
         self.assertEqual(result["candidate_keys"], [])
 
+    def test_same_second_changed_snapshot_requires_order_proof(self):
+        previous = approved("2026-10-16T01:00:00Z", [])
+        current = approved("2026-10-16T01:00:00Z", [event(KEY_A)])
+        result = review_delta(current, previous)
+        self.assertEqual(result["status"], "SNAPSHOT_ORDER_AMBIGUOUS")
+        self.assertEqual(result["candidate_keys"], [])
+        self.assertEqual(result["withdrawn_keys"], [])
+
+    def test_same_second_disappearance_does_not_assert_withdrawal(self):
+        previous = approved("2026-10-16T01:00:00Z", [event(KEY_A)])
+        current = approved("2026-10-16T01:00:00Z", [])
+        result = review_delta(current, previous)
+        self.assertEqual(result["status"], "SNAPSHOT_ORDER_AMBIGUOUS")
+        self.assertEqual(result["candidate_keys"], [])
+        self.assertEqual(result["withdrawn_keys"], [])
+
     def test_baseline_never_announces_old_offer(self):
         baseline = approved("2026-10-16T01:00:00Z", [event(KEY_A)])
         self.assertEqual(review_delta(baseline)["candidate_keys"], [])

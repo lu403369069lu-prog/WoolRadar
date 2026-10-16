@@ -43,8 +43,8 @@ def canonical_public_url(raw: object) -> str | None:
                        'apikey', 'client_secret', 'password', 'session',
                        'session_id', 'authorization', 'oauth_token', 'jwt'}:
                 return None
-            if key.startswith('utm_') or key in {'fbclid', 'gclid', 'msclkid',
-                                                  'mc_cid', 'mc_eid'}:
+            if key in {'utm_source', 'utm_medium', 'utm_term', 'utm_content',
+                       'fbclid', 'gclid', 'msclkid', 'mc_cid', 'mc_eid'}:
                 continue
             if part:
                 retained.append(part)

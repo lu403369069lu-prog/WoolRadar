@@ -6,7 +6,7 @@ import os
 import re
 import tempfile
 from pathlib import Path
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit, unquote_plus
 
 from .models import utc_now
 
@@ -25,6 +25,14 @@ _PRIVATE_VALUE = re.compile(r'(?i)(?:@|\d{13,}|token|secret|bearer|password|sess
 def _semantic_query(query: str) -> tuple[str, bool]:
     kept = {}
     preserved = True
+    # Raw encoded key spellings may be interpreted differently by an origin.
+    # Do not certify identical campaign identity after decoding a selector.
+    # Encoded names of discarded marketing trackers remain safe to discard.
+    for part in query.split('&'):
+        raw_key = part.partition('=')[0]
+        if (('%' in raw_key or '+' in raw_key)
+                and unquote_plus(raw_key).lower() not in _TRACKING_QUERY):
+            preserved = False
     for original_key, value in parse_qsl(query, keep_blank_values=True, max_num_fields=64):
         key = original_key.lower()
         if key in _TRACKING_QUERY:

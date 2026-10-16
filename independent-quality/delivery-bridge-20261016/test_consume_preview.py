@@ -60,6 +60,46 @@ class PreviewGuard(unittest.TestCase):
         p=payload(ROW);p['count']['exported_events']=2
         with self.assertRaises(UnsafePreview):check(p)
 
+    def test_duplicate_root_key_rejected_even_if_last_value_safe(self):
+        data = json.dumps(payload(ROW)).replace(
+            '"runtime_provenance_verified": false',
+            '"runtime_provenance_verified": true, "runtime_provenance_verified": false')
+        self.assertIn('"runtime_provenance_verified": true', data)
+        raw = data.encode()
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
+    def test_duplicate_event_field_rejected(self):
+        data = json.dumps(payload(ROW)).replace(
+            '"title": "Example public benefit"',
+            '"title": "PRIVATE LEAK", "title": "Example public benefit"')
+        self.assertIn('"title": "PRIVATE LEAK"', data)
+        raw = data.encode()
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
+    def test_duplicate_nested_claim_field_rejected(self):
+        p = payload(dict(ROW, official_evidence=[{
+            'url': 'https://example.org/official',
+            'checked_at': '2026-10-16T00:00:00Z',
+            'claims': {'amount': '$100'}}]))
+        data = json.dumps(p).replace('"amount": "$100"',
+                                     '"amount": "$999", "amount": "$100"')
+        self.assertIn('"amount": "$999"', data)
+        raw = data.encode()
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
+    def test_nonfinite_claim_rejected(self):
+        p = payload(dict(ROW, official_evidence=[{
+            'url': 'https://example.org/official',
+            'checked_at': '2026-10-16T00:00:00Z',
+            'claims': {'amount': float('nan')}}]))
+        raw = json.dumps(p, allow_nan=True).encode()
+        self.assertIn(b'NaN', raw)
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
     def test_bad_evidence_payload(self):
         p=payload(dict(ROW,official_evidence=[{'url':'https://example.org/a','checked_at':'2026-10-16T00:00:00Z','claims':{}, 'raw_content':'secret'}]))
         with self.assertRaises(UnsafePreview):check(p)

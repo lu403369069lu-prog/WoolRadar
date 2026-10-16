@@ -35,5 +35,27 @@ class OSSFundCollectorIntegration(unittest.TestCase):
         self.assertFalse(contains_keyword(text, DEV_KEYWORDS))
 
 
+    def test_explicit_not_accepting_does_not_trigger_collector(self):
+        text = ("GitHub open source developer fund is not accepting applications; "
+                "selected maintainers receive $10,000")
+        self.assertFalse(contains_keyword(text, DEV_KEYWORDS))
+
+    def test_no_applications_are_open_does_not_trigger_collector(self):
+        text = ("GitHub open source developer fund: no applications are open; "
+                "Funding: $10,000 per project")
+        self.assertFalse(contains_keyword(text, DEV_KEYWORDS))
+
+    def test_applicant_question_does_not_trigger_collector(self):
+        text = ("Can developers apply now for GitHub open source fund? "
+                "Selected maintainers receive $10,000.")
+        self.assertFalse(contains_keyword(text, DEV_KEYWORDS))
+
+    def test_explicit_application_fee_waiver_is_not_a_paid_plan(self):
+        text = ("GitHub open source developer grant is accepting applications. "
+                "No application fee is required; selected maintainers receive $10,000.")
+        self.assertTrue(contains_keyword(text, DEV_KEYWORDS))
+        self.assertFalse(contains_keyword(text, NO_GRANT_KEYWORDS))
+
+
 if __name__ == '__main__':
     unittest.main()

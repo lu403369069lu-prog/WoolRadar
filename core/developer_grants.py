@@ -37,6 +37,9 @@ _NEGATED_APPLICATION = re.compile(
     r'no\s+applications?\s+(?:are\s+)?(?:open|accepted)|'
     r'applications?\s+(?:are\s+)?not\s+(?:open|accepted)|'
     r'not\s+open\s+for\s+applications?|'
+    r'applications?\s+(?:(?:have|are|were)\s+)?(?:closed|ended|expired)|'
+    r'(?:fund|grant|program)\s+(?:(?:is|was)\s+|has\s+been\s+)?'
+    r'(?:closed|cancelled|canceled|discontinued|expired)|'
     r'(?:do|does|did|will|would|can|could|should|may)\s+not\s+accept\s+applications?|'
     r"(?:don|doesn|didn|won|wouldn|can|couldn|shouldn)['\u2019]t\s+accept\s+applications?|"
     r"(?:(?:isn|aren|wasn|weren)['\u2019]t|(?:is|are|was|were)\s+not)\s+accepting\s+applications?|"

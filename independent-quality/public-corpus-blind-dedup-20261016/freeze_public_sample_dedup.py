@@ -24,6 +24,7 @@ def canonical_public_url(raw: object) -> str | None:
     if not isinstance(raw, str) or len(raw) > 2048 or not raw:
         return None
     try:
+        raw.encode('utf-8')  # reject unpaired Unicode surrogates, including in paths
         p = urlsplit(raw)
         if p.scheme not in ('http', 'https') or not p.hostname or p.username or p.password:
             return None

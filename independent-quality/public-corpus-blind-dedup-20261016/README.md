@@ -183,3 +183,46 @@ upstream producer.** Codex main still needs a privacy-reviewed
 producer-level semantic query/batch identity fix plus a fresh real
 source period and separate gold labeling. No benchmark acceptance
 or same-hash 09:30 real brief delivery is proven.
+
+
+## Current-HEAD exact execution checkpoint — security query red/green
+
+After the earlier 12/12 source-to-sampler run, new business-identity rules
+were added, and then the **complete updated formal 17/17 suite** was
+actually executed in Linux Python 3.13.5 against exact current PR32
+selector/test/integration files (Git blob matches known GitHub hashes):
+
+- selector before adding privacy denial: `725bea4b20ae0d38b76781a25a02447026908380`
+- unit tests: `b5df1465e200360692bd3df5e2220fdc66f0705b`
+- real core producer synthetic roundtrip test: `8358e448da69a8ec01dcbf7c2f0ef3d7052d383b`
+- result: 17/17 PASS, exit 0, 0 failures / errors.
+
+A further privacy counterexample found that the new semantic-query
+preservation would also retain common `token`, `auth`, `code`, `sig`,
+`email` and `phone` query keys, which can carry credentials or contact
+details into the local review candidate file. Before correction, **10/10
+sensitive-key subcases failed** their non-disclosure assertion. Rejected
+all such named parameters (including fragment forms), while keeping
+business-significant `batch`, `offer`, `ref`, `utm_campaign`. The revised
+formal suite **19/19 PASS, exit 0**, exact files:
+
+- selector `4ecf0bed60c7f3edd45fd8c17638fafcda085455`
+- selector tests `50d3b039aea26e494cec4330dcac64d2ba64d1e0`
+- producer roundtrip test `8358e448da69a8ec01dcbf7c2f0ef3d7052d383b`.
+
+GitHub remote file blob equality is verified. This is a **real isolated
+Python suite with synthetic inputs**, including exact `core/public_corpus.py`
+and `core/models.py` dependencies already blob verified against main PR23.
+It is NOT an end-to-end Windows, 09:30 ChatGPT, real independent new
+corpus, unknown-credential-field privacy certification, or true distinct
+campaign metric. A human still needs to inspect even public snippets for
+personal content; new samplers never auto-upload.
+
+Important: Codex main PR23 integrated an OLDER sampler revision (blob
+`03496b3a4067947e3ee5825303ae060abb369115`). Current PR32 is
+a DIVERGED review-only delta on an outdated base, not a PR that can
+blindly replace Codex's branch. The main owner must selectively integrate
+the new safe URL changes AND separately fix real `core/public_corpus.py`
+producer query/fragment identity erasure under the active V3 lease.
+Until that upstream fix, the new sampler excludes any previously
+`url_sanitized=true` records rather than inventing distinct counts.

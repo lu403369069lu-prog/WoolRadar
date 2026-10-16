@@ -100,6 +100,17 @@ class PreviewGuard(unittest.TestCase):
         with self.assertRaises(UnsafePreview):
             validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
 
+    def test_exponent_overflow_cannot_become_nonfinite_claim(self):
+        p = payload(dict(ROW, official_evidence=[{
+            'url': 'https://example.org/official',
+            'checked_at': '2026-10-16T00:00:00Z',
+            'claims': {'amount': 1.0}}]))
+        data = json.dumps(p).replace('"amount": 1.0', '"amount": 1e9999')
+        self.assertIn('1e9999', data)
+        raw = data.encode()
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
     def test_bad_evidence_payload(self):
         p=payload(dict(ROW,official_evidence=[{'url':'https://example.org/a','checked_at':'2026-10-16T00:00:00Z','claims':{}, 'raw_content':'secret'}]))
         with self.assertRaises(UnsafePreview):check(p)

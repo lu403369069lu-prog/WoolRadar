@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import re
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -58,6 +59,13 @@ def _reject_nonfinite(value):
     raise ValueError('nonfinite JSON constant')
 
 
+def _finite_float(value):
+    number = float(value)
+    if not math.isfinite(number):
+        raise ValueError('nonfinite JSON number')
+    return number
+
+
 def validate(raw: bytes, expected_digest: str, *, now: datetime | None = None):
     if not isinstance(expected_digest, str) or not SHA64.fullmatch(expected_digest):
         raise UnsafePreview('independent digest required')
@@ -65,7 +73,7 @@ def validate(raw: bytes, expected_digest: str, *, now: datetime | None = None):
         raise UnsafePreview('digest mismatch or oversized preview')
     try:
         obj = json.loads(raw, object_pairs_hook=_strict_object,
-                         parse_constant=_reject_nonfinite)
+                         parse_constant=_reject_nonfinite, parse_float=_finite_float)
     except (ValueError, UnicodeDecodeError) as exc:
         raise UnsafePreview('invalid preview json') from exc
     if not isinstance(obj, dict) or set(obj) != TOP:

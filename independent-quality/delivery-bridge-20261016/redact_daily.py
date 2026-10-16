@@ -28,6 +28,7 @@ def public_url(raw: object) -> str | None:
     if not isinstance(raw, str) or not raw or len(raw) > 512 or re.search(r'\s|[\\<>]', raw):
         return None
     try:
+        raw.encode('utf-8')  # unpaired surrogates are not a publishable URL
         parts = urlsplit(raw)
         if parts.scheme != 'https' or not parts.hostname or parts.username or parts.password or parts.port not in (None, 443):
             return None
@@ -63,7 +64,7 @@ def public_url(raw: object) -> str | None:
 def public_title(raw: object) -> str | None:
     if not isinstance(raw, str) or len(raw) < 3 or len(raw) > 160:
         return None
-    if any(ord(ch) < 32 for ch in raw) or BAD_TEXT.search(raw) or '://' in raw or re.search(r'(?i)(?:[a-z]:[\\/]|\\\\|/(?:home|Users|private|tmp)/)', raw):
+    if any(ord(ch) < 32 or 0xD800 <= ord(ch) <= 0xDFFF for ch in raw) or BAD_TEXT.search(raw) or '://' in raw or re.search(r'(?i)(?:[a-z]:[\\/]|\\\\|/(?:home|Users|private|tmp)/)', raw):
         return None
     return raw
 
@@ -131,7 +132,11 @@ def build_preview(report: dict, report_hash: str, now: datetime | None = None) -
         batch_id = row.get('batch_id', '')
         if not isinstance(batch_id, str) or len(batch_id) > 128:
             continue
-        identity = hashlib.sha256((url + '\0' + batch_id).encode('utf-8')).hexdigest()[:24]
+        try:
+            batch_bytes = batch_id.encode('utf-8')
+        except UnicodeEncodeError:
+            continue
+        identity = hashlib.sha256(url.encode('utf-8') + b'\0' + batch_bytes).hexdigest()[:24]
         if identity in seen:
             continue
         seen.add(identity)
@@ -152,7 +157,7 @@ def build_preview(report: dict, report_hash: str, now: datetime | None = None) -
             'reported_status': status,
             'publication_lane': 'independent_official_recheck_required',
             'personal_eligibility': 'UNKNOWN',
-            'batch_key': hashlib.sha256(batch_id.encode('utf-8')).hexdigest()[:16] if batch_id else None,
+            'batch_key': hashlib.sha256(batch_bytes).hexdigest()[:16] if batch_bytes else None,
             'published_at': timestamp(row.get('published_at')),
             'first_seen': timestamp(row.get('first_seen')),
             'official_evidence': official,

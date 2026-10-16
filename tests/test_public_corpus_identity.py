@@ -73,6 +73,16 @@ class PublicCorpusIdentityTests(unittest.TestCase):
         self.assertEqual(data['rows'][0]['url'],'https://example.org/view?batch=beta')
         self.assertTrue(data['rows'][0]['url_identity_preserved'])
 
+    def test_duplicate_equal_campaign_selectors_are_not_safe_blind_identity(self):
+        data=produce(['https://example.org/view?batch=alpha&batch=alpha',
+                      'https://example.org/view?batch=alpha'])
+        self.assertEqual(data['rows'][0]['url'],data['rows'][1]['url'])
+        self.assertFalse(data['rows'][0]['url_identity_preserved'])
+        self.assertTrue(data['rows'][1]['url_identity_preserved'])
+        selected=freeze_public_sources([(data,'a'*64)],limit=8)
+        self.assertEqual(len(selected['rows']),1)
+        self.assertEqual(selected['sources'][0]['upstream_url_identity_lost'],1)
+
     def test_conflicting_functional_query_keys_do_not_become_blind_gold(self):
         data=produce(['https://example.org/view?batch=1&batch=2'])
         self.assertFalse(data['rows'][0].get('url_identity_preserved',True))

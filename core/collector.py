@@ -24,7 +24,7 @@ from .config import load_keywords, load_sources
 from .models import Candidate, utc_now
 from .public_corpus import record_public_sample
 from .verifier import VerificationEngine
-from .developer_grants import is_developer_grant_lead
+from .developer_grants import is_developer_grant_lead, has_grant_application_denial
 
 
 USER_AGENT = 'WoolRadar/7.1 (+local-read-only-monitor; contact=local-user)'
@@ -42,6 +42,10 @@ def classify_exception(exc: Exception) -> str:
 
 
 def contains_keyword(text: str, keywords: list[str]) -> bool:
+    # Brand/free fallback must not resurrect a closed grant from the same
+    # source item. Multi-program items require separate manual adjudication.
+    if has_grant_application_denial(text):
+        return False
     value = text.casefold()
     brand_only = {'claude', 'gemini', 'grok', 'github', 'cursor pro'}
     strong = [keyword.casefold() for keyword in keywords if keyword.casefold() not in brand_only]

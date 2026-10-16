@@ -192,3 +192,55 @@ Keep `DELIVERY_BRIDGE=OUTPUT_NOT_CONNECTED`; do not claim the 09:30
 ChatGPT scheduled brief consumed WoolRadar production output. Whole
 WoolRadar Windows integration suite, source P06 field validation and
 post-tuning unseen holdout are NOT_EXECUTED for this head.
+
+
+## 2026-10-16: Raw report parser must preserve audit decisions
+
+The read-only consumer now strictly checks decoded JSON, but the preview
+producer previously loaded the *raw* daily report via ordinary
+`json.loads(raw)`. Duplicate `report_audit`/`noise_audit` fields may be
+interpreted as the last occurrence and silently override a prior
+exclusion decision. A sha256 of the raw bytes does not cure that
+cross-parser ambiguity. Nonstandard `NaN`/`Infinity`, exponent overflow
+and alternative JSON encodings had the same interpretability problem.
+
+New draft producer helper `parse_daily_json(raw)` requires UTF-8 without
+BOM, rejects repeated object keys at **every level**, JSON non-finite
+constants and float overflow, large (>10 MiB) input, root non-object
+and pathological nesting. The existing local-only CLI parses the report
+**before** creating the preview file. A failure cannot publish a partial
+local preview. No source report, Windows database or cloud endpoint was
+accessed or modified.
+
+New `test_raw_daily_json_strict.py` defines **8 formal repository tests**
+for: valid excluded audit, duplicate row audit, duplicate global audit,
+duplicate event array, NaN/Infinity/exponent overflow, BOM/UTF16/UTF32,
+deep nesting, and `main()` not creating a file on invalid input.
+GitHub producer blob `fa27080ccaac4388ffdcc9dccc095a62d62b0015`
+and test blob `6281c96d9dddb443b901b1c96de2f76b625982dc`
+were fetched after commit. Independent Python3.13 *extracted-parser*
+model: ordinary `json.loads` accepted duplicate audit/array keys, NaN,
+Infinity and 1e9999, while patched parser rejected all; original valid
+ordinary report with one event still accepted. **This is NOT a formal
+run of the exact repository `test_raw_daily_json_strict.py` or full
+combined suite at the new HEAD**. The last full bridge 39/39 figure
+is historical, from the prior HEAD **before this raw parser change**.
+
+Acceptance command in approved isolated worktree, exact PR28 SHA:
+
+```sh
+python -B independent-quality/delivery-bridge-20261016/run_combined_tests.py
+python -B -m unittest discover -s independent-quality/delivery-bridge-20261016 -p 'test_*.py' -v
+```
+
+IMPORTANT separate hygiene: the main PR23 version of one exporter test
+still contained a card-number-like string matching private user data.
+The current PR28 copy was sanitized, and independent [Draft PR31]
+(https://github.com/lu403369069lu-prog/WoolRadar/pull/31) makes the
+**one-line scrub applicable to PR23 without requiring the large bridge PR**.
+Neither patch removes the prior literal from old Git commits or clones.
+Do not reproduce the value in logs, issues or tests. Coordinate a
+responsible private history/credential review rather than force-pushing.
+
+Still OUTPUT_NOT_CONNECTED; no approved real runtime report/consumer receipt,
+no verified 09:30 delivery, no new held-out field-recall acceptance.

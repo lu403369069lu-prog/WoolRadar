@@ -61,3 +61,12 @@ ChatGPT可立即：代码/文档/测试审查、受限语义反例、评估集�
 本分支新增/补正六份交接文档、浏览器独立专题、源码/脚本/公开配置/测试与小型样例。保留远端AGENTS.md及原历史，不写项目状态进AGENTS。文件清单、扫描及实际测试输出见 `ARTIFACT_INDEX.md` 和 `evidence/`。
 
 完整原始聊天、用户个人路径、账号现场、DB/日志/缓存/下载物/二进制/venv/upstream仓库均保留本地。不把本交接写成项目已完成，不取消运行中的长期工作。
+
+
+## 2026-10-16 user-resumed independent follow-up (candidate, not integrated)
+- Primary PR23 base: `2a0fea314f3728e22a334cbf6fe4202d2b5da422`; this isolated branch `chatgpt/wool-followup-identity-grant-20261016` contains **two** targeted production-source safety corrections and **two** matching test changes, plus a focused evidence checkpoint.
+- Grant helper rejects does/will/did/would-not-accept and passive nonacceptance. Stored public URL over 2048 characters loses identity proof instead of becoming blind-sample gold; safe removed tracker stays eligible.
+- Actual independently executed sandbox: exact GitHub grant-module blob + existing 17 formal tests **17/17 exit0**; six supplemental synthetic grant assertions; exact producer-module blob with synthetic temporary JSON **4/4 controls exit0**. Full Windows collector/sampler plus unified 396+ suite at this branch has **NOT** been executed.
+- Precise source blobs and run commands, remaining gates and red/green context: `evidence/independent-followup-20261016/CHECKPOINT.md`.
+- Next: authorized main integration owner checks V3 fresh lease/fence and cherry-picks minimal safe changes, then runs exact-head Windows full suite. Freeze only new unseen independently judged source holdout afterward; production daily report-to-09:30 ChatGPT connection remains `OUTPUT_NOT_CONNECTED`.
+- No V3 state mutation, Codex quota, Work, paid API, auto merge, force push, original report/SQLite upload or production modification.

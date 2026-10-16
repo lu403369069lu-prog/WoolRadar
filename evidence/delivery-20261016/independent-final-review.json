@@ -1,0 +1,60 @@
+{
+  "reviewer": "independent budget_review agent",
+  "command": "PowerShell here-string | python -B -; only test_delivery_boundaries.py plus scoped prior counterexamples/positive controls",
+  "exit_code": 0,
+  "source_sha256": {
+    "redact_daily.py": "bd0100d023d6b4270b076d3c8ab83665130d730310792d2ba029781c4a02e1f1",
+    "consume_preview.py": "ef80ab6772014512a497db4a14949681e85a84ef709fc5b16f742e22cec6ece2"
+  },
+  "focused_methods_run": 14,
+  "test_output": "..............\n----------------------------------------------------------------------\nRan 14 tests in 0.034s\n\nOK\n",
+  "additional_checks": [
+    {
+      "name": "private-title-path-rejected-on-both-sides",
+      "synthetic_title": "Free API grant saved at C:\\Users\\SyntheticUser\\Private\\daily.json",
+      "passed": true
+    },
+    {
+      "name": "private-title-path-rejected-on-both-sides",
+      "synthetic_title": "Free grant at \\\\synthetic-host\\Private\\daily.json",
+      "passed": true
+    },
+    {
+      "name": "private-title-path-rejected-on-both-sides",
+      "synthetic_title": "Free grant at /home/synthetic/private.json",
+      "passed": true
+    },
+    {
+      "name": "only-observation-clock-does-not-requeue",
+      "passed": true
+    },
+    {
+      "name": "title-changes-still-require-recheck",
+      "passed": true
+    },
+    {
+      "name": "status-changes-still-require-recheck",
+      "passed": true
+    },
+    {
+      "name": "claims-changes-still-require-recheck",
+      "passed": true
+    },
+    {
+      "name": "proof-url-changes-still-require-recheck",
+      "passed": true
+    },
+    {
+      "name": "baseline-zero-and-normal-public-title-preserved",
+      "passed": true
+    }
+  ],
+  "findings": [],
+  "conclusion": "Both reported residuals resolved for these exact fingerprints. Private path titles denied by producer and consumer; observation-only time refresh does not requeue; semantic status/title/claims/proof-URL changes still requeue for manual review.",
+  "limits": [
+    "Only the two requested fixes and positive controls reviewed; no broader re-audit or full combined regression.",
+    "Synthetic fixtures only; no real DB/daily/private logs, network, worktree or production modifications.",
+    "Actual ChatGPT delivery remains unconnected; no live availability or account eligibility claim.",
+    "Prior failure and review evidence retained unchanged."
+  ]
+}

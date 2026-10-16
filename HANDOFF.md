@@ -1,3 +1,7 @@
+## Current delivery integration — 2026-10-16
+
+See evidence/delivery-20261016/CHECKPOINT.md and MANIFEST.json. Actual ChatGPT delivery remains OUTPUT_NOT_CONNECTED. P06 continues; production unchanged. Historical sections below are not current ownership.
+
 ## Active integration checkpoint — 2026-10-16
 
 See evidence/system-integration-20261016/CHECKPOINT.md. P06 remains active; no production changes or merges. The historical sections below describe earlier snapshots and are not current locks.

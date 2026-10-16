@@ -62,3 +62,17 @@ def is_developer_grant_lead(text: object) -> bool:
     return bool(_SCOPE.search(normalized) and _PROGRAM.search(normalized)
                 and _APPLY.search(normalized)
                 and (_AWARD.search(normalized) or _AMOUNT.search(normalized)))
+
+
+def has_grant_application_denial(text: object) -> bool:
+    """Flag explicit closed applications even if brand/free words appear elsewhere.
+
+    This is deliberately conservative for a combined source item: it prevents
+    another positive cue from reviving a denied grant. A separate newly opened
+    program should be recorded as its own independently reviewed source.
+    """
+    if not isinstance(text, str) or not text:
+        return False
+    normalized = ' '.join(text.split())
+    return bool(_SCOPE.search(normalized) and _PROGRAM.search(normalized)
+                and _NEGATED_APPLICATION.search(normalized))

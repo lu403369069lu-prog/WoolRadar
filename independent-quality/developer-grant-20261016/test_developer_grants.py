@@ -1,5 +1,5 @@
 import unittest
-from core.developer_grants import is_developer_grant_lead
+from developer_grants import is_developer_grant_lead
 
 class GrantLeadTests(unittest.TestCase):
     def test_realistic_open_maintainer_fund(self):
@@ -24,5 +24,18 @@ class GrantLeadTests(unittest.TestCase):
         self.assertFalse(is_developer_grant_lead('GitHub maintainer fund applications are open. The dashboard includes a security scanner'))
     def test_ineligible_generic_startup_funding(self):
         self.assertFalse(is_developer_grant_lead('Startup Series A funding $10,000: applications are open for any company'))
+
+    def test_not_accepting_applications_is_not_open(self):
+        self.assertFalse(is_developer_grant_lead('Open source developer grant: we are not accepting applications. Selected maintainers receive $10,000.'))
+    def test_no_applications_are_open_is_not_open(self):
+        self.assertFalse(is_developer_grant_lead('Open source developer fund: no applications are open. Funding: $10,000 per maintainer.'))
+    def test_applicant_question_is_not_an_announcement(self):
+        self.assertFalse(is_developer_grant_lead('Can developers apply now for an open source fund? Selected maintainers receive $10,000.'))
+    def test_no_application_fee_is_not_paid(self):
+        self.assertTrue(is_developer_grant_lead('Open source developer grant accepting applications. No application fee is required; selected maintainers receive $10,000.'))
+    def test_fee_waiver_does_not_cancel_other_paid_requirement(self):
+        self.assertFalse(is_developer_grant_lead('Open source developer fund accepting applications, no application fee. However paid subscription is required; selected maintainers receive $10,000.'))
+    def test_fee_waived_wording_can_still_be_reviewed(self):
+        self.assertTrue(is_developer_grant_lead('Open source developer grant accepting applications, application fee waived; selected maintainers receive $10,000.'))
 
 if __name__=='__main__': unittest.main()

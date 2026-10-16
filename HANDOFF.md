@@ -70,3 +70,9 @@ ChatGPT可立即：代码/文档/测试审查、受限语义反例、评估集�
 - Precise source blobs and run commands, remaining gates and red/green context: `evidence/independent-followup-20261016/CHECKPOINT.md`.
 - Next: authorized main integration owner checks V3 fresh lease/fence and cherry-picks minimal safe changes, then runs exact-head Windows full suite. Freeze only new unseen independently judged source holdout afterward; production daily report-to-09:30 ChatGPT connection remains `OUTPUT_NOT_CONNECTED`.
 - No V3 state mutation, Codex quota, Work, paid API, auto merge, force push, original report/SQLite upload or production modification.
+
+
+### Resumed follow-through: direct collector guard (2026-10-16)
+- Additional P1 fallback bypass reproduced from precise main collector function: brand `GitHub` + `free` could revive closed grant despite conservative helper. PR36 now also edits actual `core/collector.py`, imports narrow grant-denial predicate and rejects entire ambiguous closed-grant source item before keyword/brand fallback.
+- Current actual grant helper blob `15af863bfa95073af6628c7ea97d5b7dc6912707`, existing full helper formal test blob `243f8ad7675a4a550bf2eea73164590b6d5600ef`: exact module 17/17 exit0. Isolated exact-function collector before 3/3 wrong accepts, after 3/3 denied under two keyword modes; two positive kinds preserved. Details: `evidence/independent-followup-20261016/CHECKPOINT.md`.
+- This is still not a complete imported collector integration or Windows full suite; main Codex owner must integrate selected minimal PR36 paths, run exact-head full combined tests including formally added collector cases, and separately evaluate source/region/card & real 09:30 delivery. Do not label production verified or modify main owner/lease/fence.

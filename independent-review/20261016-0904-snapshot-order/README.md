@@ -65,3 +65,32 @@ python -B independent-quality/delivery-bridge-20261016/run_combined_tests.py
   acceptance rounds remain incomplete.
 
 No Codex, Work, paid API, local deployment, real account, merge or raw report upload.
+
+
+## Newly reproduced: same-second conflicting publications
+
+Even when each preview is a valid independently SHA-checked payload and its
+date is fresh, two different snapshots may have identical `generated_at`
+timestamps. Schema v1 has **no signed monotonic publication sequence**.
+The previous PR28 candidate treated one as newer and emitted candidate
+or withdrawn keys without an ordering proof. This is an actual logical
+gap in the independent review queue, not proof of real source availability.
+
+New red/green test cases use the **exact GitHub consumer source** and the
+committed formal `test_snapshot_chronology.py`, with the exporter's pure
+`public_url`, `public_title`, `public_claims` helper implementations
+reconstructed from the main candidate (not a full production exporter).
+Before the fix, 2 new same-second assertions failed; after the fix,
+**all 9/9 formal chronology tests PASS, exit0** on Linux/Python3.13.
+The locally executed `consume_preview.py` git object equals the new GitHub
+blob `d139b07ecb427d16cde3cc6f6dfe96e3a8b2f428` and the formal
+test file equals `abd6bd20b2cb8eabf7fbe21ed80d20f2c1f38193`.
+
+Different snapshots with identical timestamps now return
+`SNAPSHOT_ORDER_AMBIGUOUS`, no changed or withdrawn event keys. This
+does not solve same-timestamp ordering; it refuses to guess until a
+future trusted monotonic publisher sequence can prove a newer revision.
+
+**Limit:** Only isolated 9-case consumer tests ran in this conversation;
+the 313-test full Windows integration remains NOT_VERIFIED at this SHA,
+and the daily ChatGPT brief is still OUTPUT_NOT_CONNECTED.

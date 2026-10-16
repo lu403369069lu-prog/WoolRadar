@@ -11,7 +11,7 @@ import math
 import os
 import re
 from pathlib import Path
-from urllib.parse import urlsplit, urlunsplit
+from urllib.parse import unquote_plus, urlsplit, urlunsplit
 
 MAX_INPUT = 8_000_000
 MAX_ROWS = 500
@@ -30,9 +30,30 @@ def canonical_public_url(raw: object) -> str | None:
         host = p.hostname.lower().rstrip('.')
         if not re.fullmatch(r'[a-z0-9.-]+', host) or '..' in host or host.startswith('-'):
             return None
+        # Never collapse business-significant query parameters or app routes.
+        # Remove only known marketing trackers; a query such as ?batch=2
+        # can represent a genuinely different grant/VPS campaign.
+        p.query.encode('utf-8')
+        p.fragment.encode('utf-8')
+        retained = []
+        for part in p.query.split('&'):
+            key = unquote_plus(part.split('=', 1)[0]).lower()
+            if key in {'access_token', 'refresh_token', 'id_token', 'api_key',
+                       'apikey', 'client_secret', 'password', 'session',
+                       'session_id', 'authorization', 'oauth_token', 'jwt'}:
+                return None
+            if key.startswith('utm_') or key in {'fbclid', 'gclid', 'msclkid',
+                                                  'mc_cid', 'mc_eid'}:
+                continue
+            if part:
+                retained.append(part)
+        fragment = p.fragment if p.fragment.startswith(('/', '!/')) else ''
+        if re.search(r'(?i)(?:access_token|refresh_token|id_token|password|session|api_key)=',
+                     fragment):
+            return None
         port = p.port
         netloc = host if port is None or (p.scheme == 'http' and port == 80) or (p.scheme == 'https' and port == 443) else f'{host}:{port}'
-        return urlunsplit((p.scheme, netloc, p.path or '/', '', ''))
+        return urlunsplit((p.scheme, netloc, p.path or '/', '&'.join(retained), fragment))
     except (ValueError, TypeError, UnicodeError):
         return None
 
@@ -63,8 +84,15 @@ def freeze_public_sources(sources: list[tuple[dict, str]], limit: int = 8) -> di
     for ident, rows, sha in sorted(source_data):
         in_source = set()
         candidates = []
-        duplicate_within = duplicate_between = invalid = 0
+        duplicate_within = duplicate_between = invalid = upstream_identity_loss = 0
         for row in rows:
+            # core/public_corpus.py schema v1 removed ALL query/fragment
+            # bytes before sampling. No downstream algorithm can restore a
+            # lost batch/offer identity. Exclude these rows from any new blind
+            # corpus rather than counting potentially merged offers as unique.
+            if row.get('url_sanitized') is True:
+                upstream_identity_loss += 1
+                continue
             url = canonical_public_url(row.get('url'))
             if (url is None or not isinstance(row.get('title'), str)
                     or not isinstance(row.get('summary'), str)):
@@ -90,10 +118,13 @@ def freeze_public_sources(sources: list[tuple[dict, str]], limit: int = 8) -> di
         audits.append({'source_id': ident, 'raw_sha256': sha, 'input_rows': len(rows),
                        'candidate_unique_urls': len(candidates), 'duplicate_within_source': duplicate_within,
                        'duplicate_across_source': duplicate_between, 'invalid_rows': invalid,
+                       'upstream_url_identity_lost': upstream_identity_loss,
                        'selected_rows': len([r for r in picked if r['source_id'] == ident])})
     return {'schema_version': 1, 'purpose': 'LOCAL_ONLY_REVIEW_CANDIDATES_HOLDOUT_UNVERIFIED',
             'no_truth_labels': True, 'not_independent_if_used_for_tuning': True,
-            'exact_url_dedup_only': True, 'sources': audits, 'rows': picked,
+            'exact_url_dedup_only': True,
+            'upstream_identity_fully_preserved': all(a['upstream_url_identity_lost'] == 0 for a in audits),
+            'sources': audits, 'rows': picked,
             'limits': 'Public title/snippet may contain private text; manually review before sharing. Different URLs may be the same campaign. No availability or eligibility claims.'}
 
 

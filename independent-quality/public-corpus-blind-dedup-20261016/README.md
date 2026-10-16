@@ -77,3 +77,35 @@ eligibility or 09:30 ChatGPT brief handoff. Old 56 rows remain TP0/FN2/
 TN47/unknown7 at their own exact old code SHA and never become a new
 independent blind acceptance set. No deployment, PR merge, Work, Codex
 quota, paid API, real account, source registration or data upload.
+
+
+## Additional actual source-to-sampler compatibility regression
+
+An exact standalone copy of WoolRadar main PR23's
+`core/public_corpus.py` (Git blob
+`fb1921e5935660eaa29b53a6f8033e7b4b52febf`) and its real
+`core/models.py` dependency (Git blob
+`f471c178d6adbad1ad85ee4ac3f99a47b231d861`) were executed in a
+separate temporary Python3.13 worktree; the two local git object hashes
+matched the GitHub blobs.
+
+The producer generated a real on-disk `data/public-corpus/publicfeed.json`
+from 3 **synthetic** public source rows: two feed URLs to the same
+campaign (differing query parameters) and one distinct URL.
+The independent selector read that producer-created file via its CLI and
+wrote a new local-only JSON review file: source input_rows=3,
+duplicate_within_source=1, retained URLs=2, no `accepted` keys or
+private account-file reads. No platform request occurred.
+
+Committed formal `test_public_corpus_real_schema.py`, verified local
+git blob = GitHub blob
+`4de99ac9fa494f6e7f14a0ed29622042534058df`.
+Combined isolated standard-library suite now **12/12 PASS, exit0**
+(11 selector tests + 1 actual-producer/CLI roundtrip).
+
+**No new real public-source sample was obtained in this test.**
+The old source duplicates and old TP0/FN2/TN47/unknown7 remain
+historical evidence at their original SHA. New file is only a
+candidate data selection mechanism; do not call it an independent
+held-out evaluation without a fresh source period, separate human
+labeling, and frozen input/label/sampler manifests.

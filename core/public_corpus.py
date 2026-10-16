@@ -37,7 +37,9 @@ def _semantic_query(query: str) -> tuple[str, bool]:
                 or _PRIVATE_VALUE.search(value)):
             preserved = False
             continue
-        if key in kept and kept[key] != value:
+        # Repeated selector keys may have server-specific array/first/last
+        # semantics, even if their values match. Never collapse them as gold.
+        if key in kept:
             preserved = False
         else:
             kept[key] = value

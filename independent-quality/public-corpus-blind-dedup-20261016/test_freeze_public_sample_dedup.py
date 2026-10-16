@@ -44,6 +44,14 @@ class CleanSample(unittest.TestCase):
         out=freeze_public_sources([sample('alpha',[first,second])])
         self.assertEqual(len(out['rows']),2)
         self.assertEqual(out['sources'][0]['duplicate_within_source'],0)
+    def test_generic_token_and_oauth_code_are_never_written_into_review(self):
+        for key in ('token','secret','auth','code','signature','sig','sessionid','api-key'):
+            with self.subTest(key=key):
+                self.assertIsNone(canonical_public_url('https://example.org/join?'+key+'=PRIVATE_CANARY'))
+    def test_contact_identifiers_are_not_preserved_in_public_review(self):
+        for key in ('email','phone'):
+            with self.subTest(key=key):
+                self.assertIsNone(canonical_public_url('https://example.org/join?'+key+'=PRIVATE_CANARY'))
     def test_upstream_query_loss_makes_blind_identity_unverified(self):
         a=sample('alpha',['https://example.org/claim'])
         a[0]['rows'][0]['url_sanitized']=True

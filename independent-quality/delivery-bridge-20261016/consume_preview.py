@@ -72,7 +72,10 @@ def validate(raw: bytes, expected_digest: str, *, now: datetime | None = None):
     if len(raw) > 2 * 1024 * 1024 or hashlib.sha256(raw).hexdigest() != expected_digest:
         raise UnsafePreview('digest mismatch or oversized preview')
     try:
-        obj = json.loads(raw, object_pairs_hook=_strict_object,
+        # Contract v1 producer writes UTF-8, without a BOM. json.loads(bytes)
+        # otherwise auto-detects UTF-16/32 and accepts a UTF-8 BOM.
+        decoded = raw.decode('utf-8', errors='strict')
+        obj = json.loads(decoded, object_pairs_hook=_strict_object,
                          parse_constant=_reject_nonfinite, parse_float=_finite_float)
     except (ValueError, UnicodeDecodeError, RecursionError) as exc:
         raise UnsafePreview('invalid preview json') from exc

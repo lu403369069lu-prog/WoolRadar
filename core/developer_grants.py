@@ -36,7 +36,9 @@ _NEGATED_APPLICATION = re.compile(
     r'\b(?:not\s+accepting\s+applications?|'
     r'no\s+applications?\s+(?:are\s+)?(?:open|accepted)|'
     r'applications?\s+(?:are\s+)?not\s+(?:open|accepted)|'
-    r'not\s+open\s+for\s+applications?|'\n    r'(?:do|does|did|will|would|can|could|should|may)\s+not\s+accept\s+applications?|'\n    r'applications?\s+(?:are|is|were)\s+not\s+being\s+accepted)\b', re.I)
+    r'not\s+open\s+for\s+applications?|'
+    r'(?:do|does|did|will|would|can|could|should|may)\s+not\s+accept\s+applications?|'
+    r'applications?\s+(?:are|is|were)\s+not\s+being\s+accepted)\b', re.I)
 _APPLICANT_QUESTION = re.compile(
     r'(?:^|[.!?]\s+)(?:can|could|should|may|would)\b[^.!?]{0,140}'
     r'\b(?:apply|application)\b', re.I)

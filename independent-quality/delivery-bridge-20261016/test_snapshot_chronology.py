@@ -85,6 +85,7 @@ class ChronologyWithdrawalTests(unittest.TestCase):
         previous = approved("2026-10-16T02:00:00Z", [event(KEY_A)])
         current = approved("2026-10-16T01:00:00Z", [event(KEY_A)])
         result = review_delta(current, previous)
+        self.assertEqual(result["status"], "OUT_OF_ORDER_IGNORED")
         self.assertEqual(result["candidate_keys"], [])
         self.assertEqual(result["withdrawn_keys"], [])
 

@@ -91,8 +91,8 @@ def record_public_sample(root: Path, node: str, source: dict, rows: list[dict], 
         clean_title, clean_summary = _clean_text(title), _clean_text(summary)
         sample_rows.append({'index': index, 'title': clean_title[:512], 'url': url[:2048],
                             'summary': clean_summary[:20000], 'published_at': str(row.get('published_at', ''))[:80],
-                            'accepted': bool(accepted[index]), 'url_sanitized': url != original,
-                            'url_identity_preserved': identity_preserved,
+                            'accepted': bool(accepted[index]), 'url_sanitized': url[:2048] != original,
+                            'url_identity_preserved': identity_preserved and len(url) <= 2048,
                             'text_url_redacted': clean_title != title or clean_summary != summary,
                             'content_truncated': len(clean_title) > 512 or len(clean_summary) > 20000 or len(url) > 2048})
     payload = {'schema_version': 1, 'sampled_at': utc_now(), 'node': str(node)[:64], 'source_id': source_id,

@@ -74,7 +74,7 @@ def validate(raw: bytes, expected_digest: str, *, now: datetime | None = None):
     try:
         obj = json.loads(raw, object_pairs_hook=_strict_object,
                          parse_constant=_reject_nonfinite, parse_float=_finite_float)
-    except (ValueError, UnicodeDecodeError) as exc:
+    except (ValueError, UnicodeDecodeError, RecursionError) as exc:
         raise UnsafePreview('invalid preview json') from exc
     if not isinstance(obj, dict) or set(obj) != TOP:
         raise UnsafePreview('unexpected preview fields')

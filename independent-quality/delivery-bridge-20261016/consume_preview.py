@@ -150,6 +150,13 @@ def review_delta(current: dict, previous: dict | None = None) -> dict:
         return {'status': 'OUT_OF_ORDER_IGNORED', 'candidate_keys': [],
                 'withdrawn_keys': [],
                 'notices': ['Snapshot chronology reversed; no candidate or withdrawal may be inferred']}
+    # Sub-second publisher ordering is not part of schema v1. Two different
+    # snapshots with the same timestamp cannot safely be ordered. A manual
+    # digest approval proves bytes, not which copy came first.
+    if _time(current['generated_at']) == _time(previous['generated_at']) and (changed or withdrawn):
+        return {'status': 'SNAPSHOT_ORDER_AMBIGUOUS', 'candidate_keys': [],
+                'withdrawn_keys': [],
+                'notices': ['Same-second distinct snapshots need independent publication sequence proof']}
     return {'status': 'MANUAL_SOURCE_RECHECK_REQUIRED',
             'candidate_keys': changed,
             # A disappearing row might be expiry, noise review, source outage,

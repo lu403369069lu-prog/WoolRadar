@@ -38,6 +38,67 @@ class PublicCorpusIdentityTests(unittest.TestCase):
         data=produce(['https://example.org/view']);row=data['rows'][0]
         row.pop('url_identity_preserved',None);row['url_sanitized']=True
         self.assertEqual(freeze_public_sources([(data,'a'*64)])['rows'],[])
+    def test_truncated_distinct_long_urls_must_not_claim_identity(self):
+        prefix='https://example.org/'+'x'*2048
+        data=produce([prefix+'/batch-alpha',prefix+'/batch-beta'])
+        self.assertEqual(data['rows'][0]['url'],data['rows'][1]['url'])
+        self.assertTrue(all(row['content_truncated'] for row in data['rows']))
+        self.assertTrue(all(row['url_sanitized'] for row in data['rows']))
+        self.assertTrue(all(row['url_identity_preserved'] is False for row in data['rows']))
+        selected=freeze_public_sources([(data,'a'*64)],limit=8)
+        self.assertEqual(selected['rows'],[])
+        self.assertEqual(selected['sources'][0]['upstream_url_identity_lost'],2)
+
+    def test_long_tracker_removed_without_losing_resource_identity(self):
+        data=produce(['https://example.org/offer?batch=1&utm_source='+'x'*3000])
+        row=data['rows'][0]
+        self.assertEqual(row['url'],'https://example.org/offer?batch=1')
+        self.assertTrue(row['url_sanitized'])
+        self.assertTrue(row['url_identity_preserved'])
+        self.assertEqual(len(freeze_public_sources([(data,'a'*64)])['rows']),1)
+
+    def test_case_folded_functional_selectors_never_claim_blind_identity(self):
+        data=produce(['https://example.org/view?Batch=alpha',
+                      'https://example.org/view?batch=alpha'])
+        self.assertEqual(data['rows'][0]['url'],data['rows'][1]['url'])
+        self.assertTrue(data['rows'][0]['url_sanitized'])
+        self.assertFalse(data['rows'][0]['url_identity_preserved'])
+        self.assertTrue(data['rows'][1]['url_identity_preserved'])
+        selected=freeze_public_sources([(data,'a'*64)],limit=8)
+        self.assertEqual(len(selected['rows']),1)
+        self.assertEqual(selected['sources'][0]['upstream_url_identity_lost'],1)
+
+    def test_case_changed_marketing_tracker_is_still_safely_removed(self):
+        data=produce(['https://example.org/view?batch=beta&UTM_SOURCE=news'])
+        self.assertEqual(data['rows'][0]['url'],'https://example.org/view?batch=beta')
+        self.assertTrue(data['rows'][0]['url_identity_preserved'])
+
+    def test_duplicate_equal_campaign_selectors_are_not_safe_blind_identity(self):
+        data=produce(['https://example.org/view?batch=alpha&batch=alpha',
+                      'https://example.org/view?batch=alpha'])
+        self.assertEqual(data['rows'][0]['url'],data['rows'][1]['url'])
+        self.assertFalse(data['rows'][0]['url_identity_preserved'])
+        self.assertTrue(data['rows'][1]['url_identity_preserved'])
+        selected=freeze_public_sources([(data,'a'*64)],limit=8)
+        self.assertEqual(len(selected['rows']),1)
+        self.assertEqual(selected['sources'][0]['upstream_url_identity_lost'],1)
+
+    def test_encoded_functional_key_does_not_claim_duplicate_blind_identity(self):
+        data=produce(['https://example.org/view?ba%74ch=alpha',
+                      'https://example.org/view?batch=alpha'])
+        self.assertEqual(data['rows'][0]['url'],data['rows'][1]['url'])
+        self.assertFalse(data['rows'][0]['url_identity_preserved'])
+        self.assertTrue(data['rows'][1]['url_identity_preserved'])
+        selected=freeze_public_sources([(data,'a'*64)],limit=8)
+        self.assertEqual(len(selected['rows']),1)
+        self.assertEqual(selected['sources'][0]['upstream_url_identity_lost'],1)
+
+    def test_encoded_tracking_key_can_still_be_safely_removed(self):
+        data=produce(['https://example.org/view?batch=beta&u%74m_source=alerts'])
+        self.assertEqual(data['rows'][0]['url'],'https://example.org/view?batch=beta')
+        self.assertTrue(data['rows'][0]['url_identity_preserved'])
+        self.assertEqual(len(freeze_public_sources([(data,'a'*64)],limit=8)['rows']),1)
+
     def test_conflicting_functional_query_keys_do_not_become_blind_gold(self):
         data=produce(['https://example.org/view?batch=1&batch=2'])
         self.assertFalse(data['rows'][0].get('url_identity_preserved',True))

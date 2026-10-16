@@ -1,3 +1,7 @@
+## USER RESUMED — 2026-10-17
+
+Explicit user continuation overrides prior stop. See evidence/pipeline-integration-20261016/oct17/HANDOFF.md. PR36 fixes have formal Windows regression evidence; business acceptance and OUTPUT_NOT_CONNECTED gates remain. Historical sections below are past checkpoints.
+
 ## USER STOP — 2026-10-16
 
 User requested upload then stop. See evidence/pipeline-integration-20261016/user-stop/HANDOFF.md. No automatic resumption. Current draft includes known failing grant-negation contracts and an unfixed URL-truncation finding; overall project incomplete. Historical sections below are not current authorization.

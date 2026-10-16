@@ -1,0 +1,22 @@
+Local review candidates=2; NOT PUBLISHED; no claimability verdict
+
+test_bad_source_encoding_and_counts_are_rejected (test_freeze_public_sample_dedup.CleanSample.test_bad_source_encoding_and_counts_are_rejected) ... ok
+test_clamped_benefit_status_does_not_select_for_truth (test_freeze_public_sample_dedup.CleanSample.test_clamped_benefit_status_does_not_select_for_truth) ... ok
+test_dont_launder_duplicate_in_later_source_if_not_selected_earlier (test_freeze_public_sample_dedup.CleanSample.test_dont_launder_duplicate_in_later_source_if_not_selected_earlier) ... ok
+test_duplicate_cross_sources_and_order_independent (test_freeze_public_sample_dedup.CleanSample.test_duplicate_cross_sources_and_order_independent) ... ok
+test_duplicate_public_source_metadata_cannot_override_identity (test_freeze_public_sample_dedup.CleanSample.test_duplicate_public_source_metadata_cannot_override_identity) ... ok
+test_local_cli_creates_new_private_file_no_overwrite (test_freeze_public_sample_dedup.CleanSample.test_local_cli_creates_new_private_file_no_overwrite) ... usage: python.exe -m unittest [-h] --input INPUT --output OUTPUT
+                              [--per-source PER_SOURCE]
+python.exe -m unittest: error: output must be a new local path
+ok
+test_malformed_row_cannot_steal_sample_quota (test_freeze_public_sample_dedup.CleanSample.test_malformed_row_cannot_steal_sample_quota) ... ok
+test_no_auto_dedup_different_urls_into_a_campaign (test_freeze_public_sample_dedup.CleanSample.test_no_auto_dedup_different_urls_into_a_campaign) ... ok
+test_reject_bad_source_identity_public_only (test_freeze_public_sample_dedup.CleanSample.test_reject_bad_source_identity_public_only) ... ok
+test_url_userinfo_removed_not_republished (test_freeze_public_sample_dedup.CleanSample.test_url_userinfo_removed_not_republished) ... ok
+test_within_source_duplicate_removed_before_cap (test_freeze_public_sample_dedup.CleanSample.test_within_source_duplicate_removed_before_cap) ... ok
+test_official_producer_output_deduplicates_before_local_review (test_public_corpus_real_schema.RealCorpusProducerCompatibility.test_official_producer_output_deduplicates_before_local_review) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.027s
+
+OK

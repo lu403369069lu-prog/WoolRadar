@@ -1,0 +1,52 @@
+[
+  {
+    "label": "wool29-matcher",
+    "command": [
+      "USER_HOME\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      ".",
+      "-v"
+    ],
+    "cwd": "USER_HOME\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\qa2-woolradar-29\\independent-quality\\developer-grant-20261016",
+    "source_sha": "87be0c915531701cb63ec577ac08433bcf18a303",
+    "exit_code": 0,
+    "seconds": 0.093,
+    "log": "wool29-matcher.log",
+    "total": 11,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 11
+  },
+  {
+    "label": "wool32-sampler",
+    "command": [
+      "USER_HOME\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "-X",
+      "utf8",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      ".",
+      "-v"
+    ],
+    "cwd": "USER_HOME\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_work\\qa2-woolradar-32\\independent-quality\\public-corpus-blind-dedup-20261016",
+    "source_sha": "2fc34f77472880d2a6a024d5ad8520c4af9f5830",
+    "exit_code": 0,
+    "seconds": 0.156,
+    "log": "wool32-sampler.log",
+    "total": 12,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "passed": 12
+  }
+]

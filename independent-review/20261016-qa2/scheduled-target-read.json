@@ -1,0 +1,44 @@
+[
+  {
+    "Name": "ChineseReport",
+    "TargetsWoolRadarPath": true,
+    "State": "Ready",
+    "LastRunTime": "2026-10-16T08:30:01.0000000+08:00",
+    "LastTaskResult": 0
+  },
+  {
+    "Name": "ClawRadar",
+    "TargetsWoolRadarPath": true,
+    "State": "Ready",
+    "LastRunTime": "2026-10-16T17:08:52.0000000+08:00",
+    "LastTaskResult": 0
+  },
+  {
+    "Name": "DigestAIAgent",
+    "TargetsWoolRadarPath": true,
+    "State": "Ready",
+    "LastRunTime": "2026-10-16T08:00:01.0000000+08:00",
+    "LastTaskResult": 0
+  },
+  {
+    "Name": "LinuxDoMonitor",
+    "TargetsWoolRadarPath": true,
+    "State": "Ready",
+    "LastRunTime": "2026-10-16T17:08:52.0000000+08:00",
+    "LastTaskResult": 0
+  },
+  {
+    "Name": "OpenMagpie",
+    "TargetsWoolRadarPath": true,
+    "State": "Ready",
+    "LastRunTime": "2026-10-16T17:08:52.0000000+08:00",
+    "LastTaskResult": 0
+  },
+  {
+    "Name": "TwitterMonitor",
+    "TargetsWoolRadarPath": true,
+    "State": "Ready",
+    "LastRunTime": "2026-10-16T17:08:52.0000000+08:00",
+    "LastTaskResult": 0
+  }
+]

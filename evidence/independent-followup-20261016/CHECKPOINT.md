@@ -24,3 +24,12 @@
 4. Keep `DELIVERY_BRIDGE=OUTPUT_NOT_CONNECTED` until user-approved sanitized real report publication and same-SHA consumer receipt actually exist; continue P06/region/card/account/deadline/actual notification recovery/three final independent rounds.
 
 Never upload private Windows reports/SQLite, credentials, account details, raw conversations or production logs. No Work, paid model API or automated claims.
+
+
+## Additional independent negation verification, 2026-10-16 (current Draft revision)
+- An independent reviewer found that ordinary English contractions and passive future application denial were not recognized by the previous narrow negative-application pattern: `doesn't accept`, `isn’t accepting`, `aren't being accepted`, `applications will not be accepted`. Prior pattern checked these four exact synthetic phrases and returned **False** for being a denial (a security/quality gap), while affirmative-looking `Apply today` nearby could satisfy the positive opening detector.
+- Current candidate updates `core/developer_grants.py` and appends **seven** exact text cases to the existing formal `tests/test_developer_grant_negations.py` without changing the positive original. It does **not** broaden the free-benefit predicate or claim personal eligibility.
+- Reconstructed full exact GitHub production-module bytes and 17 pre-existing formal unittest bytes in an isolated Python environment. Their actual Git object SHA1 values matched the GitHub connector readbacks **`0201c0327c9d6039ccc3054dc1449e9cc15b831c`** (module) and **`243f8ad7675a4a550bf2eea73164590b6d5600ef`** (original formal tests). Python AST parser accepted the full source.
+- Actual subprocess `python -B -m unittest discover -s independent-quality/developer-grant-20261016 -p test_developer_grants.py -v` ran **17 / 17 pass, 0 failure/error, exit0** against that exact hash-matched full module.
+- Direct actual function regression against that exact module: **12 / 12** synthetically negated application variants returned False, with the existing positive `open application + no application fee` returning True (**1 / 1**). This is **not** full `core.collector.contains_keyword` execution, GitHub Actions, Windows integration or real official-program eligibility.
+- Follow-up production-module tests and source blobs are uploaded on PR36. Current formal new collector integration test imports live `core.collector` and remains unexecuted by this narrow reviewer; exact new full combined Windows suite is still required at the final selected integration SHA.

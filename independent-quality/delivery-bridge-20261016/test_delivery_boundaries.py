@@ -32,14 +32,14 @@ class DeliveryBoundaryTests(unittest.TestCase):
             p=preview();p['events'][0]['official_evidence']=[{'url':value,'checked_at':'2026-10-16T00:00:00Z','claims':{}}]
             with self.subTest(value=value),self.assertRaises(UnsafePreview):checked(p)
     def test_same_identity_status_change_requires_recheck(self):
-        old=checked(preview());new=checked(preview(dict(ROW,status='CLAIMABLE')))
+        old=preview();old['generated_at']=(NOW-timedelta(seconds=1)).isoformat();old=checked(old);new=checked(preview(dict(ROW,status='CLAIMABLE')))
         self.assertEqual(review_delta(new,old)['candidate_keys'],[new['events'][0]['event_key']])
         self.assertFalse(new['public_application_live_verified'])
     def test_same_identity_title_change_requires_recheck(self):
-        old=checked(preview());new=checked(preview(dict(ROW,title='Updated public developer benefit')))
+        old=preview();old['generated_at']=(NOW-timedelta(seconds=1)).isoformat();old=checked(old);new=checked(preview(dict(ROW,title='Updated public developer benefit')))
         self.assertEqual(review_delta(new,old)['candidate_keys'],[new['events'][0]['event_key']])
     def test_same_identity_official_proof_change_requires_recheck(self):
-        old=checked(preview());row=dict(ROW,evidence=[{'kind':'official','url':'https://benefit.example/terms','checked_at':'2026-10-16T00:00:00Z','claims':{'remaining':7,'open':True}}]);new=checked(preview(row))
+        old=preview();old['generated_at']=(NOW-timedelta(seconds=1)).isoformat();old=checked(old);row=dict(ROW,evidence=[{'kind':'official','url':'https://benefit.example/terms','checked_at':'2026-10-16T00:00:00Z','claims':{'remaining':7,'open':True}}]);new=checked(preview(row))
         result=review_delta(new,old)
         self.assertEqual(result['candidate_keys'],[new['events'][0]['event_key']])
         self.assertEqual(result['status'],'MANUAL_SOURCE_RECHECK_REQUIRED')
@@ -71,6 +71,14 @@ class DeliveryBoundaryTests(unittest.TestCase):
         old=checked(preview(row));new=copy.deepcopy(old)
         new['events'][0]['official_evidence'][0]['checked_at']='2026-10-16T00:01:00Z'
         self.assertEqual(review_delta(checked(new),old)['candidate_keys'],[])
+    def test_same_second_semantic_revisions_need_sequence_proof(self):
+        old=checked(preview())
+        for changed in [dict(ROW,status='CLAIMABLE'),dict(ROW,title='Updated public developer benefit'),dict(ROW,evidence=[{'kind':'official','url':'https://benefit.example/terms','checked_at':'2026-10-16T00:00:00Z','claims':{'remaining':7}}])]:
+            with self.subTest(row=changed):
+                result=review_delta(checked(preview(changed)),old)
+                self.assertEqual(result['status'],'SNAPSHOT_ORDER_AMBIGUOUS')
+                self.assertEqual(result['candidate_keys'],[])
+                self.assertEqual(result['withdrawn_keys'],[])
     def test_baseline_is_still_zero_candidates(self):
         p=checked(preview());self.assertEqual(review_delta(p)['candidate_keys'],[])
 if __name__=='__main__':unittest.main()

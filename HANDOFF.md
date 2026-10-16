@@ -1,3 +1,7 @@
+## Latest pipeline candidate — 2026-10-16
+
+See evidence/pipeline-integration-20261016/CHECKPOINT.md and MANIFEST.json. Latest PR28/29/31/32 combined; actual09:30 consumer remains OUTPUT_NOT_CONNECTED. Historical sections are not current locks.
+
 ## Current delivery integration — 2026-10-16
 
 See evidence/delivery-20261016/CHECKPOINT.md and MANIFEST.json. Actual ChatGPT delivery remains OUTPUT_NOT_CONNECTED. P06 continues; production unchanged. Historical sections below are not current ownership.

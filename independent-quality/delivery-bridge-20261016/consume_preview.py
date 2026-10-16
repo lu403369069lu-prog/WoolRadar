@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import re
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -43,14 +44,40 @@ def _time(value):
         raise UnsafePreview('invalid time') from exc
 
 
+def _strict_object(pairs):
+    """Reject ambiguous JSON object keys at every nesting level."""
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError('duplicate JSON key')
+        result[key] = value
+    return result
+
+
+def _reject_nonfinite(value):
+    """JSON does not allow NaN or Infinity, even inside claim metadata."""
+    raise ValueError('nonfinite JSON constant')
+
+
+def _finite_float(value):
+    number = float(value)
+    if not math.isfinite(number):
+        raise ValueError('nonfinite JSON number')
+    return number
+
+
 def validate(raw: bytes, expected_digest: str, *, now: datetime | None = None):
     if not isinstance(expected_digest, str) or not SHA64.fullmatch(expected_digest):
         raise UnsafePreview('independent digest required')
     if len(raw) > 2 * 1024 * 1024 or hashlib.sha256(raw).hexdigest() != expected_digest:
         raise UnsafePreview('digest mismatch or oversized preview')
     try:
-        obj = json.loads(raw)
-    except (ValueError, UnicodeDecodeError) as exc:
+        # Contract v1 producer writes UTF-8, without a BOM. json.loads(bytes)
+        # otherwise auto-detects UTF-16/32 and accepts a UTF-8 BOM.
+        decoded = raw.decode('utf-8', errors='strict')
+        obj = json.loads(decoded, object_pairs_hook=_strict_object,
+                         parse_constant=_reject_nonfinite, parse_float=_finite_float)
+    except (ValueError, UnicodeDecodeError, RecursionError) as exc:
         raise UnsafePreview('invalid preview json') from exc
     if not isinstance(obj, dict) or set(obj) != TOP:
         raise UnsafePreview('unexpected preview fields')
@@ -136,9 +163,34 @@ def review_delta(current: dict, previous: dict | None = None) -> dict:
             key=lambda proof: json.dumps(proof, sort_keys=True))
         return json.dumps(canonical, sort_keys=True, ensure_ascii=False)
     old = {row['event_key']: revision(row) for row in previous['events']}
+    current_ids = {row['event_key'] for row in current['events']}
+    changed = [row['event_key'] for row in current['events']
+               if row['event_key'] not in old or revision(row) != old[row['event_key']]]
+    withdrawn = [row['event_key'] for row in previous['events'] if row['event_key'] not in current_ids]
+    # Both files passing the relative freshness gate does NOT establish which
+    # one came later. Never re-introduce removed/old offers by replaying an
+    # earlier snapshot as the current report. Snapshot publication ordering is
+    # separate from the user's local clock and requires a trusted channel later.
+    reversed_time = _time(current['generated_at']) < _time(previous['generated_at'])
+    reversed_day = current['report_date'] < previous['report_date']
+    if reversed_time or reversed_day:
+        return {'status': 'OUT_OF_ORDER_IGNORED', 'candidate_keys': [],
+                'withdrawn_keys': [],
+                'notices': ['Snapshot chronology reversed; no candidate or withdrawal may be inferred']}
+    # Sub-second publisher ordering is not part of schema v1. Two different
+    # snapshots with the same timestamp cannot safely be ordered. A manual
+    # digest approval proves bytes, not which copy came first.
+    if _time(current['generated_at']) == _time(previous['generated_at']) and (changed or withdrawn):
+        return {'status': 'SNAPSHOT_ORDER_AMBIGUOUS', 'candidate_keys': [],
+                'withdrawn_keys': [],
+                'notices': ['Same-second distinct snapshots need independent publication sequence proof']}
     return {'status': 'MANUAL_SOURCE_RECHECK_REQUIRED',
-            'candidate_keys': [row['event_key'] for row in current['events'] if row['event_key'] not in old or revision(row) != old[row['event_key']]],
-            'notices': ['Candidate IDs are not proof of availability, account eligibility, or new publication']}
+            'candidate_keys': changed,
+            # A disappearing row might be expiry, noise review, source outage,
+            # dedup migration or missing collection. It is never proof of
+            # closure without an independent official/source recheck.
+            'withdrawn_keys': withdrawn,
+            'notices': ['Changed and missing event IDs require manual source recheck; neither proves public availability or expiration']}
 
 
 def main(argv=None) -> int:

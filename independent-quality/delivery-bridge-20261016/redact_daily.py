@@ -10,6 +10,7 @@ import argparse
 import hashlib
 import ipaddress
 import json
+import math
 import os
 import re
 from datetime import datetime, timedelta, timezone
@@ -28,6 +29,7 @@ def public_url(raw: object) -> str | None:
     if not isinstance(raw, str) or not raw or len(raw) > 512 or re.search(r'\s|[\\<>]', raw):
         return None
     try:
+        raw.encode('utf-8')  # unpaired surrogates are not a publishable URL
         parts = urlsplit(raw)
         if parts.scheme != 'https' or not parts.hostname or parts.username or parts.password or parts.port not in (None, 443):
             return None
@@ -63,7 +65,7 @@ def public_url(raw: object) -> str | None:
 def public_title(raw: object) -> str | None:
     if not isinstance(raw, str) or len(raw) < 3 or len(raw) > 160:
         return None
-    if any(ord(ch) < 32 for ch in raw) or BAD_TEXT.search(raw) or '://' in raw or re.search(r'(?i)(?:[a-z]:[\\/]|\\\\|/(?:home|Users|private|tmp)/)', raw):
+    if any(ord(ch) < 32 or 0xD800 <= ord(ch) <= 0xDFFF for ch in raw) or BAD_TEXT.search(raw) or '://' in raw or re.search(r'(?i)(?:[a-z]:[\\/]|\\\\|/(?:home|Users|private|tmp)/)', raw):
         return None
     return raw
 
@@ -131,7 +133,11 @@ def build_preview(report: dict, report_hash: str, now: datetime | None = None) -
         batch_id = row.get('batch_id', '')
         if not isinstance(batch_id, str) or len(batch_id) > 128:
             continue
-        identity = hashlib.sha256((url + '\0' + batch_id).encode('utf-8')).hexdigest()[:24]
+        try:
+            batch_bytes = batch_id.encode('utf-8')
+        except UnicodeEncodeError:
+            continue
+        identity = hashlib.sha256(url.encode('utf-8') + b'\0' + batch_bytes).hexdigest()[:24]
         if identity in seen:
             continue
         seen.add(identity)
@@ -152,7 +158,7 @@ def build_preview(report: dict, report_hash: str, now: datetime | None = None) -
             'reported_status': status,
             'publication_lane': 'independent_official_recheck_required',
             'personal_eligibility': 'UNKNOWN',
-            'batch_key': hashlib.sha256(batch_id.encode('utf-8')).hexdigest()[:16] if batch_id else None,
+            'batch_key': hashlib.sha256(batch_bytes).hexdigest()[:16] if batch_bytes else None,
             'published_at': timestamp(row.get('published_at')),
             'first_seen': timestamp(row.get('first_seen')),
             'official_evidence': official,
@@ -171,6 +177,41 @@ def build_preview(report: dict, report_hash: str, now: datetime | None = None) -
     }
 
 
+def _strict_json_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError('ambiguous duplicate input field')
+        result[key] = value
+    return result
+
+
+def _reject_json_constant(_):
+    raise ValueError('nonstandard input number')
+
+
+def _finite_json_float(value):
+    parsed = float(value)
+    if not math.isfinite(parsed):
+        raise ValueError('nonfinite input number')
+    return parsed
+
+
+def parse_daily_json(raw: bytes) -> dict:
+    """Fail closed on ambiguous, non-UTF-8 or excessively nested local reports."""
+    if not isinstance(raw, bytes) or len(raw) > MAX_INPUT:
+        raise ValueError('invalid daily report input size')
+    try:
+        text = raw.decode('utf-8', errors='strict')
+        parsed = json.loads(text, object_pairs_hook=_strict_json_object,
+                            parse_constant=_reject_json_constant, parse_float=_finite_json_float)
+    except (UnicodeError, ValueError, RecursionError) as exc:
+        raise ValueError('invalid or ambiguous daily report JSON') from exc
+    if not isinstance(parsed, dict):
+        raise ValueError('daily report root must be an object')
+    return parsed
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--input', required=True, type=Path, help='Explicit local WoolRadar daily JSON path')
@@ -182,7 +223,7 @@ def main(argv: list[str] | None = None) -> int:
     if source.stat().st_size > MAX_INPUT:
         parser.error('input daily report exceeds 10 MiB safety limit')
     raw = source.read_bytes()
-    payload = build_preview(json.loads(raw), hashlib.sha256(raw).hexdigest())
+    payload = build_preview(parse_daily_json(raw), hashlib.sha256(raw).hexdigest())
     target.parent.mkdir(parents=True, exist_ok=True)
     flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
     flags |= getattr(os, 'O_NOFOLLOW', 0)

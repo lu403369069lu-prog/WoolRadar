@@ -33,7 +33,9 @@ class PreviewGuard(unittest.TestCase):
 
     def test_distinct_delta_only_ids(self):
         old=check(payload(ROW))
-        new=check(payload(ROW, dict(ROW,event_key='c'*24)))
+        newer = payload(ROW, dict(ROW,event_key='c'*24))
+        newer['generated_at'] = '2026-10-16T00:15:00Z'
+        new=check(newer)
         r=review_delta(new,old)
         self.assertEqual(r['candidate_keys'],['c'*24])
         self.assertNotIn('Example public benefit',json.dumps(r))
@@ -59,6 +61,77 @@ class PreviewGuard(unittest.TestCase):
         with self.assertRaises(UnsafePreview):check(payload(ROW,ROW))
         p=payload(ROW);p['count']['exported_events']=2
         with self.assertRaises(UnsafePreview):check(p)
+
+    def test_duplicate_root_key_rejected_even_if_last_value_safe(self):
+        data = json.dumps(payload(ROW)).replace(
+            '"runtime_provenance_verified": false',
+            '"runtime_provenance_verified": true, "runtime_provenance_verified": false')
+        self.assertIn('"runtime_provenance_verified": true', data)
+        raw = data.encode()
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
+    def test_duplicate_event_field_rejected(self):
+        data = json.dumps(payload(ROW)).replace(
+            '"title": "Example public benefit"',
+            '"title": "PRIVATE LEAK", "title": "Example public benefit"')
+        self.assertIn('"title": "PRIVATE LEAK"', data)
+        raw = data.encode()
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
+    def test_duplicate_nested_claim_field_rejected(self):
+        p = payload(dict(ROW, official_evidence=[{
+            'url': 'https://example.org/official',
+            'checked_at': '2026-10-16T00:00:00Z',
+            'claims': {'public': True}}]))
+        data = json.dumps(p).replace('"public": true',
+                                     '"public": false, "public": true')
+        self.assertIn('"public": false', data)
+        raw = data.encode()
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
+    def test_nonfinite_claim_rejected(self):
+        p = payload(dict(ROW, official_evidence=[{
+            'url': 'https://example.org/official',
+            'checked_at': '2026-10-16T00:00:00Z',
+            'claims': {'amount': float('nan')}}]))
+        raw = json.dumps(p, allow_nan=True).encode()
+        self.assertIn(b'NaN', raw)
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
+    def test_exponent_overflow_cannot_become_nonfinite_claim(self):
+        p = payload(dict(ROW, official_evidence=[{
+            'url': 'https://example.org/official',
+            'checked_at': '2026-10-16T00:00:00Z',
+            'claims': {'amount': 1.0}}]))
+        data = json.dumps(p).replace('"amount": 1.0', '"amount": 1e9999')
+        self.assertIn('1e9999', data)
+        raw = data.encode()
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
+    def test_pathological_nesting_is_rejected_with_unsafe_preview(self):
+        raw = b'[' * 20000 + b'0' + b']' * 20000
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
+    def test_rejects_utf8_bom_preview(self):
+        raw = json.dumps(payload(ROW)).encode('utf-8-sig')
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
+    def test_rejects_utf16_preview(self):
+        raw = json.dumps(payload(ROW)).encode('utf-16')
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
+
+    def test_rejects_utf32_preview(self):
+        raw = json.dumps(payload(ROW)).encode('utf-32')
+        with self.assertRaises(UnsafePreview):
+            validate(raw, hashlib.sha256(raw).hexdigest(), now=NOW)
 
     def test_bad_evidence_payload(self):
         p=payload(dict(ROW,official_evidence=[{'url':'https://example.org/a','checked_at':'2026-10-16T00:00:00Z','claims':{}, 'raw_content':'secret'}]))

@@ -4,7 +4,8 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+from redact_daily import build_preview
 from redact_daily import main as export_preview
 from consume_preview import validate, review_delta
 
@@ -32,5 +33,36 @@ class FileRoundtrip(unittest.TestCase):
             self.assertNotIn('private',raw.decode())
             self.assertEqual(obj['events'][0]['personal_eligibility'],'UNKNOWN')
             self.assertFalse(obj['public_application_live_verified'])
+
+
+    def test_two_approved_synthetic_snapshots_only_emit_changed_and_removed_ids(self):
+        first = datetime(2026, 10, 16, 0, 0, tzinfo=timezone.utc)
+        later = first + timedelta(minutes=30)
+        base = {'title': 'Approved synthetic public lead',
+                'primary_url': 'https://example.org/first',
+                'status': 'CLAIMABLE', 'batch_id': 'r1',
+                'evidence': []}
+        other = dict(base, title='Another approved synthetic lead',
+                     primary_url='https://example.org/second')
+        old = {'date': '2026-10-16', 'noise_audit': {'visible': 1},
+               'events': [dict(base, report_audit={'excluded': False})]}
+        # A previously visible record vanishes after an audit change; that
+        # is *not* proof it has expired and must never become a live offer.
+        newer = {'date': '2026-10-16', 'noise_audit': {'visible': 1},
+                 'events': [dict(base, report_audit={'excluded': True}),
+                            dict(other, report_audit={'excluded': False})]}
+        previous = build_preview(old, '1' * 64, first)
+        current = build_preview(newer, '2' * 64, later)
+        def checked(preview, now):
+            raw = json.dumps(preview, ensure_ascii=False).encode('utf-8')
+            return validate(raw, hashlib.sha256(raw).hexdigest(), now=now)
+        result = review_delta(checked(current, later), checked(previous, later))
+        self.assertEqual(result['status'], 'MANUAL_SOURCE_RECHECK_REQUIRED')
+        self.assertEqual(result['candidate_keys'], [current['events'][0]['event_key']])
+        self.assertEqual(result['withdrawn_keys'], [previous['events'][0]['event_key']])
+        text = json.dumps(result, ensure_ascii=False)
+        self.assertNotIn('CLAIMABLE', text)
+        self.assertNotIn('Approved synthetic public lead', text)
+        self.assertNotIn('EXPIRED', text)
 
 if __name__ == '__main__':unittest.main()

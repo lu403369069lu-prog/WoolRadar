@@ -1,0 +1,8 @@
+{
+  "live_fixture_cleaned": true,
+  "transport_files_cleaned": 3,
+  "value_printed": false,
+  "git_history_rewritten": false,
+  "production_changed": false,
+  "limits": "Historical Git objects, immutable remote commits and other agent branches may retain the original. Do not copy old blobs into a new tree; history remediation needs separate coordination."
+}

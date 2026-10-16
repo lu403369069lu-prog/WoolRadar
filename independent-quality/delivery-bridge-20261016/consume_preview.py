@@ -146,7 +146,7 @@ def review_delta(current: dict, previous: dict | None = None) -> dict:
     # separate from the user's local clock and requires a trusted channel later.
     reversed_time = _time(current['generated_at']) < _time(previous['generated_at'])
     reversed_day = current['report_date'] < previous['report_date']
-    if (reversed_time or reversed_day) and (changed or withdrawn):
+    if reversed_time or reversed_day:
         return {'status': 'OUT_OF_ORDER_IGNORED', 'candidate_keys': [],
                 'withdrawn_keys': [],
                 'notices': ['Snapshot chronology reversed; no candidate or withdrawal may be inferred']}

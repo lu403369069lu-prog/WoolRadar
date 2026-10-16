@@ -68,3 +68,14 @@ Independent exact-source execution after this update:
 **Actually executed**: isolated Python 3.13 `python -B wool_query_identity_check.py` reproducing the exact current `_semantic_query` logic and constants. **5/5 pass exit0**: uppercase functional key now loses identity, lowercase counterpart preserves, uppercase tracking key safely removed, conflicting batches denied, sensitive token query denied. The command used a local scratch extraction, not an import of the entire repository module. A new real formal `tests/test_public_corpus_identity.py` pair is committed for producer/sampler integration: one ensures only lower-case-identity row reaches downstream blind sample, the other checks uppercase tracker removal. **Formal complete source checkout/Windows unified suite at latest PR HEAD remains unexecuted**; these narrow isolated passes must not be used to inflate the final full regression denominator.
 
 Current code blobs should be freshly checked; no unseen real-source batch, cross-URL campaign gold, real 09:30 report consumption or user approval occurred. `DELIVERY_BRIDGE=OUTPUT_NOT_CONNECTED` unchanged.
+
+
+## Smallest item #3: equal repeated resource selectors (2026-10-16)
+
+The previous code marked only **conflicting values** of duplicate business keys as identity-lost. It collapsed `?batch=alpha&batch=alpha` into the same normalized value as `?batch=alpha` while incorrectly setting both `url_identity_preserved=True`. First/last/array query semantics vary by origin, so two different raw URLs are not proven identical.
+
+Uploaded correction on the existing PR36: if an allowlisted semantic query key already exists in the retained map, unconditionally set `preserved=False` even when the duplicated values are equal; tracker-only keys remain removable. Added formal producer→sampler regression `test_duplicate_equal_campaign_selectors_are_not_safe_blind_identity` in `tests/test_public_corpus_identity.py`. No change to private value redaction, maximum lengths, allowed selector set or user eligibility.
+
+**Actual isolated test**: `python -B wool_query_identity_check.py` with precisely transcribed current `_semantic_query` code/allowlists; 7/7 Python assertions exit0 (previous 5 controls plus same-value duplicate and same-value duplicate separated by a safe tracker). Old source behavior accepted the same-value duplicate as identity-preserved (source-level red condition), new code rejects. This command did not import the full `core.public_corpus` module or run the committed `unittest` producer/sampler integration, and it is not a new unseen public-source holdout. Such formal full-module and Windows integration remain pending at the final candidate SHA.
+
+No local production reports, SQLite, account verification, source crawl, publication or GitHub PR merge.

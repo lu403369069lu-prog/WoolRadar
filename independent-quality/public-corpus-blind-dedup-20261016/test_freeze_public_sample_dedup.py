@@ -38,6 +38,12 @@ class CleanSample(unittest.TestCase):
         self.assertEqual(canonical_public_url('https://example.org/claim?ref=inviteA'),
                          'https://example.org/claim?ref=inviteA')
         self.assertIsNone(canonical_public_url('https://example.org/claim?access_token=secret'))
+    def test_utm_campaign_may_encode_real_round_and_is_retained(self):
+        first='https://example.org/apply?utm_campaign=fall'
+        second='https://example.org/apply?utm_campaign=winter'
+        out=freeze_public_sources([sample('alpha',[first,second])])
+        self.assertEqual(len(out['rows']),2)
+        self.assertEqual(out['sources'][0]['duplicate_within_source'],0)
     def test_upstream_query_loss_makes_blind_identity_unverified(self):
         a=sample('alpha',['https://example.org/claim'])
         a[0]['rows'][0]['url_sanitized']=True

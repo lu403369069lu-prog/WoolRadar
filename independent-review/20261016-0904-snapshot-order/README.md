@@ -94,3 +94,35 @@ future trusted monotonic publisher sequence can prove a newer revision.
 **Limit:** Only isolated 9-case consumer tests ran in this conversation;
 the 313-test full Windows integration remains NOT_VERIFIED at this SHA,
 and the daily ChatGPT brief is still OUTPUT_NOT_CONNECTED.
+
+## 2026-10-16 follow-up: strict JSON decoding and full-suite fixture compatibility
+
+The existing `consume_preview.validate` checked the exact top-level and event
+field sets, SHA-256 and sanitized public claims **after** Python's ordinary
+`json.loads`. Standard `json.loads` silently keeps the last duplicate
+object field (including inside nested evidence claims), accepts `NaN` and
+`Infinity`, and parses `1e9999` as an infinite float. Different consumers
+may see different semantics, and a correctly hashed preview could still
+be structurally ambiguous. Current PR28 candidate adds `object_pairs_hook`
+to reject duplicate keys at all nesting levels, `parse_constant` for
+non-JSON constants and `parse_float` to fail on float overflow.
+
+Five formal new tests in `test_consume_preview.py` cover duplicate origin
+flag, event title, nested evidence claim, NaN claim and exponent overflow.
+A Linux/Python 3.13 independent **isolated strict-decoder reproduction**
+ran five identical JSON classes: legacy `json.loads` accepted all five,
+whereas the new strict decoder rejected all five; a valid finite JSON
+nested dictionary remained accepted. That execution tested the parser
+helpers in isolation, not the entire GitHub `validate` and reporter.
+
+A separate already-committed consumer test expected changed events to be
+returned when the old/new test reports shared the *same* generated-at
+timestamp. This contradicts PR28's same-second ambiguity safety contract.
+The synthetic test fixture was corrected to use a newer current preview
+generation timestamp (00:15 versus 00:00 UTC on the same day). This
+does not change original holdout labels, production runtime or criteria.
+
+**NOT VERIFIED:** The full `python -m unittest discover` on exact newest
+branch/head after these edits, Windows/Python version compatibility,
+producer-to-consumer real approved transfer, authentication and 09:30
+scheduled recipient delivery. Keep DELIVERY_BRIDGE=OUTPUT_NOT_CONNECTED.

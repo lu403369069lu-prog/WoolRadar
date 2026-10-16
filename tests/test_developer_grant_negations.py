@@ -20,3 +20,19 @@ class GrantNegationContracts(unittest.TestCase):
         text='Open-source maintainers grant applications are open. No application fee is required. Selected projects receive $750.'
         self.assertTrue(is_developer_grant_lead(text))
         self.assertTrue(contains_keyword(text,['developer perks']))
+
+    def test_closed_grant_not_revived_by_github_brand_free_fallback(self):
+        closed=[
+            "GitHub free open source developer grant doesn't accept applications. Apply today. Selected maintainers receive $750.",
+            "GitHub free open source developer grant isn’t accepting applications. Apply today. Selected maintainers receive $750.",
+            "GitHub free open source developer grant applications will not be accepted. Apply today. Selected maintainers receive $750.",
+        ]
+        for text in closed:
+            with self.subTest(text=text):
+                self.assertFalse(is_developer_grant_lead(text))
+                self.assertFalse(contains_keyword(text,['developer perks']))
+                self.assertFalse(contains_keyword(text,['GitHub']))
+        open_text='GitHub free open source developer grant accepting applications. No application fee is required. Selected maintainers receive $750.'
+        self.assertTrue(contains_keyword(open_text,['developer perks']))
+        self.assertTrue(contains_keyword(open_text,['GitHub']))
+        self.assertTrue(contains_keyword('GitHub free VPS giveaway now available',['GitHub']))

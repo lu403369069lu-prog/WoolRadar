@@ -15,11 +15,36 @@ def sample(name, urls):
 
 class CleanSample(unittest.TestCase):
     def test_within_source_duplicate_removed_before_cap(self):
-        out=freeze_public_sources([sample('alpha',['https://example.org/one?tracking=abc','https://EXAMPLE.org/one#ref','https://example.org/two'])],limit=8)
+        out=freeze_public_sources([sample('alpha',['https://example.org/one?utm_source=alpha','https://EXAMPLE.org/one#ref','https://example.org/two'])],limit=8)
         self.assertEqual(len(out['rows']),2)
         self.assertEqual(out['sources'][0]['duplicate_within_source'],1)
         self.assertEqual(len({x['url'] for x in out['rows']}),2)
         self.assertTrue(all('tracking' not in x['url'] for x in out['rows']))
+    def test_distinct_campaign_batches_are_not_silently_merged(self):
+        a=sample('alpha',['https://example.org/claim?batch=october',
+                          'https://example.org/claim?batch=november'])
+        result=freeze_public_sources([a])
+        self.assertEqual(len(result['rows']),2)
+        self.assertEqual(result['sources'][0]['duplicate_within_source'],0)
+    def test_distinct_spa_offer_routes_are_not_silently_merged(self):
+        a=sample('alpha',['https://example.org/#/offer/one',
+                          'https://example.org/#/offer/two'])
+        result=freeze_public_sources([a])
+        self.assertEqual(len(result['rows']),2)
+        self.assertEqual(result['sources'][0]['duplicate_within_source'],0)
+    def test_only_explicit_marketing_params_are_stripped(self):
+        self.assertEqual(canonical_public_url('https://example.org/claim?utm_source=a&batch=one&gclid=x'),
+                         'https://example.org/claim?batch=one')
+        self.assertEqual(canonical_public_url('https://example.org/claim?ref=inviteA'),
+                         'https://example.org/claim?ref=inviteA')
+        self.assertIsNone(canonical_public_url('https://example.org/claim?access_token=secret'))
+    def test_upstream_query_loss_makes_blind_identity_unverified(self):
+        a=sample('alpha',['https://example.org/claim'])
+        a[0]['rows'][0]['url_sanitized']=True
+        result=freeze_public_sources([a])
+        self.assertEqual(result['rows'],[])
+        self.assertEqual(result['sources'][0]['upstream_url_identity_lost'],1)
+        self.assertFalse(result['upstream_identity_fully_preserved'])
     def test_duplicate_cross_sources_and_order_independent(self):
         a=sample('alpha',['https://example.org/campaign'])
         b=sample('beta',['https://example.org/campaign','https://example.org/new'])

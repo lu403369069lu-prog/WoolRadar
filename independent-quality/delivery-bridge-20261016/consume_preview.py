@@ -43,13 +43,29 @@ def _time(value):
         raise UnsafePreview('invalid time') from exc
 
 
+def _strict_object(pairs):
+    """Reject ambiguous JSON object keys at every nesting level."""
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError('duplicate JSON key')
+        result[key] = value
+    return result
+
+
+def _reject_nonfinite(value):
+    """JSON does not allow NaN or Infinity, even inside claim metadata."""
+    raise ValueError('nonfinite JSON constant')
+
+
 def validate(raw: bytes, expected_digest: str, *, now: datetime | None = None):
     if not isinstance(expected_digest, str) or not SHA64.fullmatch(expected_digest):
         raise UnsafePreview('independent digest required')
     if len(raw) > 2 * 1024 * 1024 or hashlib.sha256(raw).hexdigest() != expected_digest:
         raise UnsafePreview('digest mismatch or oversized preview')
     try:
-        obj = json.loads(raw)
+        obj = json.loads(raw, object_pairs_hook=_strict_object,
+                         parse_constant=_reject_nonfinite)
     except (ValueError, UnicodeDecodeError) as exc:
         raise UnsafePreview('invalid preview json') from exc
     if not isinstance(obj, dict) or set(obj) != TOP:

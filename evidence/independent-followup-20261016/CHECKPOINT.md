@@ -79,3 +79,19 @@ Uploaded correction on the existing PR36: if an allowlisted semantic query key a
 **Actual isolated test**: `python -B wool_query_identity_check.py` with precisely transcribed current `_semantic_query` code/allowlists; 7/7 Python assertions exit0 (previous 5 controls plus same-value duplicate and same-value duplicate separated by a safe tracker). Old source behavior accepted the same-value duplicate as identity-preserved (source-level red condition), new code rejects. This command did not import the full `core.public_corpus` module or run the committed `unittest` producer/sampler integration, and it is not a new unseen public-source holdout. Such formal full-module and Windows integration remain pending at the final candidate SHA.
 
 No local production reports, SQLite, account verification, source crawl, publication or GitHub PR merge.
+
+
+## Smallest item #4: previously unexecuted REAL producer→sampler formal suite (2026-10-17)
+This run verified the **three complete GitHub file blobs**, not merely manually reconstructed snippets:
+- `core/public_corpus.py`: `18127a744d0b3e15c58af44c44aa737c861992a8`, byte-exact Git blob hash.
+- `independent-quality/public-corpus-blind-dedup-20261016/freeze_public_sample_dedup.py`: `c090c6885c22fe73b876de994a1c79714c0e7051`, byte-exact Git blob hash.
+- `tests/test_public_corpus_identity.py`: `45d2d51b79d2bb75405eeea15f50bc5984ef0dca`, byte-exact Git blob hash.
+
+The files were reconstructed in a temporary isolated Python 3.13.5 checkout. The producer's sole `core.models.utc_now` dependency was stubbed with a fixed synthetic timestamp; **the full real producer, full real sampler and unmodified 11-method real test file** were run without any modification to these three hashed files. The test itself writes temporary JSON through `record_public_sample`, then calls `freeze_public_sources` on that JSON.
+
+Actual command: `PYTHONPATH=<isolated temp root> python -B -m unittest discover -s <isolated temp root>/tests -p test_public_corpus_identity.py -v`.
+**Exit 0, 11 run / 11 pass / 0 failures / 0 errors / 0 skips**. Cases cover unique batches and UTM dedup, unknown/credential-bearing selectors, SPA fragments, legacy identity proof, distinct long URL truncation, safe long tracker, functional key case-fold collisions, safe uppercase tracker, duplicated equal batch keys, and conflicting batch keys.
+
+Runtime emitted a separate spreadsheet-package warmup warning during interpreter startup; the subprocess still returned exit0 and unittest reported all 11 pass, so the result pertains only to those actual test methods. This is a real formal producer→sampler focused suite, **not** the full WoolRadar Windows integrated suite or fresh unseen real-world independent holdout. Neither production reports nor private content were accessed.
+
+**Next minimal task**: check percent-encoded query key collisions (`?ba%74ch=...` versus `?batch=...`) at the exact original producer/sampler boundary before claiming public campaign identity. No merge, deployment or external publication occurred.

@@ -26,6 +26,9 @@ class GrantNegationContracts(unittest.TestCase):
             "GitHub free open source developer grant doesn't accept applications. Apply today. Selected maintainers receive $750.",
             "GitHub free open source developer grant isn’t accepting applications. Apply today. Selected maintainers receive $750.",
             "GitHub free open source developer grant applications will not be accepted. Apply today. Selected maintainers receive $750.",
+            "GitHub free open source developer grant applications have closed. Apply today. Selected maintainers receive $750.",
+            "GitHub free open source developer grant applications are expired. Apply today. Selected maintainers receive $750.",
+            "GitHub free open source developer grant program cancelled. Apply today. Selected maintainers receive $750.",
         ]
         for text in closed:
             with self.subTest(text=text):

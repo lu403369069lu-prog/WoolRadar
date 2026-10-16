@@ -47,7 +47,7 @@ class Contract(unittest.TestCase):
         self.assertEqual(self.preview([row(primary_url='https://example.org/checkout')])['count']['exported_events'],0)
 
     def test_titles_secrets_denied(self):
-        for title in ['Reach bob@example.org today', 'my token secret', 'credit 4514617595192567', '123456789012345678']:
+        for title in ['Reach bob@example.org today', 'my token secret', 'credit 1234567890123456', '123456789012345678']:
             self.assertIsNone(public_title(title))
             self.assertEqual(self.preview([row(title=title)])['count']['exported_events'],0)
 

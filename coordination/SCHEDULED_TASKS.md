@@ -26,3 +26,8 @@ GitHub Actions cron is UTC and can be delayed, dropped or disabled, so exact-tim
 3. Continue real business review on the project’s existing Draft PR and technical Issue. Do not treat passing metadata checks or scheduled-task timestamps as code acceptance, a 09:30 report, unattended AI execution, or delivery-bridge verification.
 
 No auto-merge, deployment, forced push, paid model API, account login/claim/payment, private Windows uploads, or live data mutation is permitted.
+
+
+## 2026-10-16 follow-up: avoid stale hard-coded PR lists
+The checkpoint workflow now calls GitHub's read-only paginated `pulls?state=open&per_page=100` endpoint **each run** and reports every currently open PR number/draft flag/head SHA. Previously it enumerated a fixed set of historical PRs, which would miss newly created PRs such as WoolRadar PR #36. The issue checkpoints remain #2 and #3. Closed/merged PRs are not enumerated in the open-PR stream; integration history and code evidence must still be read from the technical Issues and exact commits.
+Standalone Bash syntax and isolated mock-`gh api` execution were actually checked: 2 issue requests + 1 dynamic paginated PR-list request wrote an expected step summary, exit0. **This was a mock, not an actual GitHub Actions runner or network API success.** No automation was activated; GitHub Actions private-runner costs and approval conditions still apply.

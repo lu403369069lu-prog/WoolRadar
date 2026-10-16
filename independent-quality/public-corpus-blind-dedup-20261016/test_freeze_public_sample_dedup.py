@@ -40,7 +40,7 @@ class CleanSample(unittest.TestCase):
         x=freeze_public_sources([a])
         self.assertEqual(len(x['rows']),1)
         self.assertNotIn('accepted',x['rows'][0])
-        self.assertEqual(x['purpose'],'UNSEEN_LOCAL_ONLY_REVIEW_CANDIDATES')
+        self.assertEqual(x['purpose'],'LOCAL_ONLY_REVIEW_CANDIDATES_HOLDOUT_UNVERIFIED')
     def test_malformed_row_cannot_steal_sample_quota(self):
         a=sample('alpha',['https://example.org/a','https://example.org/b'])
         a[0]['rows'][0]['title']=None

@@ -128,9 +128,9 @@ that two different `?batch=` links became the same key, and two SPA
 before writing the JSON source sample. No downstream review selector
 can recover a missing campaign identifier from that JSON artifact.
 
-Current PR32 update keeps meaningful `batch`, `offer`, and `ref` query
+Current PR32 update keeps meaningful `batch`, `offer`, `ref` and `utm_campaign` query
 pairs, plus route-like `#/offer/...` fragments; strips only recognized
-marketing trackers such as `utm_*`, `fbclid`, and `gclid`; and rejects
+marketing trackers such as `utm_source`, `utm_medium`, `utm_term`, `utm_content`, `fbclid`, and `gclid`; preserve `utm_campaign`; and rejects
 known auth-bearing query parameters and unpaired Unicode.
 When `url_sanitized=true` indicates the upstream recorder has already
 removed some URL identity, the row is excluded from the blind sample

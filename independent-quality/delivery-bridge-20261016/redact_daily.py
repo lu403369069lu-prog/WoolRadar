@@ -10,6 +10,7 @@ import argparse
 import hashlib
 import ipaddress
 import json
+import math
 import os
 import re
 from datetime import datetime, timedelta, timezone
@@ -176,6 +177,41 @@ def build_preview(report: dict, report_hash: str, now: datetime | None = None) -
     }
 
 
+def _strict_json_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError('ambiguous duplicate input field')
+        result[key] = value
+    return result
+
+
+def _reject_json_constant(_):
+    raise ValueError('nonstandard input number')
+
+
+def _finite_json_float(value):
+    parsed = float(value)
+    if not math.isfinite(parsed):
+        raise ValueError('nonfinite input number')
+    return parsed
+
+
+def parse_daily_json(raw: bytes) -> dict:
+    """Fail closed on ambiguous, non-UTF-8 or excessively nested local reports."""
+    if not isinstance(raw, bytes) or len(raw) > MAX_INPUT:
+        raise ValueError('invalid daily report input size')
+    try:
+        text = raw.decode('utf-8', errors='strict')
+        parsed = json.loads(text, object_pairs_hook=_strict_json_object,
+                            parse_constant=_reject_json_constant, parse_float=_finite_json_float)
+    except (UnicodeError, ValueError, RecursionError) as exc:
+        raise ValueError('invalid or ambiguous daily report JSON') from exc
+    if not isinstance(parsed, dict):
+        raise ValueError('daily report root must be an object')
+    return parsed
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--input', required=True, type=Path, help='Explicit local WoolRadar daily JSON path')
@@ -187,7 +223,7 @@ def main(argv: list[str] | None = None) -> int:
     if source.stat().st_size > MAX_INPUT:
         parser.error('input daily report exceeds 10 MiB safety limit')
     raw = source.read_bytes()
-    payload = build_preview(json.loads(raw), hashlib.sha256(raw).hexdigest())
+    payload = build_preview(parse_daily_json(raw), hashlib.sha256(raw).hexdigest())
     target.parent.mkdir(parents=True, exist_ok=True)
     flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
     flags |= getattr(os, 'O_NOFOLLOW', 0)

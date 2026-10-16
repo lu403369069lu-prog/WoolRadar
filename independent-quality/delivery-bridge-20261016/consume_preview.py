@@ -136,9 +136,27 @@ def review_delta(current: dict, previous: dict | None = None) -> dict:
             key=lambda proof: json.dumps(proof, sort_keys=True))
         return json.dumps(canonical, sort_keys=True, ensure_ascii=False)
     old = {row['event_key']: revision(row) for row in previous['events']}
+    current_ids = {row['event_key'] for row in current['events']}
+    changed = [row['event_key'] for row in current['events']
+               if row['event_key'] not in old or revision(row) != old[row['event_key']]]
+    withdrawn = [row['event_key'] for row in previous['events'] if row['event_key'] not in current_ids]
+    # Both files passing the relative freshness gate does NOT establish which
+    # one came later. Never re-introduce removed/old offers by replaying an
+    # earlier snapshot as the current report. Snapshot publication ordering is
+    # separate from the user's local clock and requires a trusted channel later.
+    reversed_time = _time(current['generated_at']) < _time(previous['generated_at'])
+    reversed_day = current['report_date'] < previous['report_date']
+    if (reversed_time or reversed_day) and (changed or withdrawn):
+        return {'status': 'OUT_OF_ORDER_IGNORED', 'candidate_keys': [],
+                'withdrawn_keys': [],
+                'notices': ['Snapshot chronology reversed; no candidate or withdrawal may be inferred']}
     return {'status': 'MANUAL_SOURCE_RECHECK_REQUIRED',
-            'candidate_keys': [row['event_key'] for row in current['events'] if row['event_key'] not in old or revision(row) != old[row['event_key']]],
-            'notices': ['Candidate IDs are not proof of availability, account eligibility, or new publication']}
+            'candidate_keys': changed,
+            # A disappearing row might be expiry, noise review, source outage,
+            # dedup migration or missing collection. It is never proof of
+            # closure without an independent official/source recheck.
+            'withdrawn_keys': withdrawn,
+            'notices': ['Changed and missing event IDs require manual source recheck; neither proves public availability or expiration']}
 
 
 def main(argv=None) -> int:

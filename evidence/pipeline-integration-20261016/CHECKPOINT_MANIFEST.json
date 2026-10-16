@@ -1,0 +1,30 @@
+{
+  "code_sha": "0b413e1a480b5c5dc5d34424fd3cfab7f9f9fef6",
+  "cycle": 1792147108,
+  "production_changed": false,
+  "raw_data_uploaded": false,
+  "goal_complete": false,
+  "remaining_findings": 3,
+  "files": [
+    {
+      "path": "evidence/pipeline-integration-20261016/exact-0b413e1.json",
+      "git_blob": "ce8be32d09609f5c1c9438b1f6396b27a2e19a3f"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/local-report-roundtrip.json",
+      "git_blob": "ce4448392ecace53dd9da0b965e56a4b94fe3575"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/independent-review.json",
+      "git_blob": "5aee6cefbf58bfe75086702af13ac88e319878f8"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/independent_checks.py",
+      "git_blob": "14cfb6ef5bc065478025f37642a34627a67ceab1"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/BARRIER_HANDOFF.md",
+      "git_blob": "0884e653bfd42097d9661019ea2ef9b3ed15be77"
+    }
+  ]
+}

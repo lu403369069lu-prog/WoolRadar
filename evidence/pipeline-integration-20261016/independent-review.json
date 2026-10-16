@@ -1,0 +1,109 @@
+{
+  "reviewer": "independent budget_review agent",
+  "command": "python -B _outbox/pipeline-integration-20261016/independent_checks.py --repo-root <delivery-worktree>",
+  "exit_code": 0,
+  "source_sha256": {
+    "independent-quality\\delivery-bridge-20261016\\consume_preview.py": "1c9890e312f3e8cbf1aec309c0bf3d09713eed8e579abe93ab15a8714bd71952",
+    "core\\developer_grants.py": "6be659fcb1504c00d14ec75601d96cd0e20a011eb1ef5840f9d5565dbf841d7a",
+    "core\\collector.py": "d7357a6c7a6b53b1967ab9b67818504bb4ae49f949aae20087172c322779c3ef",
+    "independent-quality\\public-corpus-blind-dedup-20261016\\freeze_public_sample_dedup.py": "467d54055ce460c7b878b57630fb007792f935deeff639d98e38a780bec3e124"
+  },
+  "formal_scope": [
+    {
+      "directory": "independent-quality\\delivery-bridge-20261016",
+      "pattern": "test_consume_preview.py",
+      "methods": 16
+    },
+    {
+      "directory": "independent-quality\\delivery-bridge-20261016",
+      "pattern": "test_snapshot_chronology.py",
+      "methods": 9
+    },
+    {
+      "directory": "independent-quality\\developer-grant-20261016",
+      "pattern": "test_developer_grants.py",
+      "methods": 11
+    },
+    {
+      "directory": "independent-quality\\public-corpus-blind-dedup-20261016",
+      "pattern": "test_*.py",
+      "methods": 12
+    }
+  ],
+  "formal_tests": {
+    "run": 48,
+    "passed": true,
+    "failure_ids": [],
+    "error_ids": []
+  },
+  "checks": [
+    {
+      "name": "exact-equal-distinct-snapshot-rejected",
+      "passed": true
+    },
+    {
+      "name": "reversed-snapshot-ignored-and-withdrawal-is-review-only",
+      "passed": true
+    },
+    {
+      "name": "developer-grant-positive-toggle-and-explicit-closed-controls",
+      "passed": true
+    },
+    {
+      "name": "tracking-dedup-and-selection-independent-of-accepted-labels",
+      "passed": true
+    },
+    {
+      "name": "duplicate-json-fields-rejected",
+      "passed": true
+    }
+  ],
+  "findings": [
+    {
+      "priority": "P2",
+      "title": "Fractional timestamps bypass the stated same-second ambiguity policy",
+      "actual_status": "MANUAL_SOURCE_RECHECK_REQUIRED",
+      "candidate_count": 1,
+      "detail": "Distinct content in one wall-clock second is ordered by microseconds although comments say sub-second publisher ordering is outside schema v1.",
+      "minimal_fix": "Compare second-granularity publication time for ambiguity, or explicitly define and test a supported trustworthy sub-second ordering contract."
+    },
+    {
+      "priority": "P2",
+      "title": "Developer grant hook revives explicit application denials/questions",
+      "synthetic_cases": [
+        {
+          "case": "negated-acceptance",
+          "helper": true,
+          "collector_hook": true
+        },
+        {
+          "case": "not-open",
+          "helper": true,
+          "collector_hook": true
+        },
+        {
+          "case": "applicant-question",
+          "helper": true,
+          "collector_hook": true
+        }
+      ],
+      "detail": "Application regex matches a positive substring inside not-accepting or applicant-question text; the grant hook runs outside existing available_clauses filtering.",
+      "minimal_fix": "Add narrowly tested negated acceptance/not-open and applicant-intent guards to the grant helper; keep genuine grant announcements and keyword opt-in controls."
+    },
+    {
+      "priority": "P2",
+      "title": "All-query stripping collapses distinct functional resource identities",
+      "synthetic_case": "Same /view path with different program selectors and different titles",
+      "input_count": 2,
+      "selected_count": 1,
+      "detail": "This is more than removing tracking labels; a distinct public resource may disappear from the blind denominator. Source producer may already have discarded such query identity, which this selector cannot reconstruct.",
+      "minimal_fix": "Document this canonical-identity limitation or preserve approved functional identity separately; do not describe it as exact original-URL deduplication."
+    }
+  ],
+  "limits": [
+    "Only current safe source and synthetic fixtures. No old Git/cache, real private data or new public samples read.",
+    "No fixture amount text or historical sensitive literals printed or persisted in review output.",
+    "No worktree edits, production, network, full regression or accuracy claim.",
+    "Withdrawal/candidate keys remain manual-review signals, never live availability or closure proof."
+  ]
+}

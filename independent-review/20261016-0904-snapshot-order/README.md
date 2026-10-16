@@ -126,3 +126,69 @@ does not change original holdout labels, production runtime or criteria.
 branch/head after these edits, Windows/Python version compatibility,
 producer-to-consumer real approved transfer, authentication and 09:30
 scheduled recipient delivery. Keep DELIVERY_BRIDGE=OUTPUT_NOT_CONNECTED.
+
+
+## 2026-10-16 exact-source full bridge regression and privacy escalation
+
+Independent offline reproduction in Linux Python 3.13.5; all seven
+runtime/test source files in `independent-quality/delivery-bridge-20261016/`
+were copied from this exact PR branch and compared by `git hash-object`
+against the GitHub API blob SHA. No user Windows reports, accounts, SQLite
+or live API calls were used. The test fixture now contains ONLY an
+explicitly invalid synthetic payment-card-like digit sequence.
+
+Command: `python -B -m unittest discover -s . -p 'test_*.py' -q`
+executed from a self-contained directory containing the exact seven files.
+Result **39 tests, 0 failures, 0 errors, exit0**, including:
+
+- Exporter tests, including 72,900 malformed field combinations;
+- the reviewed-noise filter and a genuine synthetic file
+  `redact_daily.main` → disk → digest → `consume_preview.validate`
+  → baseline check;
+- chronological newer-activity and audit-withdrawn ID-only recheck;
+- duplicate nested JSON field, nonfinite/exponent overflow, deeply
+  nested JSON, UTF-8 BOM, UTF-16/32, and date/same-second replay rejection;
+- malformed Unicode surrogate input in event title, primary URL and
+  batch ID fails closed PER ROW, without losing a valid neighboring event.
+
+Independent RED/GREEN detail: canonical UTF-8 tests were 3/3 failures
+on earlier parser and 25/25 consumer-only green after fix. Invalid
+surrogate row test was 1 assertion failure + 2 uncaught encoding errors
+before exporter fix, then entire full bridge 38/38 green; one genuine
+multi-snapshot two-batch exporter+consumer test then raised full suite
+to **39/39**. All source blobs exactly match the current PR branch
+(use latest HEAD rather than intermediate commit IDs).
+
+Current Git blob IDs:
+
+- consumer `71bdbd60ce8e4d70e525748b79954bdbd5a9251b`
+- exporter `9da3b03349de01d3becb967f9f58f4fee4c43403`
+- consumer tests `8d7364c041493a714c724a815dbb244071fa1d2b`
+- exporter tests `8457e340fffdf1f40c12ff9d966a3c367562b5c3`
+- noise audit tests `c9779ea9545a0b86072411386f4efeacfa3c4882`
+- export/consume roundtrip tests `ecab7dda094929f8d4d217e4115353496420b6af`
+- chronology tests `abd6bd20b2cb8eabf7fbe21ed80d20f2c1f38193`
+
+**Sensitive-fixture escalation, no confidential value copied here:**
+While restoring the exporter tests, independent review found a
+payment-card-like numeric literal matching a previously user-supplied
+payment credential in the Codex-owned parent PR23 test fixture.
+This draft PR has replaced it with an intentionally invalid synthetic
+test string, preserving the rejection test. The original base branch
+and historical Git commits still contain the old literal. This is a
+merge/release PRIVACY BLOCKER until an authorized maintainer coordinates
+cleaning active branches and relevant reachable history, preventing
+cached or forked copies from propagating. **Do not** put the value in
+Issue comments, logs, PR descriptions or test failure output. Do not
+force-push or rewrite collaborators' history without explicit
+operator approval; replacing the working-tree string is not deletion
+from Git history. If any underlying payment card is active, the cardholder
+should arrange protective action with the issuer through a private channel.
+
+**Release and daily brief remain blocked:** There is no operator-approved
+live sanitized export, trusted writer identity, monotonic signed report
+revision, private read channel or recipient's matching-SHA receipt.
+Keep `DELIVERY_BRIDGE=OUTPUT_NOT_CONNECTED`; do not claim the 09:30
+ChatGPT scheduled brief consumed WoolRadar production output. Whole
+WoolRadar Windows integration suite, source P06 field validation and
+post-tuning unseen holdout are NOT_EXECUTED for this head.

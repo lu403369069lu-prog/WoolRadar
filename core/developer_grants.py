@@ -17,6 +17,8 @@ _AWARD = re.compile(
     r'\b(?:selected|eligible|approved|accepted|successful)\b.{0,90}'
     r'\b(?:receive|receives|get|gets|awarded|grant(?:ed)?)\b.{0,70}'
     r'\$\s*\d[\d,]*(?:\.\d{1,2})?\b', re.I | re.S)
+_AMOUNT = re.compile(
+    r'\b(?:funding|grant)(?:\s+amount)?\s*:\s*\$\s*\d[\d,]*(?:\.\d{1,2})?\b', re.I)
 _DENY = re.compile(
     r'\b(?:applications?\s+(?:have\s+|are\s+)?(?:closed|ended|expired)|'
     r'(?:no\s+longer|not\s+currently|not\s+yet)\s+(?:open|accepting)|'
@@ -34,4 +36,5 @@ def is_developer_grant_lead(text: object) -> bool:
     if _DENY.search(normalized):
         return False
     return bool(_SCOPE.search(normalized) and _PROGRAM.search(normalized)
-                and _APPLY.search(normalized) and _AWARD.search(normalized))
+                and _APPLY.search(normalized)
+                and (_AWARD.search(normalized) or _AMOUNT.search(normalized)))

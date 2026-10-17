@@ -28,9 +28,9 @@
       "next_gate": "local Python and Node cross-module tests + frozen real 39 command batch",
       "isolated_qa_done": true,
       "isolated_qa_methods": 27,
-      "latest_tests": "SELECTED_LINUX_GREEN_NOT_FROZEN_NATIVE_OR_EXTERNAL_BUSINESS",
-      "isolated_linux_test_status": "PASS_SELECTED_ISOLATED_ZERO_SKIPS",
-      "isolated_linux_test_methods": 53
+      "latest_tests": "LINUX_SELECTED_GREEN_NOT_FROZEN_NATIVE_OR_EXTERNAL_BUSINESS",
+      "isolated_linux_test_status": "SELECTED_COORDINATOR_PLUS_EXTERNAL_GATE_AUDITOR_83_GREEN_0_SKIP",
+      "isolated_linux_test_methods": 83
     },
     {
       "id": "wool41",
@@ -100,20 +100,20 @@
   "pr43_recall_policy": "Old 56-row, FN2 developer-used freeze cannot become independent holdout by rescoring it.",
   "latest_local_qa": {
     "date": "2026-10-17",
-    "status": "PASS_223_SELECTED_ISOLATED_AND_127_OVERLAPPING_JOINT_LINUX",
-    "methods": 223,
-    "passed": 223,
+    "status": "SELECTED_LINUX_QA_GREEN_253_METHODS_AND_OVERLAPPING_127_JOINT;NOT_NATIVE_FROZEN_OR_BUSINESS_ACCEPTANCE",
+    "methods": 253,
+    "passed": 253,
     "failed": 0,
     "skipped": 0,
     "by_track": {
-      "coord42": 53,
-      "sam17": 43,
+      "coord42_plus_external8": 83,
       "wool41": 82,
+      "sam17": 43,
       "wool43": 45
     },
     "shared_wool_cross_module_methods": 127,
     "shared_wool_cross_module_passed": 127,
-    "evidence": "coordination/FIRST_CATEGORY_SELECTED_223_JOINT_127_20261017.json"
+    "evidence": "coordination/SELECTED_SOURCE_MATCHED_253_AND_JOINT_127_20261017.json"
   },
   "frozen_source_verification": {
     "ready_families": 42,
@@ -128,15 +128,15 @@
   },
   "first_category_latest": {
     "date": "2026-10-17",
-    "status": "CHAT_AVAILABLE_SELECTED_CODE_AND_STATIC_AUDITS_EXECUTED;FROZEN_NATIVE_FULL_TREE_AND_EXTERNAL_ACCEPTANCE_UNVERIFIED",
-    "selected_linux_methods": 223,
-    "selected_passed": 223,
+    "status": "CHAT_AVAILABLE_SOURCE_MATCHED_253_SELECTED_TESTS_AND_127_JOINT_PASS;NATIVE_FULL_TREE_AND_REAL_BUSINESS_GATES_REMAIN_OPEN",
+    "selected_linux_methods": 253,
+    "selected_passed": 253,
     "selected_failed": 0,
     "selected_skipped": 0,
     "combined_wool_modules": 127,
     "combined_passed": 127,
     "exact_git_blobs_matched": true,
-    "evidence": "coordination/FIRST_CATEGORY_SELECTED_223_JOINT_127_20261017.json",
+    "evidence": "coordination/SELECTED_SOURCE_MATCHED_253_AND_JOINT_127_20261017.json",
     "historical_frozen_partial_linux": {
       "unique_commands": 10,
       "ready_family_mappings": 11,
@@ -233,5 +233,18 @@
       "Native Windows Node24/26",
       "Real SAM MCP, 61-case/522-source gold and T009/T031 human review"
     ]
+  },
+  "external_eight_gate_auditor": {
+    "read_only_gate_families": 8,
+    "source_and_two_test_blobs_now_verified_on_PR42": true,
+    "source_blob": "f5ef4ba31c50e4b5e054834d7b903a2fc1958907",
+    "test_blobs": [
+      "b048841bdd0f6367d3fd98ec97af0349d9ad79f4",
+      "0c13596d89d4df2c4366591fb5ece51b588f4abf"
+    ],
+    "subset_tests": 30,
+    "integrated_coord_tests": 83,
+    "gate_human_approvals_verified": 0,
+    "ledger_note": "83 incl old 53; do not add old and new coordinator counts"
   }
 }

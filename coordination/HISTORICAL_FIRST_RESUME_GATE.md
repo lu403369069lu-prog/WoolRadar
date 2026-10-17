@@ -8,6 +8,7 @@ This is the user's explicit preference for every next '继续' and the four hour
 
 - [WoolRadar 16 historic families](SCHEDULED_HISTORICAL_ENGINEERING_RECOVERY_20261017.md), original old SQL files in independent-quality/historical-scheduled-20261015, Issue #2, main Draft PR23, own PR35/37.
 - [SAM 21 historic families](https://github.com/lu403369069lu-prog/YinQieJi/blob/1039112335c7db3fd34d2e1d9f0c69da37840918/SAM/independent-review/SCHEDULED_HISTORICAL_ENGINEERING_RECOVERY_20261017.md), Issue #1, main PR5, archival PR10 and stacked code PR11/12/13/14.
+- [All-PR and Issue-comment census](HISTORICAL_GITHUB_CENSUS_20261017.json): actually fetched **49 PRs (Wool 35, SAM 14), 200 comments across the three long-term Issues**, with 109 detectable event_key markers; a PR/Issue reference never alone proves Scheduled-origin write.
 - [Machine state for all 37 recovered families](HISTORICAL_RECOVERY_MACHINE.json) — authoritative per-family next-action status; do not use old static PR SHAs without live readback.
 - [Scheduled activity/provenance ledger](SCHEDULED_RESULTS_LEDGER_20261017.md) and [coordination Issue #3](https://github.com/lu403369069lu-prog/WoolRadar/issues/3), latest V3 state.json owner/lease/fence.
 

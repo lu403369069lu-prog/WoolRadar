@@ -183,6 +183,8 @@ def record_public_sample(root: Path, node: str, source: dict, rows: list[dict], 
         return None
     if len(rows) != len(accepted):
         raise ValueError('CORPUS_DECISION_COUNT_MISMATCH')
+    if any(type(decision) is not bool for decision in accepted):
+        raise ValueError('CORPUS_DECISION_TYPE_MISMATCH')
     directory = Path(root) / 'data/public-corpus'
     if not directory.resolve().is_relative_to(Path(root).resolve()):
         raise ValueError('CORPUS_PATH_OUTSIDE_ROOT')

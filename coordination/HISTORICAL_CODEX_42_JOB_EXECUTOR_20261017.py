@@ -26,36 +26,49 @@ PROJECTS = {'wool': ('WoolRadar', 'W'), 'sam': ('YinQieJi-SAM', 'S'),
             'coord': ('WoolRadar-Coord', 'C')}
 
 
+def _reject_symlink_chain(root: Path, relative: str) -> Path:
+    """Walk original lexical components: resolving first erases symlink evidence."""
+    path = root
+    value = Path(relative)
+    if value.is_absolute() or ':' in relative or '\\' in relative:
+        raise RuntimeError('Absolute/non-portable historical test path not admitted.')
+    for component in value.parts:
+        if component == '..':
+            path = path.parent
+        elif component != '.':
+            path = path / component
+            if path.is_symlink():
+                raise RuntimeError('Historical test/command symlink component not admitted.')
+        if not path.resolve().is_relative_to(root):
+            raise RuntimeError('Historical test/command path escapes checkout.')
+    return path.resolve()
+
+
 def pin_command(repo: Path, job: dict, blob_lookup=None) -> tuple[Path, list[str]]:
     """Validate the exact committed test file and allowlisted no-shell argv."""
     root = repo.resolve()
     rel = job['verified_test_path']
     if not isinstance(rel, str) or not rel or '\\' in rel or ':' in rel:
         raise RuntimeError('Invalid historical test source path.')
-    original = root / rel
-    # Resolve only after checking the original pathname. A resolved symlink
-    # appears to be a regular file and would bypass a post-resolve check.
-    if original.is_symlink():
-        raise RuntimeError('Historical test symlink not admitted.')
-    target = original.resolve()
+    target = _reject_symlink_chain(root, rel)
     if not target.is_relative_to(root) or not target.is_file():
         raise RuntimeError('Historical test target missing, symlinked outside root or invalid.')
     if blob_lookup is None:
         blob_lookup = lambda path: contract.git(['rev-parse', 'HEAD:' + path], root)
     if blob_lookup(rel) != job['verified_test_blob']:
         raise RuntimeError('Historical test Git blob differs from reviewed manifest.')
-    cwd = (root / job['local_cwd']).resolve()
+    cwd = _reject_symlink_chain(root, job['local_cwd'])
     if not cwd.is_relative_to(root) or not cwd.is_dir():
         raise RuntimeError('Job working directory is outside this checkout.')
     argv = shlex.split(job['run_command'])
     if (len(argv) == 10 and argv[:6] == ['python','-B','-m','unittest','discover','-s']
             and argv[7] == '-p' and argv[9] == '-v'):
-        candidate = (cwd / argv[6] / argv[8]).resolve()
+        candidate = _reject_symlink_chain(cwd, str(Path(argv[6]) / argv[8]))
         argv[0] = sys.executable
     elif (len(argv) == 5 and argv[:4] == ['node','--import','tsx','--test']):
-        candidate = (cwd / argv[4]).resolve()
+        candidate = _reject_symlink_chain(cwd, argv[4])
     elif (len(argv) == 3 and argv[:2] == ['node','--test']):
-        candidate = (cwd / argv[2]).resolve()
+        candidate = _reject_symlink_chain(cwd, argv[2])
     else:
         raise RuntimeError('Not an allowlisted offline unit-test command.')
     if candidate != target:
@@ -87,6 +100,16 @@ def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
                  project: str) -> tuple[int, dict, Path]:
     if not commands or not mapping:
         raise RuntimeError('Empty historical batch cannot count as accepted evidence.')
+    command_keys = [x['key_sha256'] for x in commands]
+    if (len(set(command_keys)) != len(command_keys)
+            or any(len(k) != 64 or any(c not in '0123456789abcdef' for c in k)
+                   for k in command_keys)):
+        raise RuntimeError('Duplicate/malformed historical command digest.')
+    family_ids = [x['family_id'] for x in mapping]
+    mapping_keys = [x['command_key'] for x in mapping]
+    if (len(set(family_ids)) != len(family_ids)
+            or set(mapping_keys) != set(command_keys)):
+        raise RuntimeError('Duplicate or unmapped historical family/command.')
     output = Path(tempfile.mkdtemp(prefix='history-code-batch-'+project+'-'))
     by_key = {}
     for item in commands:
@@ -100,7 +123,7 @@ def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
             code, logbytes = 125, repr(exc).encode('utf-8')
         # Persist/hash ORIGINAL child bytes. Lossy decoding may be used only
         # for human-readable verdict parsing, never for evidence identity.
-        (output / (key[:16]+'.log')).write_bytes(logbytes)
+        (output / (key+'.log')).write_bytes(logbytes)
         verdict, counts = contract.evaluate_run('HISTORY-TEST',code,logbytes.decode('utf-8', errors='replace'))
         by_key[key] = {'command':item['command'], 'exit_code':verdict,
                        'observed_exit_code':code, 'counts':counts,

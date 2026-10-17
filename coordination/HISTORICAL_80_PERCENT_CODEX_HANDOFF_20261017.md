@@ -2,7 +2,7 @@
 
 **此次会话目标与边界**：原始50个家族，80%=40个。该表把**全部50类**赋予单一处置责任与精确的输入/验收命令，其中 **42类有明确本地 Codex 执行入口（84%交接就绪）**、其余 **8类**需新的外部金标/审批/真实桥接或是受限定时能力。这里的「交接就绪」**不是工程测试通过、合并、业务验收或实际完成率**。上一轮只有49/50可访问证据位置，本轮不宣称已修复40项。
 
-**源 SHA 固定**：WoolRadar只在自有Draft [PR39](https://github.com/lu403369069lu-prog/WoolRadar/pull/39) HEAD `e31eea548ab0b05d26e6fd639907bd81cbabcdfc` 执行；SAM只在自有Draft [PR15](https://github.com/lu403369069lu-prog/YinQieJi/pull/15) HEAD `82bf36efa90cced8dafb56502812eb49f40515f3` 执行；协调器独立 [PR11](https://github.com/lu403369069lu-prog/WoolRadar/pull/11) HEAD `27796df5f9847c1bb5d48d2a445e418dfb3d8e96` 验收。所有SHA为本轮冷读参考，如果HEAD变化，请 Codex 先 `git rev-parse HEAD` 重做diff/测试，绝不静默混合不同提交。Codex V3 main owner 仍由现有actor持有，禁止抢写、自动merge、push生产。
+**源 SHA 固定**：WoolRadar只在自有Draft [PR39](https://github.com/lu403369069lu-prog/WoolRadar/pull/39) HEAD `80c5ea18769c1312e5be5fd99a39e4f3d498c64f` 执行；SAM只在自有Draft [PR15](https://github.com/lu403369069lu-prog/YinQieJi/pull/15) HEAD `82bf36efa90cced8dafb56502812eb49f40515f3` 执行；协调器独立 [PR11](https://github.com/lu403369069lu-prog/WoolRadar/pull/11) HEAD `27796df5f9847c1bb5d48d2a445e418dfb3d8e96` 验收。所有SHA为本轮冷读参考，如果HEAD变化，请 Codex 先 `git rev-parse HEAD` 重做diff/测试，绝不静默混合不同提交。Codex V3 main owner 仍由现有actor持有，禁止抢写、自动merge、push生产。
 
 **4条工程小时任务已暂停**：00/10/30/40分各一条；不会再因为无法自动回写而持续堆新小时结果。每日09:30公开羊毛简报仍启用且不参与Github工程写入。
 
@@ -105,7 +105,7 @@
 
 ```powershell
 # 例子：临时干净副本，绝不在 C:\WoolRadar 生产目录运行
-python -B .\HISTORICAL_CODEX_BATCH_RUNNER_20261017.py --project wool --repo C:\temp\wool-history-qa --expected-head e31eea548ab0b05d26e6fd639907bd81cbabcdfc --run
+python -B .\HISTORICAL_CODEX_BATCH_RUNNER_20261017.py --project wool --repo C:\temp\wool-history-qa --expected-head 80c5ea18769c1312e5be5fd99a39e4f3d498c64f --run
 python -B .\HISTORICAL_CODEX_BATCH_RUNNER_20261017.py --project sam --repo C:\temp\sam-history-qa --expected-head 82bf36efa90cced8dafb56502812eb49f40515f3 --run
 python -B .\HISTORICAL_CODEX_BATCH_RUNNER_20261017.py --project coord --repo C:\temp\coord-history-qa --expected-head 27796df5f9847c1bb5d48d2a445e418dfb3d8e96 --run
 
@@ -116,3 +116,8 @@ python -B .\HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py --receipt C:\temp\history
 **验收器源码＋测试确实存在且已隔离执行**：[guard](HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py) Git blob `15f02c39a21a41b8c72ddbb03905aae01ef72c46`、[其六项正式测试](test_history_receipt_guard_20261017.py) Git blob `bb6dc55c21f52a691b1475db9da72d20a6dfba6b`，Linux Python3.13 **6/6 pass exit0**，本地完整Git blobs与远端一致。拒绝错HEAD、重复/漏批次、非零退出、无测试计数或日志SHA不合格。 `local_suite_receipt_accepted`即便为true仍永久强制 `business_gold_accepted=false` 与 `historical_recovery_closed=false`；严格防止把软件测试误充真实金标或最终发布。**回执正文与日志先人工脱敏，仅提交无秘密的family id/源SHA/exit/测试数量/日志hash到对应Issues；不得上传原始个人数据**。
 
 注意原始SHA已经固定在脚本内，若Codex修复代码使 HEAD 变化，重新审核新SHA并把本次回执标为`NEW_HEAD_REVALIDATION_REQUIRED`，不能直接改实参或脚本常量绕过原始基线判定。 
+
+### 2026-10-17 Wool PR39本轮新增红绿证据与SHA更新
+- 当前PR39新HEAD为 `80c5ea18769c1312e5be5fd99a39e4f3d498c64f`；此前旧HEAD `e31eea548ab0b05d26e6fd639907bd81cbabcdfc` 的Linux58次结果**不能继续作为新HEAD的整包绿灯**。
+- [WR-H16 新增编号/Unicode列表识别实际红→绿](https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/wool-historical-integration-20261017/independent-quality/developer-grant-20261017/H16_NUMBERED_SCOPE_RED_GREEN.md)：精确Git blob匹配，旧11+新6真实正式测试共17项，旧源3失败exit1，新源17通过exit0；仍缺Windows整包、独立新窗口准确率与日报签名桥。
+- `HISTORICAL_CODEX_BATCH_RUNNER_20261017.py`中Wool EXPECTED已同步为上述新HEAD；先在隔离工作树新SHA上全批次检验，勿自动切换到旧SHA绕过校验。

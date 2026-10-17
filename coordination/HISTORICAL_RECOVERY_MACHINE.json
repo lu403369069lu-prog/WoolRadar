@@ -143,8 +143,8 @@
     },
     {
       "id": "WR-H16",
-      "status": "PR39_NUMBERED_UNICODE_SCOPE_FIX_GITHUB_DRAFT_FULL_SUITE_PENDING",
-      "summary": "Current own Draft PR39 grants core blob8543c9c6 fixes failure to separate numbered/parenthesized/Unicode-bullet project entries; 6 new formal tests blob9263786 committed, isolated splitter regex 6/6 only; whole core+all Windows and new unseen source window NOT_RUN; previous grant11/11 and Linux58/58 were on older PR39 code, not this new head."
+      "status": "EXACT_SOURCE_NUMBERED_CROSS_PROJECT_OLD_RED3_NEW_GREEN17_LINUX_DRAFT",
+      "summary": "Wool Draft PR39 Git core blob8543c9c.. and 6 new formal blob9263786.. exact source bytes verified by git hash-object. Existing 11 + new6: original exact ce53bfd.. red 3/17 exit1; new exact8543c.. green17/17 exit0 on local isolated Linux Python. Full new PR39 Windows tests, actual external gold, recall25%, signed daily bridge remain NOT_VERIFIED."
     },
     {
       "id": "SAM-H01",
@@ -548,7 +548,18 @@
         "Wool 09:30 safe delivery requires approval",
         "SAM Node24/26+MCP+522 gold",
         "Coordinator V3 owner Windows relay"
-      ]
+      ],
+      "wool_current_head": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f",
+      "grant_exact_red_green": {
+        "old_blob": "ce53bfdcfb75d1f9b4927f0dad762a20b9bd5bc2",
+        "new_blob": "8543c9c63543645e36fcd0ed3fea396081c258f7",
+        "formal_old_failed": 3,
+        "formal_new_passed": 17,
+        "old_exit": 1,
+        "new_exit": 0,
+        "official_gold": "NOT_RUN",
+        "evidence": "independent-quality/developer-grant-20261017/H16_NUMBERED_SCOPE_RED_GREEN.md"
+      }
     }
   }
 }

@@ -34,6 +34,20 @@ class StreamingCliSafety(unittest.TestCase):
         self.assertEqual(out.stdout,'')
         self.assertNotIn(private['secret'],out.stderr)
 
+    def test_duplicate_json_text_keys_cannot_override_denied_source(self):
+        source=('{'+'"text":"Open-source developer grants for maintainers. Applications closed. Grant amount: $500.",'
+                +'"text":"Open-source developer grants for maintainers. Applications are open. Grant amount: $500."}'+'\n')
+        out=self.invoke(source)
+        self.assertNotEqual(out.returncode,0)
+        self.assertEqual(out.stdout,'')
+        self.assertIn('INVALID_INPUT',out.stderr)
+
+    def test_duplicate_nested_keys_cannot_corrupt_public_provenance(self):
+        source='{"title":"Public", "metadata":{"reviewed":"old","reviewed":"new"},"summary":"Hello"}\n'
+        out=self.invoke(source)
+        self.assertNotEqual(out.returncode,0)
+        self.assertEqual(out.stdout,'')
+
     def test_invalid_later_line_never_prints_partial_aggregate(self):
         good=json.dumps({'text':'Developer grants: open applications, award $1000 for open-source maintainers.'})
         out=self.invoke(good+'\n'+json.dumps({'title':[],'summary':'valid'})+'\n')

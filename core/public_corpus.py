@@ -32,8 +32,12 @@ def _semantic_query(query: str) -> tuple[str, bool]:
     # Do not certify identical campaign identity after decoding a selector.
     # Encoded names of discarded marketing trackers remain safe to discard.
     for part in query.split('&'):
-        raw_key = part.partition('=')[0]
-        if (('%' in raw_key or '+' in raw_key)
+        raw_key, equals, raw_value = part.partition('=')
+        # A functional selector's raw encoded VALUE can also be origin-specific:
+        # batch=%41 may not identify the same offer as batch=A on every server.
+        # Safe to normalize for display, but not to certify as blind gold.
+        if (('%' in raw_key or '+' in raw_key or
+             (equals and ('%' in raw_value or '+' in raw_value)))
                 and unquote_plus(raw_key).lower() not in _TRACKING_QUERY):
             preserved = False
     for original_key, value in parse_qsl(query, keep_blank_values=True, max_num_fields=64):

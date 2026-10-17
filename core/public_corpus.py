@@ -63,8 +63,14 @@ def _is_lexical_public_host(host: str) -> bool:
     claimability of a source need independent review.
     """
     canonical = host.lower().rstrip('.')
-    if (not re.fullmatch(r'[a-z0-9.-]+', canonical) or '..' in canonical
-            or canonical.startswith('-') or '.' not in canonical
+    # An ordinary DNS name has no empty, leading-hyphen, trailing-hyphen,
+    # overlong or punctuation-only labels. Do not promote malformed URL
+    # hostnames into a public-only review denominator.
+    labels = canonical.split('.')
+    if (len(canonical) > 253 or not all(
+            re.fullmatch(r'[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?', label)
+            for label in labels)
+            or '.' not in canonical
             or canonical.rsplit('.', 1)[-1].isdigit()):
         return False
     denied = ('localhost', 'local', 'internal', 'home.arpa', 'lan',

@@ -30,13 +30,17 @@ def canonical_public_url(raw: object) -> str | None:
         if p.scheme not in ('http', 'https') or not p.hostname or p.username or p.password:
             return None
         host = p.hostname.lower().rstrip('.')
-        if not re.fullmatch(r'[a-z0-9.-]+', host) or '..' in host or host.startswith('-'):
+        # No malformed or overlong DNS labels can enter a blind denominator.
+        # This is lexical admission only, not live DNS/provider verification.
+        if (len(host) > 253 or not all(
+                re.fullmatch(r'[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?', label)
+                for label in host.split('.'))):
             return None
         # A blind review source must refer to an ordinary public hostname.
         # IP literals and private-only DNS namespaces are not public offers.
         # This is a lexical check; it does not claim to verify live DNS,
         # redirects, publisher authenticity, or personal eligibility.
-        if ('.' not in host or host.rsplit('.', 1)[-1].isdigit()
+        if (host == 'home.arpa' or '.' not in host or host.rsplit('.', 1)[-1].isdigit()
                 or host.endswith(('.localhost', '.local', '.internal', '.lan',
                                    '.home.arpa', '.invalid', '.test',
                                    '.example', '.onion'))):

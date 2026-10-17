@@ -21,6 +21,11 @@ PRIVATE_HOSTS = (
     'http://printer.lan/page',
     'https://service.onion/internal',
     'http://intranet/private',
+    'https://www.invalid/secret',
+    'https://source.test/fake',
+    'https://archive.example/private',
+    'http://8.8.8.8:80/',
+    'https://[2606:4700:4700::1111]/',
 )
 
 class NonPublicProducerIdentity(unittest.TestCase):
@@ -47,9 +52,9 @@ class NonPublicProducerIdentity(unittest.TestCase):
                 self.assertTrue(row['text_url_redacted'])
                 self.assertFalse(row['url_identity_preserved'])
 
-    def test_public_hostname_and_global_ip_retained(self):
-        for url in ('https://example.org/offers?batch=alpha', 'https://8.8.8.8/help',
-                    'https://[2606:4700:4700::1111]/public'):
+    def test_public_dns_hostname_retained(self):
+        for url in ('https://example.org/offers?batch=alpha', 'https://www.wikipedia.org/',
+                    'https://subdomain.example.com/public'):
             with self.subTest(url=url):
                 self.assertEqual(_clean_url_identity(url), (url, True))
 

@@ -10,6 +10,8 @@ from __future__ import annotations
 import argparse
 from hashlib import sha1, sha256
 import json
+import os
+import stat
 from pathlib import Path
 import re
 import shlex
@@ -22,6 +24,7 @@ PROJECT_NAMES = {"wool": "WoolRadar", "sam": "YinQieJi-SAM",
                  "coord": "WoolRadar-Coord"}
 MANIFEST_GIT_BLOB = "96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744"
 HEX64 = re.compile(r"[0-9a-f]{64}\Z")
+MAX_RAW_LOG_BYTES = 8 * 1024 * 1024
 LOGNAME = re.compile(r"test-\d{3}\.log\Z")
 PYTHON_NAME = re.compile(r"python(?:\d+(?:\.\d+)?)?(?:\.exe)?\Z", re.I)
 
@@ -48,6 +51,56 @@ def load_verified_manifest(path: Path) -> dict[str, Any]:
         if obj.get("immutable_refs", {}).get(key, {}).get("sha") != HEADS[project]:
             raise ValueError("IMMUTABLE_HEAD_DRIFT")
     return obj
+
+
+
+def _read_pinned_raw_log(logdir: Path, filename: str) -> bytes:
+    """Bound raw log reads and reject path substitutions/special files.
+
+    On POSIX use a descriptor-relative O_NOFOLLOW file open. On Windows,
+    where dir_fd/O_NOFOLLOW are unavailable, pair lstat with fstat and
+    post-read lstat identity checks; those are a narrower defense and must be
+    independently tested on the actual target Windows filesystem.
+    """
+    if not LOGNAME.fullmatch(filename) or logdir.is_symlink():
+        raise ValueError('UNSAFE_RAW_LOG_TYPE_OR_SIZE')
+    path = logdir / filename
+    before = path.lstat()
+    if not stat.S_ISREG(before.st_mode) or before.st_size > MAX_RAW_LOG_BYTES:
+        raise ValueError('UNSAFE_RAW_LOG_TYPE_OR_SIZE')
+    if not path.resolve().is_relative_to(logdir.resolve()):
+        raise ValueError('UNSAFE_RAW_LOG_TYPE_OR_SIZE')
+    flags = os.O_RDONLY | getattr(os, 'O_BINARY', 0)
+    if hasattr(os, 'O_NONBLOCK'):
+        flags |= os.O_NONBLOCK
+    if hasattr(os, 'O_NOFOLLOW') and hasattr(os, 'O_DIRECTORY'):
+        root_fd = os.open(logdir, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
+        try:
+            file_fd = os.open(filename, flags | os.O_NOFOLLOW, dir_fd=root_fd)
+        finally:
+            os.close(root_fd)
+    else:
+        # Best available on Win32 without a tested native CreateFileW helper:
+        # bind all three stat identities rather than trusting a path alone.
+        file_fd = os.open(path, flags)
+    try:
+        opened = os.fstat(file_fd)
+        if (not stat.S_ISREG(opened.st_mode)
+                or opened.st_size > MAX_RAW_LOG_BYTES
+                or (opened.st_dev, opened.st_ino) != (before.st_dev, before.st_ino)):
+            raise ValueError('UNSAFE_RAW_LOG_TYPE_OR_SIZE')
+        with os.fdopen(os.dup(file_fd), 'rb') as reader:
+            contents = reader.read(MAX_RAW_LOG_BYTES + 1)
+        if len(contents) > MAX_RAW_LOG_BYTES:
+            raise ValueError('UNSAFE_RAW_LOG_TYPE_OR_SIZE')
+        after = path.lstat()
+        if (not stat.S_ISREG(after.st_mode)
+                or (after.st_dev, after.st_ino) != (opened.st_dev, opened.st_ino)
+                or after.st_size > MAX_RAW_LOG_BYTES):
+            raise ValueError('UNSAFE_RAW_LOG_TYPE_OR_SIZE')
+        return contents
+    finally:
+        os.close(file_fd)
 
 
 def command_key(cwd: str, args: list[str]) -> tuple[str, tuple[str, ...]]:
@@ -195,21 +248,19 @@ def review(data: dict[str, Any], manifest: dict[str, Any], logdir: Path | None) 
             seen_logs.add(filename)
             if logdir is not None:
                 try:
-                    logpath = logdir / filename
-                    if (logpath.is_symlink() or
-                            not logpath.resolve().is_relative_to(logdir.resolve())):
-                        errors.append("UNSAFE_LOG_SYMLINK_OR_ESCAPE")
-                    else:
-                        contents = logpath.read_bytes()
-                        if sha256(contents).hexdigest() != row.get("sha256"):
-                            errors.append("LOG_SHA256_MISMATCH")
-                        actual_counts = parse_actual_log_counts(contents)
-                        if actual_counts is None:
-                            errors.append("LOG_HAS_NO_GENUINE_TEST_SUMMARY")
-                        elif actual_counts != row.get("counts"):
-                            errors.append("LOG_COUNTS_DISAGREE_WITH_RECEIPT")
-                except (OSError, ValueError):
-                    errors.append("MISSING_RAW_LOG")
+                    contents = _read_pinned_raw_log(logdir, filename)
+                    if sha256(contents).hexdigest() != row.get("sha256"):
+                        errors.append("LOG_SHA256_MISMATCH")
+                    actual_counts = parse_actual_log_counts(contents)
+                    if actual_counts is None:
+                        errors.append("LOG_HAS_NO_GENUINE_TEST_SUMMARY")
+                    elif actual_counts != row.get("counts"):
+                        errors.append("LOG_COUNTS_DISAGREE_WITH_RECEIPT")
+                except (OSError, ValueError) as exc:
+                    errors.append("UNSAFE_RAW_LOG_TYPE_OR_SIZE" if
+                                  isinstance(exc, ValueError) or
+                                  getattr(exc, 'errno', None) in (40, 21)
+                                  else "MISSING_RAW_LOG")
         if not isinstance(row.get("sha256"), str) or not HEX64.fullmatch(row["sha256"]):
             errors.append("INVALID_LOG_SHA256")
         if isinstance(row.get("exit_code"), bool) or row.get("exit_code") != 0:

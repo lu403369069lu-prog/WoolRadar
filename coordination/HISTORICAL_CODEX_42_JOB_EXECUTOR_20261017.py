@@ -61,10 +61,19 @@ def pin_command(repo: Path, job: dict, blob_lookup=None) -> tuple[Path, list[str
     target = _reject_symlink_chain(root, rel)
     if not target.is_relative_to(root) or not target.is_file():
         raise RuntimeError('Historical test target missing, symlinked outside root or invalid.')
+    check_actual_worktree = blob_lookup is None
     if blob_lookup is None:
         blob_lookup = lambda path: contract.git(['rev-parse', 'HEAD:' + path], root)
     if blob_lookup(rel) != job['verified_test_blob']:
         raise RuntimeError('Historical test Git blob differs from reviewed manifest.')
+    if check_actual_worktree:
+        # HEAD:path verifies committed provenance only. A changed on-disk test
+        # could otherwise run after preflight (or if pin_command is reused).
+        raw = target.read_bytes()
+        disk_blob = hashlib.sha1(
+            b'blob ' + str(len(raw)).encode('ascii') + b'\x00' + raw).hexdigest()
+        if disk_blob != job['verified_test_blob']:
+            raise RuntimeError('Pinned historical working-tree test contents differ from HEAD blob.')
     cwd = _reject_symlink_chain(root, job['local_cwd'])
     if not cwd.is_relative_to(root) or not cwd.is_dir():
         raise RuntimeError('Job working directory is outside this checkout.')

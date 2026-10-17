@@ -16,7 +16,7 @@
       "id": "coord42",
       "repository": "lu403369069lu-prog/WoolRadar",
       "pr": 42,
-      "head_at_review": "3a3017a58d0a6ae5084a77861b8e0302a22d52f2",
+      "head_at_review": "08b1d43a186a4dd0d2364b048d84b0629f4d043e",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
       "scope": [
@@ -28,18 +28,18 @@
       "next_gate": "local Python and Node cross-module tests + frozen real 39 command batch",
       "isolated_qa_done": true,
       "isolated_qa_methods": 27,
-      "latest_tests": "ISOLATED_LINUX_GREEN_NOT_FULL_WINDOWS",
-      "isolated_linux_test_status": "PASS_NO_SKIP",
-      "isolated_linux_test_methods": 33
+      "latest_tests": "SELECTED_LINUX_GREEN_NOT_WINDOWS_FROZEN_OR_FULL_REPO",
+      "isolated_linux_test_status": "PASS_NO_SKIP_SELECTED",
+      "isolated_linux_test_methods": 50
     },
     {
       "id": "wool41",
       "repository": "lu403369069lu-prog/WoolRadar",
       "pr": 41,
-      "head_at_review": "d6988e825f6adde55bba21483feb613b4a97b2bd",
+      "head_at_review": "e6f39a163f5edd29294422f3726886b7e04ec39a",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_tests": "ISOLATED_LINUX_GREEN_NOT_FULL_WINDOWS",
+      "latest_tests": "SELECTED_LINUX_GREEN_NOT_WINDOWS_FROZEN_OR_FULL_REPO",
       "scope": [
         "URL parser normalization rejection",
         "credential-like path and source metadata redaction"
@@ -47,17 +47,17 @@
       "next_gate": "Windows full suite + unseen source gold + actual daily delivery receipt",
       "isolated_qa_done": true,
       "isolated_qa_methods": 43,
-      "isolated_linux_test_status": "PASS_NO_SKIP",
-      "isolated_linux_test_methods": 56
+      "isolated_linux_test_status": "PASS_NO_SKIP_SELECTED",
+      "isolated_linux_test_methods": 59
     },
     {
       "id": "sam17",
       "repository": "lu403369069lu-prog/YinQieJi",
       "pr": 17,
-      "head_at_review": "d8f3344a4a680a6e262ccb571a35755263ec9c7d",
+      "head_at_review": "7330d8cb858b869a36c3c1135b173c536945e61e",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_tests": "ISOLATED_LINUX_GREEN_NOT_FULL_WINDOWS",
+      "latest_tests": "SELECTED_LINUX_GREEN_NOT_WINDOWS_FROZEN_OR_FULL_REPO",
       "scope": [
         "per-card review metadata preservation",
         "non-writing 0.4.0 migration preflight"
@@ -65,17 +65,17 @@
       "next_gate": "Windows Node24/26 release full test + real source read-only audit + real MCP + 61/522 gold",
       "isolated_qa_done": true,
       "isolated_qa_methods": 24,
-      "isolated_linux_test_status": "PASS_NO_SKIP",
-      "isolated_linux_test_methods": 31
+      "isolated_linux_test_status": "PASS_NO_SKIP_SELECTED",
+      "isolated_linux_test_methods": 39
     },
     {
       "id": "wool43",
       "repository": "lu403369069lu-prog/WoolRadar",
       "pr": 43,
-      "head_at_review": "a4b969919603291849e0fddc535b0309628eb3c6",
+      "head_at_review": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_tests": "ISOLATED_LINUX_GREEN_NOT_FULL_WINDOWS",
+      "latest_tests": "SELECTED_LINUX_GREEN_NOT_WINDOWS_FROZEN_OR_FULL_REPO",
       "scope": [
         "diagnostic-only developer grant miss reasons without classifier mutation",
         "aggregate missing-signal counts without source text disclosure",
@@ -84,8 +84,8 @@
       "next_gate": "local 10+4 diagnostics tests + original developer grant suite + unseen source/time-window gold",
       "isolated_qa_done": true,
       "isolated_qa_methods": 31,
-      "isolated_linux_test_status": "PASS_NO_SKIP",
-      "isolated_linux_test_methods": 31
+      "isolated_linux_test_status": "PASS_NO_SKIP_SELECTED",
+      "isolated_linux_test_methods": 45
     }
   ],
   "prior_validation_scope": "Prior-turn isolated synthetic regressions exist in Issues. They do not certify the new heads.",
@@ -100,18 +100,19 @@
   "pr43_recall_policy": "Old 56-row, FN2 developer-used freeze cannot become independent holdout by rescoring it.",
   "latest_local_qa": {
     "date": "2026-10-17",
-    "status": "PASS_SELECTED_ISOLATED_LINUX",
-    "methods": 151,
+    "status": "PASS_SELECTED_ISOLATED_LINUX_NOT_FULL_REPO",
+    "methods": 193,
     "skipped": 0,
     "failed": 0,
     "by_track": {
-      "coord42": 33,
-      "sam17": 31,
-      "wool41": 56,
-      "wool43": 31
+      "coord42": 50,
+      "sam17": 39,
+      "wool41": 59,
+      "wool43": 45
     },
-    "shared_wool_cross_module_methods": 87,
-    "receipt_path": "coordination/FIRST_CLASS_LINUX_VERIFIED_151_20261017.json"
+    "shared_wool_cross_module_methods": 104,
+    "shared_wool_cross_module_passed": 104,
+    "receipt_path": "coordination/FIRST_CLASS_LINUX_EXECUTED_193_AND_JOINT_104_20261017.json"
   },
   "frozen_source_verification": {
     "ready_families": 42,
@@ -126,20 +127,27 @@
   },
   "first_category_latest": {
     "date": "2026-10-17",
-    "status": "IDENTIFIED_CHAT_EXECUTABLE_MODULE_TESTS_AND_STATIC_AUDITS_COMPLETE_WITH_EXTERNAL_LIMITS",
-    "executed_selected_linux_methods": 151,
-    "passed": 151,
+    "status": "IDENTIFIED_CHAT_EXECUTABLE_MODULES_VERIFIED;FROZEN_NATIVE_AND_BUSINESS_GATES_OPEN",
+    "executed_selected_linux_methods": 193,
+    "passed": 193,
     "failed": 0,
     "skipped": 0,
-    "executed_combined_wool41_wool43_methods": 87,
+    "executed_combined_wool41_wool43_methods": 104,
+    "shared_passed": 104,
     "source_blob_checks": true,
-    "changed_file_overlaps": 0,
-    "evidence": "coordination/FIRST_CLASS_LINUX_VERIFIED_151_20261017.json",
+    "evidence": "coordination/FIRST_CLASS_LINUX_EXECUTED_193_AND_JOINT_104_20261017.json",
+    "frozen_partial_linux": {
+      "distinct_commands": 10,
+      "ready_families": 11,
+      "methods": 105,
+      "exact_full_guard_accepted": false
+    },
     "external_remains": [
-      "Full frozen 39 command/42 family Windows execution",
-      "Full private repo suite/Node24/26",
-      "SAM real 0.4.0/61/522/MCP/release transaction",
-      "Wool fresh heldout source gold and confirmed delivery consumer"
+      "Remaining 29 frozen commands, full pinned 39-command Windows receipt",
+      "Full repo native Node24/26 and local dependency/Windows security context",
+      "SAM actual legacy records, real 61/522/MCP, release and rollback",
+      "Wool independent fresh source gold and daily consumer receipt",
+      "8 external or policy gates"
     ],
     "historical_80_percent_not_accepted": true
   }

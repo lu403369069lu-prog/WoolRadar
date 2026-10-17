@@ -32,11 +32,14 @@ def pin_command(repo: Path, job: dict, blob_lookup=None) -> tuple[Path, list[str
     rel = job['verified_test_path']
     if not isinstance(rel, str) or not rel or '\\' in rel or ':' in rel:
         raise RuntimeError('Invalid historical test source path.')
-    target = (root / rel).resolve()
+    original = root / rel
+    # Resolve only after checking the original pathname. A resolved symlink
+    # appears to be a regular file and would bypass a post-resolve check.
+    if original.is_symlink():
+        raise RuntimeError('Historical test symlink not admitted.')
+    target = original.resolve()
     if not target.is_relative_to(root) or not target.is_file():
         raise RuntimeError('Historical test target missing, symlinked outside root or invalid.')
-    if target.is_symlink():
-        raise RuntimeError('Historical test symlink not admitted.')
     if blob_lookup is None:
         blob_lookup = lambda path: contract.git(['rev-parse', 'HEAD:' + path], root)
     if blob_lookup(rel) != job['verified_test_blob']:
@@ -82,6 +85,8 @@ def plan_jobs(repo: Path, project: str, document: dict,
 
 def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
                  project: str) -> tuple[int, dict, Path]:
+    if not commands or not mapping:
+        raise RuntimeError('Empty historical batch cannot count as accepted evidence.')
     output = Path(tempfile.mkdtemp(prefix='history-code-batch-'+project+'-'))
     by_key = {}
     for item in commands:
@@ -89,13 +94,14 @@ def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
         try:
             done = subprocess.run(item['argv'], cwd=item['cwd'], shell=False,
                                   stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                  text=True, errors='replace', timeout=1800, check=False)
-            code, log = done.returncode, done.stdout
+                                  timeout=1800, check=False)
+            code, logbytes = done.returncode, done.stdout or b''
         except (OSError, subprocess.TimeoutExpired) as exc:
-            code, log = 125, repr(exc)
-        logbytes = log.encode('utf-8')
+            code, logbytes = 125, repr(exc).encode('utf-8')
+        # Persist/hash ORIGINAL child bytes. Lossy decoding may be used only
+        # for human-readable verdict parsing, never for evidence identity.
         (output / (key[:16]+'.log')).write_bytes(logbytes)
-        verdict, counts = contract.evaluate_run('HISTORY-TEST',code,log)
+        verdict, counts = contract.evaluate_run('HISTORY-TEST',code,logbytes.decode('utf-8', errors='replace'))
         by_key[key] = {'command':item['command'], 'exit_code':verdict,
                        'observed_exit_code':code, 'counts':counts,
                        'log_sha256':hashlib.sha256(logbytes).hexdigest(),

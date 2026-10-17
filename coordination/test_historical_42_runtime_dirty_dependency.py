@@ -23,7 +23,7 @@ def git(root,*args):
 
 
 class RuntimeDependencyMutation(unittest.TestCase):
-    def execute(self, corrupt, last_only=False):
+    def execute(self, corrupt, last_only=False, hidden_index=False):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp)
             (root/'tests').mkdir()
@@ -34,6 +34,12 @@ class RuntimeDependencyMutation(unittest.TestCase):
                 first = ('from pathlib import Path\nimport unittest\nclass T(unittest.TestCase):\n'
                          ' def test_modify_dependency(self):\n'
                          f'  Path("core/policy.py").write_text({modified!r}.replace("\\\\n","\\n"))\n')
+                if hidden_index:
+                    first = first.replace('from pathlib import Path\n',
+                                          'from pathlib import Path\nimport subprocess\n')
+                    first = first.replace('  Path("core/policy.py").write_text(',
+                                          '  subprocess.run(["git", "update-index", "--assume-unchanged", "core/policy.py"], check=True)\n'
+                                          '  Path("core/policy.py").write_text(')
                 second = ('import unittest\nfrom core.policy import flag\nclass T(unittest.TestCase):\n'
                           ' def test_dep(self):\n'
                           '  open("second_ran", "w").write("yes")\n'
@@ -75,6 +81,11 @@ class RuntimeDependencyMutation(unittest.TestCase):
         rc, receipt, _ = self.execute(True, last_only=True)
         self.assertNotEqual(rc, 0)
         self.assertNotEqual(receipt['results'][0]['exit_code'], 0)
+
+    def test_assume_unchanged_index_cannot_hide_modified_source(self):
+        rc,receipt,second_ran=self.execute(True, hidden_index=True)
+        self.assertNotEqual(rc,0,receipt['results'])
+        self.assertFalse(second_ran)
 
     def test_clean_dependency_allows_both_commands(self):
         rc,receipt,second_ran=self.execute(False)

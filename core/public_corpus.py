@@ -24,6 +24,8 @@ _FUNCTIONAL_QUERY = {'batch','offer','ref','utm_campaign','program','plan',
 _TRACKING_QUERY = {'utm_source','utm_medium','utm_term','utm_content','fbclid',
                    'gclid','msclkid','mc_cid','mc_eid'}
 _PRIVATE_VALUE = re.compile(r'(?i)(?:@|\d{13,}|token|secret|bearer|password|session)')
+# Credential-bearing path segments must not enter supposedly public sample logs.
+_SENSITIVE_PATH = re.compile(r'(?i)/(?:token|secret|password|session|api[-_]?key)/[^/]+')
 
 def _semantic_query(query: str) -> tuple[str, bool]:
     kept = {}
@@ -112,6 +114,8 @@ def _clean_url_identity(value: str) -> tuple[str, bool]:
         parsed.port
         if not _is_lexical_public_host(parsed.hostname):
             return '[non-public host redacted]', False
+        if _SENSITIVE_PATH.search(parsed.path):
+            return '[sensitive path redacted]', False
         query, preserved = _semantic_query(parsed.query)
         if parsed.username is not None or parsed.password is not None:
             preserved = False

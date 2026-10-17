@@ -329,6 +329,7 @@
     "effect": "source-policy regex has i flag; cross-backend parity not yet agreed, no production change"
   },
   "active_backlog_next": [
+    "Latest source head drift: PR39 moved from 80c5 to 1aad ahead7 and PR15 from 82bf to efe9 ahead2; 42/42 original formal tests blobs unchanged, 3 new formal tests not in 42 manifest. Validate new code and tests in separate clean checkouts, then explicitly re-pin only if Codex owner reviews; do not silently run old manifest on newer HEAD.",
     "CURRENT DELTA: Wool latest PR39 head1aad1c vs frozen 50-job runner head80c5; SAM PR15 headefe9 vs frozen runner 82bf. Use GitHub coordination/HISTORICAL_CURRENT_HEAD_CODEX_DELTA_20261017.md manual safe exact worktree commands; do NOT silently update one SHA side or claim old tests cover new head.",
     "SAM H17 updated exact current full release builder original six + new five synthetic true subprocess tests 11/11 Linux Node22, full Windows/installed skill/current.json multi-file rollback STILL NOT VERIFIED.",
     "Codex handoff executable now SHA locks all 50 manifest entries and PINs 42 Git blobs, 39 unique commands mapped to 42 family receipts; 42/42 isolated synthetic safety/verdict/subprocess tests passed. Still requires three exact HEAD local Codex batches and real Windows/full gold, no historic release completion inferred.",
@@ -651,5 +652,35 @@
     "latest_W": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
     "latest_S": "efe9a93f4bea4b6f3bf33f7fc9772e9008c8b3c0",
     "manifest_and_runner_reconciliation": "NEEDS_CODEX_OWNER_REVIEW_NO_SILENT_SHA_BUMP"
+  },
+  "codex_historical_head_drift_20261017": {
+    "status": "STOP_AUTOREPIN_SOURCE_DRIFT_REVIEW_REQUIRED",
+    "frozen_source_contract": {
+      "W": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f",
+      "S": "82bf36efa90cced8dafb56502812eb49f40515f3",
+      "C": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96"
+    },
+    "newer_unmerged_head_observed": {
+      "W": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+      "S": "efe9a93f4bea4b6f3bf33f7fc9772e9008c8b3c0",
+      "C": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96"
+    },
+    "github_compare": {
+      "W": "ahead7 behind0, core/public_corpus changed+2 new formal tests",
+      "S": "ahead2 behind0, release builder synthetic test+evidence",
+      "C": "unchanged"
+    },
+    "old_test_blob_integrity_against_new_heads": "42/42 exact original reviewed test Git blob identities unchanged, 0 mismatch",
+    "added_formal_files_not_in_original_42": {
+      "W": [
+        "tests/test_public_corpus_nonpublic_urls.py:5dc8307b2666c3ba670f7d04ee260c7ce7f02326",
+        "tests/test_public_corpus_invalid_unicode.py:e26a0ba16033de49c8544c2b03093ad103787e83"
+      ],
+      "S": [
+        "SAM/snapshot/tools/build-release-manifest.synthetic.test.mjs:5b8e99131748269ed7046ffd0d2396da3d30bc79"
+      ]
+    },
+    "note": "Old exact immutable checkout can run frozen 42 manifest; newer moving HEAD is deliberately blocked until explicit reviewed repin. New tests require delta acceptance first.",
+    "documentation": "coordination/HISTORICAL_LATEST_HEAD_DRIFT_20261017.md"
   }
 }

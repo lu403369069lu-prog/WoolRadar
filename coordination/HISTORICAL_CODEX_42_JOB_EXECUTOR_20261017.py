@@ -236,6 +236,20 @@ def main() -> int:
                               'cwd':str(entry['cwd'])},ensure_ascii=False))
         return 0
     rc,receipt,output=run_commands(commands,mapping,head,args.project)
+    # A successful subprocess batch is NOT an accepted historical-family
+    # receipt until the separate frozen guard validates every raw log and job.
+    guard_file = Path(__file__).resolve().with_name('HISTORICAL_CODEX_42_RECEIPT_GUARD_20261017.py')
+    guard_spec = importlib.util.spec_from_file_location('historical_formal_guard', guard_file)
+    formal_guard = importlib.util.module_from_spec(guard_spec)
+    guard_spec.loader.exec_module(formal_guard)
+    frozen_jobs = formal_guard.load_verified_manifest(MANIFEST)
+    raw_formal = json.loads((output / 'receipt-guard-v1.json').read_text(encoding='utf-8'))
+    guard_verdict = formal_guard.review(raw_formal, frozen_jobs, output)
+    (output / 'guard-verdict.json').write_text(
+        json.dumps(guard_verdict, ensure_ascii=False, indent=2), encoding='utf-8')
+    if not guard_verdict['local_full_family_receipt_accepted']:
+        rc = 1
+        print('OFFICIAL_HISTORY_GUARD_REJECTED:', guard_verdict['errors'], file=sys.stderr)
     print(json.dumps({'exit_code':rc,'covered_families':receipt['covered_families'],
                       'results':{k:sum(x['status']==k for x in receipt['results'])
                                  for k in ('PASS_EXACT_HEAD','FAIL_REPRODUCED','NOT_RUN_BLOCKED')},

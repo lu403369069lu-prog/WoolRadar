@@ -19,7 +19,6 @@
       "head_at_review": "3a3017a58d0a6ae5084a77861b8e0302a22d52f2",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_cross_module_tests": "ISOLATED_LINUX_GREEN_NOT_FULL_FROZEN_CLI",
       "scope": [
         "legacy-to-official-guard receipt bridge",
         "raw byte-matched test-NNN logs",
@@ -29,7 +28,9 @@
       "next_gate": "local Python and Node cross-module tests + frozen real 39 command batch",
       "isolated_qa_done": true,
       "isolated_qa_methods": 27,
-      "latest_tests": "ISOLATED_LINUX_GREEN_NOT_WINDOWS_FULL"
+      "latest_tests": "ISOLATED_LINUX_GREEN_NOT_FULL_WINDOWS",
+      "isolated_linux_test_status": "PASS_NO_SKIP",
+      "isolated_linux_test_methods": 27
     },
     {
       "id": "wool41",
@@ -38,14 +39,16 @@
       "head_at_review": "d6988e825f6adde55bba21483feb613b4a97b2bd",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_tests": "ISOLATED_LINUX_GREEN_NOT_WINDOWS_FULL",
+      "latest_tests": "ISOLATED_LINUX_GREEN_NOT_FULL_WINDOWS",
       "scope": [
         "URL parser normalization rejection",
         "credential-like path and source metadata redaction"
       ],
       "next_gate": "Windows full suite + unseen source gold + actual daily delivery receipt",
       "isolated_qa_done": true,
-      "isolated_qa_methods": 43
+      "isolated_qa_methods": 43,
+      "isolated_linux_test_status": "PASS_NO_SKIP",
+      "isolated_linux_test_methods": 53
     },
     {
       "id": "sam17",
@@ -54,14 +57,16 @@
       "head_at_review": "d8f3344a4a680a6e262ccb571a35755263ec9c7d",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_tests": "ISOLATED_LINUX_GREEN_NOT_WINDOWS_FULL",
+      "latest_tests": "ISOLATED_LINUX_GREEN_NOT_FULL_WINDOWS",
       "scope": [
         "per-card review metadata preservation",
         "non-writing 0.4.0 migration preflight"
       ],
       "next_gate": "Windows Node24/26 release full test + real source read-only audit + real MCP + 61/522 gold",
       "isolated_qa_done": true,
-      "isolated_qa_methods": 24
+      "isolated_qa_methods": 24,
+      "isolated_linux_test_status": "PASS_NO_SKIP",
+      "isolated_linux_test_methods": 27
     },
     {
       "id": "wool43",
@@ -70,7 +75,7 @@
       "head_at_review": "a4b969919603291849e0fddc535b0309628eb3c6",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_tests": "ISOLATED_LINUX_GREEN_NOT_WINDOWS_FULL",
+      "latest_tests": "ISOLATED_LINUX_GREEN_NOT_FULL_WINDOWS",
       "scope": [
         "diagnostic-only developer grant miss reasons without classifier mutation",
         "aggregate missing-signal counts without source text disclosure",
@@ -78,7 +83,9 @@
       ],
       "next_gate": "local 10+4 diagnostics tests + original developer grant suite + unseen source/time-window gold",
       "isolated_qa_done": true,
-      "isolated_qa_methods": 31
+      "isolated_qa_methods": 31,
+      "isolated_linux_test_status": "PASS_NO_SKIP",
+      "isolated_linux_test_methods": 31
     }
   ],
   "prior_validation_scope": "Prior-turn isolated synthetic regressions exist in Issues. They do not certify the new heads.",
@@ -94,14 +101,26 @@
   "latest_local_qa": {
     "date": "2026-10-17",
     "status": "PASS_SELECTED_ISOLATED_LINUX",
-    "methods": 125,
-    "skip": 0,
-    "breakdown": {
+    "methods": 138,
+    "skipped": 0,
+    "failed": 0,
+    "by_track": {
       "coord42": 27,
-      "sam17": 24,
-      "wool41": 43,
+      "sam17": 27,
+      "wool41": 53,
       "wool43": 31
     },
-    "receipt_path": "coordination/INTERACTIVE_LINUX_QA_EXPANDED_125_20261017.json"
+    "evidence": "coordination/INTERACTIVE_LINUX_QA_EXPANDED_138_20261017.json"
+  },
+  "frozen_source_verification": {
+    "ready_families": 42,
+    "blobs_matched": 42,
+    "distinct_test_files": 39,
+    "missing": 0,
+    "allowlisted_argv": 42,
+    "exact_command_source_paths": 42,
+    "tree_truncated": false,
+    "verified_manifest_blob": "96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744",
+    "evidence": "coordination/FROZEN_42_GIT_TREE_SOURCE_AUDIT_20261017.json"
   }
 }

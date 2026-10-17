@@ -110,6 +110,7 @@ def plan_jobs(repo: Path, project: str, document: dict,
         if key not in commands:
             commands[key] = {'command':key, 'cwd':cwd, 'argv':argv,
                              'cwd_contract':job['local_cwd'], 'pinned_test':pinned,
+                             'require_git_clean':blob_lookup is None,
                              'key_sha256':hashlib.sha256(key.encode('utf-8')).hexdigest()}
         elif commands[key]['pinned_test'] != pinned:
             raise RuntimeError('Identical command mapped to conflicting reviewed test source.')
@@ -167,6 +168,14 @@ def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
                     b'blob ' + str(len(payload)).encode('ascii') + b'\x00' + payload).hexdigest()
                 if actual != pinned['blob']:
                     raise RuntimeError('Historical test changed after planning; refusing execution.')
+            # The previous test might have rewritten an imported source or
+            # supporting file while leaving the next pinned test unchanged.
+            # Never treat source-file pinning alone as batch integrity.
+            if item.get('require_git_clean'):
+                if contract.git(['rev-parse', 'HEAD'], root) != repo_head:
+                    raise RuntimeError('Historical repo HEAD changed between command executions.')
+                if contract.git(['status', '--porcelain'], root):
+                    raise RuntimeError('Historical dependency tree dirty before executing next command.')
             # Per-command disposable home/tmp prevents accidental reads from
             # user dotfiles or runtime tokens inherited through env variables.
             with tempfile.TemporaryDirectory(prefix='child-', dir=output) as private_home:
@@ -175,6 +184,16 @@ def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
                                       env=_isolated_test_env(Path(private_home)),
                                       timeout=1800, check=False)
                 code, logbytes = done.returncode, done.stdout or b''
+                if item.get('require_git_clean'):
+                    try:
+                        dirty_after = (contract.git(['rev-parse', 'HEAD'], root) != repo_head
+                                       or bool(contract.git(['status', '--porcelain'], root)))
+                    except RuntimeError:
+                        dirty_after = True
+                    if dirty_after and code == 0:
+                        # Preserve exact raw child log bytes for SHA evidence:
+                        # encode the post-run tree violation in exit_code only.
+                        code = 126
         except RuntimeError as exc:
             code, logbytes = 126, repr(exc).encode('utf-8')
         except (OSError, subprocess.TimeoutExpired) as exc:

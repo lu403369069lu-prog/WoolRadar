@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-17",
+  "status": "EXECUTED_LINUX_SELECTED_INTEGRATION_NOT_COMPLETE_FROZEN_HISTORY",
+  "experiment": "Compose actual reviewed PR42 executor+formal receipt guard and 8-gate auditor/test sources in one disposable Linux directory",
+  "exact_source_git_blobs": {
+    "executor": "08af6d6304758399282d7b1799604089570c7b09",
+    "formal_guard": "072ba64688fcd479795620b870a803ddb29dc78b",
+    "external_gate_auditor": "f5ef4ba31c50e4b5e054834d7b903a2fc1958907",
+    "external_gate_auditor_tests": "b048841bdd0f6367d3fd98ec97af0349d9ad79f4",
+    "external_gate_cli_tests": "0c13596d89d4df2c4366591fb5ece51b588f4abf",
+    "executor_untracked_files_test": "458db80b575369a1a4614fe4de0225a7745ab3db"
+  },
+  "run": {
+    "environment": "Linux Python 3.13.5",
+    "command": "python -B -m unittest discover -s . -p 'test_*.py' -v",
+    "cwd": "Disposable staging of selected Git-blob-matched coordination Python sources",
+    "methods": 83,
+    "passed": 83,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "raw_stdout_stderr_sha256": "d723dfb34a7d10dc56accd0ce20f5277e0bd6ab66cbcf0ac0fd1f538eee6d83e",
+    "official_guard_parse_actual_log_counts_result": {
+      "tests": 83,
+      "passed": 83,
+      "failed": 0,
+      "skipped": 0
+    },
+    "observed_runtime_seconds": 20.687
+  },
+  "suite_composition": {
+    "frozen_executor_and_formal_guard_selected_methods": 53,
+    "new_eight_gate_offline_and_synthetic_cli_methods": 30,
+    "methods_overlap_between_these_suites": false
+  },
+  "critical_scope": {
+    "manifest_exact_frozen_39_command_complete_run": false,
+    "official_review_of_42_full_native_families": false,
+    "external_human_business_approvals_authenticated": 0,
+    "frozen_family_total": 50,
+    "ready": 42,
+    "external_gated": 8,
+    "remaining_39_commands_without_formal_full_native_receipts": 29,
+    "cli_mock_loader_used_for_four_boundary_cases": true
+  },
+  "delivery": {
+    "write_target": "Existing coordinator Draft PR #42 only",
+    "merge_done": false,
+    "production_touched": false,
+    "scheduler_modified": false,
+    "private_real_gold_uploaded": false,
+    "historical_recovery_closed": false
+  },
+  "remark": "The official guard counted 83 real unit tests from the combined actual log, but this does not authenticate the complete historical manifest, native checkouts, live scheduler safety or human approvals."
+}

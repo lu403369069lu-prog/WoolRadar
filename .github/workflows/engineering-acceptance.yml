@@ -6,6 +6,8 @@ on:
         description: 'Commit or branch to validate (empty = current branch)'
         required: false
         type: string
+  pull_request:
+    branches: [main]
   push:
     branches: [chatgpt/actions-acceptance-checkpoint-20261018]
 permissions:

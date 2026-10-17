@@ -61,7 +61,12 @@ class PathAndLogSecurity(unittest.TestCase):
         self.assertEqual(rc,0)
         for k,out in zip((ka,kb),outputs):
             self.assertEqual((folder/(k+'.log')).read_bytes(),out)
-        self.assertEqual(len([p for p in folder.glob('*.log')]),2)
+        self.assertEqual(len([p for p in folder.glob('*.log') if len(p.stem)==64]),2)
+        # Official guard receipt adds one byte-identical test-NNN.log per command.
+        self.assertEqual(sorted(p.name for p in folder.glob('test-*.log')),
+                         ['test-000.log','test-001.log'])
+        for i,out in enumerate(outputs):
+            self.assertEqual((folder/f'test-{i:03d}.log').read_bytes(),out)
         self.assertEqual([r['log_sha256'] for r in receipt['results']],
                          [hashlib.sha256(out).hexdigest() for out in outputs])
 

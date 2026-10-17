@@ -200,3 +200,13 @@ Two Wool branches PR41 and PR43 share exact historical base `1aad1c98584dd2c7291
 On Windows local Codex: use fresh nonproduction disposable clean worktrees at the current four PR heads; first verify remote immutable commit/ref and test commands from this handoff. For SAM, run `node --test tools/migrate-release-041.*.test.mjs` with actual paths enumerated rather than relying on shell wildcard expansion when shell is Windows. For official old frozen history, run 39 distinct commands strictly at the immutable W/S/C heads, then formal guard on raw receipts. Never silently substitute current draft heads for the fixed historical test heads.
 
 Prohibited: auto-merge/publish, scheduled GitHub writer, paid CI, reading real production SQLite/PLC or private tokens, changing Windows symlink permissions, or reporting 95% held-out recall without a new independent gold window.
+
+## FINAL FIRST-CATEGORY CURRENT KNOWN CODE GATE — 2026-10-17
+
+New authoritative [151 selected executed / 87 joint source QA](FIRST_CLASS_LINUX_VERIFIED_151_20261017.json) replaces earlier count statements. Both current real source modules and new formal test source blob hashes were matched to executed temporary files. Coord 33, SAM 31, Wool sample 56, grant 31 = 151 PASS with 0 skip/0 fail; joint Wool PR41+PR43 Python graph 87 PASS.
+
+Additional independent fixes after earlier handoff: official guard+executor refuse mixed or duplicate TAP/Python aggregate summaries; SAM rejects BOTH collision of a new claim with existing (cardId, claimId) AND duplicate identical claim identities in old unrelated cards before a version write, including on --dry-run; Wool public sample now redacts sensitive SPA hash-router paths #/token and #!/api-key rather than preserving them. New adversarial tests were red on old source, green on updated real source.
+
+Current unmerged candidate PR SHA must always be re-read from GitHub, not assumed from historical text above. Remote CI combined-status queries for four candidate HEADs returned 0 status entries; do not call this CI-green. True Windows frozen 39 commands/42 families were not run in chat; no Git clone possible from the current container due GitHub DNS, but exact frozen test blob and argv checks passed in the GitHub connector. Node tsx was unavailable locally. Authenticated business gold, notification consumer, full SAM lifecycle are external gates.
+
+No auto merge, production changes, PLC access, task-scheduler GitHub writes, private data export, paid CI or synthetic tests counted as real holdout acceptance.

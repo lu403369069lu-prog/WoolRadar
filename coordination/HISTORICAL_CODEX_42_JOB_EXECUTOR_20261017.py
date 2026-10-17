@@ -10,6 +10,7 @@ import argparse
 import importlib.util
 import hashlib
 import json
+import os
 from pathlib import Path
 import shlex
 import subprocess
@@ -96,6 +97,25 @@ def plan_jobs(repo: Path, project: str, document: dict,
     return list(commands.values()), mapping
 
 
+# A disposable checkout is not a security sandbox. Still prevent accidental
+# credential/environment leakage into formal test subprocesses: opt in only
+# OS process-launch essentials, never inherit authentication or preload hooks.
+_CHILD_ENV_ALLOW = frozenset({
+    'PATH', 'PATHEXT', 'SYSTEMROOT', 'WINDIR', 'COMSPEC', 'OS',
+    'PROCESSOR_ARCHITECTURE', 'NUMBER_OF_PROCESSORS',
+    'LANG', 'LC_ALL', 'LC_CTYPE', 'TZ',
+})
+
+
+def _isolated_test_env(home: Path) -> dict[str, str]:
+    env = {k: v for k, v in os.environ.items() if k.upper() in _CHILD_ENV_ALLOW}
+    for name in ('HOME', 'USERPROFILE', 'TMP', 'TEMP', 'TMPDIR',
+                 'XDG_CONFIG_HOME', 'XDG_CACHE_HOME'):
+        env[name] = str(home)
+    env.update({'PYTHONDONTWRITEBYTECODE':'1', 'PYTHONIOENCODING':'utf-8', 'CI':'1'})
+    return env
+
+
 def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
                  project: str) -> tuple[int, dict, Path]:
     if not commands or not mapping:
@@ -115,10 +135,14 @@ def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
     for item in commands:
         key = item['key_sha256']
         try:
-            done = subprocess.run(item['argv'], cwd=item['cwd'], shell=False,
-                                  stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                  timeout=1800, check=False)
-            code, logbytes = done.returncode, done.stdout or b''
+            # Per-command disposable home/tmp prevents accidental reads from
+            # user dotfiles or runtime tokens inherited through env variables.
+            with tempfile.TemporaryDirectory(prefix='child-', dir=output) as private_home:
+                done = subprocess.run(item['argv'], cwd=item['cwd'], shell=False,
+                                      stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                      env=_isolated_test_env(Path(private_home)),
+                                      timeout=1800, check=False)
+                code, logbytes = done.returncode, done.stdout or b''
         except (OSError, subprocess.TimeoutExpired) as exc:
             code, logbytes = 125, repr(exc).encode('utf-8')
         # Persist/hash ORIGINAL child bytes. Lossy decoding may be used only

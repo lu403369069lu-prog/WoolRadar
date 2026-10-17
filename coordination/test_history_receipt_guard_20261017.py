@@ -1,5 +1,10 @@
 import unittest
-import history_receipt_guard as h
+import importlib.util
+from pathlib import Path
+
+spec = importlib.util.spec_from_file_location('history_receipt_guard', Path(__file__).with_name('HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py'))
+h = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(h)
 
 
 def record(proj='coord'):

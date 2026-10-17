@@ -4,8 +4,9 @@ PR #42 coordination follow-up. This is **read-only evidence inventory**, not app
 
 - Exactly eight manifest families identified: WR-H12/H13/H14/H17, SAM-H08/H11/H24, COORD-H07.
 - Isolated Python 3.13.5 test command: `python -B -m unittest discover -s coordination -p test_historical_external_eight_gate_auditor.py -v`
-- Actual latest local run: **26/26 PASS, 0 FAIL, 0 SKIP, exit 0**; raw log SHA256 `e4b8b5c8d9e68008535dda878a42e9c67e6536291ee78d6256d72f9745b39321`.
-- Local auditor source Git blob SHA1: `8d749b3183c442da3a81557f6e9c225c206b6d1d`.
+- Actual latest local run: **30/30 PASS, 0 FAIL, 0 SKIP, exit 0** (26 auditor + 4 synthetic CLI boundary tests); raw log SHA256 `62a4541535e3b7221b0e12db66ce6ef413bc42a9ecb270fd8f51c6c71c095a81`.
+- Local auditor source Git blob SHA1: `f5ef4ba31c50e4b5e054834d7b903a2fc1958907`.
+- Local CLI synthetic-loader tests Git blob SHA1: `0c13596d89d4df2c4366591fb5ece51b588f4abf` (not official manifest acceptance).
 - Local auditor tests Git blob SHA1: `b048841bdd0f6367d3fd98ec97af0349d9ad79f4`.
 - Evidence digest is **not** user permission. COORD-H07 has an architecture review memo; WR-H14 only has scheduler metadata review. Other gates are not independently accepted.
 - This document does NOT assert that the source/tests are committed: if missing, use the separately validated local work package to add them.

@@ -1,0 +1,3 @@
+# Exact published source verification
+
+Executed clean3a71060b0134a55c60f5543382bd1758768a2b4a,261 blobs remotely matched, no discarded files. Actual Windows command: python -B -X utf8 independent-quality/delivery-bridge-20261016/run_combined_tests.py.412passed/0fail/0error/0skip/exit0,17.155s. Before/after worktree clean. This following evidence-only commit changes no executable code; do not call it a newly tested source change. Initial blind acceptance remains failed25% recall; development fixes do not establish independent accuracy. Dedup false split, OUTPUT_NOT_CONNECTED/P06/field/final3 gates remain. No production/Work/paid/merge/raw upload.

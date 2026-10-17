@@ -1,0 +1,216 @@
+{
+  "schema": 1,
+  "updated_utc": "2026-10-17",
+  "historical_recovery_closed": false,
+  "historical_first": true,
+  "all_scheduled_run_logs_complete": "UNKNOWN_SOURCE_UNAVAILABLE",
+  "user_notifications_change_requested": false,
+  "source_sweep": {
+    "library_recursive_items": 25,
+    "library_oct14_17_items": 14,
+    "archive_zip_inspected": 2,
+    "full_scheduled_execution_transcripts_available": false,
+    "text_only_origins": [
+      "woolradar_reindex_upsert_atomicity.patch",
+      "test_woolradar_reindex_upsert_atomicity.py",
+      "woolradar_reindex_upsert_race_probe.py"
+    ]
+  },
+  "verified_draft_refs": {
+    "wool_main_pr23": "6babbe12727652e8626e0fe6f554eb01fecd4a30",
+    "wool_history_pr35": "87f79e5578fe9d53c71fb00262feee512e2c951c",
+    "wool_sampler_pr37": "96abd1b8e902e93a6c56d98aeb9d043bdb1175aa",
+    "sam_main_pr5": "5aeb852577cc53da76f9a0b5e78dfef63a83a35b",
+    "sam_history_pr10": "f5e6562524b3438227e311fbc7ff0223b08a5a12",
+    "sam_claimkind_pr13": "8719d75205e50209e9b11998a2af72c4d08ee975",
+    "sam_workbuddy_pr14": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
+    "sam_audit_types_pr15": "19690853b1ddd7a18dadd728c963d292049710e7"
+  },
+  "families": [
+    {
+      "id": "WR-H01",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "main PR23 notification SENT finality; old raw SQL patch archived"
+    },
+    {
+      "id": "WR-H02",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "main PR23 BEGIN IMMEDIATE; WAL/reindex synthetic text assets archived"
+    },
+    {
+      "id": "WR-H03",
+      "status": "HISTORICAL_CANDIDATE_UNVERIFIED",
+      "summary": "CLAIMED lease + WAL backup old synthetic only"
+    },
+    {
+      "id": "WR-H04",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "notification STALE reuse candidate / PR22"
+    },
+    {
+      "id": "WR-H05",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "evidence transaction and PR22"
+    },
+    {
+      "id": "WR-H06",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "preview order PR28 merged reported, verify current source"
+    },
+    {
+      "id": "WR-H07",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "producer URL identity PR23 integrated earlier PR36 files"
+    },
+    {
+      "id": "WR-H08",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "URL private/local hostname rejection Draft PR37"
+    },
+    {
+      "id": "WR-H09",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "strict boolean identity proof Draft PR37"
+    },
+    {
+      "id": "WR-H10",
+      "status": "HISTORICAL_CANDIDATE_UNVERIFIED",
+      "summary": "published_at timezone parser old 9/10 to 10/10 model"
+    },
+    {
+      "id": "WR-H11",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "developer grants fee negation and PR29 source"
+    },
+    {
+      "id": "WR-H12",
+      "status": "HISTORICAL_PROTOTYPE_ONLY",
+      "summary": "synthetic signing 22/22 not 09:30 verified"
+    },
+    {
+      "id": "WR-H13",
+      "status": "REAL_BUSINESS_ACCEPTANCE_FAILED",
+      "summary": "47 independent cases TP1 FN3, 25 percent recall and false split"
+    },
+    {
+      "id": "WR-H14",
+      "status": "BLOCKED_AUTONOMOUS_WRITER",
+      "summary": "no Scheduled direct GitHub write verified"
+    },
+    {
+      "id": "WR-H15",
+      "status": "HISTORICAL_CANDIDATE_UNVERIFIED",
+      "summary": "delivery whitelist/official status old synthetic tests only"
+    },
+    {
+      "id": "WR-H16",
+      "status": "HISTORICAL_STATIC_DEFECT_UNFIXED",
+      "summary": "cross-project grant evidence concatenation 10/13 history"
+    },
+    {
+      "id": "SAM-H01",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "PR11 strict JSONL parser"
+    },
+    {
+      "id": "SAM-H02",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "PR13 byte-identical recovered claimKind code/test"
+    },
+    {
+      "id": "SAM-H03",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "PR15 recovered audit field types; Node22 helper 3/3"
+    },
+    {
+      "id": "SAM-H04",
+      "status": "UNFIXED_REPRODUCIBLE",
+      "summary": "reviewedArtifactSha256 only 64hex; approved bytes not bound"
+    },
+    {
+      "id": "SAM-H05",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "PR12 ancestral glob policy"
+    },
+    {
+      "id": "SAM-H06",
+      "status": "HISTORICAL_CANDIDATE_UNVERIFIED",
+      "summary": "glob semantics old 45-case model, full parity unrun"
+    },
+    {
+      "id": "SAM-H07",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "PR6 registered FTS locator scope"
+    },
+    {
+      "id": "SAM-H08",
+      "status": "REAL_BUSINESS_ACCEPTANCE_FAILED",
+      "summary": "61 positives only 10 source bound, 51 refused"
+    },
+    {
+      "id": "SAM-H09",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "PR9 teacher/frozen question CLI"
+    },
+    {
+      "id": "SAM-H10",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "older PR3 URL and symlink races"
+    },
+    {
+      "id": "SAM-H11",
+      "status": "SOURCE_GOLD_NOT_VERIFIED",
+      "summary": "T009 synthetic projection"
+    },
+    {
+      "id": "SAM-H12",
+      "status": "HISTORICAL_CANDIDATE_UNVERIFIED",
+      "summary": "claim scope order isolation"
+    },
+    {
+      "id": "SAM-H13",
+      "status": "RELEASE_ACCEPTANCE_UNVERIFIED",
+      "summary": "dist/install/cache/upgrade rollback and final 3 rounds"
+    },
+    {
+      "id": "SAM-H14",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "PR9 same-fold/cross-fold duplicate QID checks"
+    },
+    {
+      "id": "SAM-H15",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "PR14 explicit WorkBuddy filter fallback guard"
+    },
+    {
+      "id": "SAM-H16",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "WorkBuddy Promise.all rank order already in current main"
+    },
+    {
+      "id": "SAM-H17",
+      "status": "HISTORICAL_CANDIDATE_UNVERIFIED",
+      "summary": "current.json before manifest release pointer atomicity"
+    },
+    {
+      "id": "SAM-H18",
+      "status": "UNFIXED_REPRODUCIBLE",
+      "summary": "PR12 case-insensitive regex vs rg parity risk"
+    },
+    {
+      "id": "SAM-H19",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "PR14 empty WorkBuddy lines full source Node22 3/3"
+    },
+    {
+      "id": "SAM-H20",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "normative version/date null and PR5 refusal"
+    },
+    {
+      "id": "SAM-H21",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "WorkBuddy exact source excerpt hash currently verified"
+    }
+  ]
+}

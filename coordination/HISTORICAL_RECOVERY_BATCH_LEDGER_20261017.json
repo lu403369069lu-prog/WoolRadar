@@ -66,7 +66,7 @@
       "isolated_qa_done": true,
       "isolated_qa_methods": 24,
       "isolated_linux_test_status": "PASS_NO_SKIP",
-      "isolated_linux_test_methods": 30
+      "isolated_linux_test_methods": 31
     },
     {
       "id": "wool43",
@@ -101,17 +101,17 @@
   "latest_local_qa": {
     "date": "2026-10-17",
     "status": "PASS_SELECTED_ISOLATED_LINUX",
-    "methods": 150,
+    "methods": 151,
     "skipped": 0,
     "failed": 0,
     "by_track": {
       "coord42": 33,
-      "sam17": 30,
+      "sam17": 31,
       "wool41": 56,
       "wool43": 31
     },
     "shared_wool_cross_module_methods": 87,
-    "receipt_path": "coordination/FIRST_CLASS_SOURCE_QA_150_AND_SHARED_87_20261017.json"
+    "receipt_path": "coordination/FIRST_CLASS_LINUX_VERIFIED_151_20261017.json"
   },
   "frozen_source_verification": {
     "ready_families": 42,
@@ -126,22 +126,21 @@
   },
   "first_category_latest": {
     "date": "2026-10-17",
-    "status": "CURRENTLY_IDENTIFIED_ISOLATED_CODE_TASKS_TESTED;FULL_WAREHOUSE_EXTERNAL_OR_UNAVAILABLE",
-    "selected_module_linux_green": 150,
-    "joint_wool_public_plus_grant_linux_green": 87,
-    "source_and_test_git_blobs_verified": true,
-    "independent_old_code_red_controls": [
-      "coord duplicate TAP/unittest summaries",
-      "SAM existing (cardId,claimId) collisions",
-      "Wool hash-router sensitive credentials"
+    "status": "IDENTIFIED_CHAT_EXECUTABLE_MODULE_TESTS_AND_STATIC_AUDITS_COMPLETE_WITH_EXTERNAL_LIMITS",
+    "executed_selected_linux_methods": 151,
+    "passed": 151,
+    "failed": 0,
+    "skipped": 0,
+    "executed_combined_wool41_wool43_methods": 87,
+    "source_blob_checks": true,
+    "changed_file_overlaps": 0,
+    "evidence": "coordination/FIRST_CLASS_LINUX_VERIFIED_151_20261017.json",
+    "external_remains": [
+      "Full frozen 39 command/42 family Windows execution",
+      "Full private repo suite/Node24/26",
+      "SAM real 0.4.0/61/522/MCP/release transaction",
+      "Wool fresh heldout source gold and confirmed delivery consumer"
     ],
-    "evidence": "coordination/FIRST_CLASS_SOURCE_QA_150_AND_SHARED_87_20261017.json",
-    "github_pr_file_overlap": 0,
-    "incomplete_external": [
-      "real full private worktree Windows suites and frozen 39 commands",
-      "Windows Node24 and Node26",
-      "SAM real source/MCP/release atomic publish and rollback",
-      "Wool real live source holdout, qualification, delivery consumer"
-    ]
+    "historical_80_percent_not_accepted": true
   }
 }

@@ -40,6 +40,12 @@ class StreamingCliSafety(unittest.TestCase):
         self.assertEqual(result['candidate_leads'],0)
         self.assertNotIn('Unrelated',out.stdout)
 
+    def test_null_optional_summary_still_means_absent_not_invalid(self):
+        row={'title':'Developer grants for open-source maintainers', 'summary':None}
+        out=self.invoke(json.dumps(row)+'\n')
+        self.assertEqual(out.returncode,0,out.stderr)
+        self.assertEqual(json.loads(out.stdout)['records'],1)
+
     def test_valid_title_summary_fallback_still_supported(self):
         s=json.dumps({'title':'Developer grants for open-source maintainers',
                       'summary':'Applications open. Award: $500.'})+'\n'

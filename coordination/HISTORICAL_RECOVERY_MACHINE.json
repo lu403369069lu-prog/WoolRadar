@@ -63,7 +63,7 @@
     "sam_teacher_pr9": "ba2890004a45abe39d9a6da8b342db48162e9023",
     "wool_grant_pr38": "75021367f71ba550a95ef098789e1f1201b21bad",
     "wool_coord_return_pr11": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
-    "wool_unified_pr39": "e31eea548ab0b05d26e6fd639907bd81cbabcdfc"
+    "wool_unified_pr39": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f"
   },
   "families": [
     {
@@ -104,17 +104,17 @@
     {
       "id": "WR-H08",
       "status": "UNIFIED_MAIN_HEAD_DRAFT_PR39_47_EXACT_PYTHON_PASS_NEW_GOLD_PENDING",
-      "summary": "Wool main PR23 SHA6bab integrated PR37 URL host+strict truth and PR38 separated-grant into Draft PR39 HEAD 76b017e00f7760417a9131d7fb07a4044f673076; actual exact Git bytes 24 producer/grant +23 sampler=47/47 Python3.13 Linux; Windows full and post-fix independent new blind/source identity still red or pending."
+      "summary": "Wool main PR23 SHA6bab integrated PR37 URL host+strict truth and PR38 separated-grant into Draft PR39 HEAD 76b017e00f7760417a9131d7fb07a4044f673076; actual exact Git bytes 24 producer/grant +23 sampler=47/47 Python3.13 Linux; Windows full and post-fix independent new blind/source identity still red or pending. | 2026-10-17 new exact PR39 HEAD80c5 changed grant paragraph/numbered/Unicode bullet parser source8543 and formal test9263; actual same-source Python tests40/40 and sampler+schema24/24 =64 distinct local pass exit0; whole Windows/new blind NOT RUN"
     },
     {
       "id": "WR-H09",
       "status": "UNIFIED_MAIN_HEAD_DRAFT_PR39_47_EXACT_PYTHON_PASS_NEW_GOLD_PENDING",
-      "summary": "Wool main PR23 SHA6bab integrated PR37 URL host+strict truth and PR38 separated-grant into Draft PR39 HEAD 76b017e00f7760417a9131d7fb07a4044f673076; actual exact Git bytes 24 producer/grant +23 sampler=47/47 Python3.13 Linux; Windows full and post-fix independent new blind/source identity still red or pending."
+      "summary": "Wool main PR23 SHA6bab integrated PR37 URL host+strict truth and PR38 separated-grant into Draft PR39 HEAD 76b017e00f7760417a9131d7fb07a4044f673076; actual exact Git bytes 24 producer/grant +23 sampler=47/47 Python3.13 Linux; Windows full and post-fix independent new blind/source identity still red or pending. | 2026-10-17 new exact PR39 HEAD80c5 changed grant paragraph/numbered/Unicode bullet parser source8543 and formal test9263; actual same-source Python tests40/40 and sampler+schema24/24 =64 distinct local pass exit0; whole Windows/new blind NOT RUN"
     },
     {
       "id": "WR-H10",
       "status": "PR39_EXACT_PRODUCER_TIMESTAMP_RED9_GREEN58_LINUX_MAIN_WINDOWS_PENDING",
-      "summary": "New independent exact core/public_corpus.py blob6768.. fixes RFC2822/ISO8601 zone-aware UTC-only, original complete producer blob412a.. fails9/10 new genuine test. Current integrated PR39 tests/ 34/34 + sampler23 and exact original producer schema1 =24/24, 58 distinct Python3.13 unittest methods pass. Full Windows/new blind/provider claimability pending"
+      "summary": "New independent exact core/public_corpus.py blob6768.. fixes RFC2822/ISO8601 zone-aware UTC-only, original complete producer blob412a.. fails9/10 new genuine test. Current integrated PR39 tests/ 34/34 + sampler23 and exact original producer schema1 =24/24, 58 distinct Python3.13 unittest methods pass. Full Windows/new blind/provider claimability pending | 2026-10-17 new exact PR39 HEAD80c5 changed grant paragraph/numbered/Unicode bullet parser source8543 and formal test9263; actual same-source Python tests40/40 and sampler+schema24/24 =64 distinct local pass exit0; whole Windows/new blind NOT RUN"
     },
     {
       "id": "WR-H11",
@@ -143,8 +143,8 @@
     },
     {
       "id": "WR-H16",
-      "status": "EXACT_SOURCE_NUMBERED_CROSS_PROJECT_OLD_RED3_NEW_GREEN17_LINUX_DRAFT",
-      "summary": "Wool Draft PR39 Git core blob8543c9c.. and 6 new formal blob9263786.. exact source bytes verified by git hash-object. Existing 11 + new6: original exact ce53bfd.. red 3/17 exit1; new exact8543c.. green17/17 exit0 on local isolated Linux Python. Full new PR39 Windows tests, actual external gold, recall25%, signed daily bridge remain NOT_VERIFIED."
+      "status": "PR39_NUMBERED_UNICODE_SCOPE_EXACT64_LINUX_MAIN_GOLD_PENDING",
+      "summary": "Wool Draft PR39 Git core blob8543c9c.. and 6 new formal blob9263786.. exact source bytes verified by git hash-object. Existing 11 + new6: original exact ce53bfd.. red 3/17 exit1; new exact8543c.. green17/17 exit0 on local isolated Linux Python. Full new PR39 Windows tests, actual external gold, recall25%, signed daily bridge remain NOT_VERIFIED. | 2026-10-17 new exact PR39 HEAD80c5 changed grant paragraph/numbered/Unicode bullet parser source8543 and formal test9263; actual same-source Python tests40/40 and sampler+schema24/24 =64 distinct local pass exit0; whole Windows/new blind NOT RUN"
     },
     {
       "id": "SAM-H01",
@@ -329,7 +329,7 @@
     "effect": "source-policy regex has i flag; cross-backend parity not yet agreed, no production change"
   },
   "active_backlog_next": [
-    "Current interactive chat performs GitHub writebacks; four hourly engineering Scheduled automations paused and MUST NOT be delegated GitHub writes. Daily public benefits brief unchanged.",
+    "Wool current unified PR39 now HEAD80c5, exact grant numbered-scope formal code+test hash checked, isolated core40 + sampler24 =64/64 local Linux pass; this is NOT full Windows/new independent quality holdout.",
     "Codex accept: run coordination/HISTORICAL_CODEX_BATCH_RUNNER_20261017.py from clean disposable exact-SHA checkout, use 50-family JSON manifest; report 42 runnable entrypoints individually as PASS/FAIL/BLOCKED with commands/exit/log SHA. Current ready ≠ passed.",
     "Review PR39 latest e31eea and PR15 latest 82bf exact, plus older relay PR11 27796; avoid duplicate merging PR37/38/39 or old PR9 vs ported PR15; no Codex V3 owner override.",
     "Wool independent fresh public holdout original recall25% and false-split1, confirmed official eligibility and actual signed 09:30 consumer still unavailable.",
@@ -420,6 +420,20 @@
       "rg_matrix": "one original formal TAP contains 572 actual rg 14.1.1 comparisons",
       "testlog_sha256": "6af39642c699f262601517a0b03dad80702608c6cfb73a18eeaf195f91eae381",
       "unrun": "three corrected SHA-fixture full TS tests, cards.ts/zod, Windows24/26, direct stdio MCP"
+    },
+    "wool_pr39_current64": {
+      "head": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f",
+      "prior_head": "e31eea548ab0b05d26e6fd639907bd81cbabcdfc",
+      "scope": "prior head→current ahead3 commits: one grant source edit, one numbered-scope formal test, one evidence note",
+      "verified_new_source_blob": "8543c9c63543645e36fcd0ed3fea396081c258f7",
+      "verified_new_test_blob": "9263786f4165696a4647fbbd1f62b6a96ea33110",
+      "python_run": "40/40 core/producer/grant, 24/24 sampler+real schema, Python3.13 two exit0",
+      "logs_sha256": [
+        "1b43444c9984ea2d33a167a804fe6a8c90ee7f31cc9c89b9759cc7480855ef57",
+        "17fbb6de4104057b432532b2436faa227cf078d13ddf9f59dfd4ca938ba5ad09"
+      ],
+      "new_independent_holdout": "NOT_RUN",
+      "windows_full_suite": "NOT_RUN"
     }
   },
   "historical_exact_remote_test_provenance": {
@@ -504,7 +518,7 @@
     "offline_runner": "coordination/HISTORICAL_CODEX_BATCH_RUNNER_20261017.py",
     "pr9_real_port": "SAM PR15 SHA82bf36efa90cced8dafb56502812eb49f40515f3 contains nine exact-byte frozen teacher diagnostic files from old PR9",
     "git_refs": {
-      "wool_pr39": "e31eea548ab0b05d26e6fd639907bd81cbabcdfc",
+      "wool_pr39": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f",
       "sam_pr15": "82bf36efa90cced8dafb56502812eb49f40515f3",
       "coord_pr11": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96"
     },
@@ -519,22 +533,23 @@
       "distinct_test_commands": 39,
       "source_historical_files_transferred": "SAM old PR9 9 files 9/9 original Git blob match in PR15",
       "remote_repository_heads": {
-        "wool_pr39": "e31eea548ab0b05d26e6fd639907bd81cbabcdfc",
+        "wool_pr39": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f",
         "sam_pr15": "82bf36efa90cced8dafb56502812eb49f40515f3",
         "relay_pr11": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96"
       },
       "reviewed_runner_source": "coordination/HISTORICAL_CODEX_BATCH_RUNNER_20261017.py",
       "runner_not_executed_in_full_local_repo": true,
       "receipt_guard": "coordination/HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py",
-      "receipt_guard_git_blob": "e47debb9c39c473c78d82eccdbee8d77b13c52cb",
+      "receipt_guard_git_blob": "102c9c273ad3cd439b59bc6d6180c34aaed903cd",
       "receipt_guard_test": "coordination/test_history_receipt_guard_20261017.py",
       "receipt_guard_test_blob": "681711fafe9f78c2c65a1d7cd587fb6d3dcc3d13",
-      "receipt_guard_local_python": "Python3.13 exact Git blobs 8/8 pass exit0; rejects nonzero, duplicate/missing batches, wrong SHA, skipped tests, unknown pass count; gold never auto green",
+      "receipt_guard_local_python": "Exact Python3.13 8/8 pass exit0, bound to Wool PR39 80c5 and SAM PR15 82bf",
       "prohibits_automatic_gold_promotion": true,
       "runner_blob": "2740d556f24d2ffea563026628f5a904a7a3de73",
       "runner_provenance_handshake_fixed": true,
       "windows_npm_cmd_fixed": true,
-      "local_runner_full_worktree_test": "NOT_YET_EXECUTED; local Codex owns isolated Windows"
+      "local_runner_full_worktree_test": "NOT_YET_EXECUTED; local Codex owns isolated Windows",
+      "sha_pin_refreshed_after_real_diff": true
     },
     "interactive_command_integrity": {
       "state": "GITHUB_COMMITTED_PARTIAL_VERIFIED",

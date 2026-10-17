@@ -4,6 +4,7 @@ These controls are intentionally runnable with only Python stdlib. They never
 launch a real project test, modify a GitHub branch or touch production data.
 """
 import importlib.util
+import os
 from pathlib import Path
 import tempfile
 import unittest
@@ -103,8 +104,9 @@ class ReceiptTruthTests(unittest.TestCase):
             with self.assertRaisesRegex(runner.Blocked, "Manifest byte SHA"):
                 runner.load_and_validate(src, "wool", Path(directory).resolve())
 
+    @unittest.skipUnless(os.name == "nt", "Windows root semantics only")
     def test_production_root_denied_before_any_git_call(self):
-        with self.assertRaises(runner.Blocked):
+        with self.assertRaisesRegex(runner.Blocked, "Potential production"):
             runner.safe_checkout(Path(r"C:\WoolRadar"), "0" * 40, "wool")
 
     def test_path_traversal_denied(self):

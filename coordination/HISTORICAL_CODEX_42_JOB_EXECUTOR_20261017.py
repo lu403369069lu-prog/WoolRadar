@@ -138,6 +138,44 @@ def _isolated_test_env(home: Path) -> dict[str, str]:
     return env
 
 
+def _verify_frozen_worktree(root: Path, expected_head: str) -> None:
+    """Reject changes masked by Git index assume-unchanged/skip-worktree bits.
+
+    Git status alone can report clean after an earlier subprocess modifies an
+    imported module and hides it via update-index. Check every tracked file
+    against its actual immutable HEAD blob before and after every command.
+    """
+    if contract.git(['rev-parse', 'HEAD'], root) != expected_head:
+        raise RuntimeError('Historical repo HEAD changed between commands.')
+    if contract.git(['status', '--porcelain'], root):
+        raise RuntimeError('Historical repo reports a dirty worktree.')
+    try:
+        raw = subprocess.run(['git', 'ls-tree', '-r', '-z', 'HEAD'], cwd=root,
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                             timeout=30, check=True).stdout
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise RuntimeError('Failed to enumerate immutable tracked files.') from exc
+    for entry in raw.split(b'\x00'):
+        if not entry:
+            continue
+        try:
+            header, name = entry.split(b'\t', 1)
+            mode, kind, digest = header.split(b' ', 2)
+            rel = os.fsdecode(name)
+        except (ValueError, UnicodeError) as exc:
+            raise RuntimeError('Invalid frozen tracked Git tree record.') from exc
+        if kind != b'blob' or mode not in (b'100644', b'100755'):
+            raise RuntimeError('Unsupported frozen Git tree object or tracked symlink.')
+        path = _reject_symlink_chain(root, rel)
+        if not path.is_file():
+            raise RuntimeError('Immutable tracked file missing from on-disk source tree.')
+        payload = path.read_bytes()
+        got = hashlib.sha1(b'blob ' + str(len(payload)).encode('ascii')
+                           + b'\x00' + payload).hexdigest().encode('ascii')
+        if got != digest:
+            raise RuntimeError('Immutable tracked dependency differs from frozen Git HEAD.')
+
+
 def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
                  project: str) -> tuple[int, dict, Path]:
     if not commands or not mapping:
@@ -168,14 +206,10 @@ def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
                     b'blob ' + str(len(payload)).encode('ascii') + b'\x00' + payload).hexdigest()
                 if actual != pinned['blob']:
                     raise RuntimeError('Historical test changed after planning; refusing execution.')
-            # The previous test might have rewritten an imported source or
-            # supporting file while leaving the next pinned test unchanged.
-            # Never treat source-file pinning alone as batch integrity.
+            # Direct HEAD-object hashing catches index-masked dependency
+            # changes too; git status --porcelain alone is insufficient.
             if item.get('require_git_clean'):
-                if contract.git(['rev-parse', 'HEAD'], root) != repo_head:
-                    raise RuntimeError('Historical repo HEAD changed between command executions.')
-                if contract.git(['status', '--porcelain'], root):
-                    raise RuntimeError('Historical dependency tree dirty before executing next command.')
+                _verify_frozen_worktree(root, repo_head)
             # Per-command disposable home/tmp prevents accidental reads from
             # user dotfiles or runtime tokens inherited through env variables.
             with tempfile.TemporaryDirectory(prefix='child-', dir=output) as private_home:
@@ -186,14 +220,11 @@ def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
                 code, logbytes = done.returncode, done.stdout or b''
                 if item.get('require_git_clean'):
                     try:
-                        dirty_after = (contract.git(['rev-parse', 'HEAD'], root) != repo_head
-                                       or bool(contract.git(['status', '--porcelain'], root)))
+                        _verify_frozen_worktree(root, repo_head)
                     except RuntimeError:
-                        dirty_after = True
-                    if dirty_after and code == 0:
-                        # Preserve exact raw child log bytes for SHA evidence:
-                        # encode the post-run tree violation in exit_code only.
-                        code = 126
+                        # Preserve exact stdout for hashing; reject the batch.
+                        if code == 0:
+                            code = 126
         except RuntimeError as exc:
             code, logbytes = 126, repr(exc).encode('utf-8')
         except (OSError, subprocess.TimeoutExpired) as exc:

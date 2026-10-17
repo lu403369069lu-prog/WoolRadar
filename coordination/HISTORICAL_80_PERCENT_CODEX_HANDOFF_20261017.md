@@ -40,20 +40,20 @@
 | SAM-H02 | P0 | claimKind枚举回归 | S-AUDIT · `test/claim-audit-kind-integrity.test.ts` | CODEX_RUN | node --import tsx --test test/claim-audit-kind-integrity.test.ts |
 | SAM-H03 | P0 | 审查字段类型伪造 | S-AUDIT · `test/claim-audit-field-types.test.ts` | CODEX_RUN | node --import tsx --test test/claim-audit-field-types.test.ts |
 | SAM-H04 | P0 | 卡片SHA绑定/旧夹具 | S-CARDS · `test/reviewed-artifact-byte-binding.test.ts` | CODEX_RUN | node --import tsx --test test/reviewed-artifact-byte-binding.test.ts |
-| SAM-H05 | P0 | 目录祖先授权 | S-AUDIT · `../independent-review/20261016/rooted-source-authorization.test.ts` | CODEX_RUN | node --import tsx --test independent-review/20261016/rooted-source-authorization.test.ts |
-| SAM-H06 | P1 | glob与rg572矩阵 | S-AUDIT · `../independent-review/20261016/glob-ripgrep-572-matrix.test.ts` | CODEX_RUN | node --import tsx --test independent-review/20261016/glob-ripgrep-572-matrix.test.ts |
+| SAM-H05 | P0 | 目录祖先授权 | S-AUDIT · `../independent-review/20261016/rooted-source-authorization.test.ts` | CODEX_RUN | node --import tsx --test ../independent-review/20261016/rooted-source-authorization.test.ts |
+| SAM-H06 | P1 | glob与rg572矩阵 | S-AUDIT · `../independent-review/20261016/glob-ripgrep-572-matrix.test.ts` | CODEX_RUN | node --import tsx --test ../independent-review/20261016/glob-ripgrep-572-matrix.test.ts |
 | SAM-H07 | P0 | FTS locator访问范围 | S-WB · `test/workbuddy-rawroot.test.ts` | CODEX_RUN | node --import tsx --test test/workbuddy-rawroot.test.ts |
 | SAM-H08 | P0 | 61原题只有10来源绑定答案 | S-EXTERNAL · `test/evals/real-source-eval.mjs` | FRESH_GOLD | FRESH_GOLD |
-| SAM-H09 | P1 | 冻结教师JSONL和评测分母 | S-EVAL · `../independent-review/20261016-0904-audit-coverage/positive_answer_gate.test.mjs` | CODEX_RUN | node --test independent-review/20261016-0904-audit-coverage/positive_answer_gate.test.mjs |
+| SAM-H09 | P1 | 冻结教师JSONL和评测分母 | S-EVAL · `../independent-review/20261016-0904-audit-coverage/positive_answer_gate.test.mjs` | CODEX_RUN | node --test ../independent-review/20261016-0904-audit-coverage/positive_answer_gate.test.mjs |
 | SAM-H10 | P0 | canonical路径/符号链接竞态 | S-AUDIT · `test/canonical-fail-closed.test.ts` | CODEX_RUN | node --import tsx --test test/canonical-fail-closed.test.ts |
 | SAM-H11 | P0 | T009原始真实source gold | S-EXTERNAL · `test/teacher-scenarios.test.ts` | HUMAN_SOURCE_REVIEW | HUMAN_SOURCE_REVIEW |
 | SAM-H12 | P0 | 审查claim来源作用域 | S-AUDIT · `test/repository-qualified.test.ts` | CODEX_RUN | node --import tsx --test test/repository-qualified.test.ts |
 | SAM-H13 | P0 | dist安装升级回滚 | S-RELEASE · `test/release-040.test.ts` | CODEX_RUN | node --import tsx --test test/release-040.test.ts |
-| SAM-H14 | P1 | 同fold题号唯一性 | S-EVAL · `../independent-review/20261016-0904-audit-coverage/holdout_identity_check.test.mjs` | CODEX_RUN | node --test independent-review/20261016-0904-audit-coverage/holdout_identity_check.test.mjs |
+| SAM-H14 | P1 | 同fold题号唯一性 | S-EVAL · `../independent-review/20261016-0904-audit-coverage/holdout_identity_check.test.mjs` | CODEX_RUN | node --test ../independent-review/20261016-0904-audit-coverage/holdout_identity_check.test.mjs |
 | SAM-H15 | P0 | WorkBuddy显式过滤不回退 | S-WB · `test/workbuddy-filter-fallback.test.ts` | CODEX_RUN | node --import tsx --test test/workbuddy-filter-fallback.test.ts |
 | SAM-H16 | P1 | 异步FTS结果顺序 | S-WB · `test/workbuddy-rank-order.test.ts` | CODEX_RUN | node --import tsx --test test/workbuddy-rank-order.test.ts |
 | SAM-H17 | P0 | release manifest原子化和指针 | S-RELEASE · `test/release-040.test.ts` | CODEX_RUN | node --import tsx --test test/release-040.test.ts |
-| SAM-H18 | P1 | Windows glob大小写语义 | S-AUDIT · `../independent-review/20261016/glob-case-parity.test.ts` | CODEX_RUN | node --import tsx --test independent-review/20261016/glob-case-parity.test.ts |
+| SAM-H18 | P1 | Windows glob大小写语义 | S-AUDIT · `../independent-review/20261016/glob-case-parity.test.ts` | CODEX_RUN | node --import tsx --test ../independent-review/20261016/glob-case-parity.test.ts |
 | SAM-H19 | P0 | 空摘录不可成为已核验来源 | S-WB · `test/workbuddy-nonempty-lines.test.ts` | CODEX_RUN | node --import tsx --test test/workbuddy-nonempty-lines.test.ts |
 | SAM-H20 | P0 | 规范source版本要求 | S-WB · `test/source-qualified.test.ts` | CODEX_RUN | node --import tsx --test test/source-qualified.test.ts |
 | SAM-H21 | P0 | excerpt文本与SHA一致 | S-WB · `test/workbuddy-excerpt-integrity.test.ts` | CODEX_RUN | node --import tsx --test test/workbuddy-excerpt-integrity.test.ts |

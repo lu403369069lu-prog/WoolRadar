@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "run_date": "2026-10-17",
+  "purpose": "Offline eight external-gate audit code/CLI safety regression",
+  "environment": {
+    "os": "Linux",
+    "python": "3.13.5",
+    "git": "2.47.3",
+    "runtime": "actual local subprocesses; real code, no artificial pass counts"
+  },
+  "source": {
+    "auditor": "coordination/historical_external_eight_gate_auditor.py",
+    "auditor_git_blob": "f5ef4ba31c50e4b5e054834d7b903a2fc1958907",
+    "auditor_tests": "coordination/test_historical_external_eight_gate_auditor.py",
+    "auditor_tests_git_blob": "b048841bdd0f6367d3fd98ec97af0349d9ad79f4",
+    "cli_tests": "coordination/test_historical_external_gate_cli_boundary.py",
+    "cli_tests_git_blob": "0c13596d89d4df2c4366591fb5ece51b588f4abf",
+    "manifest": "coordination/HISTORICAL_80_PERCENT_CODEX_JOBS_20261017.json",
+    "manifest_git_blob": "96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744",
+    "formal_guard_source_git_blob": "072ba64688fcd479795620b870a803ddb29dc78b"
+  },
+  "command": "python -B -m unittest discover -s coordination -p 'test_historical_external*.py' -v",
+  "execution": {
+    "test_cases": 30,
+    "passed": 30,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "raw_stdout_stderr_sha256": "62a4541535e3b7221b0e12db66ce6ef413bc42a9ecb270fd8f51c6c71c095a81"
+  },
+  "guardrails": [
+    "Strict UTF-8; refuse duplicate/ambiguous JSON keys and nonfinite JSON constants/overflow",
+    "POSIX descriptor-relative O_NOFOLLOW regular evidence files; refuse symlinks, FIFOs, traversal, oversized files and oversized receipts",
+    "Never upgrade local file hash or JSON APPROVED status to user/human authority",
+    "CLI tests substitute a *synthetic manifest loader* only to exercise CLI bounds and invalid-state return codes; they do not demonstrate official manifest acceptance"
+  ],
+  "manifest_immutable_cross_check": {
+    "family_total": 50,
+    "ready": 42,
+    "external_or_policy_gated": 8,
+    "actual_gate_mapping_matches_source": true,
+    "family_id_unique": 50
+  },
+  "actual_gate_adjudication": {
+    "classified": 8,
+    "accepted_external_business": 0,
+    "document_reviewed_only": 1,
+    "scheduler_metadata_reviewed_only": 1,
+    "unresolved_remaining": 8,
+    "meaning": "All eight still require formal signoff or genuine runtime evidence; a documented review is not acceptance"
+  },
+  "frozen_test_commands": {
+    "total": 39,
+    "previous_partial_linux_reconstruction_runs": 10,
+    "remaining_without_native_frozen_receipts": 29,
+    "complete_strict_guard_accepted": false
+  },
+  "merge_and_production": {
+    "pr42_draft": true,
+    "pr42_merged": false,
+    "local_windows_modified": false,
+    "scheduler_modified": false,
+    "production_modified": false
+  },
+  "historical_recovery_closed": false
+}

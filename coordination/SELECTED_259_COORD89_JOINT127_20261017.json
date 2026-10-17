@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "status": "PASS_259_ISOLATED_SELECTED_LINUX_TESTS_NON_NATIVE_UNVERIFIED_BUSINESS",
+  "scope": "exact Git blob matched candidate module/test files in disposable Linux fixtures",
+  "selected": {
+    "tests": 259,
+    "passed": 259,
+    "failed": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "name": "coord+formal-guard+external-gates",
+        "tests": 89,
+        "raw_stdout_sha256": "78c63e2c2808bad93432ef46ef382b44a730fabdb1235914cd6bd34f3bebed49",
+        "cmd": "python -B -m unittest discover -s . -p 'test_historical*.py' -v",
+        "source_blobs": {
+          "guard": "e51ec61d5fab3b82e763f8c147f73b3486123110",
+          "hardened_test": "5ab8a2e602fbf1153012f7b9e307ec5622d87cb9",
+          "executor": "08af6d6304758399282d7b1799604089570c7b09",
+          "external_auditor": "f5ef4ba31c50e4b5e054834d7b903a2fc1958907"
+        },
+        "new_win32_fallback_simulation_tests": 2
+      },
+      {
+        "name": "wool-public-corpus",
+        "tests": 82,
+        "raw_stdout_sha256": "f110c338810ad10b4405584d61fe4bdbee6023f3deda3d3ff6c1439e0f1f97d3",
+        "blob": "c9f6e031ba48d44e0091b89036c44aeae07864f3"
+      },
+      {
+        "name": "sam-synthetic-migration",
+        "tests": 43,
+        "raw_stdout_sha256": "dfdce71124d03d4426f97502386da7af4a4ee92d9191bc0930c1358b2dbbe5bd",
+        "blob": "22582e67d9ac18aa66f4f43ac1d7556d6edc1476"
+      },
+      {
+        "name": "wool-grant-diagnostics",
+        "tests": 45,
+        "raw_stdout_sha256": "a20ce35c57de1e326b96168a1ce6d5c96e8230bed3f9a75ed8b1569029057143",
+        "blob": "6fe02aa7a83479c4eeea6a448b80f75988a13ffd"
+      }
+    ]
+  },
+  "joint": {
+    "tests": 127,
+    "passed": 127,
+    "failed": 0,
+    "skipped": 0,
+    "raw_stdout_sha256": "5781c37e991c9e4237b21fc7211741d15c6d078c561d5e3df8f40af5e4a84d85",
+    "overlap_with_selected": true,
+    "not_actual_merge": true
+  },
+  "formal_parser": {
+    "guard_sha1": "e51ec61d5fab3b82e763f8c147f73b3486123110",
+    "all_five_actual_raw_logs_parsed": true,
+    "all_counts_match": true
+  },
+  "new_security": {
+    "guard_raw_log_max_bytes": 8388608,
+    "raw_old_four_tests_failed": 3,
+    "raw_old_four_tests_passed": 1,
+    "old_red_stdout_sha256": "998f077130fe60d636164c8ba2cd9e69e1536b6b5a903870a92faaa14f103442",
+    "new_six_tests_passed": 6,
+    "win32_fallback_tests_only_simulated_under_posix": true,
+    "actual_windows_filesystem_still_unverified": true
+  },
+  "frozen_historical": {
+    "families": 50,
+    "ready": 42,
+    "gated": 8,
+    "distinct_commands": 39,
+    "partial_linux_commands": 10,
+    "partial_linux_methods": 105,
+    "strict_native_commands_without_complete_old_checkout_receipt": 29,
+    "tsx_frozen_dependency_blocked": 17,
+    "old_python_complete_tree_blocked": 12,
+    "full_guard_accepted": false
+  },
+  "external": {
+    "new_independent_wool_gold_and_recall_95_verified": false,
+    "real_daily_0930_local_bridge_approved_and_consumed": false,
+    "sam_61_522_gold_and_real_mcp_verified": false,
+    "manual_source_review_signoff_verified": false
+  },
+  "draft_prs_unmerged": true,
+  "production_untouched": true,
+  "historical_recovery_closed": false
+}

@@ -32,8 +32,8 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 3,
-    "last_persisted_worker_run_utc": "2026-10-17T12:11:04.195Z",
+    "revision": 4,
+    "last_persisted_worker_run_utc": "2026-10-17",
     "last_completed_review_key": "YinQieJi#15",
     "incremental_last_seen": {},
     "seen_branch_heads": {
@@ -44,9 +44,10 @@
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
       "YinQieJi#14/0cdc3b4e81b9e143cb92fabde1828b6c8a913e14/exact-helper-15-20261017",
-      "YinQieJi#15/73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58/entailed-empty-evidence-redgreen-20261017"
+      "YinQieJi#15/73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58/entailed-empty-evidence-redgreen-20261017",
+      "retain-retry-items-and-write-diagnostic-20261017"
     ],
-    "write_diagnostic": "INTERACTIVE_GITHUB_WRITE_NOT_SCHEDULED",
+    "write_diagnostic": "INTERACTIVE_ONLY__SCHEDULED_WRITE_NOT_VERIFIED",
     "last_write_error": null
   },
   "backlog": {
@@ -539,6 +540,13 @@
       "event_id": "historical-50-families-added-to-live-worklist-20261017",
       "facts": "50/50 inventoried, 3 new code-review evidence attached, 0 native commands accepted by this action",
       "manifest_blob": "f78b83807790a920d58c6a3e4c47db8355801d32"
+    },
+    {
+      "origin": "INTERACTIVE_CHAT_NOT_SCHEDULED",
+      "event_id": "retain-retry-items-and-write-diagnostic-20261017",
+      "what": "Persist 3 incomplete source QA followups + separate scheduled-permission diagnostic; no new test results or business acceptance",
+      "known_current_scheduled_error": "NOT_AVAILABLE_FROM_TASK_STATUS",
+      "created_retry_items": 4
     }
   ],
   "acceptance": {
@@ -1208,5 +1216,82 @@
     "native_commands_missing": 29,
     "external_gates_unaccepted": 8,
     "integrity_requirement": "Do not equate code review with frozen source receipt or business acceptance."
+  },
+  "retry_queue": {
+    "schema_version": 1,
+    "purpose": "PENDING_WORK_AFTER_FAILURE_OR_INCOMPLETE_REVIEW; resuming does not mean business acceptance",
+    "policy": {
+      "order": "P0 risk > stable newly handed-off Codex change > eligible due retry > new untouched PR/historical family",
+      "deduplicate_by": "id and observed_head_sha and evidence signature",
+      "on_transient_error": "Record task/error-class/sha/evidence and retry at next hourly trigger, max 3 attempts, then NEEDS_MANUAL_DIAGNOSIS; must not start the queue from scratch.",
+      "on_code_in_progress": "DEFER_IN_PROGRESS and choose unrelated eligible work, never override Codex branch",
+      "on_native_or_human_gate": "BLOCKED_EXTERNAL; wait for genuine evidence/permission change; do not manufacture receipts",
+      "on_safety_or_permission_block": "Record exact blocker, leave item PENDING_PERMISSION_CHANGE; never repeatedly attempt the blocked action or bypass safeguards.",
+      "on_write_unavailable": "Read known durable backlog and deterministic slot so no previous evidence is counted as newly completed. Report UNPERSISTED and exact failure; next runs must re-evaluate last confirmed checkpoint. Cannot guarantee cross-run continuity until scheduled write/readback is verified.",
+      "checkpoint": "When authorized update by current blob SHA (CAS), reread and verify actual new Git blob + revision; on CAS conflict refresh once and merge separate review items, never clobber other writes."
+    },
+    "items": [
+      {
+        "id": "RETRY-WOOL-PR39-HEAD-AND-FORMAL",
+        "kind": "FOLLOW_UP_REVIEW",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 39,
+        "observed_head_sha": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+        "related_draft_pr": 44,
+        "status": "PENDING_NEXT_ELIGIBLE_RUN",
+        "attempts": 0,
+        "last_error_code": null,
+        "reason": "PR39 prior interactive audit is partial, an isolated candidate PR44 exists; source snapshot/full original suite acceptance and full upstream integration remain unverified.",
+        "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/39",
+        "next_action": "Verify current PR39 and candidate PR44 HEAD first; inspect fix and source tests, execute safe isolated formal cases if available; do not merge or claim original frozen native tests passed."
+      },
+      {
+        "id": "RETRY-SAM-PR14-REAL-INTEGRATION",
+        "kind": "FOLLOW_UP_REVIEW",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 14,
+        "observed_head_sha": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
+        "status": "PENDING_NEXT_ELIGIBLE_RUN",
+        "attempts": 0,
+        "last_error_code": null,
+        "reason": "15 tests verified for exact helper blob in prior interactive audit; real server integration/build still not accepted.",
+        "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/14",
+        "next_action": "Read server fallback callsites on pinned HEAD; run actual build/formal suite only if source and deps available; otherwise mark NATIVE_RECEIPT_PENDING and hand off exact command."
+      },
+      {
+        "id": "RETRY-SAM-PR15-FORMAL-3",
+        "kind": "FORMAL_TEST_PENDING",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 15,
+        "observed_head_sha": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
+        "related_draft_pr": 18,
+        "status": "PENDING_NEXT_ELIGIBLE_RUN",
+        "attempts": 0,
+        "last_error_code": null,
+        "reason": "Interactive exact-binary Node isolated red/green verified; formal 3 tests recorded as unrun, PR18 candidate needs independent review.",
+        "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/18",
+        "next_action": "Check current PR15/18 HEAD and diff, run exact formal 3 tests if reproducible; otherwise remain PARTIAL_CODE_QA."
+      },
+      {
+        "id": "DIAG-SCHEDULED-GITHUB-PERSISTENCE",
+        "kind": "PERMISSION_OR_TOOL_DIAGNOSTIC",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "ledger_branch": "chatgpt/scheduled-review-ledger-20261017",
+        "ledger_path": "coordination/AUTOMATION_RELAY_LEDGER_V1.json",
+        "status": "PENDING_PERMISSION_CHANGE",
+        "attempts": 0,
+        "last_error_code": "HISTORIC_PLATFORM_SAFETY_BLOCK; CURRENT_RUN_ERROR_UNAVAILABLE",
+        "reason": "Past scheduled write diagnostic described blocked by platform safety; interactive GitHub update succeeded through revision 3; no current scheduled write/readback receipt. Do not assume user prohibited scheduled writes.",
+        "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/scheduled-review-ledger-20261017/coordination/AUTOMATION_RELAY_LEDGER_V1.json",
+        "next_action": "Re-evaluate only if a supported scheduled write permission/approval flow becomes available; perform at most one minimal normal authorized checkpoint write and immediate readback. If denied, record diagnostic and do not bypass."
+      }
+    ],
+    "summary": {
+      "known_partial_followups": 3,
+      "scheduled_write_unverified": 1,
+      "known_current_run_error": "UNKNOWN_NOT_EXPOSED",
+      "prior_interactive_receipts_preserved": 3,
+      "created_from": "interactive review of GitHub live state on 2026-10-17"
+    }
   }
 }

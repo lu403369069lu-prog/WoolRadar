@@ -60,7 +60,8 @@
     "sam_workbuddy_pr14": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
     "sam_audit_types_pr15": "028f2c38522bb49651101a402503e7751b9fe0a5",
     "sam_rooted_pr12": "a92a870951e1bbf5f2517865faca46b56a6546e7",
-    "sam_teacher_pr9": "ba2890004a45abe39d9a6da8b342db48162e9023"
+    "sam_teacher_pr9": "ba2890004a45abe39d9a6da8b342db48162e9023",
+    "wool_grant_pr38": "75021367f71ba550a95ef098789e1f1201b21bad"
   },
   "families": [
     {
@@ -140,8 +141,8 @@
     },
     {
       "id": "WR-H16",
-      "status": "HISTORICAL_STATIC_DEFECT_UNFIXED",
-      "summary": "cross-project grant evidence concatenation 10/13 history"
+      "status": "DRAFT_PARAGRAPH_SCOPE_RED4_GREEN11_FULL_COLLECTOR_BLIND_PENDING",
+      "summary": "Main actual developer_grants.py old red4/11; independent Draft PR38 exact module/test11/11 Linux Python3.13; 18 legacy negative phrases direct detector hold; mixed one paragraph and official source blind still unresolved"
     },
     {
       "id": "SAM-H01",
@@ -331,11 +332,11 @@
     "Coordination PR9→PR11 true ancestor, PR7 adapter/HMAC preserved byte-exact, PR8 dry-run behavior statically retained, but PR11 diverges from main by 157 commits; run full actual relay test/safe integration review, no auto merge.",
     "SAM H24 actual T031 approved Axis source/card evidence audit, no private text published",
     "SAM PR14 real direct/stdio MCP tests",
-    "Wool WR-H16 grant same-project evidence identity",
     "Wool WR-H13 new independent unseen public source window",
     "Wool daily report output bridge actual user-approved same-SHA consumer",
     "Wool H17 maintainer-approved sensitive test-fixture reachable history review (no numeric exposure)",
-    "SAM PR9 all formal diagnostic tests44/44 Linux pass; safe review of stacked PR9 vs main PR5, real teacher original61/522 and Windows Node24/26/MCP remain."
+    "SAM PR9 all formal diagnostic tests44/44 Linux pass; safe review of stacked PR9 vs main PR5, real teacher original61/522 and Windows Node24/26/MCP remain.",
+    "Wool WR-H16 draft PR38 separated-project grammar red4→green11 Linux; merge-owner review with current collector, same-paragraph cross-project ambiguity, Windows full suite and independent provider-blind still open."
   ],
   "index_files": [
     "coordination/HISTORICAL_FIRST_RESUME_GATE.md",
@@ -355,6 +356,7 @@
     "issue_sam": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6227987028",
     "sam_teacher": "PR9 ALL five submitted formal tests + four implementations exact nine Git blobs, actual spawned CLI / audit / QID test Node22 44/44 exit0; earlier32 subset, not additive, Issue1 #6228049779.",
     "sam_combined_one_pr_head": "PR15 now carries PR12 POSIX policy exactly; source module 30/30 official TAP pass exit0 at exact GitHub blob; PR15 remains Draft, Windows24/26/MCP not run",
-    "sam_review_sha": "Old exact PR15 claim audit SHA 5722bbe... real new test4 2 pass2 fail; code H04 fixed SHA16db..., cards same-buffer7fe2..., test1b34..., new4/4 and full7 files 34/34 Node22 exit0; cards.ts import not dynamically run (zod absent); source gold unverified"
+    "sam_review_sha": "Old exact PR15 claim audit SHA 5722bbe... real new test4 2 pass2 fail; code H04 fixed SHA16db..., cards same-buffer7fe2..., test1b34..., new4/4 and full7 files 34/34 Node22 exit0; cards.ts import not dynamically run (zod absent); source gold unverified",
+    "wool_grant": "PR38 actual main source SHA76994c old 11 methods red4, patched source SHAce53 and exact tests SHA26193 11/11 pass, historic18 denial cases direct pass; full collector/Windows/new independent blind not yet executed"
   }
 }

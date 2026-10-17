@@ -1,0 +1,2736 @@
+{
+  "schema_version": 1,
+  "source": "GitHub API at 2026-10-17; user-authorized interactive read; includes Codex/interactive/Scheduled-referenced sources, not direct Scheduled writes",
+  "coverage": {
+    "wool_pr_count": 35,
+    "sam_pr_count": 14,
+    "issues": [
+      {
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "issue": 2,
+        "comments": 61
+      },
+      {
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "issue": 3,
+        "comments": 83
+      },
+      {
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "issue": 1,
+        "comments": 56
+      }
+    ],
+    "all_scheduled_task_run_bodies_unavailable": true
+  },
+  "pulls": {
+    "lu403369069lu-prog/WoolRadar": [
+      {
+        "pr": 37,
+        "title": "fix(wool): keep private/internal hosts out of public blind review",
+        "head_sha": "96abd1b8e902e93a6c56d98aeb9d043bdb1175aa",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/scheduled-sampler-public-host-20261017",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/37"
+      },
+      {
+        "pr": 36,
+        "title": "fix(wool): reject negated grant openings and truncated blind-sample identities",
+        "head_sha": "45c15b48ae34ea7b8eb670e7a44d8e562107c7e1",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/wool-followup-identity-grant-20261016",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/36"
+      },
+      {
+        "pr": 35,
+        "title": "chore(schedule): stage WoolRadar read-only recurring checkpoint (non-deployed)",
+        "head_sha": "60c382ba2e90896b75b6809e27e88479555778d4",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/scheduled-checkpoint-contract-20261016",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/35"
+      },
+      {
+        "pr": 34,
+        "title": "fix(bridge): block fractional-second snapshot replay without trusted sequence",
+        "head_sha": "2276d617088af44886911f69b18cb166f425c177",
+        "draft": true,
+        "merged": true,
+        "closed": true,
+        "head_branch": "chatgpt/wool-second-resolution-order-20261016",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/34"
+      },
+      {
+        "pr": 33,
+        "title": "fix(quality): do not treat closed grant applications/questions as open leads",
+        "head_sha": "b6529d02d8278fed48ba5778d76271ffba6156fd",
+        "draft": true,
+        "merged": true,
+        "closed": true,
+        "head_branch": "chatgpt/wool-grant-denial-postintegration-20261016",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/33"
+      },
+      {
+        "pr": 32,
+        "title": "review(wool): deduplicate public-corpus URLs before frozen sample caps",
+        "head_sha": "4255b8fb8f24b14a32c399b162028d9e97be6cea",
+        "draft": true,
+        "merged": true,
+        "closed": true,
+        "head_branch": "chatgpt/wool-public-corpus-blind-dedup-20261016",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/32"
+      },
+      {
+        "pr": 31,
+        "title": "security(test): replace sensitive payment number in delivery fixture",
+        "head_sha": "989be0afe36b51efab96025cc8847458143cdf7d",
+        "draft": true,
+        "merged": true,
+        "closed": true,
+        "head_branch": "chatgpt/wool-test-fixture-sanitization-20261016",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/31"
+      },
+      {
+        "pr": 30,
+        "title": "security(tests): replace sensitive-looking payment fixture with synthetic invalid digits",
+        "head_sha": "c936a3fe5ba1cf8b076e2d4cb937a8c42eebd853",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/wool-fixture-privacy-redaction-20261016",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/30"
+      },
+      {
+        "pr": 29,
+        "title": "fix(discovery): recognize conditional open-source maintainer grant leads without relaxing eligibility",
+        "head_sha": "87be0c915531701cb63ec577ac08433bcf18a303",
+        "draft": true,
+        "merged": true,
+        "closed": true,
+        "head_branch": "chatgpt/wool-developer-grant-discovery-20261016",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/29"
+      },
+      {
+        "pr": 28,
+        "title": "fix(bridge): reject reversed preview chronology and surface withdrawn IDs for review",
+        "head_sha": "dfe21a0991735f940cc283bb38cc94eaa2dbd61f",
+        "draft": true,
+        "merged": true,
+        "closed": true,
+        "head_branch": "chatgpt/wool-snapshot-order-withdrawal-20261016",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/28"
+      },
+      {
+        "pr": 27,
+        "title": "review(acceptance): verify preview bridge and preserve failing privacy contracts",
+        "head_sha": "c959c7e7dc8493678416bba1f608b86ac76e3067",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "codex/qa-20261016-0820",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/27"
+      },
+      {
+        "pr": 26,
+        "title": "quality(wool): offline redacted report preview boundary for daily brief",
+        "head_sha": "45237d1fa737e722acf6d4086e6c13b6c59c713f",
+        "draft": true,
+        "merged": true,
+        "closed": true,
+        "head_branch": "chatgpt/wool-redacted-preview-20261016",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/26"
+      },
+      {
+        "pr": 25,
+        "title": "quality(wool): pre-register independent official eligibility and card-gate samples",
+        "head_sha": "05db6de47ddcf9c26644e38e48869f50365806d2",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/wool-official-eligibility-seed-20261016",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/25"
+      },
+      {
+        "pr": 24,
+        "title": "review(windows): reproduce report identity race and pin integration failures",
+        "head_sha": "b3aadb9ae299649ab7ca4dc0d290fd27d0b38163",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "codex/integration-review-20261016",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/24"
+      },
+      {
+        "pr": 23,
+        "title": "WoolRadar system integration: quality, noise, concurrency and recovery",
+        "head_sha": "6babbe12727652e8626e0fe6f554eb01fecd4a30",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/wool-system-integration-20261015",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/23"
+      },
+      {
+        "pr": 22,
+        "title": "fix(evidence): make supplemental verification atomic against campaign reindex",
+        "head_sha": "e03674ec3a4ee5df27047e91af5d972495574bde",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/wool-post-ingest-evidence-atomic-20261015",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/22"
+      },
+      {
+        "pr": 21,
+        "title": "fix(ingest): keep candidate evidence atomic with concurrent reindex",
+        "head_sha": "38f523712b9db23515bb6d56b08d9a2910b4be5c",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "codex/wool-ingest-atomic-20261015",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/21"
+      },
+      {
+        "pr": 20,
+        "title": "test(sqlite): close Windows migration fixture connections",
+        "head_sha": "79b867e48be303a00290598393e5ae7681fcc67f",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "codex/wool-windows-compat-20261015",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/20"
+      },
+      {
+        "pr": 19,
+        "title": "fix(dedup): isolate compact VPS sizes and numeric credit offers",
+        "head_sha": "c1c8adc2022ef634b266299d7d81a5e4d0353a68",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/wool-generic-compact-quantity-20261015",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/19"
+      },
+      {
+        "pr": 18,
+        "title": "fix(dedup): separate cross-vendor AI credit and generic VPS size offers",
+        "head_sha": "cd6361928e7e0a0274b2b1955b40ae3edd8ee97b",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/wool-generic-ai-resource-identity-20261015",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/18"
+      },
+      {
+        "pr": 17,
+        "title": "fix(dedup): avoid cross-vendor merges for bounded generic offer headlines",
+        "head_sha": "27fb5783ff5bd74394389cd57d73a598626b8377",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "codex/wool-generic-identity-20261015",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/17"
+      },
+      {
+        "pr": 16,
+        "title": "fix(database): refresh merged survivor status in the same evidence transaction",
+        "head_sha": "64889e48638137a84efe0e292d7f5f2a9f580b88",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "codex/wool-merge-status-20261015",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/16"
+      },
+      {
+        "pr": 15,
+        "title": "fix(verification): do not mark exhausted official offers as publicly claimable",
+        "head_sha": "0ddb3cb67718b7fe1c8212fc4d7baef9b561e126",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "codex/wool-zero-capacity-20261015",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/15"
+      },
+      {
+        "pr": 14,
+        "title": "feat(report): preserve evidence while auditing historical noise",
+        "head_sha": "f4cf71ef5df5c3ee6b2c70b46c29cb6bd4bb650d",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "codex/wool-noise-audit-20261015",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/14"
+      },
+      {
+        "pr": 13,
+        "title": "fix(discovery): scoped free hosting diagnostics and frozen baseline evidence",
+        "head_sha": "b18619212b0a760b2200f0f2e2b01adf603cbe83",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "codex/wool-quality-20261015",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/13"
+      },
+      {
+        "pr": 12,
+        "title": "Review: independent ChatGPT audit of V5 Codex return PR #11",
+        "head_sha": "fa4c2c8e0b3360bc716a619bade1e79ddfb0daf0",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/relay-v5-pr11-independent-review",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/12"
+      },
+      {
+        "pr": 11,
+        "title": "fix(coordination): verify ChatGPT return and harden real Git synchronization",
+        "head_sha": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "codex/relay-return-20261015",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/11"
+      },
+      {
+        "pr": 10,
+        "title": "Independent ChatGPT readback of V5 relay evidence (advisory only)",
+        "head_sha": "e81afca6661918b6261297f4251f413dbee09dab",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/relay-v5-readback-audit-20261015",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/10"
+      },
+      {
+        "pr": 9,
+        "title": "feat(coordination): durable V3 relay with fenced ownership and recovery",
+        "head_sha": "1440553f892676a938135e24938010d50cdd351a",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "codex/relay-v5-20261015",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/9"
+      },
+      {
+        "pr": 8,
+        "title": "Fix dispatcher dry-run filesystem side effects (verified 10 tests)",
+        "head_sha": "8aca77dbc7acd0b78a35927bcb634a9c4d55b69f",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/dispatcher-readonly-dryrun-fix",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/8"
+      },
+      {
+        "pr": 7,
+        "title": "Coordination: verified-provenance GitHub PR event adapter and tests",
+        "head_sha": "73214fd39840f7cb1971c25f0dce1c932f9b027b",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/github-event-adapter-v1",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/7"
+      },
+      {
+        "pr": 6,
+        "title": "Coordination: zero-API-cost offline event dispatcher with persistent idempotency",
+        "head_sha": "047c579dfaed1356b21495377b2e8958f37b6dbc",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/offline-dispatcher-v1",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/6"
+      },
+      {
+        "pr": 5,
+        "title": "Quality: bind holdout labels to an externally checked code SHA",
+        "head_sha": "a7a0ccd24f0715543799a8698ce398285296119d",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/holdout-code-provenance",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/5"
+      },
+      {
+        "pr": 4,
+        "title": "Quality: frozen holdout precision/recall and pairwise dedup evaluator",
+        "head_sha": "aa04646d2c6d1d6a1bbf97e9b4704f16f3d6691d",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "review/holdout-metrics-20261014",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/4"
+      },
+      {
+        "pr": 1,
+        "title": "WoolRadar：同步真实实现、测试证据与 Agent 交接资料",
+        "head_sha": "cbe18d7f058563a5aef1fb46b8d2820095f15c06",
+        "draft": false,
+        "merged": false,
+        "closed": false,
+        "head_branch": "codex/agent-knowledge-sync-20261014",
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/1"
+      }
+    ],
+    "lu403369069lu-prog/YinQieJi": [
+      {
+        "pr": 15,
+        "title": "fix(sam): recover strict runtime types for structured claim audit authority",
+        "head_sha": "19690853b1ddd7a18dadd728c963d292049710e7",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/sam-recover-claim-audit-types-20261017",
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/15"
+      },
+      {
+        "pr": 14,
+        "title": "fix(sam): restore explicit-filter safety in WorkBuddy FTS fallback",
+        "head_sha": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/sam-recover-workbuddy-filter-20261017",
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/14"
+      },
+      {
+        "pr": 13,
+        "title": "fix(sam): recover lost claimKind validator and exact historical formal test",
+        "head_sha": "8719d75205e50209e9b11998a2af72c4d08ee975",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/sam-recover-claimkind-20261017",
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/13"
+      },
+      {
+        "pr": 12,
+        "title": "fix(sam): propagate rooted exclusion policies to ancestor directories",
+        "head_sha": "f72786ffa4bb7d61cbe6e993032ba616a29dad2f",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/sam-ancestor-denials-20261017",
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/12"
+      },
+      {
+        "pr": 11,
+        "title": "fix(sam): fail closed on duplicate audit authority JSONL fields",
+        "head_sha": "c9c967d0370fd38e2bb52f14265524caa97b1f86",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/sam-strict-claim-audit-20261016",
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/11"
+      },
+      {
+        "pr": 10,
+        "title": "chore(schedule): stage YinQieJi read-only recurring checkpoint (non-deployed)",
+        "head_sha": "f5e6562524b3438227e311fbc7ff0223b08a5a12",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/scheduled-checkpoint-contract-20261016",
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/10"
+      },
+      {
+        "pr": 9,
+        "title": "review(sam): audit claim-level coverage without weakening refusal gates",
+        "head_sha": "a033f86387855c0f206f67980c3c82f67ba895e5",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/sam-audit-coverage-diagnostic-20261016",
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/9"
+      },
+      {
+        "pr": 8,
+        "title": "review(acceptance): execute SAM7 and reproduce forged line anchor",
+        "head_sha": "7121689619f8865b252a581e26cd8ff393563d4f",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "codex/qa-20261016-0820",
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/8"
+      },
+      {
+        "pr": 7,
+        "title": "fix(sam): withhold untrusted WorkBuddy output totals and stderr",
+        "head_sha": "b3586f1ad6613af5da2fe4f2a72b4707d981724f",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/sam-workbuddy-response-leak-20261016",
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/7"
+      },
+      {
+        "pr": 6,
+        "title": "fix(sam): confine WorkBuddy locators to the registered raw corpus",
+        "head_sha": "364d8001b9a93496f5fda85e0a09241f060c9f48",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/sam-workbuddy-rawroot-boundary-20261016",
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/6"
+      },
+      {
+        "pr": 5,
+        "title": "SAM integration: verified WorkBuddy isolation and legitimate FTS compatibility",
+        "head_sha": "5aeb852577cc53da76f9a0b5e78dfef63a83a35b",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "codex/sam-milestone-20261016",
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/5"
+      },
+      {
+        "pr": 4,
+        "title": "review(windows): execute exact SAM PR3 build and preserve failing acceptance gates",
+        "head_sha": "f1629531a43a3e2a673ae1ae53796e38a0940b99",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "codex/integration-review-20261016",
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/4"
+      },
+      {
+        "pr": 3,
+        "title": "SAM F1 follow-up: isolate stale index rows and missing source provenance",
+        "head_sha": "f2535cc5eb1e41268fff9160fff841bb2329b564",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/sam-pr2-index-missing-evidence-20261015",
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/3"
+      },
+      {
+        "pr": 2,
+        "title": "SAM: fail closed on canonicalization failure (F1)",
+        "head_sha": "6d0373326b624c0103a7e7294509a5be0ae37996",
+        "draft": true,
+        "merged": false,
+        "closed": false,
+        "head_branch": "chatgpt/sam-canonical-fail-closed",
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/2"
+      }
+    ]
+  },
+  "issue_comments": {
+    "lu403369069lu-prog/WoolRadar#2": [
+      {
+        "comment_id": 6172323479,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6172323479",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": false,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6172543135,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6172543135",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6172676224,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6172676224",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6172699425,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6172699425",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6172701146,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6172701146",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": false,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6172905401,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6172905401",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6172983367,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6172983367",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": false,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6173155728,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6173155728",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6173182167,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6173182167",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6179736926,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6179736926",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": false,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6183261426,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6183261426",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6186261587,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6186261587",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6188046289,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6188046289",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6189660970,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6189660970",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6191002812,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6191002812",
+        "event_key": "WoolRadar/M1/PR19/d98dd3abd18567d917e89b7c710ba59c2d8a2896/integration-20261015",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6191345679,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6191345679",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6191395701,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6191395701",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6192257497,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6192257497",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": true
+        }
+      },
+      {
+        "comment_id": 6194836520,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6194836520",
+        "event_key": "WoolRadar/M1/PR22/de9da7e2848e61e3660d9cb4b2282b4f24706962/post-ingest-20261015",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6196229469,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6196229469",
+        "event_key": "WoolRadar/M1/PR22-259d8954/PR23-a38a3cc2/one-shot-scheduled-to-interactive",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6196362992,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6196362992",
+        "event_key": "WoolRadar/CHAT-CONTINUE/20261015/NOTIFY-RECEIPT/e3155ece9822520e126aa1cc5b6157d14bd3b6ce",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6196769591,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6196769591",
+        "event_key": "WoolRadar/OUTBOX-CONFIRMATION/a05bf9021f31f9d7271f518a1c9cd784a5beb132",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6196869557,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6196869557",
+        "event_key": "WoolRadar/REVIEW-CAS-RACE/e03674ec3a4ee5df27047e91af5d972495574bde",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6199733775,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6199733775",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6199819948,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6199819948",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6199940535,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6199940535",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6200304640,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6200304640",
+        "event_key": "WoolRadar/INDEPENDENT-PRIMARY-SOURCE-SEED/05db6de47ddcf9c26644e38e48869f50365806d2",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6200480532,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6200480532",
+        "event_key": "WoolRadar/USER-VALUE-DELIVERY-BRIDGE/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6202292523,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6202292523",
+        "event_key": "WoolRadar/DELIVERY-BRIDGE-OFFLINE-PREVIEW/eb87ed11f8a966fa986cc3f9b85e00875a50b3d4",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6203725439,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6203725439",
+        "event_key": "WoolRadar/DELIVERY-BRIDGE-NOISE-AUDIT/a6631f3db307ef91519c922f2a0c539089ec48dc",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6204868779,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6204868779",
+        "event_key": "WoolRadar/REVIEW-ONLY-CONSUMER/45237d1fa737e722acf6d4086e6c13b6c59c713f",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205303725,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6205303725",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205784866,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6205784866",
+        "event_key": "WoolRadar/REVIEW-SNAPSHOT-CHRONOLOGY/1c76bd4c7d783123ee9da3ef96ecc8fad486ed65",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205921114,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6205921114",
+        "event_key": "WoolRadar/REPLAY-CONSISTENCY-PR28/96bd5cb4f4f30656fd854ac62cfdf27d5189118f",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6206194873,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6206194873",
+        "event_key": "WoolRadar/PR28-PR29-SAME-SECOND-AND-GRANT/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6206626090,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6206626090",
+        "event_key": "WoolRadar/BRIDGE-STRICT-JSON-AND-FIXTURE-20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6207185623,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6207185623",
+        "event_key": "WoolRadar/EXACT-39-UTF8-UNICODE-BRIDGE/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6207237210,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6207237210",
+        "event_key": "WoolRadar/PRIVACY-FIXTURE-ONE-LINE-PR30/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6210939813,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6210939813",
+        "event_key": "WoolRadar/RAW-JSON-AUDIT-AND-SENSITIVE-FIXTURE/20261016-1555",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6211713982,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6211713982",
+        "event_key": "WoolRadar/PUBLIC-CORPUS-DEDUPE-CANDIDATE/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6212207728,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6212207728",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6212368321,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6212368321",
+        "event_key": "WoolRadar/UPSTREAM-URL-BATCH-ID-LOSS/20261016-1720",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6212536661,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6212536661",
+        "event_key": "WoolRadar/POSTMERGE-GRANT-NEGATION-FEEWAIVER/20261016-1740",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6212751414,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6212751414",
+        "event_key": "WoolRadar/POSTINTEGRATION-FROZEN-BATCH-AND-GRANT-REDGREEN/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6212844315,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6212844315",
+        "event_key": "WoolRadar/SUBSECOND-SNAPSHOT-ORDER-20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6213812545,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6213812545",
+        "event_key": "WoolRadar/REPO-SCHEDULE-CONTRACT/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6214627353,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6214627353",
+        "event_key": "WoolRadar/RESUMED-URL-TRUNCATION-AND-GRANT-NEGATION/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6215425449,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6215425449",
+        "event_key": "WoolRadar/PR36-CLOSED-GRANT-BRANDED-FALLBACK/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6215484216,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6215484216",
+        "event_key": "WoolRadar/PR36-EXACT-CLOSED-GRANT-GATE-FINAL-20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6215779113,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6215779113",
+        "event_key": "WoolRadar/SMALLEST-CASE-SENSITIVE-URL-ID/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6215796432,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6215796432",
+        "event_key": "WoolRadar/SMALLEST-REPEATED-SELECTOR-IDENTITY/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6226916296,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6226916296",
+        "event_key": "WoolRadar/REAL-PRODUCER-SAMPLER-UNITS-20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6226932922,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6226932922",
+        "event_key": "WoolRadar/SMALLEST-PERCENT-ENCODED-KEY-ID/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227074952,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6227074952",
+        "event_key": "scheduled-backfill/wool/public-corpus-safety/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227111895,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6227111895",
+        "event_key": "scheduled-backfill/wool/public-host-PR37/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227155303,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6227155303",
+        "event_key": "scheduled-backfill/wool/strict-identity-proof-pr37/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227240468,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6227240468",
+        "event_key": "WoolRadar/oct17-new-window-json-independent-recount/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227296359,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6227296359",
+        "event_key": "scheduled/gh-checkpoint-jq-literal-fix/20261017/Wool",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227450226,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6227450226",
+        "event_key": "history-recovery/woolradar/fourteen-engineering-families/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227492467,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6227492467",
+        "event_key": "wool/history-20261015/original-library-assets-exact-blob-redgreen-20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227686594,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6227686594",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      }
+    ],
+    "lu403369069lu-prog/WoolRadar#3": [
+      {
+        "comment_id": 6172571364,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6172571364",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6172697464,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6172697464",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6172700311,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6172700311",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6172984179,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6172984179",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": false,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6173054387,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6173054387",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": false,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6173182900,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6173182900",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6173332674,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6173332674",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6179725213,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6179725213",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6179739127,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6179739127",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": false,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6179858537,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6179858537",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6180034196,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6180034196",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6180040034,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6180040034",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6180172403,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6180172403",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6182890233,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6182890233",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6183256854,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6183256854",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6183328128,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6183328128",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6184835420,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6184835420",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6186263856,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6186263856",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6187409647,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6187409647",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6187467278,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6187467278",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6188064385,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6188064385",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6188212848,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6188212848",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6189123361,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6189123361",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6189319974,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6189319974",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": false,
+          "has_test_exit": false,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6189671487,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6189671487",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6190197836,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6190197836",
+        "event_key": "coord/CONVERSATION-UNIFIED-OVERVIEW/20261015/issue3-index",
+        "marks": {
+          "has_exact_sha": false,
+          "has_test_exit": false,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6190412151,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6190412151",
+        "event_key": "coord/CODEX-QUOTA-GPT-AUTONOMY-AUDIT/20261015/paused-scheduled-v3r87",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6190612359,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6190612359",
+        "event_key": "coord/GOAL-DRIVEN-AUTODEV/20261015/mission-v1",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6191003457,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6191003457",
+        "event_key": "coord/M1/PR19/d98dd3abd18567d917e89b7c710ba59c2d8a2896/continuous-integration",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6191405526,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6191405526",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6192258364,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6192258364",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": true
+        }
+      },
+      {
+        "comment_id": 6192822316,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6192822316",
+        "event_key": "coord/CODEX-RESUME/20261015/2-visible-repos-and-3-conversations",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6194838540,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6194838540",
+        "event_key": "coord/POST-CODEX/20261015/PR22-and-SAM-stage13",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6195082659,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6195082659",
+        "event_key": "coord/POSTCODEX/20261015/WOOL-PR22-SAM-PR3/VERIFIED-CHECKPOINT",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6196231366,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6196231366",
+        "event_key": "coord/GLOBAL-RESUME/20261015/W22-259d8954-W23-a38a3cc2-SAM-af2686b0",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6196386410,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6196386410",
+        "event_key": "coord/DUAL-INTERACTIVE-20261015/WOOL-e3155ece-SAM-243ce043",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6196793565,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6196793565",
+        "event_key": "coord/INTERACTIVE-CONTINUATION/WOOL-a05bf902-SAM-f2535cc",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6196906076,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6196906076",
+        "event_key": "coord/REINDEX-REVIEW-RACE/e03674ec3a4ee5df27047e91af5d972495574bde",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6199587882,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6199587882",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6199818748,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6199818748",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6199941567,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6199941567",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6199992827,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6199992827",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6200024174,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6200024174",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6200071466,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6200071466",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6200312191,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6200312191",
+        "event_key": "coord/INTERACTIVE-NEW-REVIEW-PR25-PR6/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6202409518,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6202409518",
+        "event_key": "coord/INTERACTIVE-WOOL-PR26-SAM-PR7/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6203732484,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6203732484",
+        "event_key": "coord/INTERACTIVE-NOISE-AUDIT-AND-FTS-RANK/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6204882496,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6204882496",
+        "event_key": "coord/INTERACTIVE-REVIEW-CONSUMER-AND-FTS-INTEGRITY/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205305144,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6205305144",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205312754,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6205312754",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": false,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205379719,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6205379719",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205428013,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6205428013",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205457634,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6205457634",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205486888,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6205486888",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205796681,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6205796681",
+        "event_key": "coord/POST-CODEX-NEW-INDEPENDENT-CANDIDATES/20261016-0904",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205928079,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6205928079",
+        "event_key": "coord/REPLAY-AND-61-POSITIVE-FLOOR/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6206210319,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6206210319",
+        "event_key": "coord/INTERACTIVE-SNAPSHOT-GRANTS-HOLDOUT-ID/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6206632487,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6206632487",
+        "event_key": "coord/DAILYBRIEF-0930-JSON-CONTRACT-20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6206715671,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6206715671",
+        "event_key": "coord/POST-MANUAL-TRIGGER-WOOL-JSON-SAM-AMBIGUOUS/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6207200162,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6207200162",
+        "event_key": "coord/EXACT-39-24-SECURITY-BLOCKER/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6207242671,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6207242671",
+        "event_key": "coord/SECURITY-FIXTURE-MINIMAL-PR30/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6211021575,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6211021575",
+        "event_key": "coord/RAW-REPORT-STRICT-GOLD-IDENTITY-SECURITY/20261016-1555",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6211735343,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6211735343",
+        "event_key": "coord/POST-20261016-SAM-GOLD-WOOL-FROZEN-SAMPLER",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6212230458,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6212230458",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6212270440,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6212270440",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6212289452,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6212289452",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6212551991,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6212551991",
+        "event_key": "coord/AFTER-CODEX-RETURN-GRANT-URL-INPUT/20261016-1745",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6212765637,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6212765637",
+        "event_key": "coord/W23-POSTMERGE-REVIEW-PR32-PR33/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6212858181,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6212858181",
+        "event_key": "coord/POSTCODEX-3-WOOL-PR-20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6213813851,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6213813851",
+        "event_key": "coord/REPO-SCHEDULE-ROLLOUT/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6214193913,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6214193913",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6214627937,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6214627937",
+        "event_key": "coord/RESUME-POSTSTOP-WOOL36/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6214737661,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6214737661",
+        "event_key": "coord/REPO-CRON-DYNAMIC-OPEN-PR/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6214873973,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6214873973",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6215426246,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6215426246",
+        "event_key": "coord/PR36-BRANDED-GRANT-SAFETY-AND-SAM-V9/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6215484858,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6215484858",
+        "event_key": "coord/PR36-CLOSED-GRANT-CONTRACT-FINAL-20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6215821459,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6215821459",
+        "event_key": "coord/THREE-MINIMUM-DELIVERIES-20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6226995901,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6226995901",
+        "event_key": "coord/OCT17-FOCUSED-TEST-AND-REAL-INTEGRATION/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227075815,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6227075815",
+        "event_key": "coord/scheduled-outcome-backfill/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": true
+        }
+      },
+      {
+        "comment_id": 6227233143,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6227233143",
+        "event_key": "coord/scheduled-backfill-two-patches-and-quality-window/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227327120,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6227327120",
+        "event_key": "coord/scheduled-output-efficiency-audit-and-jq-fix/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": true
+        }
+      },
+      {
+        "comment_id": 6227458934,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6227458934",
+        "event_key": "coord/historical-scheduled-27-families-one-real-code-recovery/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227496885,
+        "url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6227496885",
+        "event_key": "coord/history-original-assets-and-sam-claimkind-recovered/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": true
+        }
+      }
+    ],
+    "lu403369069lu-prog/YinQieJi#1": [
+      {
+        "comment_id": 6172322620,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6172322620",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": false,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6172542416,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6172542416",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6172562311,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6172562311",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6172675393,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6172675393",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6172698648,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6172698648",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6172982593,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6172982593",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": false,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6173189621,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6173189621",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6179736358,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6179736358",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": false,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6179857543,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6179857543",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6187403569,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6187403569",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6187460291,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6187460291",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6188113282,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6188113282",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6188205415,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6188205415",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6191345104,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6191345104",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6194837459,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6194837459",
+        "event_key": "SAM/M2/20261015/stage13-independent-cold-read-acceptance",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6195081813,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6195081813",
+        "event_key": "SAM/M2/PR3/2060b246d5e6f11caf6d3df6ba850f5e4ba4b26b/exact-source-qualification-20261015",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6196230299,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6196230299",
+        "event_key": "SAM/M2/PR3/af2686b0bf5bf5fbff599a4f2b74878870d86f82/official-url",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6196373945,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6196373945",
+        "event_key": "SAM/CHAT-CONTINUE/20261015/CANONICAL-REOPEN/243ce043a6d8ec8045022871982fbe9dddbc270e",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6196777428,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6196777428",
+        "event_key": "SAM/CANONICAL-REPOSITORY-FALLBACK/f2535cc5eb1e41268fff9160fff841bb2329b564",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6196892179,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6196892179",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": false,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6199734777,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6199734777",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6200013188,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6200013188",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6200252173,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6200252173",
+        "event_key": "SAM/PR6-WORKBUDDY-RAW-ROOT/364d8001b9a93496f5fda85e0a09241f060c9f48",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6202383375,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6202383375",
+        "event_key": "SAM/WORKBUDDY-POSTFILTER-RESPONSE/9c8e4b12066d895b4166cca5434aa0c9d1e935c0",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6203725948,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6203725948",
+        "event_key": "SAM/WORKBUDDY-ASYNC-ORDER-AND-METADATA/3671b8d51a964000b3ef545522660f0ae64cd3ae",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6204873659,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6204873659",
+        "event_key": "SAM/WORKBUDDY-BOUNDED-AND-BYTE-VERIFIED/b3586f1ad6613af5da2fe4f2a72b4707d981724f",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205182732,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6205182732",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205304388,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6205304388",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205378954,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6205378954",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205456513,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6205456513",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205785399,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6205785399",
+        "event_key": "SAM/REVIEW-AUDIT-CLAIM-COVERAGE/3c11ad8150de14f2099b53c24846ef65980a3cb3",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6205921673,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6205921673",
+        "event_key": "SAM/61-POSITIVE-COVERAGE-GATE/88f2b4cf1b1a0502b193917e82f17649c84b555b",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6206200664,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6206200664",
+        "event_key": "SAM/FROZEN-EVAL-WITHIN-FOLD-DUPLICATE/9368d7ee9ea20d1a877a31ce03f5a35bfa3716c3",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6206702354,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6206702354",
+        "event_key": "SAM/HOLDOUT-AMBIGUOUS-DENOMINATOR/622e085dc22dbf5ca8d5ce37f941e6469e5e0f8c",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6207191234,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6207191234",
+        "event_key": "SAM/REVIEWER-24-AUDIT-CARD-ID/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6211008125,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6211008125",
+        "event_key": "SAM/STRICT-TEACHER-JSONL-FROZEN-IDS/20261016-1555",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6211698969,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6211698969",
+        "event_key": "SAM/TEACHER-ALL-DEPTH-DUPLICATE-FATAL-UTF8/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6212229106,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6212229106",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6212244310,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6212244310",
+        "event_key": "SAM/FORMAL-EVAL-INTEGRITY/bf53b3ef2a29db5c9db04cda826c90beb5c6b610",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6212312266,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6212312266",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6212413407,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6212413407",
+        "event_key": "SAM/MAIN-STRICT-JSONL-INDEPENDENT-NODE22/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6213813296,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6213813296",
+        "event_key": "SAM/REPO-SCHEDULE-CONTRACT/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6214172490,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6214172490",
+        "event_key": "SAM/SOURCE-ANSWERS/6c01ec49071144bcded9cb84a19bf1fc2f78c06e",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6214664411,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6214664411",
+        "event_key": "SAM/INDEPENDENT-SOURCE-TRIAGE-61/6c01ec49071144bcded9cb84a19bf1fc2f78c06e",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6214738522,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6214738522",
+        "event_key": "SAM/CRON-OPEN-PR-DISCOVERY/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6214848060,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6214848060",
+        "event_key": "SAM/WINDOWS-SOURCE-V9/5aeb852577cc53da76f9a0b5e78dfef63a83a35b",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6215749561,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6215749561",
+        "event_key": "SAM/SMALLEST-STRICT-CLAIM-JSONL/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6215816710,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6215816710",
+        "event_key": "SAM/SMALLEST-STRICT-AUDIT-EXACT-TEST-RUN/20261016",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6226971760,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6226971760",
+        "event_key": "SAM/REAL-POLICY-AUDIT-2-OF-2-20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": false,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227075361,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6227075361",
+        "event_key": "scheduled-backfill/sam/ancestral-exclusion/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227084183,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6227084183",
+        "event_key": "scheduled-backfill/sam/rooted-test-commit-verified/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": false,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227217004,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6227217004",
+        "event_key": "scheduled-backfill/sam/ancestor-exclusion-PR12/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227296786,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6227296786",
+        "event_key": "scheduled/gh-checkpoint-jq-literal-fix/20261017/SAM",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227452992,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6227452992",
+        "event_key": "history-recovery/sam/thirteen-engineering-families-and-restored-commit/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227686175,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6227686175",
+        "event_key": null,
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      },
+      {
+        "comment_id": 6227730171,
+        "url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6227730171",
+        "event_key": "historical-first/sam-schema-and-fts-rg-evidence/20261017",
+        "marks": {
+          "has_exact_sha": true,
+          "has_test_exit": true,
+          "mentions_scheduled": true,
+          "reports_blocked": false
+        }
+      }
+    ]
+  },
+  "notes": [
+    "PR headings or head branch do not prove actor provenance. Comment event_key may be missing; id stays authoritative.",
+    "No PR was merged or deployed by this census. All PR head SHAs may move after capture.",
+    "Issue comments are indexed by IDs and evidence flags only, not copied in full, to reduce private-data duplication.",
+    "This is exhaustive for the accessible current GitHub API first pages, which hold 35+14 PRs and 200 comments; historic deleted branches/run bodies and private Windows results may be invisible."
+  ]
+}

@@ -276,7 +276,9 @@ def main() -> int:
                       "APPDATA": str(scratch_home / "AppData"),
                       "LOCALAPPDATA": str(scratch_home / "LocalAppData"),
                       "TMP": str(scratch_temp), "TEMP": str(scratch_temp),
-                      "TMPDIR": str(scratch_temp), "PYTHONDONTWRITEBYTECODE": "1"})
+                      "TMPDIR": str(scratch_temp), "PYTHONDONTWRITEBYTECODE": "1",
+                      # Avoid locale-specific Windows cp936/cp1252 stderr encoding.
+                      "PYTHONIOENCODING": "utf-8"})
     child_env.pop("NODE_OPTIONS", None)
     runtime = {"python": sys.version.split()[0], "platform": platform.platform(),
                "os": os.name, "node": None}

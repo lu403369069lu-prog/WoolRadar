@@ -156,3 +156,33 @@ new held-out source recall. The earlier 56-row FN2 freeze was used for
 development and must remain development data. True unseen source evaluation,
 official evidence and user eligibility stay open. Formal diagnostic tests
 are committed but NOT EXECUTED in this chat.
+
+## LATEST 2026-10-17 QA — supersedes previous unexecuted-test statements
+
+Verified selected Linux QA is now **138/138 pass, 0 skipped**, not merely authored: coordinator 27, SAM migration 27, Wool public corpus 53, Wool grant diagnostics 31. [Exact blob and log-hash receipt](INTERACTIVE_LINUX_QA_EXPANDED_138_20261017.json). These are selected tests reconstructed from exact GitHub source blobs, not the full Windows suites or the frozen 39-command job run.
+
+[Frozen 42-source audit](FROZEN_42_GIT_TREE_SOURCE_AUDIT_20261017.json): all 42 READY test files exist with exact matching Git blobs, across three complete (nontruncated) immutable Git trees. All 42 command argv shapes and derived paths statically match the real runner allowlist (21 Python, 19 Node+tsx, 2 Node --test). **This does not certify successful execution.**
+
+Current PR draft HEADs at this update (always re-read prior to local run):
+- Coord PR42: 1cedcbc2ea036b723637aa94ce52fd06ac2b929c
+- Wool public corpus PR41: fb091da93c0489ce88e4c1a6db0dae8f4d41be51
+- SAM migration PR17: ee76958c7cbd6ed50fc3fe3fd306f47eb32ce780
+- Wool grants PR43: a4b969919603291849e0fddc535b0309628eb3c6
+
+Actual new fixes this turn: SAM 0.4.0 source file and 0.4.1 target symlink path redirects blocked before read/write (old 3 real subprocess cases, 2 failed; new migration suite 27/27 green). Wool public samples now redact percent-/multiply encoded credential-like URL paths, reject invalid non-Boolean accepted labels including string false/0, and reject in-root symlinked data/public-corpus storage that could overwrite unrelated JSON (public corpus 53/53 green). Source/test blobs are verified in the QA receipt.
+
+Run in separate disposable worktrees pinned to those exact heads:
+
+    # PR42 from repository root
+    python -B -m unittest discover -s coordination -p 'test_historical_42_executor_*.py' -v
+    # PR41 from repository root
+    python -B -m unittest discover -s tests -p 'test_public_corpus_*.py' -v
+    # PR17 from SAM/snapshot
+    node --test tools/migrate-release-041.*.test.mjs
+    # PR43 from repository root
+    python -B -m unittest discover -s tests -p 'test_developer_grant_*.py' -v
+    python -B -m unittest discover -s tests -p 'test_grant_lead_diagnostic*.py' -v
+
+Then run each FULL official repo suite with the existing local offline dependencies and report environment/skip/log SHA evidence. The original distinct 39 historical commands require separate clean checkouts at their OLD frozen commits; the new PR heads cannot replace them. Run the official receipt guard: command PASS alone is insufficient unless its guard-verdict indicates accepted family coverage. Do not auto re-pin.
+
+Windows symlink creation may be permission-gated; classify such native verification as BLOCKED rather than changing production ACLs or claiming PASS. True held-out source gold, Wool morning delivery consumer, SAM 61/522, real MCP, Node24/26, upgrade transaction and rollback remain OPEN. No scheduled task GitHub writer, PR auto merge, production PLC/SQLite access, live credentials or paid CI permitted.

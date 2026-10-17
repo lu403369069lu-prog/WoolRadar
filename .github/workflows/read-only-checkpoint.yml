@@ -33,5 +33,5 @@ jobs:
               gh api "repos/$GITHUB_REPOSITORY/issues/$n" --jq '"- Issue #\(.number): state=\(.state); updated=\(.updated_at)"'
             done
             echo "- Open PRs (dynamic, repository API pages):"
-            gh api --paginate "repos/$GITHUB_REPOSITORY/pulls?state=open&per_page=100" --jq '.[] | "- PR #\\(.number): state=\\(.state); draft=\\(.draft); head=\\(.head.sha)"'
+            gh api --paginate "repos/$GITHUB_REPOSITORY/pulls?state=open&per_page=100" --jq '.[] | "- PR #\(.number): state=\(.state); draft=\(.draft); head=\(.head.sha)"'
           } >> "$GITHUB_STEP_SUMMARY"

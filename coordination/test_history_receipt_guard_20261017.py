@@ -11,7 +11,10 @@ def record(proj='coord'):
     return {'project':proj, 'repo_head':h.HEADS[proj], 'schema':1,
             'source':'local-disposable-codex',
             'results':[{'batch':batch,'exit_code':0,'log_sha256':'0'*64,
-                        'counts':{'tests_reported':7 if batch!='S-BUILD' else None}}
+                        'counts':{'tests_reported':7 if batch!='S-BUILD' else None,
+                                  'passed':7 if batch!='S-BUILD' else None,
+                                  'failed':0 if batch!='S-BUILD' else None,
+                                  'skipped':0 if batch!='S-BUILD' else None}}
                        for batch in sorted(h.BATCHES[proj])]}
 
 
@@ -32,6 +35,12 @@ class Guard(unittest.TestCase):
     def test_nonzero(self):
         x=record();x['results'][0]['exit_code']=1
         self.assertFalse(h.review(x)['local_suite_receipt_accepted'])
+    def test_skip_is_not_complete(self):
+        x=record();x['results'][0]['counts']['skipped']=1
+        self.assertIn('SKIPPED_NOT_FULLY_ACCEPTED',h.review(x)['errors'])
+    def test_missing_pass_count(self):
+        x=record();x['results'][0]['counts']['passed']=None
+        self.assertIn('INVALID_TEST_OUTCOME',h.review(x)['errors'])
     def test_never_claims_business_green(self):
         x=record();r=h.review(x)
         self.assertFalse(r['business_gold_accepted'])

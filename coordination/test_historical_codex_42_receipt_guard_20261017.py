@@ -138,6 +138,23 @@ class ReviewTruth(unittest.TestCase):
         d["no_real_gold_claim"] = False
         self.assertIn("UNSAFE_REAL_GOLD_CLAIM", checked(d)["errors"])
 
+    def test_malformed_project_type_fails_closed_without_crash(self):
+        d = receipt()
+        d["project"] = {"unexpected": "mapping"}
+        self.assertIn("UNKNOWN_PROJECT", checked(d)["errors"])
+
+    def test_symlinked_raw_log_is_not_opened(self):
+        with tempfile.TemporaryDirectory() as directory:
+            folder = Path(directory)
+            private_file = folder / "do-not-read.txt"
+            private_file.write_bytes(b"synthetic sentinel not source data")
+            try:
+                (folder / "test-001.log").symlink_to(private_file)
+            except OSError:
+                self.skipTest("Windows developer symlink permissions not available")
+            result = guard.review(receipt(), manifest(), folder)
+            self.assertIn("UNSAFE_LOG_SYMLINK_OR_ESCAPE", result["errors"])
+
     def test_tampered_manifest_fails_before_review(self):
         with tempfile.TemporaryDirectory() as tmp:
             p = Path(tmp) / "manifest.json"

@@ -280,22 +280,29 @@ def main() -> int:
     receipts = []
     for i, item in enumerate(plan, 1):
         rc = 125
-        result = ""
+        raw = b""
         try:
             proc = subprocess.run(item["argv"], cwd=in_repo(repo, item["cwd"]),
                                   stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                  text=True, encoding="utf-8", errors="replace",
-                                  timeout=900, env=child_env
-            rc, result = proc.returncode, proc.stdout
+                                  timeout=900, env=child_env)
+            rc, raw = proc.returncode, proc.stdout
         except (OSError, subprocess.TimeoutExpired) as exc:
-            result = "%s: %s" % (type(exc).__name__, exc)
-        raw = result.encode("utf-8")
+            raw = ("%s: %s" % (type(exc).__name__, exc)).encode("utf-8")
+        # Logs and digests must represent the child's ACTUAL bytes. Replacing
+        # malformed UTF-8 before hashing produces a false evidence identity.
+        try:
+            decoded = raw.decode("utf-8")
+            valid_encoding = True
+        except UnicodeDecodeError:
+            decoded = ""
+            valid_encoding = False
         logname = "test-%03d.log" % i
         (output / logname).write_bytes(raw)
-        stat = counts(result)
+        stat = counts(decoded)
+        status = verdict(rc, stat) if valid_encoding else "BLOCKED_NON_UTF8_LOG"
         row = {"family_ids": item["families"], "cwd": item["cwd"],
                "argv": item["argv"], "exit_code": rc, "counts": stat,
-               "status": verdict(rc, stat), "sha256": hashlib.sha256(raw).hexdigest(),
+               "status": status, "sha256": hashlib.sha256(raw).hexdigest(),
                "local_log": logname}
         receipts.append(row)
         print(json.dumps(row, ensure_ascii=False))

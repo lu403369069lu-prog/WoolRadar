@@ -72,4 +72,34 @@ class RawLogMustRemainPinned(unittest.TestCase):
         self.assertFalse(result['local_full_family_receipt_accepted'])
         self.assertIn('UNSAFE_RAW_LOG_TYPE_OR_SIZE',result['errors'])
 
+    @unittest.skipUnless(hasattr(os, 'O_NOFOLLOW'), 'POSIX simulation of missing Win32 nofollow')
+    def test_windows_fallback_accepts_stable_regular_log(self):
+        # Exercise the Windows fallback branch on Linux without claiming
+        # actual Windows filesystem or reparse-point acceptance.
+        old_flag = os.O_NOFOLLOW
+        delattr(os, 'O_NOFOLLOW')
+        try:
+            self.assertTrue(self.verdict()['local_full_family_receipt_accepted'])
+        finally:
+            os.O_NOFOLLOW = old_flag
+
+    @unittest.skipUnless(hasattr(os, 'O_NOFOLLOW'), 'POSIX simulation of missing Win32 nofollow')
+    def test_windows_fallback_rejects_swapped_link_after_lstat(self):
+        private=self.root/'private-unrelated.log';private.write_bytes(VALID)
+        original_open = os.open
+        old_flag=os.O_NOFOLLOW
+        delattr(os,'O_NOFOLLOW')
+        def swap_open(target, flags, *args, **kwargs):
+            if str(target) == str(self.log):
+                self.log.unlink()
+                self.log.symlink_to(private)
+            return original_open(target, flags, *args, **kwargs)
+        try:
+            with patch.object(os,'open',swap_open):
+                verdict=self.verdict()
+        finally:
+            os.O_NOFOLLOW=old_flag
+        self.assertFalse(verdict['local_full_family_receipt_accepted'])
+        self.assertIn('UNSAFE_RAW_LOG_TYPE_OR_SIZE',verdict['errors'])
+
 if __name__=='__main__':unittest.main()

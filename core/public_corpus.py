@@ -9,7 +9,7 @@ import tempfile
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 from pathlib import Path
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit, unquote_plus
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit, unquote, unquote_plus
 
 from .models import utc_now
 
@@ -114,8 +114,17 @@ def _clean_url_identity(value: str) -> tuple[str, bool]:
         parsed.port
         if not _is_lexical_public_host(parsed.hostname):
             return '[non-public host redacted]', False
-        if _SENSITIVE_PATH.search(parsed.path):
-            return '[sensitive path redacted]', False
+        # Origins and intermediaries may decode path escapes before routing.
+        # Refuse to publish a credential path in either its raw or common
+        # percent-decoded spellings (including one double-encoded layer).
+        path_variant = parsed.path
+        for _ in range(3):
+            if _SENSITIVE_PATH.search(path_variant):
+                return '[sensitive path redacted]', False
+            next_variant = unquote(path_variant)
+            if next_variant == path_variant:
+                break
+            path_variant = next_variant
         query, preserved = _semantic_query(parsed.query)
         if parsed.username is not None or parsed.password is not None:
             preserved = False

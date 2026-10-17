@@ -58,7 +58,7 @@
     "sam_history_pr10": "f5e6562524b3438227e311fbc7ff0223b08a5a12",
     "sam_claimkind_pr13": "8719d75205e50209e9b11998a2af72c4d08ee975",
     "sam_workbuddy_pr14": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
-    "sam_audit_types_pr15": "e7c4056a8594045c856cca86c8c51a56e91c9d07",
+    "sam_audit_types_pr15": "e0247b42e9878c3363269c5a322090b8720cabab",
     "sam_rooted_pr12": "a92a870951e1bbf5f2517865faca46b56a6546e7",
     "sam_teacher_pr9": "ba2890004a45abe39d9a6da8b342db48162e9023",
     "wool_grant_pr38": "75021367f71ba550a95ef098789e1f1201b21bad",
@@ -173,8 +173,8 @@
     },
     {
       "id": "SAM-H06",
-      "status": "RG14_POSIX_572_REAL_SOURCE_COMPARISONS_GREEN_WINDOWS_PENDING",
-      "summary": "SAM PR15 actual source-policy0cb6e... compared to real rg14.1.1 26 glob variants x22 files=572 cases zero mismatch Node22; new formal matrix test blob77a277... staged but exact formal test not separately executed, Windows rg parity pending"
+      "status": "PR15_EXACT_POSIX_RG572_FORMAL_1_PASS_WINDOWS_PENDING",
+      "summary": "Actual entire committed TS formal test blob77a277 imported and passed Node22 1 TAP method with 572 real ripgrep14.1 comparisons and zero mismatches; combined35/35 later39/39; Windows parity untested"
     },
     {
       "id": "SAM-H07",
@@ -233,8 +233,8 @@
     },
     {
       "id": "SAM-H18",
-      "status": "POSIX_RIPGREP_PARITY_FIXED_DRAFT_WINDOWS_PENDING",
-      "summary": "Linux rg14.1 case mismatch real red1 exit1, PR12 source0cb6... and formal test93aa..., green13/13; Windows review pending"
+      "status": "PR15_EXACT_POSIX_RG572_FORMAL_1_PASS_WINDOWS_PENDING",
+      "summary": "Same actual formal POSIX rg572 and original old glob-case regression; current PR15 code and test matched Git blobs, Windows semantics pending"
     },
     {
       "id": "SAM-H19",
@@ -273,8 +273,8 @@
     },
     {
       "id": "SAM-H23",
-      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
-      "summary": "ambiguous positive denominator previous bug, now main evaluator continues and excludes ambiguous"
+      "status": "EXACT_EVAL_CONTRACT_ORIGINAL_FORMAL_4_PASS_LINUX_REAL_GOLD_PENDING",
+      "summary": "Actual original eval-contract.ts blob78fbe..., original eval-input.test.ts blob4f92..., and strict-jsonl source blob81d85... locally exact; Node22 4/4 pass, combined true-module 39/39 exit0; no actual 61-question source gold"
     },
     {
       "id": "SAM-H24",
@@ -392,6 +392,16 @@
       "new_formal_test_blob": "77a27796d2bd3cd696cd2b72993aaf6dfd7acdea",
       "formal_file_executed": false,
       "windows": "NOT_RUN"
+    },
+    "sam_full_rg572_and_eval39": {
+      "actual_formal_test_blob": "77a27796d2bd3cd696cd2b72993aaf6dfd7acdea",
+      "rg_actual": "ripgrep14.1.1 x 26 patterns x22 paths=572 comparisons, zero differences, original committed test Node22 one TAP pass exit0",
+      "teacher_original_source": "78fbe586ff2a5907e03bdab99d696f2f2343bae9",
+      "teacher_original_test": "4f92b03944f9a097ba0d166a2403e9933b7f0bc7",
+      "teacher_result": "4/4 pass",
+      "combined": "39/39 pass exit0",
+      "log_sha256": "6af39642c699f262601517a0b03dad80702608c6cfb73a18eeaf195f91eae381",
+      "scope": "isolated real GitHub source modules Linux22; no full zod/cards/MCP Node24/26 Windows"
     }
   },
   "historical_exact_remote_test_provenance": {

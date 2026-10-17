@@ -59,7 +59,8 @@
     "sam_claimkind_pr13": "8719d75205e50209e9b11998a2af72c4d08ee975",
     "sam_workbuddy_pr14": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
     "sam_audit_types_pr15": "b04e05ba359fbf4b1ff3a17a7bf82e1bb3720d3f",
-    "sam_rooted_pr12": "a92a870951e1bbf5f2517865faca46b56a6546e7"
+    "sam_rooted_pr12": "a92a870951e1bbf5f2517865faca46b56a6546e7",
+    "sam_teacher_pr9": "43f05a4c2f18365146973d4aeea15e3dd175e6fc"
   },
   "families": [
     {
@@ -184,8 +185,8 @@
     },
     {
       "id": "SAM-H09",
-      "status": "STAGED_DRAFT_TEST_PENDING",
-      "summary": "PR9 teacher/frozen question CLI"
+      "status": "PR9_TEACHER_32_EXACT_LINUX_PASS_REMAINING_TESTS_PENDING",
+      "summary": "PR9 authentic 6 source/test blob files 32/32 real Node22 exit0; remaining PR9 formal tests and actual teacher CLI on real gold pending"
     },
     {
       "id": "SAM-H10",
@@ -209,8 +210,8 @@
     },
     {
       "id": "SAM-H14",
-      "status": "STAGED_DRAFT_TEST_PENDING",
-      "summary": "PR9 same-fold/cross-fold duplicate QID checks"
+      "status": "PR9_TEACHER_32_EXACT_LINUX_PASS_REMAINING_TESTS_PENDING",
+      "summary": "Original holdout identity real 10 tests included in exact 32/32 full-source Node22 run; still Draft/unmerged and no real 61 gold evaluation"
     },
     {
       "id": "SAM-H15",
@@ -335,7 +336,8 @@
     "Wool WR-H16 grant same-project evidence identity",
     "Wool WR-H13 new independent unseen public source window",
     "Wool daily report output bridge actual user-approved same-SHA consumer",
-    "Wool H17 maintainer-approved sensitive test-fixture reachable history review (no numeric exposure)"
+    "Wool H17 maintainer-approved sensitive test-fixture reachable history review (no numeric exposure)",
+    "SAM PR9 remaining nonteacher tests audit_coverage*, CLI and original 61/522 evidence remain; exact six original formal files32/32 Linux passed, not full PR9 suite."
   ],
   "index_files": [
     "coordination/HISTORICAL_FIRST_RESUME_GATE.md",
@@ -352,6 +354,7 @@
     "sam_root": "PR12 original exact12 tests pass + real POSIX ripgrep14.1 red1→green1; combined13/13 and loader14/14 after fix",
     "blocker": "Windows Node24/26 full repo/MCP and integrated current-head remains unverified",
     "issue_wool": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6227957375",
-    "issue_sam": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6227987028"
+    "issue_sam": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6227987028",
+    "sam_teacher": "PR9 original gate+strict teacher JSONL+holdout QID authentic 6 files hash matched, formal 32/32 pass exit0 Linux Node22, other PR9 test files/Windows/actual corpus not run; Issue1 #6228033658"
   }
 }

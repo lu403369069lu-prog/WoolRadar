@@ -2,6 +2,7 @@
 import importlib.util
 import hashlib
 import shutil
+import subprocess
 import sys
 from pathlib import Path
 import tempfile
@@ -96,6 +97,21 @@ class SafeCommands(unittest.TestCase):
         self.assertEqual(rc,1)
         self.assertEqual(receipt['results'][0]['exit_code'],7)
         self.assertEqual(receipt['results'][0]['status'],'FAIL_REPRODUCED')
+    def test_real_git_blob_identity_from_disposable_repo(self):
+        subprocess.run(['git','init','-q',str(self.root)],check=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+        subprocess.run(['git','-C',str(self.root),'add','tests/test_a.py'],check=True)
+        subprocess.run(['git','-C',str(self.root),'-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-qm','fixture'],check=True)
+        source=subprocess.check_output(['git','-C',str(self.root),'rev-parse','HEAD:tests/test_a.py'],text=True).strip()
+        j=self.job('tests/test_a.py','python -B -m unittest discover -s tests -p test_a.py -v')
+        j['verified_test_blob']=source
+        self.assertEqual(EXEC.pin_command(self.root,j)[0],self.root)
+    def test_real_git_wrong_blob_fails_closed(self):
+        subprocess.run(['git','init','-q',str(self.root)],check=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+        subprocess.run(['git','-C',str(self.root),'add','tests/test_a.py'],check=True)
+        subprocess.run(['git','-C',str(self.root),'-c','user.name=Fixture','-c','user.email=fixture@example.invalid','commit','-qm','fixture'],check=True)
+        j=self.job('tests/test_a.py','python -B -m unittest discover -s tests -p test_a.py -v')
+        with self.assertRaisesRegex(RuntimeError,'Git blob'):
+            EXEC.pin_command(self.root,j)
     def test_symlink_outside_checkout_denied(self):
         with tempfile.TemporaryDirectory() as outside:
             dest=Path(outside)/'secret.py';dest.write_text('private','utf-8')

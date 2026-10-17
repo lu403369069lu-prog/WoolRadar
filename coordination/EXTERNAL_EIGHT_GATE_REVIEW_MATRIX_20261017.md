@@ -15,9 +15,9 @@ As of **2026-10-17**, reviewed against frozen manifest Git blob `96c71aad1e26e5b
 
 ## Read-only auditor and evidence status
 
-Code: `coordination/historical_external_eight_gate_auditor.py`, Git blob `8d749b3183c442da3a81557f6e9c225c206b6d1d`. Test: `coordination/test_historical_external_eight_gate_auditor.py`, blob `b048841bdd0f6367d3fd98ec97af0349d9ad79f4`.
+Code: `coordination/historical_external_eight_gate_auditor.py`, Git blob `f5ef4ba31c50e4b5e054834d7b903a2fc1958907`. Test: `coordination/test_historical_external_eight_gate_auditor.py`, blob `b048841bdd0f6367d3fd98ec97af0349d9ad79f4`.
 
-Actual isolated Linux / Python 3.13.5 run, `python -B -m unittest discover -s coordination -p test_historical_external_eight_gate_auditor.py -v`: **26/26 passed**, exit 0, zero skips; stdout/stderr log SHA256 `e4b8b5c8d9e68008535dda878a42e9c67e6536291ee78d6256d72f9745b39321`. This tests the auditor itself with synthetic gate receipts; it does **not** establish source approval or execution of the remaining frozen commands. Auditor's secure evidence opening is POSIX only and refuses unsupported platforms.
+Actual isolated Linux / Python 3.13.5 run, `python -B -m unittest discover -s coordination -p test_historical_external_eight_gate_auditor.py -v`: **30/30 passed** (includes four synthetic-loader CLI negative/boundary tests), exit 0, zero skips; stdout/stderr log SHA256 `62a4541535e3b7221b0e12db66ce6ef413bc42a9ecb270fd8f51c6c71c095a81`. The four CLI cases substitute a synthetic manifest loader to check bounds, not the real immutable receipt guard. This tests the auditor itself with synthetic gate receipts; it does **not** establish source approval or execution of the remaining frozen commands. Auditor's secure evidence opening is POSIX only and refuses unsupported platforms.
 
 Older Wool quality checkpoint `evidence/pipeline-integration-20261016/oct17/QUALITY_CHECKPOINT.md`, frozen blob `835ef4b8ff5f20ff7c6ae7d5d7a212e3cf115675`, explicitly reports the 47-row replay later improved 4/4 on the same *development* rows but had a false campaign split. It is not new independent recall acceptance, and no fresh eligibility was verified.
 

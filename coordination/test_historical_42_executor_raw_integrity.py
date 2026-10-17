@@ -21,7 +21,7 @@ class RunnerEvidenceIntegrity(unittest.TestCase):
         rc,receipt,folder=runner.run_commands([cmd],mapping,'test-commit','wool')
         self.addCleanup(lambda: shutil.rmtree(folder,ignore_errors=True))
         self.assertEqual(rc,0)
-        self.assertEqual((folder/('a'*16+'.log')).read_bytes(),raw)
+        self.assertEqual((folder/('a'*64+'.log')).read_bytes(),raw)
         self.assertEqual(receipt['results'][0]['log_sha256'],hashlib.sha256(raw).hexdigest())
 
     def test_pinned_symlink_in_repo_must_be_rejected(self):
@@ -57,7 +57,7 @@ class RunnerEvidenceIntegrity(unittest.TestCase):
         rc,receipt,folder=runner.run_commands([cmd],mapping,'test-commit','wool')
         self.addCleanup(lambda: shutil.rmtree(folder,ignore_errors=True))
         self.assertEqual(rc,0)
-        self.assertEqual((folder/('b'*16+'.log')).read_bytes(),raw)
+        self.assertEqual((folder/('b'*64+'.log')).read_bytes(),raw)
         self.assertEqual(receipt['results'][0]['log_sha256'],hashlib.sha256(raw).hexdigest())
 
 if __name__=='__main__':unittest.main()

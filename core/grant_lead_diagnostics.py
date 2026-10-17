@@ -106,6 +106,11 @@ def main() -> int:
             value[key] = item
         return value
 
+    def reject_nonfinite_number(_value):
+        # Python json.loads accepts NaN/Infinity by default, but JSONL
+        # provenance must use the interoperable RFC JSON number grammar.
+        raise ValueError('nonfinite JSONL number')
+
     def validated_records():
         # readline(limit) bounds allocation even before the JSON parser sees a
         # maliciously large record. Aggregate incrementally; never retain raw
@@ -129,9 +134,12 @@ def main() -> int:
             if not line.strip():
                 continue
             try:
-                data = json.loads(line, object_pairs_hook=reject_duplicate_keys)
+                data = json.loads(line, object_pairs_hook=reject_duplicate_keys,
+                                  parse_constant=reject_nonfinite_number)
                 if not isinstance(data, dict):
                     raise ValueError('not an object')
+                if 'text' in data and data['text'] is not None and not isinstance(data['text'], str):
+                    raise ValueError('non-string authoritative text')
                 if isinstance(data.get('text'), str):
                     value = data['text']
                 elif isinstance(data.get('title'), str) or isinstance(data.get('summary'), str):
@@ -141,7 +149,7 @@ def main() -> int:
                     value = (data.get('title') or '') + '\n' + (data.get('summary') or '')
                 else:
                     raise ValueError('missing public text fields')
-            except (ValueError, TypeError):
+            except (ValueError, TypeError, RecursionError):
                 # No parser exception or source fragment is ever returned.
                 raise ValueError(f"INVALID_INPUT: JSONL record {line_number}") from None
             yield value

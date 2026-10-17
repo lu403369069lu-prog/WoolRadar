@@ -52,10 +52,18 @@ def review(data: dict) -> dict:
         counts = result.get('counts')
         if not isinstance(counts, dict):
             errors.append('NO_COUNTS')
-        elif key != 'S-BUILD' and (not isinstance(counts.get('tests_reported'), int)
-                                       or isinstance(counts.get('tests_reported'), bool)
-                                       or counts.get('tests_reported', 0) <= 0):
-            errors.append('NO_TEST_COUNT')
+        elif key != 'S-BUILD':
+            total = counts.get('tests_reported')
+            passed = counts.get('passed')
+            failed = counts.get('failed')
+            skipped = counts.get('skipped')
+            if (not isinstance(total, int) or isinstance(total, bool) or total <= 0):
+                errors.append('NO_TEST_COUNT')
+            if (not isinstance(passed, int) or isinstance(passed, bool)
+                    or failed != 0 or (isinstance(total, int) and passed > total)):
+                errors.append('INVALID_TEST_OUTCOME')
+            if skipped != 0:
+                errors.append('SKIPPED_NOT_FULLY_ACCEPTED')
     if project in BATCHES and set(BATCHES[project]) != seen:
         errors.append('MISSING_REQUIRED_BATCH')
     return {

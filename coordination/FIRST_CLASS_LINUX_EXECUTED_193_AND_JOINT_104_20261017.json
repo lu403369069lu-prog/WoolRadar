@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "classification": "INDEPENDENT_ISOLATED_LINUX_QA_NOT_FULL_REPOSITORY_ACCEPTANCE",
+  "environment": {
+    "python": "3.13.5",
+    "node": "v22.16.0",
+    "os": "Linux",
+    "source": "exact GitHub Git-blob-matched files staged in disposable directories"
+  },
+  "status": {
+    "four_selected_suites_exit_zero": true,
+    "methods_across_selected_suite_invocations": 193,
+    "passed": 193,
+    "failed": 0,
+    "skipped": 0,
+    "cross_branch_joint_methods": 104,
+    "cross_branch_passed": 104,
+    "cross_branch_failed": 0,
+    "cross_branch_skipped": 0,
+    "distinct_business_families_claimed_complete": 0
+  },
+  "selected_suites": [
+    {
+      "id": "coord42",
+      "methods": 50,
+      "exit": 0,
+      "raw_stdout_sha256": "2b423d06ed4797ae4f10d3f7bf21a34ce6684e5269fd3707282c8b3f49bfa2f7",
+      "pr_head_at_test": "08b1d43a186a4dd0d2364b048d84b0629f4d043e",
+      "runner_blob": "29566bd772b4564aa96d0c1ae30b6b1af99af4a8",
+      "guard_blob": "072ba64688fcd479795620b870a803ddb29dc78b",
+      "scope": "Official guard, source vs worktree pin, exact raw counts, immutable manifest and masked dirty-index / dependency mutation red-green tests"
+    },
+    {
+      "id": "wool41",
+      "methods": 59,
+      "exit": 0,
+      "raw_stdout_sha256": "05caf0aa3dc4f5812b6005a7a9597b94ea1d02ead6734e63d24a576c8f23ea43",
+      "pr_head_at_test": "e6f39a163f5edd29294422f3726886b7e04ec39a",
+      "public_corpus_blob": "3038f16f129e675381f5fb9a87bbf5a7c53dfaf4",
+      "new_test_blob": "b80308cb2b0478011172acf5f430b9dfb4001945",
+      "scope": "Public-only source redaction; email URL path raw/encoded/double-encoded; unstructured title email; encoded credentials, query identity, timestamps, symlink storage, strict decisions"
+    },
+    {
+      "id": "sam17",
+      "methods": 39,
+      "exit": 0,
+      "raw_stdout_sha256": "e00f80a39fd78dc8f66cf3c8db8ec97ae449f1e39eeb5590f28dfd5bca7afdee",
+      "pr_head_at_test": "7330d8cb858b869a36c3c1135b173c536945e61e",
+      "migration_blob": "b80c4e693d11d5a7b4f7ac174e32e40fdf5f95e2",
+      "new_test_blob": "4e9090cc02eb52f5bf4a0e608580ebaf5e135730",
+      "scope": "Synthetic 0.4.0 to 0.4.1, symlink boundary, duplicated teacher/card review keys including escaped and nested spellings, nonfinite or unsafe-integer review metadata, original status and claim collisions"
+    },
+    {
+      "id": "wool43",
+      "methods": 45,
+      "exit": 0,
+      "raw_stdout_sha256": "0a9680860959d03b6486cf44aa55121ee5118e7b17334463cf10b0fb3d22158f",
+      "pr_head_at_test": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+      "diagnostics_blob": "6fe02aa7a83479c4eeea6a448b80f75988a13ffd",
+      "new_test_blob": "76cbcc0b36a9a81ddcdc17abc30b77bafbe9356e",
+      "scope": "Conservative classifier unchanged; diagnostic JSONL bounded stream; UTF-8; duplicate keys; nonfinite metadata, non-string authoritative text, extreme nesting and no partial results"
+    }
+  ],
+  "wool_cross_branch_joint": {
+    "candidate_wool41": "e6f39a163f5edd29294422f3726886b7e04ec39a",
+    "candidate_wool43": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+    "selected_test_methods": 104,
+    "passed": 104,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0,
+    "stdout_sha256": "2394d7fee313708138d441cac65dec5df99b4c5222e916a61931de556fff217f",
+    "core_blobs": [
+      "3038f16f129e675381f5fb9a87bbf5a7c53dfaf4",
+      "6fe02aa7a83479c4eeea6a448b80f75988a13ffd",
+      "8543c9c63543645e36fcd0ed3fea396081c258f7"
+    ],
+    "meaning": "One isolated, manually assembled selected-module graph with both candidate sources; not a full git merge or whole application."
+  },
+  "red_controls": [
+    {
+      "family": "wool-email-path-and-title",
+      "old_methods": 3,
+      "old_failed_assertions": 4,
+      "old_exit": 1,
+      "raw_log_sha256": "76425a23e159ee1260099c4425e67c36f0891127fb6279553577809d7c4e23de"
+    },
+    {
+      "family": "sam-jsonl-duplicate-review-fields",
+      "old_methods": 5,
+      "old_cases_failed": 4,
+      "old_exit": 1,
+      "raw_log_sha256": "6ca357e297f0c109c69274a165a05e2ab52857eb113679ff30d0e1f0df9ac929"
+    },
+    {
+      "family": "sam-unsafe-review-numbers",
+      "old_methods": 8,
+      "old_cases_failed": 2,
+      "old_exit": 1,
+      "raw_log_sha256": "7afc1a0ef185a11f43a8dda4723289f9afdf435d5d10ad38b28fcaa05c864da5"
+    },
+    {
+      "family": "wool-grant-jsonl-strict",
+      "new_methods": 5,
+      "old_failed_assertions": 10,
+      "old_exit": 1,
+      "raw_log_sha256": "def02a06e4176e2d709d8f09432c4c9a5e4eb06dc2b864fcfa30e37d5bc76597"
+    }
+  ],
+  "immutable_old_history": {
+    "total_families": 50,
+    "ready": 42,
+    "externally_gated": 8,
+    "distinct_commands": 39,
+    "static_git_tree_blob_matching": 42,
+    "static_local_import_tests": 39,
+    "old_frozen_commands_executed_in_partial_Linux": 10,
+    "old_frozen_families_covered_partial_Linux": 11,
+    "old_frozen_methods_passed_partial_Linux": 105,
+    "old_frozen_commands_needing_native_full_receipts": 29,
+    "previous_evidence": "coordination/FROZEN_10_COMMANDS_11_FAMILIES_LINUX_PARTIAL_20261017.json",
+    "windows_official_full_guard_accepted": false
+  },
+  "validation_limits": [
+    "Some whole-repository dependencies and coordination neighboring helper contracts locally staged in limited form. Not full private checkout and not a true merge.",
+    "Selected test invocation counts overlap between PRs and joint graph; never sum them as unique business acceptance cases.",
+    "Actual frozen 39 command official full-family acceptance and 8 external-policy gates remain open.",
+    "No Windows Node24/26 full build, real SAM 61/522/MCP, released 0.4.1 pointer or rollback.",
+    "No new independent Wool source held-out labels, official eligibility checks or actual morning delivery consumer receipts.",
+    "Tests are offline/synthetic, no production Windows / PLC, no real accounts, no active signup, no paid CI, no PR merge.",
+    "Raw logs are local to isolated container; portable report contains their SHA-256 digests, not original private material."
+  ],
+  "historical_recovery_closed": false
+}

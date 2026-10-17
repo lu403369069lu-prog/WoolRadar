@@ -79,8 +79,14 @@ def _is_lexical_public_host(host: str) -> bool:
     return False
 
 
+def _safe_public_text(value: str) -> str:
+    """Neutralize malformed UTF-16 surrogate codepoints from untrusted feeds."""
+    return re.sub(r'[\ud800-\udfff]', '\ufffd', value)
+
+
 def _clean_url_identity(value: str) -> tuple[str, bool]:
     try:
+        value.encode('utf-8')  # reject malformed Unicode before URL identity admission
         parsed = urlsplit(value)
         if parsed.scheme not in {'http', 'https'} or not parsed.hostname:
             return '', False
@@ -155,15 +161,15 @@ def record_public_sample(root: Path, node: str, source: dict, rows: list[dict], 
         original = str(row.get('url', ''))
         url, identity_preserved = _clean_url_identity(original)
         title, summary = str(row.get('title', '')), str(row.get('summary', ''))
-        clean_title, clean_summary = _clean_text(title), _clean_text(summary)
+        clean_title, clean_summary = _clean_text(_safe_public_text(title)), _clean_text(_safe_public_text(summary))
         sample_rows.append({'index': index, 'title': clean_title[:512], 'url': url[:2048],
                             'summary': clean_summary[:20000], 'published_at': _clean_published_at(row.get('published_at', '')),
                             'accepted': bool(accepted[index]), 'url_sanitized': url[:2048] != original,
                             'url_identity_preserved': identity_preserved and len(url) <= 2048,
                             'text_url_redacted': clean_title != title or clean_summary != summary,
                             'content_truncated': len(clean_title) > 512 or len(clean_summary) > 20000 or len(url) > 2048})
-    payload = {'schema_version': 1, 'sampled_at': utc_now(), 'node': str(node)[:64], 'source_id': source_id,
-               'platform': str(source.get('platform', ''))[:128], 'public_only': True,
+    payload = {'schema_version': 1, 'sampled_at': utc_now(), 'node': _safe_public_text(str(node))[:64], 'source_id': source_id,
+               'platform': _safe_public_text(str(source.get('platform', '')))[:128], 'public_only': True,
                'fetched_count': len(rows), 'stored_count': len(sample_rows), 'rows_truncated': len(rows) > 500,
                'rows': sample_rows, 'max_utf8_bytes': MAX_BYTES,
                'limits': 'Latest bounded public sample only; redactions/truncations marked; not a full platform or time-window denominator'}

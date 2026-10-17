@@ -34,6 +34,7 @@ TESTPY = re.compile(r"test_[a-zA-Z0-9_-]+\.py\Z")
 TESTNODE = re.compile(r"[a-zA-Z0-9_./-]+\.test\.(?:ts|mjs)\Z")
 EXPECTED_FAMILIES = 50
 EXPECTED_READY = 42
+MANIFEST_BLOB_SHA1 = "96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744"
 
 
 class Blocked(ValueError):
@@ -62,7 +63,7 @@ def in_repo(repo: Path, rel: str) -> Path:
 def safe_checkout(repo: Path, expected: str, project: str) -> None:
     resolved = repo.resolve()
     spelling = str(resolved).replace("/", "\\").casefold().rstrip("\\")
-    if (spelling == "c:\\woolradar"
+    if (spelling == "c:\\woolradar" or spelling.startswith("c:\\woolradar\\")
             or any(part in {"production", "twincat", "appdata", "sam_local"}
                    for part in (x.casefold() for x in resolved.parts))):
         raise Blocked("Potential production/user-data location; use a disposable clone")
@@ -87,7 +88,7 @@ def validate_command(job: dict[str, Any], repo: Path) -> tuple[str, list[str]]:
         raise Blocked(job["family_id"] + ": missing command")
     args = shlex.split(command, posix=True)
     expected_path = job["verified_test_path"]
-    if args[:7] == ["python", "-B", "-m", "unittest", "discover", "-s", args[6]]:
+    if len(args) == 10 and args[:6] == ["python", "-B", "-m", "unittest", "discover", "-s"]:
         if len(args) != 10 or args[7] != "-p" or args[9] != "-v":
             raise Blocked(job["family_id"] + ": unexpected unittest command shape")
         rel_directory, name = args[6], args[8]
@@ -115,7 +116,12 @@ def validate_command(job: dict[str, Any], repo: Path) -> tuple[str, list[str]]:
 
 
 def load_and_validate(path: Path, project: str, repo: Path) -> list[dict[str, Any]]:
-    manifest = json.loads(path.read_text(encoding="utf-8"))
+    raw = path.read_bytes()
+    # Do not accept a silently edited plan even when its commands stay allowlisted.
+    blob_sha1 = hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\x00" + raw).hexdigest()
+    if blob_sha1 != MANIFEST_BLOB_SHA1:
+        raise Blocked("Manifest byte SHA differs from frozen reviewed Git blob")
+    manifest = json.loads(raw.decode("utf-8"))
     if manifest.get("total_families") != EXPECTED_FAMILIES:
         raise Blocked("Wrong manifest family denominator")
     if manifest.get("ready_for_local_codex") != EXPECTED_READY:

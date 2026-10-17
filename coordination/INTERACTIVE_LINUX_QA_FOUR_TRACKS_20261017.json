@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "execution_date": "2026-10-17",
+  "evidence_type": "isolated_local_subprocess_tests_not_production",
+  "runner": "Linux Python3.13.5 Node22.16.0",
+  "passed_methods_total": 87,
+  "skipped_methods_total": 0,
+  "green": {
+    "coord": {
+      "methods": 27,
+      "exit_code": 0,
+      "raw_log_sha256": "37574ea096b1b323b0ecff8268f3e96824073a2381ecfc23fe355962cfed51c1",
+      "actual_guard_git_blob": "6dd9a83ac01f2f233437deb527fa2b9197b791cd",
+      "runner_git_blob": "255d5bf735b7f58760ee5ac6464ec5539b4744e9",
+      "cross_module_python_node": true,
+      "formal_guard_accept_and_reject": "synthetic inputs only"
+    },
+    "sam": {
+      "methods": 24,
+      "exit_code": 0,
+      "raw_log_sha256": "a316c5fc541af0c2a939f11527f4ba91087d57fa51adc97b11937eb3cf61e547",
+      "migration_git_blob": "3fa01b21ad82ff83908743f2714f4bcf05151711",
+      "read_only_dry_run": true
+    },
+    "wool": {
+      "methods": 22,
+      "exit_code": 0,
+      "raw_log_sha256": "02ccc87cf6c67a5496cca2676f1a1664ef75bb08ffbe32626296c615f88b1af0",
+      "corpus_git_blob": "1b9be2e54151a084daf00842b774990f229d714f"
+    },
+    "grant": {
+      "methods": 14,
+      "exit_code": 0,
+      "raw_log_sha256": "5222cc090b50d069b29042a12bd8607cba76873a378cb7f238745efd67157738",
+      "classifier_git_blob": "8543c9c63543645e36fcd0ed3fea396081c258f7",
+      "diagnostics_git_blob": "4c5fec88b8bcd1b96840ab681d60f1111b7271f7"
+    }
+  },
+  "negative_controls": {
+    "wool_old": {
+      "git_blob": "fbcea363097aaa90ff2a671340cfe2d975dd8ecf",
+      "tests_run": 11,
+      "failed_subtest_assertions": 18,
+      "exit_code": 1,
+      "raw_log_sha256": "c58a4a39e7cc35f95daecb687bb55faa50df25fb6b26819ef78dbaf4ddb60f63"
+    },
+    "sam_old": {
+      "git_blob": "5d4b21370eab5d4e057321ee79a5c5237346c510",
+      "tests_run": 13,
+      "passed": 7,
+      "failed": 6,
+      "exit_code": 1,
+      "raw_log_sha256": "62ad40c748f5afb47be02132c5145a4333bba20b084209a8b659a5b8437a41dc"
+    }
+  },
+  "manifest": {
+    "git_blob": "96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744",
+    "family_count": 50,
+    "ready": 42,
+    "distinct_commands": 39,
+    "external_gated": 8,
+    "subprojects": {
+      "W": {
+        "ready": 15,
+        "distinct": 14,
+        "gated": 4
+      },
+      "S": {
+        "ready": 21,
+        "distinct": 19,
+        "gated": 3
+      },
+      "C": {
+        "ready": 6,
+        "distinct": 6,
+        "gated": 1
+      }
+    }
+  },
+  "scope_limits": [
+    "Selected isolated private-GitHub code/test blobs reconstructed and independently byte-verified via git hash-object",
+    "Coordinator external batch contract locally includes exact evaluate_run/summarize logic only, not the full original neighbor module; do not call full frozen manifest integrated",
+    "No Windows frozen historical 39 commands run; no local source gold, MCP, real release/current.json rollback, or Wool daily consumer receipt",
+    "Raw logs are local and were not uploaded to GitHub; only SHA256 digests are included",
+    "No production, PLC, paid CI, or PR merge"
+  ],
+  "status": "ISOLATED_CODE_QA_PASS;HISTORICAL_ACCEPTANCE_OPEN",
+  "historical_recovery_closed": false
+}

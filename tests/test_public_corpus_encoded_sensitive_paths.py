@@ -13,6 +13,7 @@ SENSITIVE=[
     'https://example.org/%2574oken/synthetic-secret-42',
     'https://example.org/a%252ftoken/synthetic-secret-42',
     'https://example.org/%73ession/synthetic-secret-42',
+    'https://example.org/%252574oken/synthetic-secret-42',
 ]
 
 class EncodedPathLeak(unittest.TestCase):
@@ -30,6 +31,12 @@ class EncodedPathLeak(unittest.TestCase):
             self.assertFalse(result['url_identity_preserved'])
             self.assertTrue(result['text_url_redacted'])
             self.assertNotIn('synthetic-secret-42',json.dumps(result))
+
+    def test_extreme_nesting_is_redacted_even_without_complete_decoding(self):
+        encoded='%74oken'
+        for _ in range(12): encoded=encoded.replace('%','%25')
+        self.assertEqual(_clean_url_identity('https://example.org/'+encoded+'/synthetic-secret-42'),
+                         ('[untrusted path encoding redacted]',False))
 
     def test_benign_percent_encoded_path_is_not_scrubbed(self):
         url='https://example.org/docs/%65xamples'

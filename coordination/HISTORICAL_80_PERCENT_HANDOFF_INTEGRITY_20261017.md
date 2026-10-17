@@ -18,3 +18,7 @@ Checked GitHub live content of the original machine manifest (blob `dcabb20769b9
 
 ## Next action for local Codex
 Use `coordination/HISTORICAL_80_PERCENT_CODEX_HANDOFF_20261017.md` and `coordination/HISTORICAL_CODEX_BATCH_RUNNER_20261017.py` in a disposable checkout at exact manifest SHA. Record per-family `source_head | command | exit | pass/fail/skip | log_sha256 | disposition`, keeping test totals deduplicated. Never treat `READY_FOR_LOCAL_CODEX` as `PASS`. If immutable heads differ, stop and explicitly reconcile before running. Feed receipts back to WoolRadar Issue #2, YinQieJi Issue #1 and coordinator Issue #3.
+
+## Follow-up blocker: runner/manifest cross-file SHA guard
+
+2026-10-17 interactive follow-up independently re-fetched the runner blob `8dd067055447eb19afde71a707466d02c6526ec0`. It checks an internal `EXPECTED` SHA but **does not read the adjacent 50-family JSON manifest before invoking tests**. Proposed change: parse `HISTORICAL_80_PERCENT_CODEX_JOBS_20261017.json`, require `total_families==50`, `len(jobs)==50`, and require `immutable_refs[{wool:W,sam:S,coord:C}].sha == expected`; fail before subprocess invocation if any mismatch. Add a negative test with a deliberately altered manifest SHA, and a missing-manifest negative test. This is **not fixed**: GitHub code write was safety-blocked, so do not claim implementation or formal tests passed. No bypass attempted.

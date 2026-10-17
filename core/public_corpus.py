@@ -35,6 +35,9 @@ _SENSITIVE_TEXT_ASSIGNMENT = re.compile(
 _BEARER_CREDENTIAL = re.compile(r'(?i)\bBearer[ \t]+[A-Za-z0-9._~+/\-]{12,}')
 _LONG_DIGIT_SECRET = re.compile(r'(?<![A-Za-z0-9])\d{13,}(?![A-Za-z0-9])')
 _GROUPED_CARD_NUMBER = re.compile(r'(?<!\d)(?:\d{4}[ -]){3}\d{4}(?!\d)')
+_WINDOWS_USER_FILE = re.compile(r'(?i)(?<!\w)[A-Z]:\\(?:Users|Documents and Settings)\\[^\s,;<>]+')
+_UNC_PRIVATE_FILE = re.compile(r'(?<!\S)\\\\[^\s\\]+\\[^\s,;<>]+')
+_POSIX_USER_FILE = re.compile(r'(?<!\S)/(?:home|Users)/[^\s,;<>]+')
 
 def _semantic_query(query: str) -> tuple[str, bool]:
     kept = {}
@@ -202,7 +205,10 @@ def _clean_text(value: str) -> str:
     scrubbed = _SENSITIVE_TEXT_ASSIGNMENT.sub('[private credential redacted]', scrubbed)
     scrubbed = _BEARER_CREDENTIAL.sub('[private credential redacted]', scrubbed)
     scrubbed = _LONG_DIGIT_SECRET.sub('[private number redacted]', scrubbed)
-    return _GROUPED_CARD_NUMBER.sub('[private number redacted]', scrubbed)
+    scrubbed = _GROUPED_CARD_NUMBER.sub('[private number redacted]', scrubbed)
+    scrubbed = _WINDOWS_USER_FILE.sub('[private local path redacted]', scrubbed)
+    scrubbed = _UNC_PRIVATE_FILE.sub('[private local path redacted]', scrubbed)
+    return _POSIX_USER_FILE.sub('[private local path redacted]', scrubbed)
 
 
 def record_public_sample(root: Path, node: str, source: dict, rows: list[dict], accepted: list[bool]) -> Path | None:

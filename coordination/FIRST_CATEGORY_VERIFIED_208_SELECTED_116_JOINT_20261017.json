@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "status": "CODE_QA_SELECTED_LINUX_GREEN;FROZEN_NATIVE_AND_EXTERNAL_BUSINESS_GATES_OPEN",
+  "execution_environment": {
+    "os": "Linux",
+    "python": "3.13.5",
+    "node": "v22.16.0",
+    "execution": "Actual isolated subprocesses; candidate source/test files byte-match GitHub blobs, not full original repositories"
+  },
+  "selected_suites": {
+    "methods": 208,
+    "passed": 208,
+    "failed": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "id": "coord42",
+        "pr": 42,
+        "methods": 53,
+        "exit": 0,
+        "head_at_test": "1a63ee3f72586023a901e75d7635e81695780495",
+        "source_blob": "08af6d6304758399282d7b1799604089570c7b09",
+        "new_test_blob": "458db80b575369a1a4614fe4de0225a7745ab3db",
+        "stdout_sha256": "bbfcfb7b2ef1bbce8560f28af3410b80ddfde9911358662e4f0cb9147bd764f4"
+      },
+      {
+        "id": "wool41",
+        "pr": 41,
+        "methods": 71,
+        "exit": 0,
+        "head_at_test": "376df34e11941270711165b0bccbc18c8b9ab9b1",
+        "source_blob": "cce9e9da2b05375c4134dd789873913ed9aee04d",
+        "recent_test_blobs": [
+          "7e3cd377ecfbe23287240ab84862037ce79c20c4",
+          "86d5532a69d3619eb6dab98b4fa5984e4e50b728",
+          "6863db4502423e124905e45ec746cea901d35814",
+          "67348c144d86193979153249c7eb169fdd2d25b8"
+        ],
+        "stdout_sha256": "fe81ed1f84a224155826c6ece29d92c959e0c372a277163a7b453d999150618d"
+      },
+      {
+        "id": "sam17",
+        "pr": 17,
+        "methods": 39,
+        "exit": 0,
+        "head_at_test": "7330d8cb858b869a36c3c1135b173c536945e61e",
+        "source_blob": "b80c4e693d11d5a7b4f7ac174e32e40fdf5f95e2",
+        "stdout_sha256": "d2da602a543dae733a725298857a9fa6a4bde4897562f903f007df3fa9c5bb87"
+      },
+      {
+        "id": "grant43",
+        "pr": 43,
+        "methods": 45,
+        "exit": 0,
+        "head_at_test": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+        "source_blob": "6fe02aa7a83479c4eeea6a448b80f75988a13ffd",
+        "stdout_sha256": "82ed68e23e1f1f985091d55726a10303f3b2c6364ee340d7b5cc1df8c116062f"
+      }
+    ]
+  },
+  "combined_wool_module_graph": {
+    "candidate_heads": {
+      "wool41": "376df34e11941270711165b0bccbc18c8b9ab9b1",
+      "grant43": "621871f9afc5ae43272d04bcff9d4763ae25fa5a"
+    },
+    "source_blobs": [
+      "cce9e9da2b05375c4134dd789873913ed9aee04d",
+      "6fe02aa7a83479c4eeea6a448b80f75988a13ffd",
+      "8543c9c63543645e36fcd0ed3fea396081c258f7"
+    ],
+    "methods": 116,
+    "passed": 116,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0,
+    "stdout_sha256": "02536a74564d912d4cd621fdda79464cbd5e32716aee2dc7b448c02303d7308d",
+    "not_additive_to_selected_methods": true,
+    "actual_git_merge_performed": false
+  },
+  "independently_reproduced_red_cases": [
+    {
+      "name": "coord status config and ignored untracked startup hooks",
+      "old_methods": 3,
+      "old_failed": 2,
+      "raw_sha256": "ee697fe0f90fce959b67ada1e969f2d6e874145adc21fc05e8043e6a15c9fc04"
+    },
+    {
+      "name": "wool unicode mailbox source URLs and text",
+      "old_methods": 3,
+      "old_failed_assertions": 4,
+      "raw_sha256": "dc02487fd92f5e92fa5a141945a893cdd147904a8b6e5a2e61e9c12b81c72f7d"
+    },
+    {
+      "name": "wool feed plain bearer key and card-like number",
+      "old_methods": 3,
+      "old_failed_assertions": 2,
+      "raw_sha256": "0822b7ac319e46297ebd5f1ec23e075bc413eff3d8681a40aebe0b71ba8dc899"
+    },
+    {
+      "name": "wool card-like numeric source URL and SPA route",
+      "old_methods": 3,
+      "old_failed_assertions": 3,
+      "raw_sha256": "e694b794a6dcad3ff0358d3a3d111e523ab7bd69c8986fbe62274779c5223e8a"
+    },
+    {
+      "name": "wool local filesystem paths in title and summary",
+      "old_methods": 3,
+      "old_failed_assertions": 2,
+      "raw_sha256": "1e16bc173bd48f3e584b409c6e30bfe66c55e7d8802a437db52c0ec66998b1c0",
+      "test_integrity_note": "Original draft compared raw JSON escaped Windows backslashes and falsely considered that case green. Assertion repaired to inspect parsed JSON field before executing red/green; only corrected red batch is cited."
+    }
+  ],
+  "official_grammar_verification": {
+    "guard_source_git_blob": "072ba64688fcd479795620b870a803ddb29dc78b",
+    "real_logs_parsed": 5,
+    "real_log_counts_pass": 208,
+    "combined_log_counts_pass": 116,
+    "failed_parses": 0
+  },
+  "historical_truth": {
+    "frozen_families": 50,
+    "ready": 42,
+    "external_or_policy_gated": 8,
+    "unique_frozen_commands": 39,
+    "partially_executed_Linux_commands": 10,
+    "partially_covered_families": 11,
+    "partial_Linux_methods_passed": 105,
+    "full_native_frozen_command_receipts_missing": 29,
+    "non_native_types": {
+      "tsx_without_locked_dependencies": 17,
+      "python_without_full_frozen_checkout": 12
+    },
+    "frozen_partial_evidence": "coordination/FROZEN_10_COMMANDS_11_FAMILIES_LINUX_PARTIAL_20261017.json",
+    "remaining_gate_matrix": "coordination/FIRST_CATEGORY_29_FROZEN_COMMANDS_NATIVE_GATE_MATRIX_20261017.json",
+    "all_39_formally_accepted": false
+  },
+  "limitations": [
+    "Not full frozen Git worktrees/39-command strict guard result",
+    "Not Windows Node24/26 or real 0.4.0 data, 61/522/MCP/release rollback",
+    "Not new independent Wool holdout source gold, user eligibility, live 09:30 consumer or full network 19-platform access",
+    "All three Wool PR changed paths did not overlap on the audited heads, but no actual git composite merge and no CI status contexts validated",
+    "No user credentials, production paths, PLC, scheduled GitHub writes or paid CI used"
+  ],
+  "any_pr_merged": false,
+  "all_four_prs_draft": true,
+  "historical_recovery_closed": false
+}

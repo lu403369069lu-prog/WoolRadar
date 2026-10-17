@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "kind": "SELECTED_GIT_BLOB_MATCHED_LINUX_QA_AND_NEGATIVE_CONTROLS",
+  "status": "SELECTED_257_PASS_LEGACY_NATIVE_AND_REAL_BUSINESS_ACCEPTANCE_OPEN",
+  "selected": {
+    "total": 257,
+    "passed": 257,
+    "failed": 0,
+    "skipped": 0,
+    "distinct_test_methods_within_selected_suites": true,
+    "suites": [
+      {
+        "track": "coordination+eight-gate+raw-log-guard",
+        "tests": 87,
+        "passed": 87,
+        "failed": 0,
+        "skipped": 0,
+        "exit": 0,
+        "stdout_sha256": "8f17cc9a40cb7afbc38d0f5fe46db921d6d9487375cb9591e88ef30b75d31d83",
+        "command": "python -B -m unittest discover -s . -p 'test_historical*.py' -v",
+        "source_blobs": {
+          "runner": "08af6d6304758399282d7b1799604089570c7b09",
+          "formal_guard": "e51ec61d5fab3b82e763f8c147f73b3486123110",
+          "guard_race_tests": "76acb4ca9a48a709af611a92ed9554c89165f77d",
+          "external_gate_auditor": "f5ef4ba31c50e4b5e054834d7b903a2fc1958907",
+          "external_tests": [
+            "b048841bdd0f6367d3fd98ec97af0349d9ad79f4",
+            "0c13596d89d4df2c4366591fb5ece51b588f4abf"
+          ]
+        },
+        "new_methods_over_prior_coord83": 4,
+        "actual_full_frozen_checkout": false
+      },
+      {
+        "track": "WoolRadar public-corpus",
+        "tests": 82,
+        "passed": 82,
+        "failed": 0,
+        "skipped": 0,
+        "exit": 0,
+        "stdout_sha256": "f110c338810ad10b4405584d61fe4bdbee6023f3deda3d3ff6c1439e0f1f97d3",
+        "source_blob": "c9f6e031ba48d44e0091b89036c44aeae07864f3"
+      },
+      {
+        "track": "SAM synthetic migration",
+        "tests": 43,
+        "passed": 43,
+        "failed": 0,
+        "skipped": 0,
+        "exit": 0,
+        "stdout_sha256": "dfdce71124d03d4426f97502386da7af4a4ee92d9191bc0930c1358b2dbbe5bd",
+        "source_blob": "22582e67d9ac18aa66f4f43ac1d7556d6edc1476"
+      },
+      {
+        "track": "WoolRadar grant diagnostics",
+        "tests": 45,
+        "passed": 45,
+        "failed": 0,
+        "skipped": 0,
+        "exit": 0,
+        "stdout_sha256": "a20ce35c57de1e326b96168a1ce6d5c96e8230bed3f9a75ed8b1569029057143",
+        "source_blob": "6fe02aa7a83479c4eeea6a448b80f75988a13ffd"
+      }
+    ]
+  },
+  "co_staged_wool": {
+    "total": 127,
+    "passed": 127,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0,
+    "stdout_sha256": "5781c37e991c9e4237b21fc7211741d15c6d078c561d5e3df8f40af5e4a84d85",
+    "overlaps_selected_257": true,
+    "real_git_merge": false
+  },
+  "red_green": {
+    "previous_guard_source_blob": "072ba64688fcd479795620b870a803ddb29dc78b",
+    "new_guard_source_blob": "e51ec61d5fab3b82e763f8c147f73b3486123110",
+    "new_regression_blob": "76acb4ca9a48a709af611a92ed9554c89165f77d",
+    "old_tests": 4,
+    "old_failed": 3,
+    "old_passed": 1,
+    "old_exit": 1,
+    "old_raw_stdout_sha256": "998f077130fe60d636164c8ba2cd9e69e1536b6b5a903870a92faaa14f103442",
+    "new_tests": 4,
+    "new_passed": 4,
+    "new_failed": 0,
+    "new_exit": 0,
+    "full_suite_raw_stdout_sha256": "8f17cc9a40cb7afbc38d0f5fe46db921d6d9487375cb9591e88ef30b75d31d83",
+    "failure_modes": [
+      "Oversized raw test log with forged valid summary formerly accepted",
+      "Nonregular named pipe / FIFO could block the unbounded raw-log read; old-path-read mock demonstrated false acceptance",
+      "Symlink replacement after prior path precheck could read unrelated bytes and pass hash check; stale-precheck model accepted in old guard"
+    ],
+    "fix": [
+      "POSIX descriptor-relative O_NOFOLLOW open, regular-file fstat checks and bounded reads",
+      "Windows fallback performs pre-read lstat, opened fstat and post-read lstat file identity checks; this is narrower than POSIX and requires native Windows verification"
+    ],
+    "new_raw_log_cap_bytes": 8388608
+  },
+  "official_log_parser": {
+    "source_blob": "e51ec61d5fab3b82e763f8c147f73b3486123110",
+    "five_genuine_raw_stdout_logs_reparsed": true,
+    "all_counts_match": true
+  },
+  "frozen_historical": {
+    "families": 50,
+    "ready": 42,
+    "external_or_policy_gated": 8,
+    "distinct_commands": 39,
+    "partial_reconstructed_linux_commands": 10,
+    "partial_family_mappings": 11,
+    "partial_methods": 105,
+    "missing_strict_complete_checkout_command_receipts": 29,
+    "tsx_pinned_dependency_unavailable": 17,
+    "old_python_complete_checkout_unavailable": 12,
+    "strict_grouped_receipt_accepted": false
+  },
+  "unverified": [
+    "GitHub candidate PRs remain Draft and unmerged; no full real Git composite merge",
+    "No native Windows pinned old 39 command whole-batch receipt; Windows fallback needs real filesystem checks",
+    "No fresh independent Wool source gold / 95% recall / 09:30 local report bridge approved consume receipt",
+    "No SAM original 61/522 source audit, real MCP, release pointer rollback, Node24/26 full release receipt",
+    "No authenticated human approvals for gated private data and source reviews"
+  ],
+  "historical_recovery_closed": false
+}

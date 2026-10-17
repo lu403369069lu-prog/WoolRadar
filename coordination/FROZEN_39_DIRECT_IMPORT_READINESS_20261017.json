@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "scope": "Static ready-command test entrypoint import reference check; NOT execution",
+  "input": {
+    "manifest_git_blob": "96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744",
+    "frozen_source_commits": {
+      "wool": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f",
+      "sam": "82bf36efa90cced8dafb56502812eb49f40515f3",
+      "coord": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96"
+    }
+  },
+  "reviewed": {
+    "distinct_ready_entrypoint_files": 39,
+    "families": 42,
+    "checked_groups": [
+      {
+        "project": "WoolRadar",
+        "unique_python_test_files": 14,
+        "expected_local_core_module_imports_missing": 0,
+        "blobs_matched": 14
+      },
+      {
+        "project": "YinQieJi-SAM",
+        "unique_node_test_files": 19,
+        "literal_relative_module_imports_missing": 0,
+        "blobs_matched": 19,
+        "tsx_dependency_declared": "4.23.15",
+        "package_json_blob": "e0ef326a447821bee3526e45d242f8f4bcff08f6",
+        "package_lock_present": true
+      },
+      {
+        "project": "WoolRadar-Coord",
+        "unique_python_test_files": 6,
+        "expected_local_coordination_module_imports_missing": 0,
+        "blobs_matched": 6,
+        "python_namespace_package_handling": "coordination directory without __init__.py remains importable as namespace"
+      }
+    ],
+    "missing_statically_resolved_entrypoint_imports": 0,
+    "source_git_tree_truncated": false
+  },
+  "limitations": [
+    "Heuristic syntax scan of direct Python from/import statements and literal Node import ... from relative path statements; no runtime dynamic imports or transitive dependency proof",
+    "A declared tsx dependency and committed package lock do not prove it is installed on Windows or that Node24/26 tests run",
+    "Does not validate Python third-party distribution availability, filesystem case parity, test assertion behavior, production sources, safety boundaries, or real business gold",
+    "Zero of the frozen 39 commands executed here; exact immutable original test entrypoints already previously verified 42/42 by Git blob"
+  ],
+  "safety": {
+    "historical_recovery_closed": false,
+    "release_ready": false,
+    "no_production_modified": true
+  }
+}

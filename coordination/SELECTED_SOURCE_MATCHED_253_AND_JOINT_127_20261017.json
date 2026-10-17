@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "classification": "REAL_SELECTED_LINUX_UNIT_QA_NOT_FULL_FROZEN_NATIVE_OR_BUSINESS_ACCEPTANCE",
+  "source": "interactive-chat-offline-subprocess+GitHub-readback",
+  "execution": {
+    "os": "Linux",
+    "python": "3.13.5",
+    "node": "22.16.0",
+    "disposable_files": true,
+    "actual_full_old_git_checkout": false
+  },
+  "selected": {
+    "methods": 253,
+    "passed": 253,
+    "failed": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "track": "coordination-executor-guard-plus-external-eight-gate-auditor",
+        "github_pr": "https://github.com/lu403369069lu-prog/WoolRadar/pull/42",
+        "head_at_verification": "580ce3b35ef9b57fd98ed786aeb267fd90988d9e",
+        "tests": 83,
+        "passed": 83,
+        "failed": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "command": "python -B -m unittest discover -s . -p 'test_historical*.py' -v",
+        "raw_log_sha256": "67ae2162993cacde1ea4df15e79e407db50d781b83a5b4ae3026282e792f1ee1",
+        "blobs": {
+          "runner": "08af6d6304758399282d7b1799604089570c7b09",
+          "guard": "072ba64688fcd479795620b870a803ddb29dc78b",
+          "external_gate_auditor": "f5ef4ba31c50e4b5e054834d7b903a2fc1958907",
+          "external_gate_tests": "b048841bdd0f6367d3fd98ec97af0349d9ad79f4",
+          "external_gate_cli_tests": "0c13596d89d4df2c4366591fb5ece51b588f4abf"
+        },
+        "incremental_unique_methods_over_old_coord53": 30
+      },
+      {
+        "track": "wool-public-corpus",
+        "github_pr": "https://github.com/lu403369069lu-prog/WoolRadar/pull/41",
+        "head_at_verification": "6616b4d65949beb26b0bcfe20a293c633efd49f5",
+        "tests": 82,
+        "passed": 82,
+        "failed": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "command": "python -B -m unittest discover -s tests -p 'test_public_corpus_*.py' -v",
+        "raw_log_sha256": "f110c338810ad10b4405584d61fe4bdbee6023f3deda3d3ff6c1439e0f1f97d3",
+        "source_blob": "c9f6e031ba48d44e0091b89036c44aeae07864f3"
+      },
+      {
+        "track": "sam-migration-synthetic",
+        "github_pr": "https://github.com/lu403369069lu-prog/YinQieJi/pull/17",
+        "head_at_verification": "0adf08324f612d343dfafe386bfd2503ada5beae",
+        "tests": 43,
+        "passed": 43,
+        "failed": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "command": "node --test tools/migrate-release-041.*.test.mjs",
+        "raw_log_sha256": "dfdce71124d03d4426f97502386da7af4a4ee92d9191bc0930c1358b2dbbe5bd",
+        "source_blob": "22582e67d9ac18aa66f4f43ac1d7556d6edc1476",
+        "byte_preservation_test_blob": "683327a3f353883b0e646a792da3365e17fd7874"
+      },
+      {
+        "track": "wool-grant-diagnostic",
+        "github_pr": "https://github.com/lu403369069lu-prog/WoolRadar/pull/43",
+        "head_at_verification": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+        "tests": 45,
+        "passed": 45,
+        "failed": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "command": "python -B -m unittest discover -s tests -p 'test_*grant*.py' -v",
+        "raw_log_sha256": "a20ce35c57de1e326b96168a1ce6d5c96e8230bed3f9a75ed8b1569029057143",
+        "source_blob": "6fe02aa7a83479c4eeea6a448b80f75988a13ffd"
+      }
+    ]
+  },
+  "selected_gate_regex": "HISTORICAL_CODEX_42_RECEIPT_GUARD_20261017.py:parse_actual_log_counts() parsed exactly one real test aggregate per stdout log and returned totals, all passing with no skipped/failed",
+  "wool_joint": {
+    "tests": 127,
+    "passed": 127,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "raw_log_sha256": "5781c37e991c9e4237b21fc7211741d15c6d078c561d5e3df8f40af5e4a84d85",
+    "command": "python -B -m unittest discover -s tests -p 'test_*.py' -v",
+    "scope": "Manually staged exact public-corpus and grant-diagnostic modules/test files in one isolated directory",
+    "overlaps_selected_253": true,
+    "not_full_git_merge": true
+  },
+  "legacy_frozen": {
+    "historical_families": 50,
+    "ready": 42,
+    "external_or_policy_gated": 8,
+    "distinct_frozen_commands": 39,
+    "partial_reconstructed_linux_commands": 10,
+    "partial_methods_passed": 105,
+    "missing_complete_old_checkout_native_command_receipts": 29,
+    "unavailable_locked_typescript_commands": 17,
+    "missing_complete_legacy_python_tree_commands": 12,
+    "official_grouped_guard_accepted": false
+  },
+  "business_gates": {
+    "wool_fresh_independent_95_percent_recall_verified": false,
+    "wool_actual_0930_daily_consumer_verified": false,
+    "sam_original_61_522_source_golds_verified": false,
+    "sam_real_mcp_and_windows_release_verified": false,
+    "manual_approval_for_private_artifact_publication_verified": false
+  },
+  "constraints": [
+    "Only selected exact-blob source/test fixtures executed, no full old private repo checkout",
+    "A GitHub file hash does not mean independently approved business behavior",
+    "No production, authenticated account, paid CI, private datasets, PR merges or scheduler GitHub writes touched"
+  ],
+  "historical_recovery_closed": false
+}

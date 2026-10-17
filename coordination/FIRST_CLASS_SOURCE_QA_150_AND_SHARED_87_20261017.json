@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "scope": "Interactive independently executed selected Linux module tests, NOT frozen full-history release",
+  "tests": {
+    "selected_methods_total": 150,
+    "passed": 150,
+    "failed": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "id": "coord42",
+        "methods": 33,
+        "log_sha256": "be86bf262ea4c76750bdca09860240e93146e65d8765a79a05f50d1f15459f8b",
+        "source_blob": "92dfcc62f1a3ea42e952ceea3ca5a95019539e6b",
+        "guard_blob": "2be2736a00b2b4aec3f54787949762b87c433de2",
+        "new_test_blob": "ef04f2332d52ae6cc4258575790ef88460c5dff8"
+      },
+      {
+        "id": "sam17",
+        "methods": 30,
+        "log_sha256": "7cf625d10fe7d4cbbc340c3b5b276690d18d4f813437bde347cb5ebfc309bf9d",
+        "source_blob": "828c2adb51fe180360dc5aef2de4886cd873729a",
+        "new_test_blob": "e6b37d4234a1ed9e594e67e1cbbf55bf124691ad"
+      },
+      {
+        "id": "wool41",
+        "methods": 56,
+        "log_sha256": "97886322502006e37b3f774da82ac27c9be7fa9031f86d585260124f3da18eeb",
+        "source_blob": "2f9d57a692fd8d13f4bb58d11b995c699b51a258",
+        "new_test_blob": "1eb9ecb1440898fc105dc6aac07dc3d791f3d425"
+      },
+      {
+        "id": "wool43",
+        "methods": 31,
+        "log_sha256": "33049babc6763151b0416ee603b95f714293bd99cb739b4aa6ce4a66560e17e9",
+        "classifier_source_blob": "8543c9c63543645e36fcd0ed3fea396081c258f7",
+        "diagnostic_blob": "4c5fec88b8bcd1b96840ab681d60f1111b7271f7"
+      }
+    ]
+  },
+  "red_controls": [
+    {
+      "area": "multiple TAP/Python aggregate spoofing",
+      "new_tests": 6,
+      "old_failures": 5,
+      "old_exit": 1,
+      "log_sha256": "a3bff101a21cc99c4bd6e5b82602673b45a8a1280684ec0852fae3551e272f28"
+    },
+    {
+      "area": "SAM claim id source collision",
+      "new_tests": 3,
+      "old_failures": 2,
+      "old_exit": 1,
+      "log_sha256": "d5ef701a778594b619e0161cc5463dbdf2a1a9aba48744679ad712f91154fcbb"
+    },
+    {
+      "area": "Wool SPA sensitive hash route",
+      "new_tests": 3,
+      "old_failed_assertions": 4,
+      "old_exit": 1,
+      "log_sha256": "c92ce56e2cf4acb939c4696839989e1daac9a7c70200226ead74a2d8fe0ba6fb"
+    }
+  ],
+  "shared_wool_pr_integration": {
+    "pr41_and_pr43_same_base": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+    "changed_file_overlaps": 0,
+    "executed_together": true,
+    "passed": 87,
+    "failed": 0,
+    "skipped": 0,
+    "log_sha256": "b9c88b9e4808aefbd9c923405f2df930769488f05a2a94218c53a997e0585091",
+    "precise_scope": "16 unittest files, common locally staged core/ modules; not a Git merge, not the full repository"
+  },
+  "frozen_history": {
+    "ready": 42,
+    "distinct_commands": 39,
+    "source_blob_matches": 42,
+    "command_target_matches": 42,
+    "externally_gated": 8,
+    "actual_native_windows_commands_executed": 0
+  },
+  "production_and_ci": {
+    "merged_any_pr": false,
+    "connected_production_modified": false,
+    "remote_ci_statuses_per_pr": 0,
+    "subscription_or_paid_ci_started": false,
+    "github_writes_via_scheduled_automation": false
+  },
+  "limitations": [
+    "Linux Python3.13.5 + Node22.16.0 only",
+    "No complete private repository local checkout: git fetch github.com failed DNS, selected sources retrieved using connected GitHub plugin",
+    "Coordinator source selected tests used an exact evaluation-logic shim for its adjacent full contract; no claim of complete frozen CLI integration",
+    "No Windows Node24/26, live service MCP, independent unseen 95%-recall business source gold, 09:30 output consumer or release pointer rollback"
+  ],
+  "historical_recovery_closed": false
+}

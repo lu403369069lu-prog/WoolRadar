@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "run_date": "2026-10-17",
+  "environment": {
+    "os": "Linux",
+    "python": "3.13.5",
+    "node": "v22.16.0"
+  },
+  "status": "SELECTED_ISOLATED_TESTS_PASS;FROZEN_HISTORICAL_EXECUTION_OPEN",
+  "tests_total": 138,
+  "failed": 0,
+  "skipped": 0,
+  "suites": [
+    {
+      "name": "coord-executor-formal-guard",
+      "methods": 27,
+      "exit": 0,
+      "raw_log_sha256": "028868fd2c6641eb1d51638dd2daafb20a1993a70d344e0d020658c9ba043f94",
+      "source_blob": "255d5bf735b7f58760ee5ac6464ec5539b4744e9",
+      "guard_blob": "6dd9a83ac01f2f233437deb527fa2b9197b791cd"
+    },
+    {
+      "name": "sam-release-migration",
+      "methods": 27,
+      "exit": 0,
+      "raw_log_sha256": "2a6cc99c6f431ec6fff05f905f62de223fa0e1ef4e05269146eb10084fee9c51",
+      "source_blob": "79a675e3d6c0566262ea3e4c889501586c6770c7",
+      "new_path_test_blob": "90b2f39e02aa8879cdb752c71655d03aff3d72ac"
+    },
+    {
+      "name": "wool-public-corpus",
+      "methods": 53,
+      "exit": 0,
+      "raw_log_sha256": "233f385e8e57b65286bb9d8396110540c1e5819bb2fdb7de5ca244054a4457ce",
+      "source_blob": "168e86445780910eceda5d2c1d75a5db7bf0418d",
+      "new_test_blobs": [
+        "0f64cdfe7e6ba7ed6f7b3fcd010283e7e9fdcb85",
+        "fe4b9b13eea8cd10b59c64186535944464d917b6",
+        "f759222f0a8a4dfd6142444bbb663e627b4ac983"
+      ]
+    },
+    {
+      "name": "wool-grant",
+      "methods": 31,
+      "exit": 0,
+      "raw_log_sha256": "4156484af06c2134c0e18921cf345342ddf2da5d4c798978a007a2e493a4653d",
+      "original_classifier_blob": "8543c9c63543645e36fcd0ed3fea396081c258f7",
+      "diagnostic_blob": "4c5fec88b8bcd1b96840ab681d60f1111b7271f7"
+    }
+  ],
+  "new_red_controls": [
+    {
+      "test": "wool-percent-encoded-sensitive",
+      "methods": 3,
+      "exit": 1,
+      "assertion_failures": 7,
+      "log_sha256": "34756b21679cd8666288f46df972f0f33f14ea93eacce4ae0cd943368b80cfc6"
+    },
+    {
+      "test": "wool-multi-layer-percent-encoding",
+      "methods": 4,
+      "exit": 1,
+      "assertion_failures": 2,
+      "log_sha256": "994c2197e44a5b6aed101edab407796f976c1dea956e2f2d7d0c51d343ed05a4"
+    },
+    {
+      "test": "wool-bool-verdict-integrity",
+      "methods": 3,
+      "exit": 1,
+      "assertion_failures": 9,
+      "log_sha256": "964769d6b080d8f31c007f3e59725b73dafe2239e26f8eaea177ec82f701d2a7"
+    },
+    {
+      "test": "wool-in-root-symlink-overwrite",
+      "methods": 3,
+      "exit": 1,
+      "assertion_failures": 2,
+      "log_sha256": "cc0735b78dceb2c7d2dee0825053dc79f29c2e9d27878899806bb94a1f173679"
+    },
+    {
+      "test": "sam-release-source-target-symlinks",
+      "methods": 3,
+      "exit": 1,
+      "assertion_failures": 2,
+      "log_sha256": "3c23bee09f1b3ad63d87208e68b5a5492c90849f82d767bb675038db699b65f5"
+    }
+  ],
+  "frozen_source_audit": {
+    "manifest_blob": "96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744",
+    "repo_head_sources": 3,
+    "tree_truncations": 0,
+    "ready_families": 42,
+    "exact_file_git_blob_matches": 42,
+    "distinct_test_files": 39,
+    "missing": 0,
+    "incorrect_blob": 0,
+    "external_or_policy_gated": 8,
+    "evidence_path": "coordination/FROZEN_42_GIT_TREE_SOURCE_AUDIT_20261017.json"
+  },
+  "candidate_pr_sha_at_test": {
+    "wool41": "fb091da93c0489ce88e4c1a6db0dae8f4d41be51",
+    "sam17": "ee76958c7cbd6ed50fc3fe3fd306f47eb32ce780",
+    "coord42": "0ee138aa46b14ce3fbedd340d613d6a94de7e396",
+    "wool43": "a4b969919603291849e0fddc535b0309628eb3c6"
+  },
+  "scope_limits": [
+    "Only pinned modules/formal tests reconstructed in disposable Linux directory; not full repository checkout",
+    "Coordinator neighboring batch contract's exact evaluate_run/summarize logic locally staged in narrow shim, not entire original contract",
+    "Actual frozen 39 command invocations on Windows, full Node24/26, real customer legacy migration/rollback, SAM 61/522 and MCP, Wool fresh blind source gold and 09:30 consumer receipt not executed",
+    "Symlink verification is preflight defense, not race-proof sandbox; Windows symlink support requires native testing",
+    "Raw stdout/stderr retained only locally; file digests and reviewed Git blobs in this report are identity evidence, not a production acceptance receipt"
+  ],
+  "historical_recovery_closed": false,
+  "windows_historical_commands_executed": 0
+}

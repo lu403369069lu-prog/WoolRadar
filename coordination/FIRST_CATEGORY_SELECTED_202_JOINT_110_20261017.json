@@ -1,0 +1,142 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "classification": "REAL_SELECTED_ISOLATED_LINUX_TESTS_NOT_FULL_FROZEN_NATIVE_ACCEPTANCE",
+  "environment": {
+    "os": "Linux",
+    "python": "3.13.5",
+    "node": "v22.16.0",
+    "execution": "real local isolated subprocesses with Git blob matched sources"
+  },
+  "selected": {
+    "tests": 202,
+    "passed": 202,
+    "failed": 0,
+    "skipped": 0,
+    "exit_codes": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "suites": [
+      {
+        "id": "coord42",
+        "tests": 53,
+        "passed": 53,
+        "exit": 0,
+        "head_at_test": "229be49401e53c77621a1a2f495d9df83d3c8311",
+        "source_git_blob": "08af6d6304758399282d7b1799604089570c7b09",
+        "new_test_blob": "458db80b575369a1a4614fe4de0225a7745ab3db",
+        "stdout_sha256": "eb6ec6ae434d0ce8fb91d76ee1dbeb49e5bf426f00f8c67e60ddfd3d66af5a81"
+      },
+      {
+        "id": "wool41",
+        "tests": 65,
+        "passed": 65,
+        "exit": 0,
+        "head_at_test": "efb861999e38b76441137a8a5a381ddfb043c7f0",
+        "source_git_blob": "e836ddd8bafc474ddad5f70e7e6dd4f32a4d99ba",
+        "new_test_blobs": [
+          "7e3cd377ecfbe23287240ab84862037ce79c20c4",
+          "86d5532a69d3619eb6dab98b4fa5984e4e50b728"
+        ],
+        "stdout_sha256": "70b567be28be728e17d5519ddc73c1b07962987d3f32a38c325055479dc35721"
+      },
+      {
+        "id": "sam17",
+        "tests": 39,
+        "passed": 39,
+        "exit": 0,
+        "head_at_test": "7330d8cb858b869a36c3c1135b173c536945e61e",
+        "source_git_blob": "b80c4e693d11d5a7b4f7ac174e32e40fdf5f95e2",
+        "stdout_sha256": "b29b4fed26fdc279397d8efc3f7010b8cbf121253e73e1e84bccf914429a345f"
+      },
+      {
+        "id": "wool43",
+        "tests": 45,
+        "passed": 45,
+        "exit": 0,
+        "head_at_test": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+        "source_git_blob": "6fe02aa7a83479c4eeea6a448b80f75988a13ffd",
+        "stdout_sha256": "2ee8e4379e36470958d9e4813b19640449f466cc6b51f745986f44eaffec24b4"
+      }
+    ]
+  },
+  "wool_joint": {
+    "tests": 110,
+    "passed": 110,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0,
+    "stdout_sha256": "d6919ae3ea8f2963ab0b6d95137627e3d032a24b5e8573a91d9e9ebd7fd6a677",
+    "source_git_blobs": [
+      "e836ddd8bafc474ddad5f70e7e6dd4f32a4d99ba",
+      "6fe02aa7a83479c4eeea6a448b80f75988a13ffd",
+      "8543c9c63543645e36fcd0ed3fea396081c258f7"
+    ],
+    "qualification": "Manually co-staged modules + tests; not a full Git merge, overlaps selected suites and must not be added to 202 as unique methods"
+  },
+  "real_red_control_batches": [
+    {
+      "category": "Coordinator ignored/untracked script admission under Git config and .gitignore",
+      "old_tests": 3,
+      "old_failed": 2,
+      "old_exit": 1,
+      "log_sha256": "ee697fe0f90fce959b67ada1e969f2d6e874145adc21fc05e8043e6a15c9fc04",
+      "new_tests": 3,
+      "all_green": true
+    },
+    {
+      "category": "Wool Unicode email local parts in path/title",
+      "old_tests": 3,
+      "old_failed_assertions": 4,
+      "old_exit": 1,
+      "log_sha256": "dc02487fd92f5e92fa5a141945a893cdd147904a8b6e5a2e61e9c12b81c72f7d",
+      "new_tests": 3,
+      "all_green": true
+    },
+    {
+      "category": "Wool feed plain API credentials bearer and long/payment-number tokens",
+      "old_tests": 3,
+      "old_failed_assertions": 2,
+      "old_exit": 1,
+      "log_sha256": "0822b7ac319e46297ebd5f1ec23e075bc413eff3d8681a40aebe0b71ba8dc899",
+      "new_tests": 3,
+      "all_green": true
+    }
+  ],
+  "raw_log_parser": {
+    "source": "coordination/HISTORICAL_CODEX_42_RECEIPT_GUARD_20261017.py",
+    "git_blob": "072ba64688fcd479795620b870a803ddb29dc78b",
+    "executed_log_parses": 5,
+    "all_counts_consistent": true,
+    "no_skipped_or_failed": true
+  },
+  "frozen_history": {
+    "family_total": 50,
+    "ready": 42,
+    "external_gated": 8,
+    "unique_commands": 39,
+    "partial_linux_commands_executed": 10,
+    "partial_linux_families_covered": 11,
+    "partial_linux_methods_passed": 105,
+    "missing_full_native_receipts": 29,
+    "missing_full_native_mapped_families": 31,
+    "partial_evidence": "coordination/FROZEN_10_COMMANDS_11_FAMILIES_LINUX_PARTIAL_20261017.json",
+    "remaining_gate_matrix": "coordination/FIRST_CATEGORY_29_FROZEN_COMMANDS_NATIVE_GATE_MATRIX_20261017.json",
+    "all_39_official_acceptance": false
+  },
+  "limitations": [
+    "Not full private source checkout or pinned 39-command official runner receipt",
+    "No SAM npm tsx locally; remaining 17 TSX test commands need original dependency installation and exact old Git tree",
+    "Other 12 Python commands require full matching old private checkout not mounted here",
+    "No Windows Node24/26, real 0.4.0 release/MCP/61/522, release transaction and rollback",
+    "No new independent Wool held-out labels or real 09:30 consumer receipt",
+    "PR41+43 source graph manually staged rather than Git merge; no GitHub CI context on these commits",
+    "No production files, private user tokens, PLC, paid CI, or scheduled GitHub writer touched"
+  ],
+  "all_prs_draft": true,
+  "any_pr_merged": false,
+  "historical_recovery_closed": false
+}

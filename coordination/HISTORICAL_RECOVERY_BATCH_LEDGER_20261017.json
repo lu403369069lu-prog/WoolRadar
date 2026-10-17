@@ -1,0 +1,264 @@
+{
+  "schema_version": 1,
+  "updated_utc": "2026-10-17",
+  "written_by": "interactive-chat-GitHub",
+  "overall_status": "PARTIAL_NOT_RELEASE_READY",
+  "historical_recovery_closed": false,
+  "history_family_total": 50,
+  "source_runnable_families": 42,
+  "externally_gated_families": 8,
+  "frozen_historical_command_count": 39,
+  "windows_historical_commands_executed_in_this_turn": 0,
+  "ai_delivery_receipt_received": false,
+  "new_independent_business_gold_accepted": false,
+  "candidate_tracks": [
+    {
+      "id": "coord42",
+      "repository": "lu403369069lu-prog/WoolRadar",
+      "pr": 42,
+      "head_at_review": "728e0766612fcae7a674c5dacab59a8b8b664cf0",
+      "state": "DRAFT_UNMERGED",
+      "code_committed": true,
+      "scope": [
+        "legacy-to-official-guard receipt bridge",
+        "raw byte-matched test-NNN logs",
+        "strict non-UTF8 rejection",
+        "official guard CLI gate"
+      ],
+      "next_gate": "local Python and Node cross-module tests + frozen real 39 command batch",
+      "isolated_qa_done": true,
+      "isolated_qa_methods": 27,
+      "latest_tests": "GREEN_SELECTED_LINUX_NOT_NATIVE_WINDOWS_OR_BUSINESS",
+      "isolated_linux_test_status": "PASS_SELECTED_SOURCE_MATCHED_91_COORD_AND_GATES_WIN_FALLBACK_SIMULATION",
+      "isolated_linux_test_methods": 91
+    },
+    {
+      "id": "wool41",
+      "repository": "lu403369069lu-prog/WoolRadar",
+      "pr": 41,
+      "head_at_review": "6616b4d65949beb26b0bcfe20a293c633efd49f5",
+      "state": "DRAFT_UNMERGED",
+      "code_committed": true,
+      "latest_tests": "SELECTED_LINUX_GREEN_NOT_FROZEN_NATIVE_OR_EXTERNAL_BUSINESS",
+      "scope": [
+        "URL parser normalization rejection",
+        "credential-like path and source metadata redaction"
+      ],
+      "next_gate": "Windows full suite + unseen source gold + actual daily delivery receipt",
+      "isolated_qa_done": true,
+      "isolated_qa_methods": 43,
+      "isolated_linux_test_status": "PASS_SELECTED_ISOLATED_ZERO_SKIPS",
+      "isolated_linux_test_methods": 82
+    },
+    {
+      "id": "sam17",
+      "repository": "lu403369069lu-prog/YinQieJi",
+      "pr": 17,
+      "head_at_review": "efcd73540587c482c93b8d487385de636d47fadd",
+      "state": "DRAFT_UNMERGED",
+      "code_committed": true,
+      "latest_tests": "SELECTED_LINUX_GREEN_NOT_FROZEN_NATIVE_OR_EXTERNAL_BUSINESS",
+      "scope": [
+        "per-card review metadata preservation",
+        "non-writing 0.4.0 migration preflight"
+      ],
+      "next_gate": "Windows Node24/26 release full test + real source read-only audit + real MCP + 61/522 gold",
+      "isolated_qa_done": true,
+      "isolated_qa_methods": 24,
+      "isolated_linux_test_status": "PASS_SELECTED_ISOLATED_ZERO_SKIPS",
+      "isolated_linux_test_methods": 43
+    },
+    {
+      "id": "wool43",
+      "repository": "lu403369069lu-prog/WoolRadar",
+      "pr": 43,
+      "head_at_review": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+      "state": "DRAFT_UNMERGED",
+      "code_committed": true,
+      "latest_tests": "SELECTED_LINUX_GREEN_NOT_FROZEN_NATIVE_OR_EXTERNAL_BUSINESS",
+      "scope": [
+        "diagnostic-only developer grant miss reasons without classifier mutation",
+        "aggregate missing-signal counts without source text disclosure",
+        "local stdin-only JSONL CLI"
+      ],
+      "next_gate": "local 10+4 diagnostics tests + original developer grant suite + unseen source/time-window gold",
+      "isolated_qa_done": true,
+      "isolated_qa_methods": 31,
+      "isolated_linux_test_status": "PASS_SELECTED_ISOLATED_ZERO_SKIPS",
+      "isolated_linux_test_methods": 45
+    }
+  ],
+  "prior_validation_scope": "Prior-turn isolated synthetic regressions exist in Issues. They do not certify the new heads.",
+  "constraints": {
+    "auto_merge": false,
+    "live_production_modified": false,
+    "scheduled_github_writer": false,
+    "private_data_exported": false,
+    "paid_ci_launched": false
+  },
+  "handoff": "coordination/HISTORICAL_42_RUNNER_HARDENED_HANDOFF_20261017.md",
+  "pr43_recall_policy": "Old 56-row, FN2 developer-used freeze cannot become independent holdout by rescoring it.",
+  "latest_local_qa": {
+    "date": "2026-10-17",
+    "status": "261_SELECTED_EXACT_GIT_BLOB_LINUX_PASS_127_JOINT_OVERLAPPING_PASS_NATIVE_FULL_TREE_NOT_VERIFIED",
+    "methods": 261,
+    "passed": 261,
+    "failed": 0,
+    "skipped": 0,
+    "by_track": {
+      "coord42_plus_external8_and_two_windows_fallback_simulations": 91,
+      "wool41": 82,
+      "sam17": 43,
+      "wool43": 45
+    },
+    "shared_wool_cross_module_methods": 127,
+    "shared_wool_cross_module_passed": 127,
+    "evidence": "coordination/SELECTED_261_COORD91_JOINT127_20261017.json"
+  },
+  "frozen_source_verification": {
+    "ready_families": 42,
+    "blobs_matched": 42,
+    "distinct_test_files": 39,
+    "missing": 0,
+    "allowlisted_argv": 42,
+    "exact_command_source_paths": 42,
+    "tree_truncated": false,
+    "verified_manifest_blob": "96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744",
+    "evidence": "coordination/FROZEN_42_GIT_TREE_SOURCE_AUDIT_20261017.json"
+  },
+  "first_category_latest": {
+    "date": "2026-10-17",
+    "status": "INTERACTIVE_CHAT_SOURCE_MATCHED_261_SELECTED_TESTS_PASS;FROZEN_NATIVE_AND_SOURCE_APPROVAL_EXTERNAL_GATES_OPEN",
+    "selected_linux_methods": 261,
+    "selected_passed": 261,
+    "selected_failed": 0,
+    "selected_skipped": 0,
+    "combined_wool_modules": 127,
+    "combined_passed": 127,
+    "exact_git_blobs_matched": true,
+    "evidence": "coordination/SELECTED_261_COORD91_JOINT127_20261017.json",
+    "historical_frozen_partial_linux": {
+      "unique_commands": 10,
+      "ready_family_mappings": 11,
+      "methods": 105,
+      "whole_batch_guard_accepted": false
+    },
+    "unexecuted_full_native_commands": 29,
+    "missing_tsx_and_full_sam_tree": 17,
+    "unmounted_full_legacy_python_checkout": 12,
+    "external_policy_family_gates": 8,
+    "native_handoff": "coordination/CODEX_FROZEN_FULL_39_NATIVE_HANDOFF_20261017.md",
+    "historical_80_percent_not_accepted": true
+  },
+  "external_eight_gate_readonly_checkpoint": {
+    "date": "2026-10-17",
+    "frozen_manifest_blob": "96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744",
+    "enumerated_families": 8,
+    "local_auditor_tests_executed": 30,
+    "local_auditor_tests_passed": 30,
+    "local_auditor_tests_failed": 0,
+    "local_auditor_tests_skipped": 0,
+    "execution_environment": "Linux Python 3.13.5 POSIX only",
+    "raw_test_log_sha256": "62a4541535e3b7221b0e12db66ce6ef413bc42a9ecb270fd8f51c6c71c095a81",
+    "auditor_code_git_blob": "f5ef4ba31c50e4b5e054834d7b903a2fc1958907",
+    "auditor_test_git_blob": "b048841bdd0f6367d3fd98ec97af0349d9ad79f4",
+    "code_and_tests_written_to_draft_pr42": true,
+    "all_eight_review_matrix": "coordination/EXTERNAL_EIGHT_GATE_REVIEW_MATRIX_20261017.md",
+    "architecture_document_review_only": true,
+    "scheduler_instruction_review_only": true,
+    "independent_external_approvals_verified": 0,
+    "remaining_historical_frozen_full_native_commands_without_receipts": 29,
+    "all_external_gates_accepted": false,
+    "original_frozen_business_acceptance_closed": false,
+    "cli_test_git_blob": "0c13596d89d4df2c4366591fb5ece51b588f4abf",
+    "cli_manifest_loader_synthetic": true,
+    "full_immutable_manifest_cli_test_run": false,
+    "evidence": "coordination/EXTERNAL_EIGHT_GATE_30_TEST_EXECUTION_20261017.json",
+    "composed_executor_auditor_joint_tests": 83,
+    "composed_joint_passed": 83,
+    "composed_joint_failed": 0,
+    "composed_joint_skipped": 0,
+    "composed_joint_log_sha256": "d723dfb34a7d10dc56accd0ce20f5277e0bd6ab66cbcf0ac0fd1f538eee6d83e",
+    "composed_joint_evidence": "coordination/HISTORICAL_EXECUTOR_EIGHT_GATE_JOINT_83_20261017.json"
+  },
+  "sam_source_id_type_checkpoint": {
+    "review_date": "2026-10-17",
+    "repository": "lu403369069lu-prog/YinQieJi",
+    "draft_pr": 17,
+    "production_source": "SAM/snapshot/src/source-qualified.ts",
+    "old_blob": "0f7b8c15f6d2bf221a0a7cbddc47f4251a8af72b",
+    "fixed_blob": "d0f0c2f51e743889bf2101e6f3a5268c0831d747",
+    "new_test_blob": "51c8dc4fe54feb0f7922d01ce5801320e15b0bce",
+    "actual_node22_type_strip_negative_tests_before": {
+      "tests": 7,
+      "passed": 3,
+      "failed": 4,
+      "exit_code": 1
+    },
+    "after": {
+      "tests": 7,
+      "passed": 7,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "joint_with_existing_migration": {
+      "tests": 50,
+      "passed": 50,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "raw_stdout_sha256": "93e92db1336123161c5267d0aec9c6a8006d93b9636d4fa5a5304feed32ef88c"
+    },
+    "evidence": "YinQieJi/SAM/independent-review/source-id-runtime-types-redgreen-20261017.json",
+    "official_full_repo_tsx_run_completed": false,
+    "source_human_review_accepted": false,
+    "real_mcp_validated": false,
+    "raw_win_node24_26_validated": false,
+    "additional_old_negative_tests": {
+      "tests": 11,
+      "passed": 8,
+      "failed": 3,
+      "exit_code": 1
+    },
+    "latest_joint_sam_node22": {
+      "tests": 54,
+      "passed": 54,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "raw_stdout_sha256": "7dd9563641c786686b5eca80935d765f4330956cb92929cadacd6e7029dd407e"
+    },
+    "still_unverified": [
+      "Full project npm test with pinned tsx",
+      "Native Windows Node24/26",
+      "Real SAM MCP, 61-case/522-source gold and T009/T031 human review"
+    ]
+  },
+  "external_eight_gate_auditor": {
+    "read_only_gate_families": 8,
+    "source_and_two_test_blobs_now_verified_on_PR42": true,
+    "source_blob": "3237eb61d54ec62927bb06a15c1ba056e8f8fb42",
+    "test_blobs": [
+      "253e05c0bb35ba5664794e967b68d30f7b4e0997",
+      "0c13596d89d4df2c4366591fb5ece51b588f4abf"
+    ],
+    "subset_tests": 32,
+    "integrated_coord_tests": 91,
+    "windows_fallback_synthetic_checks": 2,
+    "windows_actual_native_verified": false,
+    "gate_human_approvals_verified": 0,
+    "ledger_note": "91 includes earlier 53 coordinator methods; 127 joint Wool tests overlap overall selected"
+  },
+  "formal_raw_log_guard_20261017": {
+    "new_guard_blob": "e51ec61d5fab3b82e763f8c147f73b3486123110",
+    "new_regression_blob": "5ab8a2e602fbf1153012f7b9e307ec5622d87cb9",
+    "old_raw_race_suite_failed": 3,
+    "old_raw_race_suite_total": 4,
+    "full_coord_selected_green": 91,
+    "posix_nofollow": true,
+    "win32_fallback_posix_sim_tests_green": 2,
+    "actual_windows_native_pending": true,
+    "max_raw_log_bytes": 8388608,
+    "full_native_acceptance": false
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "scope": "Selected true frozen-manifest command executions reconstructed in disposable partial Linux source trees; NOT full-frozen-repository, official guard or Windows acceptance",
+  "python_version": "3.13.5",
+  "node_version": "v22.16.0",
+  "frozen_manifest_blob": "96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744",
+  "frozen_heads": {
+    "wool": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f",
+    "sam": "82bf36efa90cced8dafb56502812eb49f40515f3",
+    "coord": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96"
+  },
+  "distinct_frozen_commands_executed": 10,
+  "distinct_historical_ready_families_covered": 11,
+  "methods_executed": 105,
+  "methods_passed": 105,
+  "methods_failed": 0,
+  "methods_skipped": 0,
+  "raw_byte_logs_uploaded": false,
+  "commands": [
+    {
+      "families": [
+        "WR-H03"
+      ],
+      "project": "wool",
+      "command": "python -B -m unittest discover -s tests -p test_config_backup.py -v",
+      "cwd": ".",
+      "count": 6,
+      "sha": "112438f8e39515d18942e8c16f1da5c744dcb95984567936a34432f6f4ba580c",
+      "exit_code": 0,
+      "skipped": 0,
+      "failed": 0,
+      "log_sha256": "112438f8e39515d18942e8c16f1da5c744dcb95984567936a34432f6f4ba580c"
+    },
+    {
+      "families": [
+        "WR-H07"
+      ],
+      "project": "wool",
+      "command": "python -B -m unittest discover -s tests -p test_public_corpus_identity.py -v",
+      "cwd": ".",
+      "count": 13,
+      "sha": "d6b976b253c32a6c532a5ba8a760b81f42f672ea6bcaba66239a5aa8d6eb93a1",
+      "exit_code": 0,
+      "skipped": 0,
+      "failed": 0,
+      "log_sha256": "d6b976b253c32a6c532a5ba8a760b81f42f672ea6bcaba66239a5aa8d6eb93a1"
+    },
+    {
+      "families": [
+        "WR-H08",
+        "WR-H09"
+      ],
+      "project": "wool",
+      "command": "python -B -m unittest discover -s independent-quality/public-corpus-blind-dedup-20261016 -p test_freeze_public_sample_dedup.py -v",
+      "cwd": ".",
+      "count": 23,
+      "sha": "ad66dd8142d76d4c282d01b904c5e4c89c8993a7d9ea6c2ecab183b534e31926",
+      "exit_code": 0,
+      "skipped": 0,
+      "failed": 0,
+      "log_sha256": "ad66dd8142d76d4c282d01b904c5e4c89c8993a7d9ea6c2ecab183b534e31926"
+    },
+    {
+      "families": [
+        "WR-H10"
+      ],
+      "project": "wool",
+      "command": "python -B -m unittest discover -s tests -p test_public_corpus_timestamp.py -v",
+      "cwd": ".",
+      "count": 10,
+      "sha": "918d98d67e32114ab579dafc2611d0f084a2decceb291e3bafe42c1083e44087",
+      "exit_code": 0,
+      "skipped": 0,
+      "failed": 0,
+      "log_sha256": "918d98d67e32114ab579dafc2611d0f084a2decceb291e3bafe42c1083e44087"
+    },
+    {
+      "families": [
+        "WR-H16"
+      ],
+      "project": "wool",
+      "command": "python -B -m unittest discover -s tests -p test_developer_grant_project_scope.py -v",
+      "cwd": ".",
+      "count": 11,
+      "sha": "65a8b5456bc1534e39b838d208e7efaea4b17c2feb54d900ab9b338bb6c57527",
+      "exit_code": 0,
+      "skipped": 0,
+      "failed": 0,
+      "log_sha256": "65a8b5456bc1534e39b838d208e7efaea4b17c2feb54d900ab9b338bb6c57527"
+    },
+    {
+      "families": [
+        "COORD-H01"
+      ],
+      "project": "coord",
+      "command": "python -B -m unittest discover -s tests -p test_dispatcher.py -v",
+      "cwd": ".",
+      "count": 11,
+      "sha": "0b18ef0b891deeda647fe1b0fde9ee598fd6f330d09230b203c24f77b0ca210b",
+      "exit_code": 0,
+      "skipped": 0,
+      "failed": 0,
+      "log_sha256": "0b18ef0b891deeda647fe1b0fde9ee598fd6f330d09230b203c24f77b0ca210b"
+    },
+    {
+      "families": [
+        "COORD-H02"
+      ],
+      "project": "coord",
+      "command": "python -B -m unittest discover -s tests -p test_github_event_adapter.py -v",
+      "cwd": ".",
+      "count": 8,
+      "sha": "9af83cef34d6fe239a52ae215380c2d3922fec1f4c6323455e54ddd18f5881c9",
+      "exit_code": 0,
+      "skipped": 0,
+      "failed": 0,
+      "log_sha256": "9af83cef34d6fe239a52ae215380c2d3922fec1f4c6323455e54ddd18f5881c9"
+    },
+    {
+      "families": [
+        "COORD-H03"
+      ],
+      "project": "coord",
+      "command": "python -B -m unittest discover -s tests -p test_github_webhook.py -v",
+      "cwd": ".",
+      "count": 6,
+      "sha": "b34a73ef84fc86bd24ff390f136fdb759c93d9ffb2efd61fa64a05488aa7ea53",
+      "exit_code": 0,
+      "skipped": 0,
+      "failed": 0,
+      "log_sha256": "b34a73ef84fc86bd24ff390f136fdb759c93d9ffb2efd61fa64a05488aa7ea53"
+    },
+    {
+      "families": [
+        "SAM-H09"
+      ],
+      "project": "sam",
+      "command": "node --test ../independent-review/20261016-0904-audit-coverage/positive_answer_gate.test.mjs",
+      "cwd": "SAM/snapshot",
+      "count": 7,
+      "sha": "da506c551ac85cc3813bdeaa5c1e9d760e024a3a23f2f26e406e480446149098",
+      "exit_code": 0,
+      "skipped": 0,
+      "failed": 0,
+      "log_sha256": "da506c551ac85cc3813bdeaa5c1e9d760e024a3a23f2f26e406e480446149098"
+    },
+    {
+      "families": [
+        "SAM-H14"
+      ],
+      "project": "sam",
+      "command": "node --test ../independent-review/20261016-0904-audit-coverage/holdout_identity_check.test.mjs",
+      "cwd": "SAM/snapshot",
+      "count": 10,
+      "sha": "34cfedfeb08ca6ca392449bb2abb309d68e5fd356a70f0cc38cfd660568204e6",
+      "exit_code": 0,
+      "skipped": 0,
+      "failed": 0,
+      "log_sha256": "34cfedfeb08ca6ca392449bb2abb309d68e5fd356a70f0cc38cfd660568204e6"
+    }
+  ],
+  "source_provenance": {
+    "wool_and_coord_selected_source_or_test_git_blobs_checked": 15,
+    "checked_matches": 15,
+    "sam_test_and_helper_git_blobs_checked": 5,
+    "sam_checked_matches": 5,
+    "missing_or_wrong_blobs": 0,
+    "verified_against_immutable_git_trees": true
+  },
+  "critical_nonclaims": [
+    "Partial source staging with some supporting synthetic files, NOT exact complete immutable repo tree",
+    "No complete frozen 39-command runner/guard accepted receipt, no native Windows or Node24/26",
+    "No SAM real 61/522, real MCP or release migration pointer/rollback",
+    "No real new Wool holdout business gold or 09:30 consumer",
+    "Logs are local in /mnt/data/our_frozen_*.log and not persisted in repo; SHA digests provide identity only",
+    "These 105 historical frozen methods overlap other selected candidate suites; do not sum as unique methods"
+  ],
+  "remaining_distinct_frozen_commands": 29,
+  "remaining_ready_families_without_this_selected_execution": 31,
+  "external_gated_families": 8,
+  "historical_recovery_closed": false,
+  "official_guard_raw_log_parser": {
+    "guard_source_blob": "072ba64688fcd479795620b870a803ddb29dc78b",
+    "actual_raw_log_summaries_parsed": 10,
+    "positive_zero_fail_zero_skip_summaries": 10,
+    "failed_parses": 0,
+    "method_sum": 105,
+    "meaning": "Actual official parse_actual_log_counts(raw_bytes) was called on all ten raw logs. Only its per-log grammar/count checks passed; formal guard.review full receipt remains unaccepted, because 29 commands are missing."
+  }
+}

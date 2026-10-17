@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "description": "Read-only PR and combined status context snapshot. Zero contexts is absence of evidence, not CI success or proof that no workflows exist.",
+  "pull_requests": [
+    {
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "pr": 41,
+      "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/41",
+      "head": "6616b4d65949beb26b0bcfe20a293c633efd49f5",
+      "draft": true,
+      "merged": false,
+      "mergeable": true,
+      "status_contexts": 0,
+      "ci_pass_verified": false
+    },
+    {
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "pr": 42,
+      "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/42",
+      "head": "87c74e8f8785dbf8ebd278c3b1a123b0b2221ccb",
+      "draft": true,
+      "merged": false,
+      "mergeable": true,
+      "status_contexts": 0,
+      "ci_pass_verified": false
+    },
+    {
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "pr": 43,
+      "url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/43",
+      "head": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+      "draft": true,
+      "merged": false,
+      "mergeable": true,
+      "status_contexts": 0,
+      "ci_pass_verified": false
+    },
+    {
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "pr": 17,
+      "url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/17",
+      "head": "0adf08324f612d343dfafe386bfd2503ada5beae",
+      "draft": true,
+      "merged": false,
+      "mergeable": true,
+      "status_contexts": 0,
+      "ci_pass_verified": false
+    }
+  ],
+  "all_draft": true,
+  "all_unmerged": true,
+  "all_status_contexts_zero": true,
+  "do_not_auto_merge": true,
+  "full_native_frozen_39_accepted": false,
+  "external_business_gates_accepted": false
+}

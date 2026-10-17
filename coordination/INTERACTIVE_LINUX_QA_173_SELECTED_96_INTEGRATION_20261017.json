@@ -1,0 +1,124 @@
+{
+  "schema_version": 1,
+  "execution_date": "2026-10-17",
+  "status": "SELECTED_LINUX_CODE_QA_GREEN;FROZEN_WINDOWS_AND_REAL_BUSINESS_GATES_OPEN",
+  "environment": {
+    "os": "Linux",
+    "python": "3.13.5",
+    "node": "v22.16.0"
+  },
+  "selected_modules": {
+    "methods": 173,
+    "passed": 173,
+    "failed": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "id": "coord42",
+        "methods": 46,
+        "exit_code": 0,
+        "stdout_sha256": "cfbe38b94d14da90e3179f72ca4772fc390eb856a90383ba54939ddaafdaf2bb",
+        "pinned_head": "3075743f95e35a59737717055893a0efecc98be8",
+        "tested_runner_blob": "23911750340e7b9d0e859cf9b693f578ae49d46c",
+        "tested_guard_blob": "072ba64688fcd479795620b870a803ddb29dc78b",
+        "tested_worktree_test_blob": "0bfdb167a012ccae94cd47ece193fea3130e3b6d",
+        "scope": "runner, official receipt guard, real Git source-vs-worktree red/green, per-command runtime repin"
+      },
+      {
+        "id": "sam17",
+        "methods": 31,
+        "exit_code": 0,
+        "stdout_sha256": "c92fbbded6c84f6b644e917167e8bace4c44cad5022549486d9904bf3959e9af",
+        "pinned_head": "c57562670ec614d33dcbe31dcda4a7bffe3f545a",
+        "tested_migration_blob": "26e81a8afbccdbcca4ee3f3056bff039a49d452f",
+        "scope": "synthetic migration provenance, dry-run, release symlink and claim collision"
+      },
+      {
+        "id": "wool41",
+        "methods": 56,
+        "exit_code": 0,
+        "stdout_sha256": "bd0bd388f724f79944a6d34313654298c2b4d3d1908df752e7596a15402137fa",
+        "pinned_head": "0a688648249a6e7734effba30c01deb0df7bc047",
+        "tested_corpus_blob": "2f9d57a692fd8d13f4bb58d11b995c699b51a258",
+        "scope": "public feed URL identity, fragments, redactions, timestamps, storage safety"
+      },
+      {
+        "id": "wool43",
+        "methods": 40,
+        "exit_code": 0,
+        "stdout_sha256": "af7b999ea271561269f11130b1892be92500b9c9bb900da1e5135c0d026c3a9a",
+        "pinned_head": "498d9a795798405ce41f9bdd4474a736255614e6",
+        "tested_diagnostics_blob": "202132959338b2af59dc3ddf30092e09effbad85",
+        "tested_stream_test_blob": "569c63689cef1e495889a630272b7efbd08e009c",
+        "scope": "old classifier unchanged, diagnostics parity, raw strict UTF8, bounded JSONL streaming, duplicate key refusal, no partial or raw text outputs"
+      }
+    ]
+  },
+  "cross_pr_merged_module_graph": {
+    "head_pair": [
+      "0a688648249a6e7734effba30c01deb0df7bc047",
+      "498d9a795798405ce41f9bdd4474a736255614e6"
+    ],
+    "base": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+    "overlapping_changed_code_paths": 0,
+    "tests": 96,
+    "passed": 96,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "stdout_sha256": "f6e266db624d79c3dd14820af65df92a2d4dbe7d255f4b3f73ea663f61040d22",
+    "coverage": "Selected manually staged exact Git blobs in one disposable Linux module graph; NOT full native git merge or full application"
+  },
+  "negative_controls": [
+    {
+      "name": "coord unchanged HEAD but modified disk test",
+      "cases": 3,
+      "pre_patch": "2-pass 1-fail",
+      "post_patch": "3-pass",
+      "real_temporary_git_repository": true
+    },
+    {
+      "name": "grant oversized JSONL, invalid typed fields, late failure",
+      "pre_patch": "5 cases, 3 failed",
+      "post_patch": "5 pass"
+    },
+    {
+      "name": "grant malformed raw UTF8",
+      "pre_patch": "1 fails",
+      "post_patch": "1 pass"
+    },
+    {
+      "name": "grant duplicate JSON source key and nested metadata key",
+      "pre_patch": "2 fail",
+      "post_patch": "2 pass"
+    }
+  ],
+  "frozen_history": {
+    "immutable_families": 50,
+    "ready": 42,
+    "unique_commands": 39,
+    "externally_gated": 8,
+    "original_test_source_blob_checks_passed": 42,
+    "actual_windows_frozen_commands_executed_in_this_chat": 0
+  },
+  "github": {
+    "all_four_prs_draft": true,
+    "all_four_mergeable_at_last_check": true,
+    "all_four_merged": false,
+    "commit_status_context_counts": {
+      "coord42": 0,
+      "wool41": 0,
+      "sam17": 0,
+      "wool43": 0
+    }
+  },
+  "limits": [
+    "Some coordination adjacent batch logic was locally staged as exact evaluate/summarize narrow shim, not complete private worktree",
+    "This verifies selected modules only and no native Windows full suite/Node24+Node26",
+    "GitHub mergeable does not establish successful CI or runtime integration",
+    "No real held-out source gold, Wool 09:30 delivery consumer, SAM 61/522 MCP, PLC, upgrade or rollback",
+    "Log SHA digests are portable evidence; raw log bytes remain in disposable local environment",
+    "No scheduled GitHub writer, PR auto-merge or production modification"
+  ],
+  "historical_recovery_closed": false
+}

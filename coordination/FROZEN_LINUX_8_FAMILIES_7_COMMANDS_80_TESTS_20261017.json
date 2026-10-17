@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "date": "2026-10-17",
+  "purpose": "Actual selected immutable historical job command replay in disposable Linux, separate from 46 newer runner QA unit methods",
+  "frozen_heads": {
+    "W": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f",
+    "S": "82bf36efa90cced8dafb56502812eb49f40515f3"
+  },
+  "families_covered": 8,
+  "distinct_commands_replayed": 7,
+  "independent_test_methods": 80,
+  "failures": 0,
+  "skips": 0,
+  "exit_codes": "all 0",
+  "node_version": "22.16.0",
+  "python_version": "3.13.5",
+  "jobs": [
+    {
+      "family": "SAM-H09",
+      "project": "SAM",
+      "tests": 7,
+      "stdout_sha256": "7c5d17433bab42f68bc1481e961986e555fd77ad3dd9ed2e4eca68006269f852",
+      "expected_test_git_blob": "898940d35e5ccb1efb1dbe2ee888e424bc24acf3",
+      "scope": "fully exact frozen source + module"
+    },
+    {
+      "family": "SAM-H14",
+      "project": "SAM",
+      "tests": 10,
+      "stdout_sha256": "95ca430f54848888a2205649f8c680ea3f073e4c68a8f03e586d8846f5a9c175",
+      "expected_test_git_blob": "fa8a40a68e85571d3d84cad1fd7e30b42aea040b",
+      "scope": "fully exact frozen source + modules"
+    },
+    {
+      "family": "WR-H16",
+      "project": "WoolRadar",
+      "tests": 11,
+      "stdout_sha256": "65a8b5456bc1534e39b838d208e7efaea4b17c2feb54d900ab9b338bb6c57527",
+      "expected_test_git_blob": "26193c5b92c69c41b53a22ccc1cbb6c008ec2545",
+      "scope": "fully exact frozen test + classifier"
+    },
+    {
+      "family": "WR-H10",
+      "project": "WoolRadar",
+      "tests": 10,
+      "stdout_sha256": "a31bf862b389341ef6227e147ef86b86d2a482e997b31602ccc516e2c54ea76b",
+      "expected_test_git_blob": "c90cb9eab13230d4c4086e51c9c1b3f6f034dd62",
+      "scope": "fully exact frozen test + producer + models"
+    },
+    {
+      "family": "WR-H07",
+      "project": "WoolRadar",
+      "tests": 13,
+      "stdout_sha256": "60e0d66977258738936afe4c3670316b03c8d87585ed30c7813d229eff6cd2e2",
+      "expected_test_git_blob": "e4e9d815b364fd95aa7e9db35574988555a25271",
+      "scope": "fully exact frozen test + producer + blind sampler + models"
+    },
+    {
+      "family": "WR-H08+WR-H09",
+      "project": "WoolRadar",
+      "tests": 23,
+      "stdout_sha256": "46ab3a53bc947df275278ad2e2acfb853b9a5d84cc8632d6a2ea13ccb7717afc",
+      "expected_test_git_blob": "5cdbb67b4a7a6be4f8cc19fce873b7656a9d37dd",
+      "scope": "both historical families SHARE one frozen command; executed once, 23 tests"
+    },
+    {
+      "family": "WR-H03",
+      "project": "WoolRadar",
+      "tests": 6,
+      "stdout_sha256": "9921c5381d8aaca915c9e8347a504273588cdc5c137b837443a9ce552738aa64",
+      "expected_test_git_blob": "834e6289d7305f6a77777c3cc5c1dac314c8bd75",
+      "scope": "real exact frozen module/test; config fixture deliberately synthetic, NOT actual frozen 7KB sources.yaml"
+    }
+  ],
+  "source_integrity": "Selected frozen test and direct module bytes independently checked with git hash-object; WR-H03 public config setup is synthetic (not exact actual sources.yaml)",
+  "overall_frozen_jobs": {
+    "families": 42,
+    "distinct": 39,
+    "executed_families_here": 8,
+    "remaining_family_count": 34,
+    "executed_distinct": 7,
+    "remaining_distinct": 32
+  },
+  "limits": [
+    "This is NOT official full Git worktree runner receipt; no clean frozen checkout HEAD or formal guard-verdict produced; selected file/module replay only",
+    "No Windows Node24/26, tsx-dependent TypeScript tests, real 61/522 teacher data, browser, webhook, consumer receipt, MCP or release rollback",
+    "One 23-test run covers WR-H08 and WR-H09 sharing the same command, not 46 independent methods",
+    "No private data or real external APIs touched"
+  ],
+  "historical_recovery_closed": false
+}

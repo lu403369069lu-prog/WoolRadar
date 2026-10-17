@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "checked_date": "2026-10-17",
+  "meaning": "Filename-level PR delta overlap and GitHub per-PR mergeable metadata only; not an actual composite merge or CI verdict",
+  "wool_prs": [
+    {
+      "pr": 41,
+      "head_sha": "efb861999e38b76441137a8a5a381ddfb043c7f0",
+      "base": "chatgpt/wool-historical-integration-20261017",
+      "base_sha": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+      "draft": true,
+      "mergeable": true,
+      "merged": false,
+      "changed_files": [
+        "core/public_corpus.py",
+        "tests/test_public_corpus_alt_numeric_hosts.py",
+        "tests/test_public_corpus_control_url_identity.py",
+        "tests/test_public_corpus_decision_type_integrity.py",
+        "tests/test_public_corpus_directory_symlink.py",
+        "tests/test_public_corpus_encoded_selector.py",
+        "tests/test_public_corpus_encoded_sensitive_paths.py",
+        "tests/test_public_corpus_pii_path.py",
+        "tests/test_public_corpus_plaintext_secrets.py",
+        "tests/test_public_corpus_sensitive_fragments.py",
+        "tests/test_public_corpus_sensitive_paths.py",
+        "tests/test_public_corpus_source_metadata_redaction.py",
+        "tests/test_public_corpus_unicode_emails.py"
+      ]
+    },
+    {
+      "pr": 42,
+      "head_sha": "ef38f79abac2bdd2752305df1295511d58dd3e3e",
+      "base": "chatgpt/scheduled-checkpoint-contract-20261016",
+      "base_sha": "30b1a560dd48bd6a14467c8e44278856712c5fe6",
+      "draft": true,
+      "mergeable": true,
+      "merged": false,
+      "changed_files": [
+        "coordination/FIRST_CATEGORY_29_FROZEN_COMMANDS_NATIVE_GATE_MATRIX_20261017.json",
+        "coordination/FIRST_CATEGORY_SELECTED_202_JOINT_110_20261017.json",
+        "coordination/FIRST_CLASS_LINUX_EXECUTED_193_AND_JOINT_104_20261017.json",
+        "coordination/FIRST_CLASS_LINUX_VERIFIED_151_20261017.json",
+        "coordination/FIRST_CLASS_SOURCE_QA_150_AND_SHARED_87_20261017.json",
+        "coordination/FROZEN_10_COMMANDS_11_FAMILIES_LINUX_PARTIAL_20261017.json",
+        "coordination/FROZEN_39_DIRECT_IMPORT_READINESS_20261017.json",
+        "coordination/FROZEN_42_GIT_TREE_SOURCE_AUDIT_20261017.json",
+        "coordination/FROZEN_LINUX_8_FAMILIES_7_COMMANDS_80_TESTS_20261017.json",
+        "coordination/HISTORICAL_42_RUNNER_HARDENED_HANDOFF_20261017.md",
+        "coordination/HISTORICAL_CODEX_42_JOB_EXECUTOR_20261017.py",
+        "coordination/HISTORICAL_CODEX_42_RECEIPT_GUARD_20261017.py",
+        "coordination/HISTORICAL_RECOVERY_BATCH_LEDGER_20261017.json",
+        "coordination/INTERACTIVE_FIRST_CLASS_EXECUTED_147_20261017.json",
+        "coordination/INTERACTIVE_LINUX_QA_173_SELECTED_96_INTEGRATION_20261017.json",
+        "coordination/INTERACTIVE_LINUX_QA_EXPANDED_125_20261017.json",
+        "coordination/INTERACTIVE_LINUX_QA_EXPANDED_138_20261017.json",
+        "coordination/INTERACTIVE_LINUX_QA_FOUR_TRACKS_20261017.json",
+        "coordination/test_historical_42_executor_env_isolation.py",
+        "coordination/test_historical_42_executor_guard_bridge.py",
+        "coordination/test_historical_42_executor_path_and_log_collision.py",
+        "coordination/test_historical_42_executor_raw_integrity.py",
+        "coordination/test_historical_42_guard_multi_summary.py",
+        "coordination/test_historical_42_guard_strict_receipts.py",
+        "coordination/test_historical_42_preflight_manifest.py",
+        "coordination/test_historical_42_runtime_dirty_dependency.py",
+        "coordination/test_historical_42_runtime_repin.py",
+        "coordination/test_historical_42_untracked_import_safety.py",
+        "coordination/test_historical_42_worktree_blob_integrity.py"
+      ]
+    },
+    {
+      "pr": 43,
+      "head_sha": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+      "base": "chatgpt/wool-historical-integration-20261017",
+      "base_sha": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+      "draft": true,
+      "mergeable": true,
+      "merged": false,
+      "changed_files": [
+        "core/grant_lead_diagnostics.py",
+        "independent-quality/developer-grant-20261017/GRANT_DIAGNOSTICS_HOLDOUT_HANDOFF.md",
+        "tests/test_grant_lead_diagnostic_cli.py",
+        "tests/test_grant_lead_diagnostic_stream_safety.py",
+        "tests/test_grant_lead_diagnostic_strict_json.py",
+        "tests/test_grant_lead_diagnostics.py"
+      ]
+    }
+  ],
+  "wool_pairwise_changed_path_intersections": [
+    {
+      "pr_pair": [
+        41,
+        42
+      ],
+      "common_changed_paths": []
+    },
+    {
+      "pr_pair": [
+        41,
+        43
+      ],
+      "common_changed_paths": []
+    },
+    {
+      "pr_pair": [
+        42,
+        43
+      ],
+      "common_changed_paths": []
+    }
+  ],
+  "overlapping_changed_paths": 0,
+  "sam_separate_repo": {
+    "pr": 17,
+    "head": "7330d8cb858b869a36c3c1135b173c536945e61e",
+    "base": "chatgpt/sam-recover-claim-audit-types-20261017",
+    "mergeable": true,
+    "draft": true,
+    "merged": false
+  },
+  "interpretation": [
+    "No exact changed filenames overlap among currently reviewed Wool PR41/42/43; this reduces text-level conflicts but does NOT prove semantic integration or shared-base merge success.",
+    "PR41+PR43 selected code/test modules actually ran together 110/110 in an isolated source graph, but no Git composite merge was performed.",
+    "PR42 has a different base branch from PR41/43; do not silently rebase or merge without native review.",
+    "No PR merged, no GitHub status contexts on earlier checked heads; do not label CI-green."
+  ],
+  "historical_recovery_closed": false
+}

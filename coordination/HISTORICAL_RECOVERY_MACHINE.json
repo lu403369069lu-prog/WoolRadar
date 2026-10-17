@@ -510,6 +510,25 @@
     "source_status": "historical original Scheduled runs unavailable; local Codex tests and real source gold remain pending",
     "next": "Receive locally executed sanitized per-batch receipts in Issues Wool2/SAM1/Coord3; then revise only actual PASS_EXACT_HEAD, prioritize real 61/522 and independent 47-sample Gold",
     "no_auto_merge": true,
-    "no_production_changes": true
+    "no_production_changes": true,
+    "ready_for_codex_jobs_manifest": "coordination/HISTORICAL_80_PERCENT_CODEX_JOBS_20261017.json",
+    "codex_local_validation": {
+      "full_immutable_github_test_paths": "42/42 verified against current 3 PR trees",
+      "distinct_test_commands": 39,
+      "source_historical_files_transferred": "SAM old PR9 9 files 9/9 original Git blob match in PR15",
+      "remote_repository_heads": {
+        "wool_pr39": "e31eea548ab0b05d26e6fd639907bd81cbabcdfc",
+        "sam_pr15": "82bf36efa90cced8dafb56502812eb49f40515f3",
+        "relay_pr11": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96"
+      },
+      "reviewed_runner_source": "coordination/HISTORICAL_CODEX_BATCH_RUNNER_20261017.py",
+      "runner_not_executed_in_full_local_repo": true,
+      "receipt_guard": "coordination/HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py",
+      "receipt_guard_git_blob": "15f02c39a21a41b8c72ddbb03905aae01ef72c46",
+      "receipt_guard_test": "coordination/test_history_receipt_guard_20261017.py",
+      "receipt_guard_test_blob": "bb6dc55c21f52a691b1475db9da72d20a6dfba6b",
+      "receipt_guard_local_python": "Python3.13 6/6 pass exit0, exact Git blob source+test",
+      "prohibits_automatic_gold_promotion": true
+    }
   }
 }

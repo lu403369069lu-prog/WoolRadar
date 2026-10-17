@@ -1,0 +1,43 @@
+name: Engineering acceptance checkpoint
+on:
+  workflow_dispatch:
+    inputs:
+      target_ref:
+        description: 'Commit or branch to validate (empty = current branch)'
+        required: false
+        type: string
+  push:
+    branches: [chatgpt/actions-acceptance-checkpoint-20261018]
+permissions:
+  contents: read
+concurrency:
+  group: acceptance-${{ github.repository }}-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_ref || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Run bounded acceptance and generate machine-readable checkpoint
+        id: acceptance
+        shell: bash
+        run: |
+          python .github/scripts/engineering_acceptance.py
+      - name: Upload checkpoint even on test failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: engineering-acceptance-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .engineering-acceptance/
+          if-no-files-found: error
+          retention-days: 30

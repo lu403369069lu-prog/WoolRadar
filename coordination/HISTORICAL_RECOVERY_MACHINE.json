@@ -58,7 +58,7 @@
     "sam_history_pr10": "f5e6562524b3438227e311fbc7ff0223b08a5a12",
     "sam_claimkind_pr13": "8719d75205e50209e9b11998a2af72c4d08ee975",
     "sam_workbuddy_pr14": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
-    "sam_audit_types_pr15": "11e87c629ec28e58fd91b629936b71ea235b4581",
+    "sam_audit_types_pr15": "efe9a93f4bea4b6f3bf33f7fc9772e9008c8b3c0",
     "sam_rooted_pr12": "a92a870951e1bbf5f2517865faca46b56a6546e7",
     "sam_teacher_pr9": "ba2890004a45abe39d9a6da8b342db48162e9023",
     "wool_grant_pr38": "75021367f71ba550a95ef098789e1f1201b21bad",
@@ -209,7 +209,7 @@
     {
       "id": "SAM-H13",
       "status": "RELEASE_ACCEPTANCE_UNVERIFIED",
-      "summary": "dist/install/cache/upgrade rollback and final 3 rounds"
+      "summary": "dist/install/cache/upgrade rollback and final 3 rounds | 2026-10-17 actual current PR15 full build-release-manifest subprocess synthetic temp Git checks5/5 plus existing atomic helper6/6, but no Windows24/26 release, installed artifact pointer/rollback/61/522 gold, so release still UNVERIFIED."
     },
     {
       "id": "SAM-H14",
@@ -228,8 +228,8 @@
     },
     {
       "id": "SAM-H17",
-      "status": "DRAFT_ATOMIC_MANIFEST_FILE_FIX_6_LOCAL_TESTS_RELEASE_POINTER_PENDING",
-      "summary": "Scheduled H17-a atomic manifest candidate original patch unavailable/BLOCKED_WRITE (historical test 5/5 reported, not new). Authorized interactive reimplementation on SAM PR15: actual helper blob de5a34c..., true builder blob0ed0bfb..., original six-test file blob7acb5d..., isolated Node22 5 real file tests plus one reconstructed callsite test 6/6 exit0; remote exact source verified; cross-current.json and manifest atomic pointer transaction, Windows Node24/26/npm/rollback NOT verified."
+      "status": "PR15_REAL_BUILDER_EXACT_11_POSIX_PASS_CURRENT_POINTER_WINDOWS_PENDING",
+      "summary": "Original actual Git source builder0ed0..., atomic-write de5a..., original formal test7acb... + new real synthetic temporary Git/registry/card release full-builder test5b8e... byte-exact; Node22 atomic6 + full builder5=11/11 pass exit0. Not Windows Node24/26, installed skill, current.json multi-file pointer, rollback or final source gold."
     },
     {
       "id": "SAM-H18",
@@ -329,8 +329,9 @@
     "effect": "source-policy regex has i flag; cross-backend parity not yet agreed, no production change"
   },
   "active_backlog_next": [
+    "CURRENT DELTA: Wool latest PR39 head1aad1c vs frozen 50-job runner head80c5; SAM PR15 headefe9 vs frozen runner 82bf. Use GitHub coordination/HISTORICAL_CURRENT_HEAD_CODEX_DELTA_20261017.md manual safe exact worktree commands; do NOT silently update one SHA side or claim old tests cover new head.",
+    "SAM H17 updated exact current full release builder original six + new five synthetic true subprocess tests 11/11 Linux Node22, full Windows/installed skill/current.json multi-file rollback STILL NOT VERIFIED.",
     "Codex handoff executable now SHA locks all 50 manifest entries and PINs 42 Git blobs, 39 unique commands mapped to 42 family receipts; 42/42 isolated synthetic safety/verdict/subprocess tests passed. Still requires three exact HEAD local Codex batches and real Windows/full gold, no historic release completion inferred.",
-    "Codex immutable 50-family manifest/runner still pins Wool80c5; latest own PR39 now 1aad1c after real producer nonpublic host + malformed Unicode security repairs, exactly 21/21 producer Python test at latest Git blob. Treat manifest pin as old immutable snapshot, NOT same HEAD: require explicit coordinated manifest+runner bump before batch launch.",
     "Wool producer current real 21/21 is only focused tests; rerun entire current-HEAD Windows 412+ and 24 sampler/real producer schema and 40 grant+data; new independent blind recall(old25%) and 09:30 OUTPUT_NOT_CONNECTED remain open.",
     "Wool current unified PR39 now HEAD80c5, exact grant numbered-scope formal code+test hash checked, isolated core40 + sampler24 =64/64 local Linux pass; this is NOT full Windows/new independent quality holdout.",
     "Codex accept: run coordination/HISTORICAL_CODEX_BATCH_RUNNER_20261017.py from clean disposable exact-SHA checkout, use 50-family JSON manifest; report 42 runnable entrypoints individually as PASS/FAIL/BLOCKED with commands/exit/log SHA. Current ready ≠ passed.",
@@ -450,6 +451,16 @@
       "log_sha256": "41fe1dedf0828743d347329bb2df35179f21338f925816f5e05ed61b7bffd144",
       "scope": "isolated Python3.13 with synthetic temp feed and standard UTC stub; not full repository test",
       "still_missing": "current HEAD full Windows suite, newly independent blind gold, signed daily report, owner merge"
+    },
+    "sam_current_release_builder": {
+      "source_head": "efe9a93f4bea4b6f3bf33f7fc9772e9008c8b3c0",
+      "atomic_source": "de5a34c509740e4eac44656379c7b6ed52ca5329",
+      "atomic_original_test": "7acb5d3fa6b645487cf1d2e4d5d9092c64bb8e89",
+      "manifest_builder": "0ed0bfb55851a092b73c0e30856f3926ce2f2b20",
+      "new_full_builder_formal_test": "5b8e99131748269ed7046ffd0d2396da3d30bc79",
+      "actual_isolated_test": "Node22 Linux real child-process + tempfile Git source SHA, 11/11 TAP, 0 failed/skip, exit0",
+      "log_sha256": "288bb78a6b3342a1c8f317bd60b4f3df26f41e3ee8f0e5905da1418020f13e3d",
+      "gap": "Windows24/26 real installation, pointer multi-file atomic, dist/skill sync, user-approved release and actual 61/522 source gold"
     }
   },
   "historical_exact_remote_test_provenance": {
@@ -631,5 +642,14 @@
       "Scheduled unattended GitHub write remains blocked"
     ],
     "historic_recovery_closed": false
+  },
+  "current_head_codex_handoff_delta_20261017": "coordination/HISTORICAL_CURRENT_HEAD_CODEX_DELTA_20261017.md",
+  "runner_manifest_frozen_at": {
+    "W": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f",
+    "S": "82bf36efa90cced8dafb56502812eb49f40515f3",
+    "C": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "latest_W": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+    "latest_S": "efe9a93f4bea4b6f3bf33f7fc9772e9008c8b3c0",
+    "manifest_and_runner_reconciliation": "NEEDS_CODEX_OWNER_REVIEW_NO_SILENT_SHA_BUMP"
   }
 }

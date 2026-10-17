@@ -174,6 +174,24 @@ def _verify_frozen_worktree(root: Path, expected_head: str) -> None:
                            + b'\x00' + payload).hexdigest().encode('ascii')
         if got != digest:
             raise RuntimeError('Immutable tracked dependency differs from frozen Git HEAD.')
+    # A configured `status.showUntrackedFiles=no` or a tracked .gitignore can
+    # hide importable untracked Python/Node sources from git status. Enumerate
+    # the actual working tree independently of index/ignore settings. Ignore
+    # only the local dependency cache and disposable test output directories;
+    # these do not establish pinned source provenance themselves.
+    try:
+        others = subprocess.run(['git', 'ls-files', '--others', '-z'], cwd=root,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                timeout=30, check=True).stdout
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise RuntimeError('Failed to enumerate untracked historical files.') from exc
+    transient_roots = frozenset(('node_modules', '.venv', '.test-tmp', '.pytest_cache'))
+    for entry in others.split(b'\x00'):
+        if not entry:
+            continue
+        rel = os.fsdecode(entry)
+        if Path(rel).parts[0] not in transient_roots:
+            raise RuntimeError('Untracked or ignored file in frozen worktree.')
 
 
 def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,

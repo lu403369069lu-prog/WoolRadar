@@ -179,5 +179,13 @@
   "remaining_distinct_frozen_commands": 29,
   "remaining_ready_families_without_this_selected_execution": 31,
   "external_gated_families": 8,
-  "historical_recovery_closed": false
+  "historical_recovery_closed": false,
+  "official_guard_raw_log_parser": {
+    "guard_source_blob": "072ba64688fcd479795620b870a803ddb29dc78b",
+    "actual_raw_log_summaries_parsed": 10,
+    "positive_zero_fail_zero_skip_summaries": 10,
+    "failed_parses": 0,
+    "method_sum": 105,
+    "meaning": "Actual official parse_actual_log_counts(raw_bytes) was called on all ten raw logs. Only its per-log grammar/count checks passed; formal guard.review full receipt remains unaccepted, because 29 commands are missing."
+  }
 }

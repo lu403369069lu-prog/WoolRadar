@@ -190,8 +190,9 @@ def record_public_sample(root: Path, node: str, source: dict, rows: list[dict], 
                             'url_identity_preserved': identity_preserved and len(url) <= 2048,
                             'text_url_redacted': clean_title != title or clean_summary != summary,
                             'content_truncated': len(clean_title) > 512 or len(clean_summary) > 20000 or len(url) > 2048})
-    payload = {'schema_version': 1, 'sampled_at': utc_now(), 'node': _safe_public_text(str(node))[:64], 'source_id': source_id,
-               'platform': _safe_public_text(str(source.get('platform', '')))[:128], 'public_only': True,
+    payload = {'schema_version': 1, 'sampled_at': utc_now(),
+               'node': _clean_text(_safe_public_text(str(node)))[:64], 'source_id': source_id,
+               'platform': _clean_text(_safe_public_text(str(source.get('platform', ''))))[:128], 'public_only': True,
                'fetched_count': len(rows), 'stored_count': len(sample_rows), 'rows_truncated': len(rows) > 500,
                'rows': sample_rows, 'max_utf8_bytes': MAX_BYTES,
                'limits': 'Latest bounded public sample only; redactions/truncations marked; not a full platform or time-window denominator'}

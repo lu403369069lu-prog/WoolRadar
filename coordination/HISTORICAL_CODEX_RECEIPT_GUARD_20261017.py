@@ -1,6 +1,7 @@
 """Validate source-locked local Codex batch receipts without promoting releases."""
 from __future__ import annotations
 import argparse
+import hashlib
 import json
 import re
 from pathlib import Path
@@ -18,7 +19,7 @@ BATCHES = {
 HEX = re.compile(r'^[0-9a-f]{64}$')
 
 
-def review(data: dict) -> dict:
+def review(data: dict, logs_dir: Path | None = None) -> dict:
     """Only certifies receipt structural consistency, never business readiness."""
     errors = []
     project = data.get('project')
@@ -29,6 +30,12 @@ def review(data: dict) -> dict:
         errors.append('HEAD_MISMATCH')
     if data.get('schema') != 1 or data.get('source') != 'local-disposable-codex':
         errors.append('UNTRUSTED_RECEIPT_PROVENANCE')
+    if data.get('no_live_gold_claim') is not True:
+        errors.append('UNSAFE_GOLD_CLAIM')
+    if data.get('production_modified') is not False:
+        errors.append('PRODUCTION_MODIFICATION_NOT_DENIED')
+    if logs_dir is None:
+        errors.append('LOG_BYTES_NOT_VERIFIED')
     results = data.get('results')
     if not isinstance(results, list):
         results = []
@@ -42,8 +49,17 @@ def review(data: dict) -> dict:
         if key in seen:
             errors.append('DUPLICATE_BATCH')
         seen.add(key)
+        if not isinstance(key, str) or not re.fullmatch(r'[A-Z]-[A-Z]+', key):
+            errors.append('INVALID_BATCH_NAME')
         if project in BATCHES and key not in BATCHES[project]:
             errors.append('UNEXPECTED_BATCH')
+        if logs_dir is not None and isinstance(key, str) and re.fullmatch(r'[A-Z]-[A-Z]+', key):
+            try:
+                real_hash = hashlib.sha256((logs_dir / (key + '.log')).read_bytes()).hexdigest()
+                if real_hash != result.get('log_sha256'):
+                    errors.append('LOG_DIGEST_MISMATCH')
+            except (OSError, ValueError):
+                errors.append('MISSING_BATCH_LOG')
         rc = result.get('exit_code')
         if isinstance(rc, bool) or not isinstance(rc, int) or rc != 0:
             errors.append('BATCH_NONZERO_OR_UNKNOWN')
@@ -59,8 +75,13 @@ def review(data: dict) -> dict:
             skipped = counts.get('skipped')
             if (not isinstance(total, int) or isinstance(total, bool) or total <= 0):
                 errors.append('NO_TEST_COUNT')
-            if (not isinstance(passed, int) or isinstance(passed, bool)
-                    or failed != 0 or (isinstance(total, int) and passed > total)):
+            if (any(not isinstance(n, int) or isinstance(n, bool) or n < 0
+                    for n in (passed, failed, skipped))
+                    or (isinstance(total, int) and not isinstance(total, bool)
+                        and isinstance(passed, int) and isinstance(failed, int)
+                        and isinstance(skipped, int)
+                        and passed + failed + skipped != total)
+                    or failed != 0):
                 errors.append('INVALID_TEST_OUTCOME')
             if skipped != 0:
                 errors.append('SKIPPED_NOT_FULLY_ACCEPTED')
@@ -81,7 +102,7 @@ def main() -> int:
     parser.add_argument('--receipt', type=Path, required=True)
     args = parser.parse_args()
     data = json.loads(args.receipt.read_text(encoding='utf-8'))
-    report = review(data)
+    report = review(data, args.receipt.parent)
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0 if report['local_suite_receipt_accepted'] else 1
 

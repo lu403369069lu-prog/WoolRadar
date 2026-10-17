@@ -65,7 +65,11 @@ def is_developer_grant_lead(text: object) -> bool:
     # A feed item may concatenate unrelated grants, contests and schools. Do
     # not manufacture a single open developer grant from different sections.
     # Explicit denials above intentionally remain global and fail closed.
-    sections = [block for block in re.split(r'\n\s*\n+|\n\s*[-*]\s+', text) if block.strip()]
+    # Numbered or Unicode-bullet feeds are separate project entries too:
+    # otherwise A's scope + B's applications + C's amount form a false grant.
+    sections = [block for block in re.split(
+        r'\r?\n[ \t]*\r?\n+|(?m:^[ \t]*(?:[-*•]|\d{1,3}[.)])[ \t]+)',
+        text) if block.strip()]
     for section in sections:
         candidate = ' '.join(section.split())
         if (_SCOPE.search(candidate) and _PROGRAM.search(candidate)

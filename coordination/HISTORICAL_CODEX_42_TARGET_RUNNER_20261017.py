@@ -221,6 +221,16 @@ def verdict(exit_code: int, c: dict[str, int | None]) -> str:
     return "PASS"
 
 
+
+def audit_raw_log(raw: bytes, exit_code: int) -> tuple[dict[str, int | None], str]:
+    """Validate exact child-output bytes. Malformed UTF-8 cannot prove green."""
+    try:
+        stat = counts(raw.decode("utf-8"))
+    except UnicodeDecodeError:
+        return counts(""), "BLOCKED_NON_UTF8_LOG"
+    return stat, verdict(exit_code, stat)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--project", choices=tuple(PINNED), required=True)
@@ -288,18 +298,10 @@ def main() -> int:
             rc, raw = proc.returncode, proc.stdout
         except (OSError, subprocess.TimeoutExpired) as exc:
             raw = ("%s: %s" % (type(exc).__name__, exc)).encode("utf-8")
-        # Logs and digests must represent the child's ACTUAL bytes. Replacing
-        # malformed UTF-8 before hashing produces a false evidence identity.
-        try:
-            decoded = raw.decode("utf-8")
-            valid_encoding = True
-        except UnicodeDecodeError:
-            decoded = ""
-            valid_encoding = False
+        # Logs/digests describe the child's original bytes, never replacements.
         logname = "test-%03d.log" % i
         (output / logname).write_bytes(raw)
-        stat = counts(decoded)
-        status = verdict(rc, stat) if valid_encoding else "BLOCKED_NON_UTF8_LOG"
+        stat, status = audit_raw_log(raw, rc)
         row = {"family_ids": item["families"], "cwd": item["cwd"],
                "argv": item["argv"], "exit_code": rc, "counts": stat,
                "status": status, "sha256": hashlib.sha256(raw).hexdigest(),

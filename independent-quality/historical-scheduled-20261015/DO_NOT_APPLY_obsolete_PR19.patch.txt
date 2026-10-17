@@ -1,0 +1,39 @@
+--- a/core/db.py
++++ b/core/db.py
+@@ -320,8 +320,30 @@
+                 self._merge_evidence(conn, keep, old)
+-                for table, columns in (
+-                    ('sightings', 'node,source,url,discovered_at'),
+-                    ('notifications', 'batch_id,channel,created_at,result,payload,attempts,next_attempt')):
+-                    conn.execute(f'INSERT OR IGNORE INTO {table}(event_id,{columns}) '
+-                        f'SELECT ?,{columns} FROM {table} WHERE event_id=?', (keep, old))
+-                    conn.execute(f'DELETE FROM {table} WHERE event_id=?', (old,))
++                # Keep all sightings, but preserve delivery finality when two
++                # previously distinct keys collide after a key upgrade.
++                conn.execute('''INSERT OR IGNORE INTO sightings(event_id,node,source,url,discovered_at)
++                    SELECT ?,node,source,url,discovered_at FROM sightings WHERE event_id=?''', (keep, old))
++                columns = 'batch_id,channel,created_at,result,payload,attempts,next_attempt'
++                conn.execute(f'INSERT OR IGNORE INTO notifications(event_id,{columns}) '
++                    f'SELECT ?,{columns} FROM notifications WHERE event_id=?', (keep, old))
++                # INSERT OR IGNORE alone loses an already SENT notice if the
++                # survivor has PENDING/RETRY/CLAIMED for the same batch/channel.
++                # Prefer the sent record and its audit payload; never requeue it.
++                conn.execute('''UPDATE notifications SET result='SENT',
++                    created_at=(SELECT n.created_at FROM notifications n
++                        WHERE n.event_id=? AND n.batch_id=notifications.batch_id
++                          AND n.channel=notifications.channel AND UPPER(n.result)='SENT'),
++                    payload=(SELECT n.payload FROM notifications n
++                        WHERE n.event_id=? AND n.batch_id=notifications.batch_id
++                          AND n.channel=notifications.channel AND UPPER(n.result)='SENT'),
++                    attempts=MAX(attempts,(SELECT n.attempts FROM notifications n
++                        WHERE n.event_id=? AND n.batch_id=notifications.batch_id
++                          AND n.channel=notifications.channel AND UPPER(n.result)='SENT')),
++                    next_attempt=0
++                    WHERE event_id=? AND UPPER(result)!='SENT' AND EXISTS (
++                        SELECT 1 FROM notifications n WHERE n.event_id=?
++                          AND n.batch_id=notifications.batch_id AND n.channel=notifications.channel
++                          AND UPPER(n.result)='SENT')''', (old, old, old, keep, old))
++                conn.execute("UPDATE notifications SET result='SENT' WHERE event_id=? AND result='sent'", (keep,))
++                conn.execute('DELETE FROM sightings WHERE event_id=?', (old,))
++                conn.execute('DELETE FROM notifications WHERE event_id=?', (old,))
+                 conn.execute('UPDATE status_history SET event_id=? WHERE event_id=?', (keep, old))

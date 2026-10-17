@@ -37,8 +37,8 @@ BATCHES = {
                               "-p", "test_*.py", "-v"]),
     ],
     "sam": [
-        ("S-BUILD", "SAM/snapshot", ["npm", "run", "build"]),
-        ("S-ALL", "SAM/snapshot", ["npm", "test"]),
+        ("S-BUILD", "SAM/snapshot", ["npm.cmd" if os.name == "nt" else "npm", "run", "build"]),
+        ("S-ALL", "SAM/snapshot", ["npm.cmd" if os.name == "nt" else "npm", "test"]),
         ("S-ROOTED", "SAM/snapshot", ["node", "--import", "tsx", "--test",
                                       "../independent-review/20261016/rooted-source-authorization.test.ts",
                                       "../independent-review/20261016/glob-case-parity.test.ts",
@@ -185,7 +185,7 @@ def main() -> int:
         results.append(row)
         print(json.dumps(row))
     receipt = {"schema": 1, "repo_head": head, "project": args.project,
-               "source": "local-disposable-codex-not-scheduled",
+               "source": "local-disposable-codex",
                "results": results,
                "no_live_gold_claim": True, "production_modified": False}
     (output_dir / "receipt.json").write_text(

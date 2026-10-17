@@ -76,3 +76,44 @@ def aggregate_diagnostics(texts) -> dict[str, object]:
     return {"records": total, "candidate_leads": selected,
             "not_a_claimability_verdict": True,
             "reasons": dict(sorted(reasons.items()))}
+
+
+def main() -> int:
+    """Consume explicitly supplied local JSONL via stdin; print AGGREGATES only.
+
+    Each object supplies text or title+summary; URLs, identities and full
+    messages are never printed, persisted or exported by this command.
+    """
+    import json
+    import sys
+    if len(sys.argv) != 1:
+        print("Usage: python -m core.grant_lead_diagnostics < local_public.jsonl", file=sys.stderr)
+        return 2
+    messages = []
+    for line_number, line in enumerate(sys.stdin, start=1):
+        if line_number > 10000:
+            print("INVALID_INPUT: too many diagnostic records", file=sys.stderr)
+            return 2
+        if not line.strip():
+            continue
+        try:
+            data = json.loads(line)
+            if not isinstance(data, dict):
+                raise ValueError("not an object")
+            if isinstance(data.get("text"), str):
+                value = data["text"]
+            elif isinstance(data.get("title"), str) or isinstance(data.get("summary"), str):
+                value = str(data.get("title") or "") + "\n" + str(data.get("summary") or "")
+            else:
+                raise ValueError("missing public text fields")
+        except (ValueError, TypeError):
+            # Never echo bad input or secrets from a malformed JSON line.
+            print(f"INVALID_INPUT: JSONL record {line_number}", file=sys.stderr)
+            return 2
+        messages.append(value)
+    print(json.dumps(aggregate_diagnostics(messages), ensure_ascii=False, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

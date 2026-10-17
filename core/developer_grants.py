@@ -10,7 +10,7 @@ import re
 _SCOPE = re.compile(r'\b(?:open[\s-]?source|maintainers?|developers?)\b', re.I)
 _PROGRAM = re.compile(r'\b(?:fund|funding|grants?|fellowships?)\b', re.I)
 _APPLY = re.compile(
-    r'\b(?:accept(?:s|ing)?\s+applications?|applications?\s+(?:are\s+|now\s+|currently\s+)?'
+    r'\b(?:accept(?:s|ing)?\s+applications?|applications?\s+(?:are\s+)?(?:(?:now|currently)\s+)?'
     r'(?:open|accepted)|rolling\s+applications?|apply\s+(?:now|today|for)|'
     r'call\s+for\s+applications?)\b', re.I)
 _AWARD = re.compile(
@@ -20,7 +20,7 @@ _AWARD = re.compile(
 _AMOUNT = re.compile(
     r'\b(?:funding|grant)(?:\s+amount)?\s*:\s*\$\s*\d[\d,]*(?:\.\d{1,2})?\b', re.I)
 _DENY = re.compile(
-    r'\b(?:applications?\s+(?:have\s+|are\s+)?(?:closed|ended|expired)|'
+    r'\b(?:applications?\s+(?:have\s+|are\s+)?(?:now\s+)?(?:closed|ended|expired)|'
     r'(?:no\s+longer|not\s+currently|not\s+yet)\s+(?:open|accepting)|'
     r'(?:closed|expired|discontinued|cancelled)\s+(?:fund|grant|program)|'
     r'(?:paid|application\s+fee|pay\s+to\s+apply|donation|donations|subscription|'
@@ -37,7 +37,7 @@ _NEGATED_APPLICATION = re.compile(
     r'no\s+applications?\s+(?:are\s+)?(?:open|accepted)|'
     r'applications?\s+(?:are\s+)?not\s+(?:open|accepted)|'
     r'not\s+open\s+for\s+applications?|'
-    r'applications?\s+(?:(?:have|are|were)\s+)?(?:closed|ended|expired)|'
+    r'applications?\s+(?:(?:have|are|were)\s+)?(?:now\s+)?(?:closed|ended|expired)|'
     r'(?:fund|grant|program)\s+(?:(?:is|was)\s+|has\s+been\s+)?'
     r'(?:closed|cancelled|canceled|discontinued|expired)|'
     r'(?:do|does|did|will|would|can|could|should|may)\s+not\s+accept\s+applications?|'
@@ -62,9 +62,17 @@ def is_developer_grant_lead(text: object) -> bool:
     fee_scoped = _NO_FEE.sub(' ', normalized)
     if _DENY.search(fee_scoped):
         return False
-    return bool(_SCOPE.search(normalized) and _PROGRAM.search(normalized)
-                and _APPLY.search(normalized)
-                and (_AWARD.search(normalized) or _AMOUNT.search(normalized)))
+    # A feed item may concatenate unrelated grants, contests and schools. Do
+    # not manufacture a single open developer grant from different sections.
+    # Explicit denials above intentionally remain global and fail closed.
+    sections = [block for block in re.split(r'\n\s*\n+|\n\s*[-*]\s+', text) if block.strip()]
+    for section in sections:
+        candidate = ' '.join(section.split())
+        if (_SCOPE.search(candidate) and _PROGRAM.search(candidate)
+                and _APPLY.search(candidate)
+                and (_AWARD.search(candidate) or _AMOUNT.search(candidate))):
+            return True
+    return False
 
 
 def has_grant_application_denial(text: object) -> bool:

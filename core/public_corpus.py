@@ -17,8 +17,10 @@ MAX_BYTES = 8_000_000
 
 # Only structured public resource selectors are retained. Unknown selectors
 # may change activity identity, so dropping one makes the row ineligible for a
-# new blind denominator. Known transport trackers do not change identity.
-_FUNCTIONAL_QUERY = {'batch','offer','ref','utm_campaign','program','plan',
+# new blind denominator. Referral selectors such as ref may identify
+# individual users/affiliates; dropping them also disqualifies blind gold.
+# Known transport trackers do not change identity.
+_FUNCTIONAL_QUERY = {'batch','offer','utm_campaign','program','plan',
                      'campaign','edition','round','page','id','lang','locale',
                      'category','region','product','event','promo','coupon','sku'}
 _TRACKING_QUERY = {'utm_source','utm_medium','utm_term','utm_content','fbclid',

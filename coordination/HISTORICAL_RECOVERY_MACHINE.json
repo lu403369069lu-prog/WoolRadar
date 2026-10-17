@@ -143,8 +143,8 @@
     },
     {
       "id": "WR-H16",
-      "status": "UNIFIED_MAIN_HEAD_DRAFT_PR39_47_EXACT_PYTHON_PASS_GRANT_GOLD_PENDING",
-      "summary": "Wool main PR23 SHA6bab integrated PR37 URL host+strict truth and PR38 separated-grant into Draft PR39 HEAD 76b017e00f7760417a9131d7fb07a4044f673076; actual exact Git bytes 24 producer/grant +23 sampler=47/47 Python3.13 Linux; Windows full and post-fix independent new blind/source identity still red or pending."
+      "status": "PR39_NUMBERED_UNICODE_SCOPE_FIX_GITHUB_DRAFT_FULL_SUITE_PENDING",
+      "summary": "Current own Draft PR39 grants core blob8543c9c6 fixes failure to separate numbered/parenthesized/Unicode-bullet project entries; 6 new formal tests blob9263786 committed, isolated splitter regex 6/6 only; whole core+all Windows and new unseen source window NOT_RUN; previous grant11/11 and Linux58/58 were on older PR39 code, not this new head."
     },
     {
       "id": "SAM-H01",
@@ -334,7 +334,9 @@
     "Review PR39 latest e31eea and PR15 latest 82bf exact, plus older relay PR11 27796; avoid duplicate merging PR37/38/39 or old PR9 vs ported PR15; no Codex V3 owner override.",
     "Wool independent fresh public holdout original recall25% and false-split1, confirmed official eligibility and actual signed 09:30 consumer still unavailable.",
     "SAM full real cards/zod Node24/26 direct/stdio MCP, 61 original source-bound questions(10 answered)/522 gold, T031/T009 correct evidential ground truth, dist pointer rollback and final rounds not verified.",
-    "WR-H17 sensitive historical fixture requires explicit maintainer review; no raw secrets in GitHub."
+    "WR-H17 sensitive historical fixture requires explicit maintainer review; no raw secrets in GitHub.",
+    "New PR39 source change after previously green Linux58: run full exact new HEAD Python suite, maintain external Wool source recall25% RED until fresh gold; 6 synthetic numbered-list contracts are committed but full module tests NOT_RUN.",
+    "Codex historical runner zero-test guard static and isolated parser 10 cases pass; run committed coordination/test_historical_batch_contract_20261017.py against exact checkout before trusting 42 path contracts."
   ],
   "index_files": [
     "coordination/HISTORICAL_FIRST_RESUME_GATE.md",
@@ -529,6 +531,24 @@
       "receipt_guard_test_blob": "bb6dc55c21f52a691b1475db9da72d20a6dfba6b",
       "receipt_guard_local_python": "Python3.13 6/6 pass exit0, exact Git blob source+test",
       "prohibits_automatic_gold_promotion": true
+    },
+    "interactive_command_integrity": {
+      "state": "GITHUB_COMMITTED_PARTIAL_VERIFIED",
+      "total_family_rows": 50,
+      "codex_runnable_rows": 42,
+      "exact_discovery_directory_mismatches_found": 1,
+      "exact_discovery_directory_mismatches_fixed": 1,
+      "source_blob_runner": "888fd36459bd23aef35a78a35681c17b038bc6df",
+      "test_blob": "804eb98c8d8d87e928b5cc870d4c5861955ead1b",
+      "isolated_parser_scenarios_passed": 10,
+      "repo_self_test_full_run": "NOT_RUN_LOCAL_REPO_UNAVAILABLE",
+      "github_scheduled_direct_write": "UNSUPPORTED",
+      "remaining_business_gates": [
+        "Wool fresh independent recall/source",
+        "Wool 09:30 safe delivery requires approval",
+        "SAM Node24/26+MCP+522 gold",
+        "Coordinator V3 owner Windows relay"
+      ]
     }
   }
 }

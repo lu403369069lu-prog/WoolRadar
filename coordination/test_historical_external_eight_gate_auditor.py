@@ -194,3 +194,42 @@ class HardenedEvidenceBoundary(unittest.TestCase):
         p.write_bytes(b'x'*(g.MAX_BYTES+1))
         with self.assertRaisesRegex(ValueError,'OVERSIZE_EVIDENCE'):
             g._read_safe_evidence(self.root,p.name)
+
+
+class WindowsFallbackSimulation(unittest.TestCase):
+    """Simulate Windows flags absent; still requires native Windows verification."""
+    def setUp(self):
+        self.temp=tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root=Path(self.temp.name)
+
+    @unittest.skipUnless(hasattr(__import__('os'),'O_NOFOLLOW'),'POSIX fallback simulation')
+    def test_fallback_pins_stable_nested_regular_file(self):
+        import os
+        (self.root/'nested').mkdir()
+        (self.root/'nested'/'safe.txt').write_bytes(b'safe')
+        flag=os.O_NOFOLLOW;del os.O_NOFOLLOW
+        try:
+            self.assertEqual(g._read_safe_evidence(self.root,'nested/safe.txt'),b'safe')
+        finally:
+            os.O_NOFOLLOW=flag
+
+    @unittest.skipUnless(hasattr(__import__('os'),'O_NOFOLLOW'),'POSIX fallback simulation')
+    def test_fallback_rejects_replacement_with_external_symlink(self):
+        import os
+        from unittest.mock import patch
+        local=self.root/'safe.txt';local.write_bytes(b'safe')
+        outsider=self.root/'unrelated.txt';outsider.write_bytes(b'private')
+        original_open=os.open
+        flag=os.O_NOFOLLOW;del os.O_NOFOLLOW
+        def change_path(target, *args, **kwargs):
+            if str(target)==str(local):
+                local.unlink();local.symlink_to(outsider)
+            return original_open(target,*args,**kwargs)
+        try:
+            with patch.object(os,'open',change_path):
+                with self.assertRaisesRegex(ValueError,'EVIDENCE_UNVERIFIABLE_FILE_IDENTITY'):
+                    g._read_safe_evidence(self.root,local.name)
+        finally:
+            os.O_NOFOLLOW=flag
+

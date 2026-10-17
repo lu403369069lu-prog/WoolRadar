@@ -41,7 +41,13 @@
     "all_historical_hourly_task_runs_retrieved": false,
     "visible_issue_body_sampling_analyzed": true,
     "issue_body_sampling_expanded_families": 6,
-    "all_issue_comment_bodies_semantically_classified": false
+    "all_issue_comment_bodies_semantically_classified": false,
+    "coordination_historical_families": 7,
+    "visible_user_goal_tracks": [
+      "WoolRadar-discovery-and-delivery",
+      "YinQieJi-SAM",
+      "Cross-Agent coordination relay"
+    ]
   },
   "verified_draft_refs": {
     "wool_main_pr23": "6babbe12727652e8626e0fe6f554eb01fecd4a30",
@@ -267,6 +273,41 @@
       "id": "SAM-H24",
       "status": "REAL_SOURCE_GOLD_MISMATCH",
       "summary": "T031 Axis question expected evidence card points to FSM path; do not promote source score"
+    },
+    {
+      "id": "COORD-H01",
+      "status": "STAGED_OLDER_PR_NOT_MAIN",
+      "summary": "PR6 offline standardlib dispatcher/idempotency; source absent from Wool main PR23"
+    },
+    {
+      "id": "COORD-H02",
+      "status": "STAGED_OLDER_PR_NOT_MAIN",
+      "summary": "PR7 GitHub event provenance adapter not deployed"
+    },
+    {
+      "id": "COORD-H03",
+      "status": "STAGED_OLDER_PR_NOT_MAIN",
+      "summary": "PR7 HMAC webhook verifier and formal tests not deployed"
+    },
+    {
+      "id": "COORD-H04",
+      "status": "STAGED_OLDER_PR_NOT_MAIN",
+      "summary": "PR8 fix dispatcher dry-run writing; full latest checkout tests unrun"
+    },
+    {
+      "id": "COORD-H05",
+      "status": "HISTORICAL_UNIT_GREEN_REAL_AUTONOMY_UNVERIFIED",
+      "summary": "PR9 V3/V5 relay, historical Windows 50/50 + five simulated rounds, real ChatGPT/Codex handoff not proven"
+    },
+    {
+      "id": "COORD-H06",
+      "status": "STAGED_OLDER_PR_NOT_MAIN",
+      "summary": "PR11 return Git synchronization/fence regression not deployed"
+    },
+    {
+      "id": "COORD-H07",
+      "status": "REVIEW_ARTIFACT_ONLY",
+      "summary": "PR10/PR12 independent relay review advisory, no production agent automation proof"
     }
   ],
   "verified_draft_refs_note": "Historical observations only; always fetch live PR HEAD before edits. PR35 changes when this file is updated; no self-referential exact SHA is possible.",
@@ -281,6 +322,7 @@
     "effect": "source-policy regex has i flag; cross-backend parity not yet agreed, no production change"
   },
   "active_backlog_next": [
+    "Coordination PR6/7/8/9/11 real offline dispatcher+relay integration into latest owner-respecting branch; no billed cron or real unattended writer claim",
     "SAM H24 actual T031 approved Axis source/card evidence audit, no private text published",
     "SAM H04 actual reviewed artifact SHA byte binding design + source policy",
     "SAM PR15 actual loader combined formal Node24/26 testing",
@@ -297,6 +339,7 @@
     "coordination/HISTORICAL_GITHUB_CENSUS_20261017.json",
     "coordination/SCHEDULED_HISTORICAL_ENGINEERING_RECOVERY_20261017.md",
     "coordination/SCHEDULED_RESULTS_LEDGER_20261017.md",
-    "https://github.com/lu403369069lu-prog/YinQieJi/blob/chatgpt/scheduled-checkpoint-contract-20261016/SAM/independent-review/SCHEDULED_HISTORICAL_ENGINEERING_RECOVERY_20261017.md"
+    "https://github.com/lu403369069lu-prog/YinQieJi/blob/chatgpt/scheduled-checkpoint-contract-20261016/SAM/independent-review/SCHEDULED_HISTORICAL_ENGINEERING_RECOVERY_20261017.md",
+    "coordination/SCHEDULED_HISTORICAL_RELAY_ASSETS_20261017.md"
   ]
 }

@@ -23,6 +23,12 @@ _CONTRACT_SPEC = importlib.util.spec_from_file_location(
 contract = importlib.util.module_from_spec(_CONTRACT_SPEC)
 _CONTRACT_SPEC.loader.exec_module(contract)
 
+_GUARD_SPEC = importlib.util.spec_from_file_location(
+    'historical_formal_receipt_guard', Path(__file__).resolve().with_name(
+        'HISTORICAL_CODEX_42_RECEIPT_GUARD_20261017.py'))
+formal_guard = importlib.util.module_from_spec(_GUARD_SPEC)
+_GUARD_SPEC.loader.exec_module(formal_guard)
+
 MANIFEST = Path(__file__).resolve().with_name('HISTORICAL_80_PERCENT_CODEX_JOBS_20261017.json')
 PROJECTS = {'wool': ('WoolRadar', 'W'), 'sam': ('YinQieJi-SAM', 'S'),
             'coord': ('WoolRadar-Coord', 'C')}
@@ -157,6 +163,14 @@ def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
         except UnicodeDecodeError:
             if verdict == 0:
                 verdict = 126
+        # Independently enforce official raw-log grammar before building
+        # either legacy or formal receipts: appended/mixed summaries cannot
+        # turn a failed, skipped or partial command into PASS.
+        genuine = formal_guard.parse_actual_log_counts(logbytes)
+        if (genuine is None or genuine != {
+                'tests': counts['tests_reported'], 'passed': counts['passed'],
+                'failed': counts['failed'], 'skipped': counts['skipped']}):
+            verdict = 126 if verdict == 0 else verdict
         by_key[key] = {'command':item['command'], 'exit_code':verdict,
                        'observed_exit_code':code, 'counts':counts,
                        'log_sha256':hashlib.sha256(logbytes).hexdigest(),
@@ -238,10 +252,6 @@ def main() -> int:
     rc,receipt,output=run_commands(commands,mapping,head,args.project)
     # A successful subprocess batch is NOT an accepted historical-family
     # receipt until the separate frozen guard validates every raw log and job.
-    guard_file = Path(__file__).resolve().with_name('HISTORICAL_CODEX_42_RECEIPT_GUARD_20261017.py')
-    guard_spec = importlib.util.spec_from_file_location('historical_formal_guard', guard_file)
-    formal_guard = importlib.util.module_from_spec(guard_spec)
-    guard_spec.loader.exec_module(formal_guard)
     frozen_jobs = formal_guard.load_verified_manifest(MANIFEST)
     raw_formal = json.loads((output / 'receipt-guard-v1.json').read_text(encoding='utf-8'))
     guard_verdict = formal_guard.review(raw_formal, frozen_jobs, output)

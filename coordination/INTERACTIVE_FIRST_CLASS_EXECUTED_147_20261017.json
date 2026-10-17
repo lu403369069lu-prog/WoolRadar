@@ -1,0 +1,84 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "classification": "selected_isolated_linux_regression_not_full_release",
+  "environment": {
+    "os": "Linux",
+    "python": "3.13.5",
+    "node": "v22.16.0",
+    "github_access": "GitHub plugin: read/blob/commit; container direct clone DNS unavailable"
+  },
+  "selected_module_total_methods": 147,
+  "failed": 0,
+  "skipped": 0,
+  "suites": {
+    "coord": {
+      "passed": 33,
+      "exit": 0,
+      "log_sha256": "be86bf262ea4c76750bdca09860240e93146e65d8765a79a05f50d1f15459f8b",
+      "executor_blob": "92dfcc62f1a3ea42e952ceea3ca5a95019539e6b",
+      "formal_guard_blob": "2be2736a00b2b4aec3f54787949762b87c433de2",
+      "new_adversarial_test_blob": "ef04f2332d52ae6cc4258575790ef88460c5dff8"
+    },
+    "sam": {
+      "passed": 30,
+      "exit": 0,
+      "log_sha256": "7cf625d10fe7d4cbbc340c3b5b276690d18d4f813437bde347cb5ebfc309bf9d",
+      "migration_blob": "828c2adb51fe180360dc5aef2de4886cd873729a",
+      "new_duplicate_claim_test_blob": "e6b37d4234a1ed9e594e67e1cbbf55bf124691ad"
+    },
+    "wool_corpus": {
+      "passed": 53,
+      "exit": 0,
+      "log_sha256": "2815c4ff4f3a771a9ad9be8b698cac759389334d95fa061e6f2ac527c52a11f0",
+      "module_blob": "168e86445780910eceda5d2c1d75a5db7bf0418d"
+    },
+    "wool_grants": {
+      "passed": 31,
+      "exit": 0,
+      "log_sha256": "33049babc6763151b0416ee603b95f714293bd99cb739b4aa6ce4a66560e17e9",
+      "source_classifier_blob": "8543c9c63543645e36fcd0ed3fea396081c258f7",
+      "diagnostics_blob": "4c5fec88b8bcd1b96840ab681d60f1111b7271f7"
+    }
+  },
+  "cross_branch_integration": {
+    "description": "PR41 public_corpus with PR43 grant classifier and diagnostics modules, combined 15 real pytest-like unittest files in one throwaway Python module path",
+    "passed": 84,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0,
+    "stdout_sha256": "f6a42fe6216edee196f45095fcdb10065919e47a1e93b3b42f3f9768b877c3da",
+    "changed_filenames_overlap": 0,
+    "shared_wool_base_sha": "1aad1c98584dd2c7291ada30ef71e813dbfedd50"
+  },
+  "new_red_controls": {
+    "formal_guard_duplicate_summaries": {
+      "tests": 6,
+      "old_failures": 5,
+      "old_exit": 1,
+      "log_sha256": "a3bff101a21cc99c4bd6e5b82602673b45a8a1280684ec0852fae3551e272f28"
+    },
+    "sam_claim_id_collision": {
+      "tests": 3,
+      "old_failures": 2,
+      "old_exit": 1,
+      "log_sha256": "d5ef701a778594b619e0161cc5463dbdf2a1a9aba48744679ad712f91154fcbb"
+    }
+  },
+  "provenance": {
+    "source_files": "raw bytes in disposable Linux directory, verified via git hash-object against current PR Git blobs",
+    "logs": "raw combined process stdout/stderr maintained in local ephemeral container; only SHA256 identities written to GitHub"
+  },
+  "other_accepted_checks": {
+    "frozen_source_files": "42 of 42 Git blobs and paths matched immutable Git trees, untruncated",
+    "frozen_argv": "42 of 42 patterns and relative target paths matched; source audit in coordination/FROZEN_42_GIT_TREE_SOURCE_AUDIT_20261017.json"
+  },
+  "limitations": [
+    "This is 147 selected regression methods, NOT 147 independent historical business families or full Windows repository tests",
+    "SAM Node24/26 native, true source gold 61/522, real MCP/rollback, Wool user notifications, new heldout 95% recall, old 39 Windows commands still unverified",
+    "No direct clone due container GitHub DNS; historical neighbor contract narrow stub in isolated coordinator runner QA, not full real CLI integration",
+    "No auto merges, no CI bill, no production filesystem or PLC changes"
+  ],
+  "historical_recovery_closed": false,
+  "windows_historical_frozen_commands_executed": 0
+}

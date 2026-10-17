@@ -58,12 +58,12 @@
     "sam_history_pr10": "f5e6562524b3438227e311fbc7ff0223b08a5a12",
     "sam_claimkind_pr13": "8719d75205e50209e9b11998a2af72c4d08ee975",
     "sam_workbuddy_pr14": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
-    "sam_audit_types_pr15": "028f2c38522bb49651101a402503e7751b9fe0a5",
+    "sam_audit_types_pr15": "e7c4056a8594045c856cca86c8c51a56e91c9d07",
     "sam_rooted_pr12": "a92a870951e1bbf5f2517865faca46b56a6546e7",
     "sam_teacher_pr9": "ba2890004a45abe39d9a6da8b342db48162e9023",
     "wool_grant_pr38": "75021367f71ba550a95ef098789e1f1201b21bad",
     "wool_coord_return_pr11": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
-    "wool_unified_pr39": "76b017e00f7760417a9131d7fb07a4044f673076"
+    "wool_unified_pr39": "9f5bced16dd12e07a24134b046b64d981634a4f2"
   },
   "families": [
     {
@@ -113,8 +113,8 @@
     },
     {
       "id": "WR-H10",
-      "status": "HISTORICAL_CANDIDATE_UNVERIFIED",
-      "summary": "published_at timezone parser old 9/10 to 10/10 model"
+      "status": "PR39_PUBLISHED_AT_REAL_SOURCE_RED9_GREEN57_LINUX_WINDOWS_PENDING",
+      "summary": "Wool actual core/public_corpus.py old Git blob412a... 10 real producer cases 9fail/exit1; new source6768c5... and testc90cb... after 10/10, focused full producer+grant tests34/34 + sampler23/23 =57/57 Python3.13 Linux, repo current PR39 Draft; Windows/provider-gold not tested"
     },
     {
       "id": "WR-H11",
@@ -164,7 +164,7 @@
     {
       "id": "SAM-H04",
       "status": "SHA_BOUND_DRAFT_REAL_FILE_4_PASS_CARDS_FULL_BUILD_PENDING",
-      "summary": "PR15 bound reviewedArtifactSha256 to real authorized whole cards JSONL bytes; old exact loader red2/4, fixed green4/4 and combined genuine 34/34 Node22; cards.ts same-buffer code committed but zod/full build/MCP not run"
+      "summary": "PR15 bound reviewedArtifactSha256 to real authorized whole cards JSONL bytes; old exact loader red2/4, fixed green4/4 and combined genuine 34/34 Node22; cards.ts same-buffer code committed but zod/full build/MCP not run; previous 3 other dependent formal test fixtures (quality-gates, inheritance-source-gate, iteration-fixes) corrected to hash exact reviewed cards bytes on PR15; full zod/MCP formal execution still pending"
     },
     {
       "id": "SAM-H05",
@@ -173,8 +173,8 @@
     },
     {
       "id": "SAM-H06",
-      "status": "HISTORICAL_CANDIDATE_UNVERIFIED",
-      "summary": "glob semantics old 45-case model, full parity unrun"
+      "status": "RG14_POSIX_572_REAL_SOURCE_COMPARISONS_GREEN_WINDOWS_PENDING",
+      "summary": "SAM PR15 actual source-policy0cb6e... compared to real rg14.1.1 26 glob variants x22 files=572 cases zero mismatch Node22; new formal matrix test blob77a277... staged but exact formal test not separately executed, Windows rg parity pending"
     },
     {
       "id": "SAM-H07",
@@ -258,8 +258,8 @@
     },
     {
       "id": "WR-H18",
-      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
-      "summary": "external send success but database CAS=0 must report uncertain, not exactly-once"
+      "status": "SOURCE_AND_EXACT_OFFICIAL_NEGATIVE_TEST_PRESENT_REEXECUTION_PENDING",
+      "summary": "Actual main core/notify.py blob f2b330... emits uncertain on external success but DB CAS0; tests/test_notify_reindex_transaction.py blob ac5ec... asserts sent=0 uncertain=1 and replacement stays PENDING. Current source/test existence verified; test itself not newly executed this turn"
     },
     {
       "id": "WR-H19",
@@ -329,6 +329,8 @@
     "effect": "source-policy regex has i flag; cross-backend parity not yet agreed, no production change"
   },
   "active_backlog_next": [
+    "WR-H10 new draft PR39 now actual source UTC-only published_at 57/57 focused Linux; full official Windows/current main branch and new independent provider blind still missing.",
+    "SAM PR15 three historical fake-hash fixtures corrected + new 572 rg matrix checked against actual POSIX policy, but full TS/zod/Node24/26 and direct/stdio MCP must still be run; no claim that these new TS formal files were executed.",
     "Wool unified Draft PR39 based on PR23 exact 6bab (PR37 sampler and PR38 grant) authentic 47/47 isolated Python Linux. OWNER must review exactly once without duplicate merging PR37/38, run current Windows full 412+ suite, then genuinely fresh blind public holdout (old TP1/FN3 recall25%, false-split1) and actual approved 09:30 report bridge.",
     "SAM PR15 now contains PR12 latest policy+PR13 enum+PR14 WorkBuddy+PR15 typed/hash code in one GitHub Draft head; 34/34 true source-module Linux Node22, still need exact full cards.ts/zod package Node24/26 Windows build and real MCP direct+stdio, source artifact mapping validation against 104-card gold.",
     "Coordination PR9→PR11 true ancestor, PR7 adapter/HMAC preserved byte-exact, PR8 dry-run behavior statically retained, but PR11 diverges from main by 157 commits; run full actual relay test/safe integration review, no auto merge.",
@@ -370,6 +372,26 @@
       "all": "47 distinct tests exit0",
       "original_provenance": "authorized interactive local exact full Git blobs incl core/models",
       "not_yet": "main Windows412, new public holdout/cross-URL merge, real signed 9:30 report bridge, region/card eligibility, coordinator merge"
+    },
+    "new_H10": {
+      "source": "9f5bced16dd12e07a24134b046b64d981634a4f2",
+      "red": "9 of 10 real producer tests failed on source 412a",
+      "green": "new real producer cases10/10, full focused current producer+grants34/34, sampler23/23, 57 different unittest methods",
+      "source_git_blob": "6768c5d1a2229c6b5410c70de270ef49dc65bc26",
+      "test_git_blob": "c90cb9eab13230d4c4086e51c9c1b3f6f034dd62",
+      "windows": "NOT_RUN",
+      "holdout": "NOT_RUN"
+    },
+    "new_glob_matrix": {
+      "source": "e7c4056a8594045c856cca86c8c51a56e91c9d07",
+      "rg": "ripgrep14.1.1",
+      "scope": "26 globs x22 paths",
+      "compared": 572,
+      "mismatches": 0,
+      "source_sha": "0cb6ead5e4764aa8b7364ba92d3137b0b8171f5b",
+      "new_formal_test_blob": "77a27796d2bd3cd696cd2b72993aaf6dfd7acdea",
+      "formal_file_executed": false,
+      "windows": "NOT_RUN"
     }
   },
   "historical_exact_remote_test_provenance": {
@@ -381,5 +403,16 @@
     "historical_report": "Windows Python3.12.14 57 tests exit0",
     "new_test_run": false,
     "unmerged": true
+  },
+  "evidence_coverage_20261017": {
+    "family_count": 50,
+    "primary_remote_git_blob_verified": 49,
+    "classified": 50,
+    "privileged_fixture_unread": [
+      "WR-H17"
+    ],
+    "denominator_for_user_80pct": 40,
+    "engineering_completion_80pct_claim": false,
+    "source": "coordination/HISTORICAL_50_FAMILY_EVIDENCE_SWEEP_20261017.md"
   }
 }

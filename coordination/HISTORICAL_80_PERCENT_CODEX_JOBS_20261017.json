@@ -298,7 +298,7 @@
       "repo": "lu403369069lu-prog/WoolRadar",
       "verified_test_path": "independent-quality/delivery-bridge-20261016/test_delivery_boundaries.py",
       "verified_test_blob": "3efdbe3484d9e8210b86a00572f3476f0eb7a4ae",
-      "run_command": "python -B -m unittest discover -s independent-quality/public-corpus-blind-dedup-20261016 -p test_delivery_boundaries.py -v",
+      "run_command": "python -B -m unittest discover -s independent-quality/delivery-bridge-20261016 -p test_delivery_boundaries.py -v",
       "external_constraint": null,
       "prior_engineering_status": "HISTORICAL_CANDIDATE_UNVERIFIED",
       "do_not_claim_pass_before_new_receipt": true
@@ -933,5 +933,13 @@
       "prior_engineering_status": "REVIEW_ARTIFACT_ONLY",
       "do_not_claim_pass_before_new_receipt": true
     }
-  ]
+  ],
+  "validation_20261017": {
+    "scope": "42 READY_FOR_LOCAL_CODEX per-job command resolved test paths vs 42 verified_test_path; one mismatch WR-H15 corrected",
+    "before_mismatches": 1,
+    "after_mismatches": 0,
+    "zero_test_guard_required": true,
+    "run_verdict": "NOT_EXECUTED_BY_MANIFEST_AUDIT",
+    "author": "authorized interactive chat"
+  }
 }

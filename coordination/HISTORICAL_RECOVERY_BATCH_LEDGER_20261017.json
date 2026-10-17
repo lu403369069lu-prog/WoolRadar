@@ -55,6 +55,21 @@
         "non-writing 0.4.0 migration preflight"
       ],
       "next_gate": "Windows Node24/26 release full test + real source read-only audit + real MCP + 61/522 gold"
+    },
+    {
+      "id": "wool43",
+      "repository": "lu403369069lu-prog/WoolRadar",
+      "pr": 43,
+      "head_at_review": "a4b969919603291849e0fddc535b0309628eb3c6",
+      "state": "DRAFT_UNMERGED",
+      "code_committed": true,
+      "latest_tests": "AUTHORED_NOT_EXECUTED",
+      "scope": [
+        "diagnostic-only developer grant miss reasons without classifier mutation",
+        "aggregate missing-signal counts without source text disclosure",
+        "local stdin-only JSONL CLI"
+      ],
+      "next_gate": "local 10+4 diagnostics tests + original developer grant suite + unseen source/time-window gold"
     }
   ],
   "prior_validation_scope": "Prior-turn isolated synthetic regressions exist in Issues. They do not certify the new heads.",
@@ -65,5 +80,6 @@
     "private_data_exported": false,
     "paid_ci_launched": false
   },
-  "handoff": "coordination/HISTORICAL_42_RUNNER_HARDENED_HANDOFF_20261017.md"
+  "handoff": "coordination/HISTORICAL_42_RUNNER_HARDENED_HANDOFF_20261017.md",
+  "pr43_recall_policy": "Old 56-row, FN2 developer-used freeze cannot become independent holdout by rescoring it."
 }

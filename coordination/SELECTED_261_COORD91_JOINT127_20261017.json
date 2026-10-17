@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "status": "261_SELECTED_EXACT_GIT_BLOB_MATCHED_LINUX_TESTS_PASS;FROZEN_NATIVE_AND_BUSINESS_UNACCEPTED",
+  "selected": {
+    "total": 261,
+    "passed": 261,
+    "failed": 0,
+    "skipped": 0,
+    "not_full_legacy_checkout": true,
+    "suites": [
+      {
+        "project": "coordination+eight-external-gates",
+        "tests": 91,
+        "passed": 91,
+        "failed": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "actual_command": "python -B -m unittest discover -s . -p 'test_historical*.py' -v",
+        "raw_stdout_sha256": "358efa465ba4a5f2e040eaacb82ba4f6e8cae7039dd5f7afa2c406902cb4f8bc",
+        "blobs": {
+          "executor": "08af6d6304758399282d7b1799604089570c7b09",
+          "formal_guard": "e51ec61d5fab3b82e763f8c147f73b3486123110",
+          "formal_guard_race_tests": "5ab8a2e602fbf1153012f7b9e307ec5622d87cb9",
+          "external_eight_auditor": "3237eb61d54ec62927bb06a15c1ba056e8f8fb42",
+          "external_eight_auditor_tests": "253e05c0bb35ba5664794e967b68d30f7b4e0997",
+          "external_eight_cli_tests": "0c13596d89d4df2c4366591fb5ece51b588f4abf"
+        }
+      },
+      {
+        "project": "WoolRadar public samples",
+        "tests": 82,
+        "passed": 82,
+        "failed": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "raw_stdout_sha256": "f110c338810ad10b4405584d61fe4bdbee6023f3deda3d3ff6c1439e0f1f97d3",
+        "source_blob": "c9f6e031ba48d44e0091b89036c44aeae07864f3"
+      },
+      {
+        "project": "SAM 0.4.1 synthetic migration",
+        "tests": 43,
+        "passed": 43,
+        "failed": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "raw_stdout_sha256": "dfdce71124d03d4426f97502386da7af4a4ee92d9191bc0930c1358b2dbbe5bd",
+        "source_blob": "22582e67d9ac18aa66f4f43ac1d7556d6edc1476"
+      },
+      {
+        "project": "WoolRadar grant diagnostics",
+        "tests": 45,
+        "passed": 45,
+        "failed": 0,
+        "skipped": 0,
+        "exit_code": 0,
+        "raw_stdout_sha256": "a20ce35c57de1e326b96168a1ce6d5c96e8230bed3f9a75ed8b1569029057143",
+        "source_blob": "6fe02aa7a83479c4eeea6a448b80f75988a13ffd"
+      }
+    ]
+  },
+  "wool_joint": {
+    "tests": 127,
+    "passed": 127,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "stdout_sha256": "5781c37e991c9e4237b21fc7211741d15c6d078c561d5e3df8f40af5e4a84d85",
+    "overlapping_selected": true,
+    "actual_git_merge": false
+  },
+  "red_green": [
+    {
+      "module": "formal-raw-log-guard",
+      "original_source_blob": "072ba64688fcd479795620b870a803ddb29dc78b",
+      "new_source_blob": "e51ec61d5fab3b82e763f8c147f73b3486123110",
+      "old_suite": "3 failures/4 tests exit 1",
+      "old_stdout_sha256": "998f077130fe60d636164c8ba2cd9e69e1536b6b5a903870a92faaa14f103442",
+      "new_synthetic_regressions_passed": 6,
+      "real_linux_coord_suite_green": 91,
+      "behavior": "Bounded raw log <= 8 MiB and nofollow or Windows-fallback before/opened/after identity"
+    },
+    {
+      "module": "eight-gate auditor Windows fallback",
+      "original_source_blob": "f5ef4ba31c50e4b5e054834d7b903a2fc1958907",
+      "new_source_blob": "3237eb61d54ec62927bb06a15c1ba056e8f8fb42",
+      "old_suite": "1 failure + 1 error/2 tests exit 1 when O_NOFOLLOW absent",
+      "old_raw_stdout_sha256": "421cf9a8837a2dbb2a41fda459006f09a93f256866411a463f9855e51d4438be",
+      "new_suite": "2/2 Windows fallback simulations green, gate auditor suite 32/32 green, integrated coordinator 91/91 green",
+      "behavior": "Windows regular-evidence bounded read and evidence-path identity pinning fail closed"
+    }
+  ],
+  "receipt_parser": {
+    "official_guard_blob": "e51ec61d5fab3b82e763f8c147f73b3486123110",
+    "actual_5_stdout_logs_parsed": true,
+    "all_5_counts_match": true
+  },
+  "qualifications": [
+    "Actual Windows OS behavior and native Windows file reparse/NTFS behavior remain unverified; POSIX-simulated Windows fallback tests are NOT actual Windows acceptance",
+    "47-row historical real Wool blind recall remained 25%, new unseen post-fix gold missing",
+    "Original SAM T031 Axis vs FSM gold human approval remains missing; Beckhoff public references are background, not user-specific label adjudication",
+    "No local daily 09:30 full exporter/consumer bridge approval or same-SHA live receipt"
+  ],
+  "frozen_historical": {
+    "families": 50,
+    "ready": 42,
+    "gated": 8,
+    "distinct_commands": 39,
+    "partial_linux_commands_executed_on_reconstructed_sources": 10,
+    "partial_linux_methods_passed": 105,
+    "strict_full_native_command_receipts_missing": 29,
+    "pinned_tsx_dependency_missing": 17,
+    "complete_old_python_checkout_missing": 12,
+    "whole_39_strict_guard_acceptance": false
+  },
+  "draft_prs_unmerged": true,
+  "production_untouched": true,
+  "historical_recovery_closed": false
+}

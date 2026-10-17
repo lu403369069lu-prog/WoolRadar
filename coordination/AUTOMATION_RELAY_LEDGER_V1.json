@@ -32,22 +32,25 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 6,
-    "last_persisted_worker_run_utc": "2026-10-17",
-    "last_completed_review_key": "WoolRadar#39",
+    "revision": 7,
+    "last_persisted_worker_run_utc": "2026-10-17T12:44:46.471Z",
+    "last_completed_review_key": "YinQieJi#18",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
       "YinQieJi#14": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
-      "YinQieJi#15": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58"
+      "YinQieJi#15": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
+      "YinQieJi#18": "4118010257ece04c302ac591f074daac798e9744"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
       "YinQieJi#14/0cdc3b4e81b9e143cb92fabde1828b6c8a913e14/exact-helper-15-20261017",
       "YinQieJi#15/73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58/entailed-empty-evidence-redgreen-20261017",
-      "retain-retry-items-and-write-diagnostic-20261017"
+      "retain-retry-items-and-write-diagnostic-20261017",
+      "YinQieJi#18/4118010257ece04c302ac591f074daac798e9744/exact-helper-four-scheduled-20261017",
+      "YinQieJi#14/0cdc3b4e81b9e143cb92fabde1828b6c8a913e14/server-fallback-guard-static-scheduled-20261017"
     ],
-    "write_diagnostic": "INTERACTIVE_WRITE_CONFIRMED_ONLY_SCHEDULED_WRITE_UNVERIFIED",
+    "write_diagnostic": "SCHEDULED_SECOND_ROUND_GITHUB_WRITE_ATTEMPT_READBACK_REQUIRED_FIRST_ROUND_PERSISTENCE_UNVERIFIED",
     "last_write_error": null
   },
   "backlog": {
@@ -538,6 +541,49 @@
       "executor": "interactive_chat",
       "scheduled_worker_wrote_this": false,
       "duplicate_pr_closed": 45
+    },
+    {
+      "event_key": "YinQieJi#18/4118010257ece04c302ac591f074daac798e9744/exact-helper-four-scheduled-20261017",
+      "origin": "SCHEDULED_SECOND_ROUND",
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "pr": 18,
+      "head_sha": "4118010257ece04c302ac591f074daac798e9744",
+      "parent_pr": 15,
+      "parent_head_sha": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
+      "source_path": "SAM/snapshot/src/claim-audit-field-types.ts",
+      "source_blob_sha": "f649a530e1616134b3008f7d08d7b07d29d331ce",
+      "test_scope": "EXACT_GITHUB_SOURCE_BLOB_ISOLATED_NODE22_HELPER_4_CASES_NOT_FORMAL_FULL_SUITE",
+      "command": "node --experimental-strip-types --test test/helper-boundary.test.ts",
+      "exit_code": 0,
+      "passed": 4,
+      "failed": 0,
+      "description": "Exact Git blob reproduced via git hash-object; 4 isolated synthetic tests: entailed empty evidence rejected, missing empty allowed, entailed cited allowed, invalid members rejected. Original PR18 three formal cases, full loader, npm build, native Node24/26 not run.",
+      "source_changed_recently": true,
+      "full_integration_status": "DEFER_IN_PROGRESS_AND_NATIVE_RECEIPT_PENDING",
+      "evidence_urls": [
+        "https://github.com/lu403369069lu-prog/YinQieJi/pull/18",
+        "https://github.com/lu403369069lu-prog/YinQieJi/blob/4118010257ece04c302ac591f074daac798e9744/SAM/snapshot/src/claim-audit-field-types.ts"
+      ],
+      "business_accepted": false,
+      "native_receipt": false
+    },
+    {
+      "event_key": "YinQieJi#14/0cdc3b4e81b9e143cb92fabde1828b6c8a913e14/server-fallback-guard-static-scheduled-20261017",
+      "origin": "SCHEDULED_SECOND_ROUND",
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "pr": 14,
+      "head_sha": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
+      "source_path": "SAM/snapshot/src/server.ts",
+      "source_blob_sha": "ea9487c7132c5ccb2db97eed1de52a99225b2ec8",
+      "test_scope": "STATIC_SOURCE_CALLSITE_CHECK_ONLY",
+      "command": null,
+      "exit_code": null,
+      "description": "Checked exact server.ts: WorkBuddy fallback at line 320 uses workbuddyFilterFallbackAllowed(input); documentReviewApplicable and qualified answer path separately require absence of evidenceTiers and claimClasses. Runtime full MCP/integration not run.",
+      "evidence_urls": [
+        "https://github.com/lu403369069lu-prog/YinQieJi/blob/0cdc3b4e81b9e143cb92fabde1828b6c8a913e14/SAM/snapshot/src/server.ts"
+      ],
+      "business_accepted": false,
+      "native_receipt": false
     }
   ],
   "run_history": [
@@ -591,13 +637,27 @@
       "canonical_pr": 44,
       "duplicate_closed": 45,
       "comment": "No code merged; retain PR44's richer source formal tests for next eligible retry; no newly executed complete repo suite"
+    },
+    {
+      "origin": "SCHEDULED_SECOND_ROUND",
+      "event_id": "scheduled-second-round-20261017-pr18-exact-helper4-pr14-static-guard",
+      "run_utc": "2026-10-17T12:44:46.471Z",
+      "reviewed_keys": [
+        "YinQieJi#18",
+        "YinQieJi#14"
+      ],
+      "checkpoint_status": "COMMIT_ATTEMPT_READBACK_REQUIRED",
+      "source_receipts_pending": true,
+      "actual_cases": "PR18 exact source 4/4 Node22 isolated exit0; PR14 server guard static only; formal/full native pending",
+      "first_run_persistence": "UNVERIFIED",
+      "next_action": "At next independent Scheduled run, read this event by new Git blob, skip same evidence signatures, review different eligible work, CAS persist and readback; only then mark cross-run VERIFIED."
     }
   ],
   "acceptance": {
     "scheduled_wakeup": "PROVED_TWICE_2026-10-17",
-    "scheduled_private_github_read": "UNVERIFIED",
-    "scheduled_write": "UNVERIFIED",
-    "stateful_cross_run_continuation": "NOT_VERIFIED_IN_SCHEDULED_CONTEXT",
+    "scheduled_private_github_read": "VERIFIED_2026-10-17_SECOND_ROUND",
+    "scheduled_write": "PENDING_READBACK_SECOND_ROUND_2026-10-17",
+    "stateful_cross_run_continuation": "NOT_VERIFIED_FIRST_RUN_PERSISTENCE_MISSING",
     "backlog_actual_review": "PR39_PARTIAL_FIX_CANONICAL_DRAFT44_FULL_SUITE_PENDING"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
@@ -1314,7 +1374,7 @@
         "last_error_code": null,
         "reason": "Interactive exact-binary Node isolated red/green verified; formal 3 tests recorded as unrun, PR18 candidate needs independent review.",
         "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/18",
-        "next_action": "Check current PR15/18 HEAD and diff, run exact formal 3 tests if reproducible; otherwise remain PARTIAL_CODE_QA."
+        "next_action": "PR18 exact helper isolated Node22 4/4 pass but 3 committed formal tests including real loader still unrun; after PR18 HEAD stable 90min, run from full SAM/snapshot: npm ci; npm run build; node --import tsx --test test/claim-audit-positive-evidence.test.ts test/claim-audit-field-types.test.ts; record exact versions/exit. No merge."
       },
       {
         "id": "DIAG-SCHEDULED-GITHUB-PERSISTENCE",
@@ -1327,7 +1387,7 @@
         "last_error_code": "HISTORIC_PLATFORM_SAFETY_BLOCK; CURRENT_RUN_ERROR_UNAVAILABLE",
         "reason": "Past scheduled write diagnostic described blocked by platform safety; interactive GitHub update succeeded through revision 3; no current scheduled write/readback receipt. Do not assume user prohibited scheduled writes.",
         "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/scheduled-review-ledger-20261017/coordination/AUTOMATION_RELAY_LEDGER_V1.json",
-        "next_action": "Re-evaluate only if a supported scheduled write permission/approval flow becomes available; perform at most one minimal normal authorized checkpoint write and immediate readback. If denied, record diagnostic and do not bypass."
+        "next_action": "This second Scheduled run is attempting a normal CAS ledger write/readback. If successful, first Scheduled write is proven but cross-run remains NOT_VERIFIED until next independent Scheduled run reads this receipt and advances a different task."
       }
     ],
     "summary": {

@@ -173,6 +173,46 @@
     "cli_test_git_blob": "0c13596d89d4df2c4366591fb5ece51b588f4abf",
     "cli_manifest_loader_synthetic": true,
     "full_immutable_manifest_cli_test_run": false,
-    "evidence": "coordination/EXTERNAL_EIGHT_GATE_30_TEST_EXECUTION_20261017.json"
+    "evidence": "coordination/EXTERNAL_EIGHT_GATE_30_TEST_EXECUTION_20261017.json",
+    "composed_executor_auditor_joint_tests": 83,
+    "composed_joint_passed": 83,
+    "composed_joint_failed": 0,
+    "composed_joint_skipped": 0,
+    "composed_joint_log_sha256": "d723dfb34a7d10dc56accd0ce20f5277e0bd6ab66cbcf0ac0fd1f538eee6d83e",
+    "composed_joint_evidence": "coordination/HISTORICAL_EXECUTOR_EIGHT_GATE_JOINT_83_20261017.json"
+  },
+  "sam_source_id_type_checkpoint": {
+    "review_date": "2026-10-17",
+    "repository": "lu403369069lu-prog/YinQieJi",
+    "draft_pr": 17,
+    "production_source": "SAM/snapshot/src/source-qualified.ts",
+    "old_blob": "0f7b8c15f6d2bf221a0a7cbddc47f4251a8af72b",
+    "fixed_blob": "9708d860dce46c529b048963cd43d00ad93a7688",
+    "new_test_blob": "2124eacfc2f2a3ca3e73a2bab19ff65605ef418c",
+    "actual_node22_type_strip_negative_tests_before": {
+      "tests": 7,
+      "passed": 3,
+      "failed": 4,
+      "exit_code": 1
+    },
+    "after": {
+      "tests": 7,
+      "passed": 7,
+      "failed": 0,
+      "exit_code": 0
+    },
+    "joint_with_existing_migration": {
+      "tests": 50,
+      "passed": 50,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "raw_stdout_sha256": "93e92db1336123161c5267d0aec9c6a8006d93b9636d4fa5a5304feed32ef88c"
+    },
+    "evidence": "YinQieJi/SAM/independent-review/source-id-runtime-types-redgreen-20261017.json",
+    "official_full_repo_tsx_run_completed": false,
+    "source_human_review_accepted": false,
+    "real_mcp_validated": false,
+    "raw_win_node24_26_validated": false
   }
 }

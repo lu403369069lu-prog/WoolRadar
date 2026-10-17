@@ -21,7 +21,24 @@
       "/SAM-WoolRadar-Checkpoints",
       "/Google Drive"
     ],
-    "library_unrelated_drive_not_used": true
+    "library_unrelated_drive_not_used": true,
+    "visible_github_pr_census": {
+      "wool": 35,
+      "sam": 14,
+      "all": 49,
+      "covered_first_page_max_100": true
+    },
+    "visible_github_issue_comment_census": {
+      "WoolRadar#2": 61,
+      "WoolRadar#3": 83,
+      "YinQieJi#1": 56,
+      "total": 200,
+      "detectable_event_keys": 109
+    },
+    "visible_pr_and_issue_api_census_complete": true,
+    "visible_library_listing_complete": true,
+    "archival_source_catalogue_complete_for_current_access": true,
+    "all_historical_hourly_task_runs_retrieved": false
   },
   "verified_draft_refs": {
     "wool_main_pr23": "6babbe12727652e8626e0fe6f554eb01fecd4a30",
@@ -229,5 +246,22 @@
     ],
     "result": "case-sensitive on tested Linux",
     "effect": "source-policy regex has i flag; cross-backend parity not yet agreed, no production change"
-  }
+  },
+  "active_backlog_next": [
+    "SAM H04 actual reviewed artifact SHA byte binding design + source policy",
+    "SAM PR15 actual loader combined formal Node24/26 testing",
+    "SAM PR14 real direct/stdio MCP tests",
+    "SAM PR12 cross-platform glob safety/ripgrep parity",
+    "Wool PR37 full formal 23 tests vs updated main HEAD",
+    "Wool WR-H16 grant same-project evidence identity",
+    "Wool WR-H13 new independent unseen public source window",
+    "Wool daily report output bridge actual user-approved same-SHA consumer"
+  ],
+  "index_files": [
+    "coordination/HISTORICAL_FIRST_RESUME_GATE.md",
+    "coordination/HISTORICAL_GITHUB_CENSUS_20261017.json",
+    "coordination/SCHEDULED_HISTORICAL_ENGINEERING_RECOVERY_20261017.md",
+    "coordination/SCHEDULED_RESULTS_LEDGER_20261017.md",
+    "https://github.com/lu403369069lu-prog/YinQieJi/blob/chatgpt/scheduled-checkpoint-contract-20261016/SAM/independent-review/SCHEDULED_HISTORICAL_ENGINEERING_RECOVERY_20261017.md"
+  ]
 }

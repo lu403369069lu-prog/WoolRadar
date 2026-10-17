@@ -32,7 +32,7 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 5,
+    "revision": 6,
     "last_persisted_worker_run_utc": "2026-10-17",
     "last_completed_review_key": "WoolRadar#39",
     "incremental_last_seen": {},
@@ -81,12 +81,12 @@
         "key": "WoolRadar#39",
         "repo": "lu403369069lu-prog/WoolRadar",
         "pr": 39,
-        "status": "PROVISIONAL_FINDING",
+        "status": "PARTIAL_REVIEW_PATCH_PROPOSED",
         "reviewed_head_sha": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
-        "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/45",
+        "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
         "review_scope": "EXTRACTED_FUNCTION_RED_GREEN_4_NOT_FULL_GITHUB_SUITE",
         "finding": "P2: exact home.arpa apex accepted as public DNS URL by downstream blind sampler while producer excludes it",
-        "disposition": "FIX_PROPOSED_IN_DRAFT_PR_45; SOURCE_UNIT_SUITE_UNVERIFIED"
+        "disposition": "CANONICAL_DRAFT_PR_44_NOT_MERGED; DUPLICATE_PR_45_CLOSED; FULL_FORMAL_SUITE_PENDING"
       },
       {
         "key": "WoolRadar#38",
@@ -523,8 +523,8 @@
       "severity": "P2",
       "scope": "SAMPLER_CANONICAL_PUBLIC_URL_APEX",
       "source_blob_sha": "d9c3f9c2d4c88d5867ae00f7c5039f7bc9e63ab8",
-      "proposed_fix_draft_pr": 45,
-      "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/45",
+      "proposed_fix_draft_pr": 44,
+      "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
       "local_repro": {
         "mode": "ISOLATED_EXTRACTED_FUNCTION_NOT_FULL_REPO_SUITE",
         "command": "python -m unittest test_boundary_extract -v",
@@ -534,9 +534,10 @@
         "baseline": "home.arpa and https://home.arpa were admitted before patch",
         "fixed": "apex and subdomain denied, public control admitted"
       },
-      "verdict": "PARTIAL_STATIC_REVIEW_DRAFT_FIX_NOT_MERGED",
+      "verdict": "PARTIAL_STATIC_REVIEW_CANONICAL_DRAFT_PR44_FULL_SUITE_PENDING",
       "executor": "interactive_chat",
-      "scheduled_worker_wrote_this": false
+      "scheduled_worker_wrote_this": false,
+      "duplicate_pr_closed": 45
     }
   ],
   "run_history": [
@@ -578,10 +579,18 @@
       "kind": "INTERACTIVE_AUDIT",
       "review_key": "WoolRadar#39",
       "head_sha": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
-      "outcome": "PR45_DRAFT_FIX_SUBMITTED",
+      "outcome": "PR45_CLOSED_DUPLICATE_OF_EXISTING_PR44",
       "scheduled": false,
       "checkpoint_status": "INTERACTIVE_PERSISTED",
-      "note": "Remote source+test patch inspected; isolated reproduction 4/4 PASS; entire original PR source suite and business acceptance pending"
+      "note": "Remote source+test patch inspected; isolated reproduction 4/4 PASS; entire original PR source suite and business acceptance pending; canonical is PR44, PR45 closed unmerged after duplicate detection"
+    },
+    {
+      "origin": "INTERACTIVE_CHAT_NOT_SCHEDULED",
+      "event_id": "backlog-pr39-pr45-duplicate-closed-20261017",
+      "review_key": "WoolRadar#39",
+      "canonical_pr": 44,
+      "duplicate_closed": 45,
+      "comment": "No code merged; retain PR44's richer source formal tests for next eligible retry; no newly executed complete repo suite"
     }
   ],
   "acceptance": {
@@ -589,7 +598,7 @@
     "scheduled_private_github_read": "UNVERIFIED",
     "scheduled_write": "UNVERIFIED",
     "stateful_cross_run_continuation": "NOT_VERIFIED_IN_SCHEDULED_CONTEXT",
-    "backlog_actual_review": "PR39_PARTIAL_STATIC_REVIEW_ISSUE_FOUND_DRAFT45_FIX_PENDING"
+    "backlog_actual_review": "PR39_PARTIAL_FIX_CANONICAL_DRAFT44_FULL_SUITE_PENDING"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

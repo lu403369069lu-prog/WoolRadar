@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "checked_date": "2026-10-17",
+  "source": {
+    "repo": "lu403369069lu-prog/WoolRadar",
+    "branch": "codex/relay-state-v3",
+    "path": "state.json",
+    "git_blob": "b59ae266a135b08bcdaec8c1cc7d67c91b39053c",
+    "envelope_format": 1,
+    "protocol_schema_version": 3
+  },
+  "observed": {
+    "revision": 251,
+    "task_count": 26,
+    "task_status_counts": {
+      "ready": 12,
+      "in_progress": 2,
+      "conflict": 4,
+      "needs_approval": 8
+    },
+    "event_entries": 251
+  },
+  "assessment": {
+    "documented_architecture_review": "COORD-H07",
+    "read_only_state_snapshot_checked": true,
+    "proves_claim_fence_runtime_correct": false,
+    "proves_current_lease_owner_authority": false,
+    "proves_authenticated_autonomous_execution": false,
+    "proves_all_8_external_business_approvals": false,
+    "remark": "State snapshot is metadata; no ownership claim, CAS write, scheduler action, or authenticated take-over simulation was attempted. The eight needs_approval TASKS are not presumed identical to the eight frozen external-gated historical FAMILIES."
+  },
+  "safety": {
+    "state_branch_written": false,
+    "user_approval_requested": false,
+    "local_production_touched": false,
+    "draft_merged": false,
+    "historical_recovery_closed": false
+  }
+}

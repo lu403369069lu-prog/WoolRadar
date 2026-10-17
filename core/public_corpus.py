@@ -36,7 +36,8 @@ _ENCODED_EMAIL = re.compile(r'(?i)(?<![\w.+%\-])[\w.+%\-]+%(?:25)*40[a-z0-9.-]+\
 _SENSITIVE_TEXT_ASSIGNMENT = re.compile(
     r'(?i)\b(?:api[_ -]?key|access[_ -]?token|refresh[_ -]?token|password|'
     r'client[_ -]?secret|session[_ -]?id)\s*[:=]\s*[\"\']?[^\s\"\';,]{1,}')
-_BEARER_CREDENTIAL = re.compile(r'(?i)\bBearer[ \t]+[A-Za-z0-9._~+/\-]{1,}')
+_BEARER_CREDENTIAL = re.compile(r'(?i)\bBearer[ \t]+[A-Za-z0-9._~+/\-]{12,}')
+_AUTH_BEARER_CREDENTIAL = re.compile(r'(?i)\bAuthorization\s*[:=]\s*Bearer[ \t]+[A-Za-z0-9._~+/\-]{1,}')
 _LONG_DIGIT_SECRET = re.compile(r'(?<![A-Za-z0-9])\d{13,}(?![A-Za-z0-9])')
 _CHINA_MOBILE_NUMBER = re.compile(r'(?<!\d)1[3-9]\d{9}(?!\d)')
 _GROUPED_CARD_NUMBER = re.compile(r'(?<!\d)(?:\d{4}[ -]){3}\d{4}(?!\d)')
@@ -212,6 +213,7 @@ def _clean_text(value: str) -> str:
     scrubbed = _EMAIL.sub('[private email redacted]', scrubbed)
     scrubbed = _ENCODED_EMAIL.sub('[private email redacted]', scrubbed)
     scrubbed = _SENSITIVE_TEXT_ASSIGNMENT.sub('[private credential redacted]', scrubbed)
+    scrubbed = _AUTH_BEARER_CREDENTIAL.sub('[private credential redacted]', scrubbed)
     scrubbed = _BEARER_CREDENTIAL.sub('[private credential redacted]', scrubbed)
     scrubbed = _LONG_DIGIT_SECRET.sub('[private number redacted]', scrubbed)
     scrubbed = _CHINA_MOBILE_NUMBER.sub('[private phone redacted]', scrubbed)

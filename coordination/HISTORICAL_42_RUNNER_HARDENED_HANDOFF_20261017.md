@@ -131,3 +131,28 @@ Derived audit claims now preserve their individual source record's reviewer/revi
 6. Do not upload raw customer corpus, tokens, production SQLite or locally identifying details. Keep all eight external/policy gates, unseen independent business gold, Wool delivery consumer, SAM source gold 61/522, MCP, release rollback and final 3 rounds OPEN.
 
 All code and tests herein are isolated candidate artifacts: no auto merge, Scheduled GitHub writer, paid CI, Windows Task Scheduler/production changes, PLC or deployment.
+
+
+## E. New separate Wool developer-grant diagnostic PR43 (same interactive batch)
+
+Independent [Draft PR43](https://github.com/lu403369069lu-prog/WoolRadar/pull/43),
+candidate HEAD a4b969919603291849e0fddc535b0309628eb3c6. This branch is rooted
+in Wool PR39; it does NOT modify the real Boolean lead classifier or its
+thresholds. It adds human-auditable reason/signal analysis and a local-only,
+aggregate-by-reason CLI over explicitly sanitized public JSONL, with no
+source contents/URL/identifiers printed.
+
+Additional Codex worktree required to validate PR43 independently:
+
+    python -B -m unittest discover -s tests -p "test_grant_lead_diagnostic*.py" -v
+    python -B -m unittest discover -s tests -p "test_developer_grant_*.py" -v
+    python -B -m unittest discover -s tests -v
+    python -m core.grant_lead_diagnostics < local_public_sanitized.jsonl
+
+Expect the last command to print aggregate-only reason frequencies and
+missing application/award/scope/program signals. Do not send sanitized
+source text to Github by default, and never call diagnostic counts a measured
+new held-out source recall. The earlier 56-row FN2 freeze was used for
+development and must remain development data. True unseen source evaluation,
+official evidence and user eligibility stay open. Formal diagnostic tests
+are committed but NOT EXECUTED in this chat.

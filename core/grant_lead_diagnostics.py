@@ -98,6 +98,14 @@ def main() -> int:
     if len(sys.argv) != 1:
         print("Usage: python -m core.grant_lead_diagnostics < local_public.jsonl", file=sys.stderr)
         return 2
+    def reject_duplicate_keys(pairs):
+        value = {}
+        for key, item in pairs:
+            if key in value:
+                raise ValueError('ambiguous JSONL duplicate key')
+            value[key] = item
+        return value
+
     def validated_records():
         # readline(limit) bounds allocation even before the JSON parser sees a
         # maliciously large record. Aggregate incrementally; never retain raw
@@ -121,7 +129,7 @@ def main() -> int:
             if not line.strip():
                 continue
             try:
-                data = json.loads(line)
+                data = json.loads(line, object_pairs_hook=reject_duplicate_keys)
                 if not isinstance(data, dict):
                     raise ValueError('not an object')
                 if isinstance(data.get('text'), str):

@@ -1,3 +1,7 @@
+## October17 new-window acceptance failure and repair
+
+Latest exact8023 full406passed. New blind47 evaluation TP1/FN3, failed; subsequently retired to development, discovery repair plus independent counterexamples formal411passed; one true duplicate pair remains split. See evidence/pipeline-integration-20261016/oct17/QUALITY_CHECKPOINT.md. OUTPUT_NOT_CONNECTED and original P06 remain.
+
 ## USER RESUMED — 2026-10-17
 
 Explicit user continuation overrides prior stop. See evidence/pipeline-integration-20261016/oct17/HANDOFF.md. PR36 fixes have formal Windows regression evidence; business acceptance and OUTPUT_NOT_CONNECTED gates remain. Historical sections below are past checkpoints.

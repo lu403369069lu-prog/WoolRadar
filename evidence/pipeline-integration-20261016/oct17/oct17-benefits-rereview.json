@@ -1,0 +1,87 @@
+{
+  "reviewer": "independent budget_review agent",
+  "command": "python -B _outbox/pipeline-integration-20261016/oct17_benefits_rereview_checks.py --repo-root <delivery-worktree>",
+  "exit_code": 0,
+  "source_sha256": {
+    "core/developer_benefits.py": "d9a56be70e1451195f136d221890273eb06a0d1d53a5451afdd2e95ece418bd0",
+    "core/collector.py": "866bc8e710f123715b22bf77555664af0c1f5554df3792f100ae902cad17a0c1",
+    "tests/test_explicit_developer_benefits.py": "6b2a3ac232d6e86e02a46f218aaa79a5092bdcfc948050da4a81c52733052fd2"
+  },
+  "formal_tests": {
+    "run": 18,
+    "passed": true,
+    "failure_ids": [],
+    "error_ids": []
+  },
+  "checks": [
+    {
+      "name": "waiver-event-positive-and-keyword-opt-in-controls",
+      "passed": true
+    },
+    {
+      "name": "invalid-and-overlong-helper-input-does-not-create-new-benefit-lead",
+      "passed": true
+    },
+    {
+      "name": "explicit-paid-exam-control-rejected",
+      "passed": true
+    },
+    {
+      "name": "direct-past-control-rejected",
+      "passed": true
+    },
+    {
+      "name": "explicit-negation-control-rejected",
+      "passed": true
+    },
+    {
+      "name": "unrelated-event-control-rejected",
+      "passed": true
+    },
+    {
+      "name": "nontechnical-student-certification",
+      "expected": false,
+      "actual": true,
+      "passed": false
+    },
+    {
+      "name": "software-hackathon",
+      "expected": true,
+      "actual": false,
+      "passed": false
+    }
+  ],
+  "findings": [
+    {
+      "priority": "P2",
+      "title": "nontechnical-student-certification scope boundary mismatch",
+      "synthetic_text": "Driving certification examination fee is now waived for students.",
+      "expected": false,
+      "actual": true,
+      "detail": "Certification plus students does not establish a technical exam domain.",
+      "minimal_fix": "Require a technical certification qualifier, not student status alone."
+    },
+    {
+      "priority": "P2",
+      "title": "software-hackathon scope boundary mismatch",
+      "synthetic_text": "Software hackathon: apply to host a Fest. Organizers will receive participant swag.",
+      "expected": true,
+      "actual": false,
+      "detail": "New technical-event restriction omits the explicitly software-scoped hackathon previously accepted.",
+      "minimal_fix": "Retain software hackathon as a technical event positive control."
+    }
+  ],
+  "qualification_boundary": "In the three reviewed files this is a boolean discovery branch. No evidence/status/account-eligibility promotion is introduced by the branch; whole-system qualification behavior was not re-audited.",
+  "limits": [
+    "All new counterexamples are synthetic development checks, not a new holdout or 95% acceptance.",
+    "No retired sample, original data, DB, report, network or paid API used.",
+    "No worktree/product edits or full-suite rerun. No raw data upload.",
+    "Dedup was not reviewed: the previously reported same-campaign false split remains unresolved; no dedup pass claimed."
+  ],
+  "original_six_counterexamples": {
+    "count": 6,
+    "helper_all_false": true,
+    "collector_all_false": true,
+    "verification": "The executed script asserts every original case has helper=False and collector=False before creating this report."
+  }
+}

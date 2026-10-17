@@ -1,0 +1,6 @@
+{
+  "command": "python -B -X utf8 -m unittest discover -s tests -p test_explicit_developer_benefits.py -v",
+  "exit_code": 0,
+  "stderr": "test_conditional_developer_event_support_is_only_a_lead (test_explicit_developer_benefits.ExplicitDeveloperBenefitContracts.test_conditional_developer_event_support_is_only_a_lead) ... ok\ntest_current_certification_fee_waiver (test_explicit_developer_benefits.ExplicitDeveloperBenefitContracts.test_current_certification_fee_waiver) ... ok\ntest_fee_and_event_counterexamples (test_explicit_developer_benefits.ExplicitDeveloperBenefitContracts.test_fee_and_event_counterexamples) ... ok\ntest_independent_review_counterexamples (test_explicit_developer_benefits.ExplicitDeveloperBenefitContracts.test_independent_review_counterexamples) ... ok\ntest_keyword_toggle_remains_respected (test_explicit_developer_benefits.ExplicitDeveloperBenefitContracts.test_keyword_toggle_remains_respected) ... ok\ntest_technical_domain_review (test_explicit_developer_benefits.ExplicitDeveloperBenefitContracts.test_technical_domain_review) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.004s\n\nOK\n",
+  "source_sha256": "446be8e762641e4ee125ed3f12e433d4f2f15ba20c10bf2fd4e1cd0e6de6b1fb"
+}

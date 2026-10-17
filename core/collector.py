@@ -25,6 +25,7 @@ from .models import Candidate, utc_now
 from .public_corpus import record_public_sample
 from .verifier import VerificationEngine
 from .developer_grants import is_developer_grant_lead, has_grant_application_denial
+from .developer_benefits import is_explicit_developer_benefit
 
 
 USER_AGENT = 'WoolRadar/7.1 (+local-read-only-monitor; contact=local-user)'
@@ -135,6 +136,8 @@ def contains_keyword(text: str, keywords: list[str]) -> bool:
         return True
     # Developer grants are discovery leads only. They never imply a verified
     # award or account eligibility, and respect the existing keyword toggle.
+    if 'developer perks' in strong and is_explicit_developer_benefit(text):
+        return True
     if 'developer perks' in strong and is_developer_grant_lead(text):
         return True
     if not any(matches(brand) for brand in brand_only):

@@ -329,6 +329,7 @@
     "effect": "source-policy regex has i flag; cross-backend parity not yet agreed, no production change"
   },
   "active_backlog_next": [
+    "Codex handoff executable now SHA locks all 50 manifest entries and PINs 42 Git blobs, 39 unique commands mapped to 42 family receipts; 42/42 isolated synthetic safety/verdict/subprocess tests passed. Still requires three exact HEAD local Codex batches and real Windows/full gold, no historic release completion inferred.",
     "Codex immutable 50-family manifest/runner still pins Wool80c5; latest own PR39 now 1aad1c after real producer nonpublic host + malformed Unicode security repairs, exactly 21/21 producer Python test at latest Git blob. Treat manifest pin as old immutable snapshot, NOT same HEAD: require explicit coordinated manifest+runner bump before batch launch.",
     "Wool producer current real 21/21 is only focused tests; rerun entire current-HEAD Windows 412+ and 24 sampler/real producer schema and 40 grant+data; new independent blind recall(old25%) and 09:30 OUTPUT_NOT_CONNECTED remain open.",
     "Wool current unified PR39 now HEAD80c5, exact grant numbered-scope formal code+test hash checked, isolated core40 + sampler24 =64/64 local Linux pass; this is NOT full Windows/new independent quality holdout.",
@@ -595,5 +596,40 @@
         "evidence": "independent-quality/developer-grant-20261017/H16_NUMBERED_SCOPE_RED_GREEN.md"
       }
     }
+  },
+  "codex_historical_batch_executor_20261017": {
+    "status": "READY_FOR_LOCAL_CODEX_EXECUTION_NOT_TESTED_ON_LOCAL_WINDOWS",
+    "source": "coordination/HISTORICAL_CODEX_42_JOB_EXECUTOR_20261017.py",
+    "source_blob": "167d415c92dca86d1211c6fa2541c5b84c398ecf",
+    "contract_runner_blob": "d60f10c5c01d876b8ab663ad31f9c1dd703b8323",
+    "manifest_blob": "96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744",
+    "manifest_test_blob": "f29ff052831e8437c45a70e106d3245c2c3ccb97",
+    "verdict_test_blob": "433a3d31bb0ef53294897d2beb22b57f571dbece",
+    "executor_test_blob": "03a446ab7db3e4e20f8187c2244ed0fb6539ee14",
+    "isolated_synthetic_tests": {
+      "methods": 42,
+      "passed": 42,
+      "failed": 0,
+      "exit_code": 0,
+      "log_sha256": "50b1f3c568ad8b95e35af154a41791fcc06ef54e6ae32411dddd960608eac2e0",
+      "caveat": "exact new executor code and source-matched helper functions in isolated local harness, not full Windows repo test run"
+    },
+    "verified_immutable_git_tree_sources": {
+      "Wool_PR39": 15,
+      "SAM_PR15": 21,
+      "Coord_PR11": 6,
+      "unique_commands": 39,
+      "identity_mismatches": 0
+    },
+    "family_engineering_jobs_executed_this_turn": 0,
+    "historic_engineering_completion_claim_80_percent": false,
+    "retained_gates": [
+      "Windows full repo suites",
+      "Node24/26 zod/MCP direct+stdio",
+      "SAM original61/522/T031 approved gold",
+      "Wool fresh real holdout and 09:30 verified report bridge",
+      "Scheduled unattended GitHub write remains blocked"
+    ],
+    "historic_recovery_closed": false
   }
 }

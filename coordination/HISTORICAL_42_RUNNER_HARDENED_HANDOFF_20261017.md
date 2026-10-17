@@ -210,3 +210,26 @@ Additional independent fixes after earlier handoff: official guard+executor refu
 Current unmerged candidate PR SHA must always be re-read from GitHub, not assumed from historical text above. Remote CI combined-status queries for four candidate HEADs returned 0 status entries; do not call this CI-green. True Windows frozen 39 commands/42 families were not run in chat; no Git clone possible from the current container due GitHub DNS, but exact frozen test blob and argv checks passed in the GitHub connector. Node tsx was unavailable locally. Authenticated business gold, notification consumer, full SAM lifecycle are external gates.
 
 No auto merge, production changes, PLC access, task-scheduler GitHub writes, private data export, paid CI or synthetic tests counted as real holdout acceptance.
+
+## 2026-10-17 CONTINUED REAL QA — 193 selected + 104 joint (supersedes earlier 151/87 and 138/96)
+
+Machine proof: [FIRST_CLASS_LINUX_EXECUTED_193_AND_JOINT_104_20261017.json](FIRST_CLASS_LINUX_EXECUTED_193_AND_JOINT_104_20261017.json). The following are actual Linux subprocess test results on candidate Git-blob-matched source, not authored-only tests:
+
+| Draft PR | Selected real tests | Code source blob at test |
+|---|---:|---|
+| Coord42 | 50/50 | 29566bd772b4564aa96d0c1ae30b6b1af99af4a8 |
+| Wool41 public corpus | 59/59 | 3038f16f129e675381f5fb9a87bbf5a7c53dfaf4 |
+| SAM17 migration | 39/39 | b80c4e693d11d5a7b4f7ac174e32e40fdf5f95e2 |
+| Wool43 grant diagnostics | 45/45 | 6fe02aa7a83479c4eeea6a448b80f75988a13ffd |
+
+Total 193 selected executed PASS / 0 fail / 0 skip. Manually assembled Wool41+Wool43 selected module graph: **104/104** PASS / 0 skip; it overlaps the separate suites and is NOT a Git merge nor independent business families.
+
+Actual new fail-before/pass-after fixes:
+- Wool41: URL path user emails (literal, percent, double-percent) and plain-feed title email addresses could enter a supposedly public blind corpus. New 3-method test old 4 failing assertions; now redacts mail identities without erasing benign public offer paths.
+- SAM17: source 0.4.0 JSON review rows with duplicate answer_status or cardId keys, escaped aliases and nested duplicate keys were silently last-write-wins; migration now refuses source ambiguity. Source review number 1e999 became Infinity and later null, and unsafe integer IDs silently rounded; those are now rejected.
+- Wool43: local diagnostic JSONL now rejects Python JSON NaN/Infinity, invalid non-string authoritative `text` override and pathological deeply nested payloads, but preserves nullable optional `text` and `summary` fallback compatibility.
+- Coord42: immutable source check extended from `HEAD:path` to actual tracked on-disk bytes before and after each frozen subprocess, including Git assume-unchanged index masking. The selected test suite is 50 PASS with real local Git temporary fixtures.
+
+**Separate historical progress:** 10 exact frozen command spellings were actually run against source-reconstructed disposable Linux partial trees, covering 11 of 42 READY historical families and 105 methods, all PASS and official per-log grammar/counts parse 10/10. See [the separate historic partial evidence](FROZEN_10_COMMANDS_11_FAMILIES_LINUX_PARTIAL_20261017.json). The remaining 29 frozen commands HAVE NO accepted execution receipt; the existing 10 also do NOT satisfy the frozen full-repository worktree preflight. No full-family official guard acceptance was claimed. All 39 test entrypoint literal imports were checked statically [here](FROZEN_39_DIRECT_IMPORT_READINESS_20261017.json).
+
+Next actions for authorized native Codex Windows (separate disposable copies, no production): run all 39 frozen commands on the exact three OLD pinned heads using the official runner/guard, preserve every raw log SHA and test count, and report missing or skipped tests as BLOCKED. SAM old TypeScript tests require the pinned local `tsx` and lockfile dependency; installing that dependency here was impossible because the isolated container had no installed `tsx` or GitHub/npm network access. Native Node24/26, real MCP, real legacy releases, true held-out source business gold and the actual Wool 09:30 notification consumer remain unverified external gates. Do not silently update frozen manifest refs, merge draft PRs, or claim the 80% historical business acceptance is closed.

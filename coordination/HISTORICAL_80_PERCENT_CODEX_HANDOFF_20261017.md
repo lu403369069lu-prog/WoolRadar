@@ -2,7 +2,7 @@
 
 **此次会话目标与边界**：原始50个家族，80%=40个。该表把**全部50类**赋予单一处置责任与精确的输入/验收命令，其中 **42类有明确本地 Codex 执行入口（84%交接就绪）**、其余 **8类**需新的外部金标/审批/真实桥接或是受限定时能力。这里的「交接就绪」**不是工程测试通过、合并、业务验收或实际完成率**。上一轮只有49/50可访问证据位置，本轮不宣称已修复40项。
 
-**源 SHA 固定**：WoolRadar只在自有Draft [PR39](https://github.com/lu403369069lu-prog/WoolRadar/pull/39) HEAD `e31eea548ab0b05d26e6fd639907bd81cbabcdfc` 执行；SAM只在自有Draft [PR15](https://github.com/lu403369069lu-prog/YinQieJi/pull/15) HEAD `11e87c629ec28e58fd91b629936b71ea235b4581` 执行；协调器独立 [PR11](https://github.com/lu403369069lu-prog/WoolRadar/pull/11) HEAD `27796df5f9847c1bb5d48d2a445e418dfb3d8e96` 验收。所有SHA为本轮冷读参考，如果HEAD变化，请 Codex 先 `git rev-parse HEAD` 重做diff/测试，绝不静默混合不同提交。Codex V3 main owner 仍由现有actor持有，禁止抢写、自动merge、push生产。
+**源 SHA 固定**：WoolRadar只在自有Draft [PR39](https://github.com/lu403369069lu-prog/WoolRadar/pull/39) HEAD `e31eea548ab0b05d26e6fd639907bd81cbabcdfc` 执行；SAM只在自有Draft [PR15](https://github.com/lu403369069lu-prog/YinQieJi/pull/15) HEAD `82bf36efa90cced8dafb56502812eb49f40515f3` 执行；协调器独立 [PR11](https://github.com/lu403369069lu-prog/WoolRadar/pull/11) HEAD `27796df5f9847c1bb5d48d2a445e418dfb3d8e96` 验收。所有SHA为本轮冷读参考，如果HEAD变化，请 Codex 先 `git rev-parse HEAD` 重做diff/测试，绝不静默混合不同提交。Codex V3 main owner 仍由现有actor持有，禁止抢写、自动merge、push生产。
 
 **4条工程小时任务已暂停**：00/10/30/40分各一条；不会再因为无法自动回写而持续堆新小时结果。每日09:30公开羊毛简报仍启用且不参与Github工程写入。
 

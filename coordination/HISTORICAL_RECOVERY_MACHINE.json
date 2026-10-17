@@ -62,7 +62,8 @@
     "sam_rooted_pr12": "a92a870951e1bbf5f2517865faca46b56a6546e7",
     "sam_teacher_pr9": "ba2890004a45abe39d9a6da8b342db48162e9023",
     "wool_grant_pr38": "75021367f71ba550a95ef098789e1f1201b21bad",
-    "wool_coord_return_pr11": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96"
+    "wool_coord_return_pr11": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "wool_unified_pr39": "76b017e00f7760417a9131d7fb07a4044f673076"
   },
   "families": [
     {
@@ -102,13 +103,13 @@
     },
     {
       "id": "WR-H08",
-      "status": "EXACT_FORMAL_23_PASS_LINUX_MAIN_INTEGRATION_PENDING",
-      "summary": "Draft PR37 source+official test exact blobs 23/23 and core producer13/13 exit0; latest main/Windows/DNS pending"
+      "status": "UNIFIED_MAIN_HEAD_DRAFT_PR39_47_EXACT_PYTHON_PASS_NEW_GOLD_PENDING",
+      "summary": "Wool main PR23 SHA6bab integrated PR37 URL host+strict truth and PR38 separated-grant into Draft PR39 HEAD 76b017e00f7760417a9131d7fb07a4044f673076; actual exact Git bytes 24 producer/grant +23 sampler=47/47 Python3.13 Linux; Windows full and post-fix independent new blind/source identity still red or pending."
     },
     {
       "id": "WR-H09",
-      "status": "EXACT_FORMAL_23_PASS_LINUX_MAIN_INTEGRATION_PENDING",
-      "summary": "Strict boolean proof in same PR37 formal23/23 exit0; Windows/new source holdout pending"
+      "status": "UNIFIED_MAIN_HEAD_DRAFT_PR39_47_EXACT_PYTHON_PASS_NEW_GOLD_PENDING",
+      "summary": "Wool main PR23 SHA6bab integrated PR37 URL host+strict truth and PR38 separated-grant into Draft PR39 HEAD 76b017e00f7760417a9131d7fb07a4044f673076; actual exact Git bytes 24 producer/grant +23 sampler=47/47 Python3.13 Linux; Windows full and post-fix independent new blind/source identity still red or pending."
     },
     {
       "id": "WR-H10",
@@ -142,8 +143,8 @@
     },
     {
       "id": "WR-H16",
-      "status": "DRAFT_PARAGRAPH_SCOPE_RED4_GREEN11_FULL_COLLECTOR_BLIND_PENDING",
-      "summary": "Main actual developer_grants.py old red4/11; independent Draft PR38 exact module/test11/11 Linux Python3.13; 18 legacy negative phrases direct detector hold; mixed one paragraph and official source blind still unresolved"
+      "status": "UNIFIED_MAIN_HEAD_DRAFT_PR39_47_EXACT_PYTHON_PASS_GRANT_GOLD_PENDING",
+      "summary": "Wool main PR23 SHA6bab integrated PR37 URL host+strict truth and PR38 separated-grant into Draft PR39 HEAD 76b017e00f7760417a9131d7fb07a4044f673076; actual exact Git bytes 24 producer/grant +23 sampler=47/47 Python3.13 Linux; Windows full and post-fix independent new blind/source identity still red or pending."
     },
     {
       "id": "SAM-H01",
@@ -328,8 +329,8 @@
     "effect": "source-policy regex has i flag; cross-backend parity not yet agreed, no production change"
   },
   "active_backlog_next": [
+    "Wool unified Draft PR39 based on PR23 exact 6bab (PR37 sampler and PR38 grant) authentic 47/47 isolated Python Linux. OWNER must review exactly once without duplicate merging PR37/38, run current Windows full 412+ suite, then genuinely fresh blind public holdout (old TP1/FN3 recall25%, false-split1) and actual approved 09:30 report bridge.",
     "SAM PR15 now contains PR12 latest policy+PR13 enum+PR14 WorkBuddy+PR15 typed/hash code in one GitHub Draft head; 34/34 true source-module Linux Node22, still need exact full cards.ts/zod package Node24/26 Windows build and real MCP direct+stdio, source artifact mapping validation against 104-card gold.",
-    "Wool PR37 official23/23 and producer13/13 on exact blobs PASS Linux; evaluate against latest main SHA and Windows full suite, then fresh independent holdout.",
     "Coordination PR9→PR11 true ancestor, PR7 adapter/HMAC preserved byte-exact, PR8 dry-run behavior statically retained, but PR11 diverges from main by 157 commits; run full actual relay test/safe integration review, no auto merge.",
     "SAM H24 actual T031 approved Axis source/card evidence audit, no private text published",
     "SAM PR14 real direct/stdio MCP tests",
@@ -337,7 +338,6 @@
     "Wool daily report output bridge actual user-approved same-SHA consumer",
     "Wool H17 maintainer-approved sensitive test-fixture reachable history review (no numeric exposure)",
     "SAM PR9 all formal diagnostic tests44/44 Linux pass; safe review of stacked PR9 vs main PR5, real teacher original61/522 and Windows Node24/26/MCP remain.",
-    "Wool WR-H16 draft PR38 separated-project grammar red4→green11 Linux; merge-owner review with current collector, same-paragraph cross-project ambiguity, Windows full suite and independent provider-blind still open.",
     "Coord PR11 existing owner Windows 57-test receipt matches latest source by Git blobs but still requires independent clean PR11 checkout/source test and safe main overlay; no unattended ChatGPT Scheduled write proof."
   ],
   "index_files": [
@@ -359,7 +359,18 @@
     "sam_teacher": "PR9 ALL five submitted formal tests + four implementations exact nine Git blobs, actual spawned CLI / audit / QID test Node22 44/44 exit0; earlier32 subset, not additive, Issue1 #6228049779.",
     "sam_combined_one_pr_head": "PR15 now carries PR12 POSIX policy exactly; source module 30/30 official TAP pass exit0 at exact GitHub blob; PR15 remains Draft, Windows24/26/MCP not run",
     "sam_review_sha": "Old exact PR15 claim audit SHA 5722bbe... real new test4 2 pass2 fail; code H04 fixed SHA16db..., cards same-buffer7fe2..., test1b34..., new4/4 and full7 files 34/34 Node22 exit0; cards.ts import not dynamically run (zod absent); source gold unverified",
-    "wool_grant": "PR38 actual main source SHA76994c old 11 methods red4, patched source SHAce53 and exact tests SHA26193 11/11 pass, historic18 denial cases direct pass; full collector/Windows/new independent blind not yet executed"
+    "wool_grant": "PR38 actual main source SHA76994c old 11 methods red4, patched source SHAce53 and exact tests SHA26193 11/11 pass, historic18 denial cases direct pass; full collector/Windows/new independent blind not yet executed",
+    "wool_single_main_base_integration": {
+      "sha": "76b017e00f7760417a9131d7fb07a4044f673076",
+      "base": "6babbe12727652e8626e0fe6f554eb01fecd4a30",
+      "command1": "PYTHONPATH=$PWD python -B -m unittest discover -s tests -p 'test_*' -v",
+      "result1": "24/24 exit0",
+      "command2": "python -B -m unittest discover -s independent-quality/public-corpus-blind-dedup-20261016 -p test_freeze_public_sample_dedup.py -v",
+      "result2": "23/23 exit0",
+      "all": "47 distinct tests exit0",
+      "original_provenance": "authorized interactive local exact full Git blobs incl core/models",
+      "not_yet": "main Windows412, new public holdout/cross-URL merge, real signed 9:30 report bridge, region/card eligibility, coordinator merge"
+    }
   },
   "historical_exact_remote_test_provenance": {
     "artifact": "coordination/evidence/return-20261015/fixed-tests.json",

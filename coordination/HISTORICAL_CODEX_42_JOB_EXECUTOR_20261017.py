@@ -105,10 +105,14 @@ def plan_jobs(repo: Path, project: str, document: dict,
     for job in jobs:
         cwd, argv = pin_command(repo, job, blob_lookup)
         key = job['run_command']
+        pinned = {'root':repo.resolve(), 'relative':job['verified_test_path'],
+                  'blob':job['verified_test_blob']}
         if key not in commands:
             commands[key] = {'command':key, 'cwd':cwd, 'argv':argv,
-                             'cwd_contract':job['local_cwd'],
+                             'cwd_contract':job['local_cwd'], 'pinned_test':pinned,
                              'key_sha256':hashlib.sha256(key.encode('utf-8')).hexdigest()}
+        elif commands[key]['pinned_test'] != pinned:
+            raise RuntimeError('Identical command mapped to conflicting reviewed test source.')
         mapping.append({'family_id':job['family_id'], 'source_blob':job['verified_test_blob'],
                         'command_key':commands[key]['key_sha256']})
     return list(commands.values()), mapping
@@ -152,6 +156,17 @@ def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
     for item in commands:
         key = item['key_sha256']
         try:
+            if 'pinned_test' in item:
+                pinned = item['pinned_test']
+                root = Path(pinned['root']).resolve()
+                target = _reject_symlink_chain(root, pinned['relative'])
+                if not target.is_file():
+                    raise RuntimeError('Pinned historical test no longer exists before execution.')
+                payload = target.read_bytes()
+                actual = hashlib.sha1(
+                    b'blob ' + str(len(payload)).encode('ascii') + b'\x00' + payload).hexdigest()
+                if actual != pinned['blob']:
+                    raise RuntimeError('Historical test changed after planning; refusing execution.')
             # Per-command disposable home/tmp prevents accidental reads from
             # user dotfiles or runtime tokens inherited through env variables.
             with tempfile.TemporaryDirectory(prefix='child-', dir=output) as private_home:
@@ -160,6 +175,8 @@ def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
                                       env=_isolated_test_env(Path(private_home)),
                                       timeout=1800, check=False)
                 code, logbytes = done.returncode, done.stdout or b''
+        except RuntimeError as exc:
+            code, logbytes = 126, repr(exc).encode('utf-8')
         except (OSError, subprocess.TimeoutExpired) as exc:
             code, logbytes = 125, repr(exc).encode('utf-8')
         # Persist/hash ORIGINAL child bytes. Lossy decoding may be used only

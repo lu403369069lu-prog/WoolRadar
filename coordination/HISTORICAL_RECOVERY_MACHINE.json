@@ -58,7 +58,7 @@
     "sam_history_pr10": "f5e6562524b3438227e311fbc7ff0223b08a5a12",
     "sam_claimkind_pr13": "8719d75205e50209e9b11998a2af72c4d08ee975",
     "sam_workbuddy_pr14": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
-    "sam_audit_types_pr15": "b04e05ba359fbf4b1ff3a17a7bf82e1bb3720d3f",
+    "sam_audit_types_pr15": "028f2c38522bb49651101a402503e7751b9fe0a5",
     "sam_rooted_pr12": "a92a870951e1bbf5f2517865faca46b56a6546e7",
     "sam_teacher_pr9": "ba2890004a45abe39d9a6da8b342db48162e9023"
   },
@@ -160,8 +160,8 @@
     },
     {
       "id": "SAM-H04",
-      "status": "UNFIXED_REPRODUCIBLE",
-      "summary": "reviewedArtifactSha256 only 64hex; approved bytes not bound"
+      "status": "SHA_BOUND_DRAFT_REAL_FILE_4_PASS_CARDS_FULL_BUILD_PENDING",
+      "summary": "PR15 bound reviewedArtifactSha256 to real authorized whole cards JSONL bytes; old exact loader red2/4, fixed green4/4 and combined genuine 34/34 Node22; cards.ts same-buffer code committed but zod/full build/MCP not run"
     },
     {
       "id": "SAM-H05",
@@ -326,12 +326,10 @@
     "effect": "source-policy regex has i flag; cross-backend parity not yet agreed, no production change"
   },
   "active_backlog_next": [
-    "SAM PR12 latest POSIX glob source0cb6 requires Windows Node24/26 rg parity; PR13/14/15 are based on older PR12 head, safely integrate before combined full suite.",
-    "SAM PR15 typed+enum+strict loader 14/14 Linux actual but Windows24/26/build and direct/stdio MCP NOT verified.",
+    "SAM PR15 now contains PR12 latest policy+PR13 enum+PR14 WorkBuddy+PR15 typed/hash code in one GitHub Draft head; 34/34 true source-module Linux Node22, still need exact full cards.ts/zod package Node24/26 Windows build and real MCP direct+stdio, source artifact mapping validation against 104-card gold.",
     "Wool PR37 official23/23 and producer13/13 on exact blobs PASS Linux; evaluate against latest main SHA and Windows full suite, then fresh independent holdout.",
     "Coordination PR9→PR11 true ancestor, PR7 adapter/HMAC preserved byte-exact, PR8 dry-run behavior statically retained, but PR11 diverges from main by 157 commits; run full actual relay test/safe integration review, no auto merge.",
     "SAM H24 actual T031 approved Axis source/card evidence audit, no private text published",
-    "SAM H04 actual reviewed artifact SHA byte binding design + source policy",
     "SAM PR14 real direct/stdio MCP tests",
     "Wool WR-H16 grant same-project evidence identity",
     "Wool WR-H13 new independent unseen public source window",
@@ -355,6 +353,8 @@
     "blocker": "Windows Node24/26 full repo/MCP and integrated current-head remains unverified",
     "issue_wool": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6227957375",
     "issue_sam": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6227987028",
-    "sam_teacher": "PR9 ALL five submitted formal tests + four implementations exact nine Git blobs, actual spawned CLI / audit / QID test Node22 44/44 exit0; earlier32 subset, not additive, Issue1 #6228049779."
+    "sam_teacher": "PR9 ALL five submitted formal tests + four implementations exact nine Git blobs, actual spawned CLI / audit / QID test Node22 44/44 exit0; earlier32 subset, not additive, Issue1 #6228049779.",
+    "sam_combined_one_pr_head": "PR15 now carries PR12 POSIX policy exactly; source module 30/30 official TAP pass exit0 at exact GitHub blob; PR15 remains Draft, Windows24/26/MCP not run",
+    "sam_review_sha": "Old exact PR15 claim audit SHA 5722bbe... real new test4 2 pass2 fail; code H04 fixed SHA16db..., cards same-buffer7fe2..., test1b34..., new4/4 and full7 files 34/34 Node22 exit0; cards.ts import not dynamically run (zod absent); source gold unverified"
   }
 }

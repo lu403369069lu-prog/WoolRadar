@@ -32,16 +32,19 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 11,
-    "last_persisted_worker_run_utc": "2026-10-17T15:34:44Z",
-    "last_completed_review_key": "SAM-H01:partial-boundary-review",
+    "revision": 12,
+    "last_persisted_worker_run_utc": "2026-10-17T23:30:25.571Z",
+    "last_completed_review_key": "WoolRadar#44:DNS_LABEL_CODE_PATCH_FORMAL_UNRUN",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
       "YinQieJi#14": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
       "YinQieJi#15": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
       "YinQieJi#18": "4118010257ece04c302ac591f074daac798e9744",
-      "WoolRadar#43": "621871f9afc5ae43272d04bcff9d4763ae25fa5a"
+      "WoolRadar#43": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+      "WoolRadar#44": "e81ef59bc2b0b05fad5acfbb231ead92c0d2925e",
+      "WoolRadar#38": "75021367f71ba550a95ef098789e1f1201b21bad",
+      "YinQieJi#13": "8719d75205e50209e9b11998a2af72c4d08ee975"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -55,7 +58,8 @@
       "WoolRadar#43/621871f9afc5ae43272d04bcff9d4763ae25fa5a/exact-source-patched-formal-subsets-20261017T2324",
       "YinQieJi/SAM-H01/81d8543aeae4a15ea6ecee32cde550808fa5f1c3/strict-jsonl-exact-source-12-boundaries-20261017T2324",
       "WoolRadar#44/1482f97e61b1163ccdc761906eda087fcba48628/invalid-dns-labels-extracted-redgreen-20261017T2324",
-      "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
+      "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17",
+      "interactive-20261018-backfill-wrh16-samh02-w44-dns-fix"
     ],
     "write_diagnostic": "SCHEDULED_BATCH_CAS_COMMIT_PENDING_READBACK",
     "last_write_error": null,
@@ -105,9 +109,9 @@
         "key": "WoolRadar#38",
         "repo": "lu403369069lu-prog/WoolRadar",
         "pr": 38,
-        "status": "QUEUED_UNREVIEWED",
-        "reviewed_head_sha": null,
-        "evidence_url": null
+        "status": "PARTIAL_SOURCE_PATCH_READ_SCHEDULED_REPORT_UNREPRODUCED",
+        "reviewed_head_sha": "75021367f71ba550a95ef098789e1f1201b21bad",
+        "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/38"
       },
       {
         "key": "WoolRadar#37",
@@ -363,9 +367,9 @@
         "key": "YinQieJi#13",
         "repo": "lu403369069lu-prog/YinQieJi",
         "pr": 13,
-        "status": "QUEUED_UNREVIEWED",
-        "reviewed_head_sha": null,
-        "evidence_url": null
+        "status": "PARTIAL_SOURCE_PATCH_READ_SCHEDULED_REPORT_UNREPRODUCED",
+        "reviewed_head_sha": "8719d75205e50209e9b11998a2af72c4d08ee975",
+        "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/13"
       },
       {
         "key": "YinQieJi#12",
@@ -459,8 +463,8 @@
         "key": "WoolRadar#44",
         "repo": "lu403369069lu-prog/WoolRadar",
         "pr": 44,
-        "status": "PARTIAL_STATIC_REVIEW_FINDING_P2",
-        "reviewed_head_sha": "1482f97e61b1163ccdc761906eda087fcba48628",
+        "status": "CODE_PATCH_COMMITTED_FORMAL_TEST_UNRUN",
+        "reviewed_head_sha": "e81ef59bc2b0b05fad5acfbb231ead92c0d2925e",
         "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
         "parent": "WoolRadar#39",
         "submitted_head_sha": "1482f97e61b1163ccdc761906eda087fcba48628",
@@ -776,6 +780,68 @@
       ],
       "business_accepted": false,
       "native_receipt": false
+    },
+    {
+      "event_key": "interactive-20261018/WR-H16/75021367f71ba550a95ef098789e1f1201b21bad/source-review-and-prior-scheduled-report-unconfirmed",
+      "origin": "INTERACTIVE_GITHUB_PATCH_READ_WITH_SCHEDULED_CHAT_REPORT_CARRIED_FOR_RETRY",
+      "family_id": "WR-H16",
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "pr": 38,
+      "head_sha": "75021367f71ba550a95ef098789e1f1201b21bad",
+      "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/38",
+      "source_review": "Actual current HEAD, source patch and committed test file inspected using GitHub tool in interactive chat.",
+      "prior_scheduled_reported_cases": "11/11",
+      "independently_reproduced_cases": null,
+      "formal_suite_exit_code": null,
+      "status": "PARTIAL_UNVERIFIED_FORMAL_RESULT",
+      "next_action": "Run full current-HEAD formal tests and build in clean checkout, keep source/test SHA; then update receipt; no business acceptance.",
+      "native_frozen_accepted": false,
+      "business_accepted": false
+    },
+    {
+      "event_key": "interactive-20261018/SAM-H02/8719d75205e50209e9b11998a2af72c4d08ee975/source-review-and-prior-scheduled-report-unconfirmed",
+      "origin": "INTERACTIVE_GITHUB_PATCH_READ_WITH_SCHEDULED_CHAT_REPORT_CARRIED_FOR_RETRY",
+      "family_id": "SAM-H02",
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "pr": 13,
+      "head_sha": "8719d75205e50209e9b11998a2af72c4d08ee975",
+      "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/13",
+      "source_review": "Actual current HEAD, source patch and committed test file inspected using GitHub tool in interactive chat.",
+      "prior_scheduled_reported_cases": "9/9",
+      "independently_reproduced_cases": null,
+      "formal_suite_exit_code": null,
+      "status": "PARTIAL_UNVERIFIED_FORMAL_RESULT",
+      "next_action": "Run full current-HEAD formal tests and build in clean checkout, keep source/test SHA; then update receipt; no business acceptance.",
+      "native_frozen_accepted": false,
+      "business_accepted": false
+    },
+    {
+      "event_key": "interactive-20261018/WoolRadar#44/e81ef59bc2b0b05fad5acfbb231ead92c0d2925e/dns-label-scope-code-fix",
+      "origin": "INTERACTIVE_GITHUB_CODE_PATCH_AND_LOCAL_EXTRACTED_SOURCE_TEST",
+      "family_ids": [
+        "WR-H07",
+        "WR-H08"
+      ],
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "pr": 44,
+      "head_sha": "e81ef59bc2b0b05fad5acfbb231ead92c0d2925e",
+      "source_blobs": {
+        "core/public_corpus.py": "a08a5ac3ef5a94c71fa05f9a42cb438b86041b7a",
+        "independent-quality/public-corpus-blind-dedup-20261016/freeze_public_sample_dedup.py": "c939cb14995fc1a57685d70b32f43f4674a19867",
+        "tests/test_public_corpus_dns_label_boundary_20261018.py": "be670e519ca1e7def7ab3710136dec2f956b7ba6"
+      },
+      "code_commits": [
+        "d6c67885d675f638d03983b352d16c8a7d2f9954",
+        "9111799fc7e461a1b4a7e9546524a88de3d2dd34",
+        "e81ef59bc2b0b05fad5acfbb231ead92c0d2925e"
+      ],
+      "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
+      "validation": "Local transcribed/extracted lexical shape functions: python -B /mnt/data/test_host_lexical_20261018.py -v, 4/4 exit 0. Original repository formal methods committed 5, UNRUN. This does NOT prove PR44 full source/formal suite or acceptance.",
+      "formal_test_count_committed": 5,
+      "formal_test_exit_code": null,
+      "status": "CODE_PATCH_COMMITTED_FORMAL_PENDING",
+      "native_frozen_accepted": false,
+      "business_accepted": false
     }
   ],
   "run_history": [
@@ -907,6 +973,21 @@
       "strict_deliveries_new": 0,
       "retained_scheduled_latest_revision": 10,
       "reason": "User requested interactive GitHub recovery due to intermittent Scheduled safety blocks; independently read source HEAD/blob; formal prior-run tests reported, not rerun."
+    },
+    {
+      "origin": "INTERACTIVE_CHAT_NOT_SCHEDULED",
+      "event_id": "interactive-20261018-backfill-wrh16-samh02-w44-dns-fix",
+      "run_utc": "2026-10-17T23:30:25.571Z",
+      "reviewed_keys": [
+        "WoolRadar#44",
+        "WoolRadar#38",
+        "YinQieJi#13"
+      ],
+      "checkpoint_status": "CAS_PENDING_READBACK",
+      "code_patch_commit": "e81ef59bc2b0b05fad5acfbb231ead92c0d2925e",
+      "actual_cases": "W44 producer+sampler DNS guard source commits with 5 formal tests added, local extracted harness 4/4 pass exit0, formal module UNRUN; WR-H16 and SAM-H02 prior Scheduled chat 11/11 and 9/9 reports revalidated only by PR code+test presence, not independent test execution.",
+      "strict_delivery": "NO_FAMILY_BUSINESS_ACCEPTANCE_CLAIMED",
+      "next_action": "Run original formal suites and missing build/native gates, no auto merge; retry permission failures only after state change."
     }
   ],
   "acceptance": {
@@ -1011,7 +1092,7 @@
         "review_state": "NEW_CLOUD_CODE_EVIDENCE_PARTIAL",
         "recent_evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
         "code_review_key": "WoolRadar#44",
-        "new_evidence_scope": "Malformed DNS labels accepted in producer/sampler extracted red 3 failed green 3 pass; full modules/formal suite pending",
+        "new_evidence_scope": "Interactive new PR44 producer and sampler DNS-label guard code committed on HEAD e81ef59bc2b0b05fad5acfbb231ead92c0d2925e; exact-source lexical extraction boundary 4/4 methods exit0; 5 formal methods committed but not executed in full repo; frozen native/official gold pending.",
         "native_frozen_accepted": false,
         "business_accepted": false
       },
@@ -1023,8 +1104,8 @@
         "gate": null,
         "review_state": "NEW_CLOUD_CODE_EVIDENCE_PARTIAL",
         "recent_evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
-        "code_review_key": "WoolRadar#39",
-        "new_evidence_scope": "root home.arpa gap found; extracted function red/green, new formal tests pending; new malformed DNS-label extracted red/green P2; full source formal pending",
+        "code_review_key": "WoolRadar#44",
+        "new_evidence_scope": "Interactive new PR44 producer and sampler DNS-label guard code committed on HEAD e81ef59bc2b0b05fad5acfbb231ead92c0d2925e; exact-source lexical extraction boundary 4/4 methods exit0; 5 formal methods committed but not executed in full repo; frozen native/official gold pending.",
         "native_frozen_accepted": false,
         "business_accepted": false
       },
@@ -1125,10 +1206,10 @@
         "goal": "资助跨项目拼接误判",
         "original_disposition": "READY_FOR_LOCAL_CODEX",
         "gate": null,
-        "review_state": "LOCAL_NATIVE_RECEIPT_PENDING",
-        "recent_evidence_url": null,
-        "code_review_key": null,
-        "new_evidence_scope": null,
+        "review_state": "NEW_CLOUD_CODE_EVIDENCE_PARTIAL",
+        "recent_evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/38",
+        "code_review_key": "WoolRadar#38",
+        "new_evidence_scope": "Interactive cold-read of PR patch and committed test file; preceding Scheduled chat reported 11/11 isolated/formal result, not independently rerun in this turn. Full integrated build/native acceptance pending.",
         "native_frozen_accepted": false,
         "business_accepted": false
       },
@@ -1190,10 +1271,10 @@
         "goal": "claimKind枚举回归",
         "original_disposition": "READY_FOR_LOCAL_CODEX",
         "gate": null,
-        "review_state": "LOCAL_NATIVE_RECEIPT_PENDING",
-        "recent_evidence_url": null,
-        "code_review_key": null,
-        "new_evidence_scope": null,
+        "review_state": "NEW_CLOUD_CODE_EVIDENCE_PARTIAL",
+        "recent_evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/13",
+        "code_review_key": "YinQieJi#13",
+        "new_evidence_scope": "Interactive cold-read of PR patch and committed test file; preceding Scheduled chat reported 9/9 isolated/formal result, not independently rerun in this turn. Full integrated build/native acceptance pending.",
         "native_frozen_accepted": false,
         "business_accepted": false
       },
@@ -1691,14 +1772,14 @@
         "kind": "FOLLOW_UP_REVIEW",
         "repo": "lu403369069lu-prog/WoolRadar",
         "pr": 44,
-        "observed_head_sha": "1482f97e61b1163ccdc761906eda087fcba48628",
-        "status": "PENDING_NEXT_ELIGIBLE_RUN",
+        "observed_head_sha": "e81ef59bc2b0b05fad5acfbb231ead92c0d2925e",
+        "status": "FORMAL_REGRESSION_PENDING_AFTER_CODE_PATCH",
         "attempts": 0,
         "last_error_code": null,
         "severity": "P2",
-        "reason": "New isolated lexical red3 green3: malformed DNS labels .example.org/a-.example.org/a.-b.example.org admitted as public by producer and sampler.",
+        "reason": "Interactive code fix committed to existing Draft PR44 on 2026-10-18, both producer and sampler guards plus five formal methods; isolated extracted-source four-method harness exit0; original full GitHub test suite UNRUN.",
         "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
-        "next_action": "On independent branch after HEAD stability, add label-by-label DNS validation to producer and sampler, committed formal regressions for invalid and public controls; run exact original test_public_sample_private_root_20261017.py plus full producer/sampler modules; no duplicate PR45."
+        "next_action": "On PR44 HEAD e81ef59bc2b0b05fad5acfbb231ead92c0d2925e execute PYTHONPATH=. python -B -m unittest discover -s tests -p 'test_public_corpus_dns_label_boundary_20261018.py' -v; also run test_public_sample_private_root_20261017.py, test_public_corpus_nonpublic_urls.py and independent-quality/public-corpus-blind-dedup-20261016/test_freeze_public_sample_dedup.py in proper module path. Preserve exit/test count and diagnose any failures; do not merge."
       },
       {
         "id": "RETRY-WOOL-PR43-STRICT-FORMAL-RUNTIME",
@@ -1740,6 +1821,32 @@
         "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/15",
         "next_action": "Commit proper unified case-normalization guard plus regression in independent draft branch; Run full loader and npm build; Node24/26 matrix and frozen teacher-gold source review",
         "recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
+      },
+      {
+        "id": "RETRY-WR-H16-ORIGINAL-FORMAL-BUILD",
+        "kind": "FORMAL_SUITE_AND_NATIVE_ACCEPTANCE_PENDING",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 38,
+        "observed_head_sha": "75021367f71ba550a95ef098789e1f1201b21bad",
+        "status": "PENDING_NEXT_ELIGIBLE_RUN",
+        "attempts": 0,
+        "last_error_code": null,
+        "reason": "Scheduled task chat reported 11/11 but no corresponding full-run test log/reproducible exit was cold-verified by the interactive audit; original official tests/build/native receipt remain missing.",
+        "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/38",
+        "next_action": "On exact PR38/PR39 dependency head run python -B -m unittest discover -s tests -p 'test_developer_grant_project_scope.py' -v plus full grant selection and integration tests; record exit/versions/source SHA."
+      },
+      {
+        "id": "RETRY-SAM-H02-ORIGINAL-FORMAL-BUILD",
+        "kind": "FORMAL_SUITE_AND_NATIVE_ACCEPTANCE_PENDING",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 13,
+        "observed_head_sha": "8719d75205e50209e9b11998a2af72c4d08ee975",
+        "status": "PENDING_NEXT_ELIGIBLE_RUN",
+        "attempts": 0,
+        "last_error_code": null,
+        "reason": "Scheduled task chat reported 9/9 but no corresponding full-run test log/reproducible exit was cold-verified by the interactive audit; original official tests/build/native receipt remain missing.",
+        "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/13",
+        "next_action": "On exact PR13 current dependency tree run TypeScript build and original claim-audit-kind-integrity.test.ts plus dependent loader/source-policy tests on Node24/26; record exit/build versions/source SHA."
       }
     ],
     "summary": {

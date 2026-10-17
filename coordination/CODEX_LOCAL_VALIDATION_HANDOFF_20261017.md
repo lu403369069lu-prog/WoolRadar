@@ -82,3 +82,18 @@ sanitized counts only, no personal URLs, Windows home paths, passwords or source
 
 **Close individual historical families by actual evidence**, not by repeatedly re-summarizing green tests. True 80% engineering task completion is **at least 40/50 independently accepted dispositions**; a source path present or a prior Draft test is not acceptance. The historical inventory never gets a 51st member. New hourly findings go to [NEW_SCHEDULED_RESULTS_INBOX_20261017.md](NEW_SCHEDULED_RESULTS_INBOX_20261017.md). No dependency on activating new Work/Codex/cloud paid quota by ChatGPT. No proactive reminder or extra notifications.
 
+
+
+## H17-a exact current manifest helper branch — concrete new local Codex job
+
+**Historical SAM-H17, not a new family.** [SAM PR15](https://github.com/lu403369069lu-prog/YinQieJi/pull/15) now contains a real interactive new atomic metadata helper `SAM/snapshot/tools/atomic-write.mjs` blob `de5a34c509740e4eac44656379c7b6ed52ca5329`, builder `build-release-manifest.mjs` blob `0ed0bfb55851a092b73c0e30856f3926ce2f2b20`, and `atomic-write.test.mjs` blob `7acb5d3fa6b645487cf1d2e4d5d9092c64bb8e89`. Rebuilt independently from a Scheduled H17-a BLOCKED_WRITE report; original old patch ZIP remains inaccessible.
+
+In the *independent SAM test worktree* specified above, **do not run the real build-release-manifest.mjs until a fully synthetic registry and immutable release source snapshot are prepared**. First run only:
+```powershell
+cd ..\sam-history-validation\SAM\snapshot
+node --version
+node --test tools/atomic-write.test.mjs
+```
+Run on Node 24 and Node 26 Windows; return exit/denominator and filenames + sanitized Git SHA. Expect 6 total controls. The earlier isolated Linux Node22 had 5 genuine filesystem checks plus a reconstructed minimal static callsite test **6/6 exit0**, but the entire real build script was **not** dynamically run. A Windows test can expose rename-over-existing/AV-lock/failure differences and post-replace partial-failure behavior. Add crash/restart, target absent, concurrent processes and directory handles on a **disposable synthetic folder**. Keep `current.json`, release pointer, tags and global skill/cache untouched. Separate later full **pointer + release-manifest ordering** transaction after reviewing current full `tools/migrate-release-041.mjs`; test rollback using synthetic files, never actual release data or user home.
+
+Report only immutable helper/builder/test blobs, command exits and synthetic fixture results to [SAM Issue1](https://github.com/lu403369069lu-prog/YinQieJi/issues/1), with `event_key=local-history/SAM-H17/atomic-release-windows/<head-sha>`. A passing helper alone does not approve a production release.

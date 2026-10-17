@@ -1,0 +1,170 @@
+#!/usr/bin/env python3
+"""Historical Codex offline acceptance, 2026-10-17.
+
+DRY RUN by default. Runs only in a disposable, nonproduction clone/worktree.
+No git push, merge, checkout, installation, API, scheduled task or user data reads.
+The exact immutable SHA contract is required before executing a test.
+"""
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+import tempfile
+
+EXPECTED = {
+    "wool": "e31eea548ab0b05d26e6fd639907bd81cbabcdfc",
+    "sam": "11e87c629ec28e58fd91b629936b71ea235b4581",
+    "coord": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+}
+
+# Every command uses only this code checkout and synthetic/temp test fixtures.
+# SAM dependency installation is intentionally NOT automatic.
+BATCHES = {
+    "wool": [
+        ("W-ALL", ".", [sys.executable, "-B", "-m", "unittest", "discover",
+                         "-s", "tests", "-p", "test_*.py", "-v"]),
+        ("W-SAMPLER", ".", [sys.executable, "-B", "-m", "unittest", "discover",
+                             "-s", "independent-quality/public-corpus-blind-dedup-20261016",
+                             "-p", "test_*.py", "-v"]),
+        ("W-SNAPSHOT", ".", [sys.executable, "-B", "-m", "unittest", "discover",
+                              "-s", "independent-quality/delivery-bridge-20261016",
+                              "-p", "test_*.py", "-v"]),
+    ],
+    "sam": [
+        ("S-BUILD", "SAM/snapshot", ["npm", "run", "build"]),
+        ("S-ALL", "SAM/snapshot", ["npm", "test"]),
+        ("S-ROOTED", "SAM/snapshot", ["node", "--import", "tsx", "--test",
+                                      "../independent-review/20261016/rooted-source-authorization.test.ts",
+                                      "../independent-review/20261016/glob-case-parity.test.ts",
+                                      "../independent-review/20261016/glob-ripgrep-572-matrix.test.ts"]),
+        ("S-TEACHER", "SAM/snapshot", ["node", "--test",
+                                       "../independent-review/20261016-0904-audit-coverage/audit_coverage.test.mjs",
+                                       "../independent-review/20261016-0904-audit-coverage/holdout_identity_check.test.mjs",
+                                       "../independent-review/20261016-0904-audit-coverage/holdout_identity_cli.test.mjs",
+                                       "../independent-review/20261016-0904-audit-coverage/positive_answer_gate.test.mjs",
+                                       "../independent-review/20261016-0904-audit-coverage/strict_teacher_jsonl.test.mjs"]),
+    ],
+    "coord": [
+        ("C-ALL", ".", [sys.executable, "-B", "-m", "unittest", "discover",
+                         "-s", "tests", "-p", "test_*.py", "-v"]),
+    ],
+}
+
+
+def git(args: list[str], cwd: Path) -> str:
+    p = subprocess.run(["git", *args], cwd=cwd, text=True,
+                       stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                       timeout=30, check=False)
+    if p.returncode:
+        raise RuntimeError("git preflight failed (code %s): %s" %
+                           (p.returncode, p.stderr[:300]))
+    return p.stdout.strip()
+
+
+def preflight(repo: Path, project: str, expected: str) -> str:
+    path = str(repo.resolve()).replace("/", "\\").lower().rstrip("\\")
+    # Do not touch the local installation and user/PLC material.
+    forbidden = ("c:\\woolradar", "\\sam_local\\", "\\twincat\\",
+                 "\\production\\", "\\appdata\\")
+    if any(path == f or path.startswith(f + "\\") for f in forbidden[:1]) or any(
+            f in path for f in forbidden[1:]):
+        raise RuntimeError("Refusing production/private repo path; use disposable clone.")
+    root = Path(git(["rev-parse", "--show-toplevel"], repo)).resolve()
+    if root != repo:
+        raise RuntimeError("Supply exact repository root, not subfolder.")
+    head = git(["rev-parse", "HEAD"], repo)
+    if head != expected:
+        raise RuntimeError("SHA mismatch: expected %s, got %s; rebase/review before tests." %
+                           (expected, head))
+    if git(["status", "--porcelain"], repo):
+        raise RuntimeError("Dirty worktree. Execute in a clean disposable copy.")
+    marker = ("SAM/snapshot/package.json" if project == "sam"
+              else "coordination/relay.py" if project == "coord"
+              else "core/public_corpus.py")
+    if not (repo / marker).is_file():
+        raise RuntimeError("Wrong project/ref: missing %s" % marker)
+    return head
+
+
+def summarize(output: str) -> dict[str, int | None]:
+    # Informative; do not turn missing counts into implied pass.
+    node = re.search(r"(?m)^# tests (\d+)\s*$", output)
+    passed = re.search(r"(?m)^# pass (\d+)\s*$", output)
+    failed = re.search(r"(?m)^# fail (\d+)\s*$", output)
+    py = re.search(r"(?m)^Ran (\d+) tests? in [\d.]+s", output)
+    return {
+        "tests_reported": int(node.group(1)) if node else
+                          int(py.group(1)) if py else None,
+        "node_pass": int(passed.group(1)) if passed else None,
+        "node_fail": int(failed.group(1)) if failed else None,
+    }
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument("--project", choices=sorted(BATCHES), required=True)
+    p.add_argument("--repo", type=Path, required=True,
+                   help="Clean disposable clone/worktree root (not production)")
+    p.add_argument("--expected-head", required=True,
+                   help="Full immutable 40-hex reviewed PR head")
+    p.add_argument("--run", action="store_true",
+                   help="Actually run offline/build tests in isolated checkout")
+    args = p.parse_args()
+    repo = args.repo.expanduser().resolve()
+    expected = args.expected_head.lower()
+    if not re.fullmatch(r"[0-9a-f]{40}", expected):
+        p.error("expected-head must be the full SHA1")
+    if expected != EXPECTED[args.project]:
+        raise RuntimeError("Requested SHA differs from reviewed historical contract."
+                           " Update manifest by explicit review, not silently.")
+    head = preflight(repo, args.project, expected)
+    print(json.dumps({"project": args.project, "head": head,
+                      "mode": "RUN" if args.run else "DRY_RUN",
+                      "batches": [x[0] for x in BATCHES[args.project]]},
+                     ensure_ascii=False))
+    if not args.run:
+        for label, rel, command in BATCHES[args.project]:
+            print(label, "cwd="+rel, "argv="+json.dumps(command))
+        return 0
+    output_dir = Path(tempfile.mkdtemp(prefix="history-codex-"+args.project+"-"))
+    results = []
+    for label, rel, command in BATCHES[args.project]:
+        cwd = repo / rel
+        try:
+            done = subprocess.run(command, cwd=cwd, stdout=subprocess.PIPE,
+                                  stderr=subprocess.STDOUT, text=True,
+                                  errors="replace", timeout=1800, check=False,
+                                  env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})
+            rc, stdout = done.returncode, done.stdout
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            rc, stdout = 125, repr(exc)
+        logpath = output_dir / (label + ".log")
+        logpath.write_text(stdout, encoding="utf-8")
+        row = {"batch": label, "exit_code": rc,
+               "log_sha256": hashlib.sha256(stdout.encode("utf-8")).hexdigest(),
+               "counts": summarize(stdout)}
+        results.append(row)
+        print(json.dumps(row))
+    receipt = {"schema": 1, "repo_head": head, "project": args.project,
+               "source": "local-disposable-codex-not-scheduled",
+               "results": results,
+               "no_live_gold_claim": True, "production_modified": False}
+    (output_dir / "receipt.json").write_text(
+        json.dumps(receipt, indent=2, ensure_ascii=False), encoding="utf-8")
+    print("Local-only logs/receipt:", output_dir)
+    print("Review/redact logs before any GitHub comment. Do not upload private fixtures.")
+    return 0 if all(r["exit_code"] == 0 for r in results) else 1
+
+
+if __name__ == "__main__":
+    try:
+        raise SystemExit(main())
+    except (RuntimeError, OSError, ValueError) as exc:
+        print("PRECHECK_BLOCKED:", exc, file=sys.stderr)
+        raise SystemExit(2)

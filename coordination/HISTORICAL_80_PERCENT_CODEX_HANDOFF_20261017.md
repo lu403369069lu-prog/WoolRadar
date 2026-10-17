@@ -97,3 +97,22 @@
 - 针对全50行（其中42条CODEX_RUN）的表格做了精确 `-s/-p` 与声明相对路径静态一致性核对，发现并修正唯一不一致 **WR-H15**：之前误把`test_delivery_boundaries.py`指向公共采样器目录，该命令可能 `Ran 0 tests` 但退出0，属假绿风险。
 - `coordination/HISTORICAL_CODEX_BATCH_RUNNER_20261017.py` 新增对零测试、无法识别测试摘要的拒绝：`S-BUILD`属于纯编译不要求测试数，其余batch即使子进程exit0但无至少1项实际测试且没有成功摘要，判`exit_code=126`，不能计PASS；解析Python和Node的pass/fail/skip。详见同分支隔离回归测试。
 - 这是**执行交接可靠性修复**，不代表42项真的在Windows跑过，更不代表真实羊毛source/gold合格。
+
+
+## Codex真实回执校验与禁止误报
+
+**在本地独立位置下载脚本**（不能放进被检出的仓库，否则`git status --porcelain`将判为脏仓）：[批量运行器](HISTORICAL_CODEX_BATCH_RUNNER_20261017.py) 和 [回执验收器](HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py)。运行器默认只是列出计划，只有显式 `--run` 才执行离线测试，绝不安装、合并或push。先确认所用分支的实际`git rev-parse HEAD`与下面的命令固定SHA一致：
+
+```powershell
+# 例子：临时干净副本，绝不在 C:\WoolRadar 生产目录运行
+python -B .\HISTORICAL_CODEX_BATCH_RUNNER_20261017.py --project wool --repo C:\temp\wool-history-qa --expected-head e31eea548ab0b05d26e6fd639907bd81cbabcdfc --run
+python -B .\HISTORICAL_CODEX_BATCH_RUNNER_20261017.py --project sam --repo C:\temp\sam-history-qa --expected-head 82bf36efa90cced8dafb56502812eb49f40515f3 --run
+python -B .\HISTORICAL_CODEX_BATCH_RUNNER_20261017.py --project coord --repo C:\temp\coord-history-qa --expected-head 27796df5f9847c1bb5d48d2a445e418dfb3d8e96 --run
+
+# 各批执行器分别生成一份本地 receipt.json，验收而不声称业务发布
+python -B .\HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py --receipt C:\temp\history-codex-wool-XXXX\receipt.json
+```
+
+**验收器源码＋测试确实存在且已隔离执行**：[guard](HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py) Git blob `15f02c39a21a41b8c72ddbb03905aae01ef72c46`、[其六项正式测试](test_history_receipt_guard_20261017.py) Git blob `bb6dc55c21f52a691b1475db9da72d20a6dfba6b`，Linux Python3.13 **6/6 pass exit0**，本地完整Git blobs与远端一致。拒绝错HEAD、重复/漏批次、非零退出、无测试计数或日志SHA不合格。 `local_suite_receipt_accepted`即便为true仍永久强制 `business_gold_accepted=false` 与 `historical_recovery_closed=false`；严格防止把软件测试误充真实金标或最终发布。**回执正文与日志先人工脱敏，仅提交无秘密的family id/源SHA/exit/测试数量/日志hash到对应Issues；不得上传原始个人数据**。
+
+注意原始SHA已经固定在脚本内，若Codex修复代码使 HEAD 变化，重新审核新SHA并把本次回执标为`NEW_HEAD_REVALIDATION_REQUIRED`，不能直接改实参或脚本常量绕过原始基线判定。 

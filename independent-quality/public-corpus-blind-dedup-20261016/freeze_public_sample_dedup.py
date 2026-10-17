@@ -36,7 +36,7 @@ def canonical_public_url(raw: object) -> str | None:
         # IP literals and private-only DNS namespaces are not public offers.
         # This is a lexical check; it does not claim to verify live DNS,
         # redirects, publisher authenticity, or personal eligibility.
-        if ('.' not in host or host.rsplit('.', 1)[-1].isdigit()
+        if (host == 'home.arpa' or '.' not in host or host.rsplit('.', 1)[-1].isdigit()
                 or host.endswith(('.localhost', '.local', '.internal', '.lan',
                                    '.home.arpa', '.invalid', '.test',
                                    '.example', '.onion'))):

@@ -32,8 +32,8 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 8,
-    "last_persisted_worker_run_utc": "2026-10-17T12:53:15.964Z",
+    "revision": 9,
+    "last_persisted_worker_run_utc": "2026-10-17T13:07:20.810Z",
     "last_completed_review_key": "WoolRadar#43",
     "incremental_last_seen": {},
     "seen_branch_heads": {
@@ -50,9 +50,10 @@
       "retain-retry-items-and-write-diagnostic-20261017",
       "YinQieJi#18/4118010257ece04c302ac591f074daac798e9744/exact-helper-four-scheduled-20261017",
       "YinQieJi#14/0cdc3b4e81b9e143cb92fabde1828b6c8a913e14/server-fallback-guard-static-scheduled-20261017",
-      "WoolRadar#43/621871f9afc5ae43272d04bcff9d4763ae25fa5a/diagnostic-best-section-tie-repro-20261017"
+      "WoolRadar#43/621871f9afc5ae43272d04bcff9d4763ae25fa5a/diagnostic-best-section-tie-repro-20261017",
+      "WoolRadar#43/621871f9afc5ae43272d04bcff9d4763ae25fa5a/strict-json-overflow-exponent-isolated-20261017"
     ],
-    "write_diagnostic": "SCHEDULED_THIRD_ROUND_CAS_COMMIT_PENDING_READBACK",
+    "write_diagnostic": "SCHEDULED_ONE_WRITE_TEST_CAS_COMMIT_PENDING_READBACK",
     "last_write_error": null
   },
   "backlog": {
@@ -618,6 +619,38 @@
       ],
       "business_accepted": false,
       "native_receipt": false
+    },
+    {
+      "event_key": "WoolRadar#43/621871f9afc5ae43272d04bcff9d4763ae25fa5a/strict-json-overflow-exponent-isolated-20261017",
+      "origin": "SCHEDULED_ONE_WRITE_TEST",
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "pr": 43,
+      "head_sha": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+      "source_path": "core/grant_lead_diagnostics.py",
+      "source_blob_sha": "6fe02aa7a83479c4eeea6a448b80f75988a13ffd",
+      "test_path": "tests/test_grant_lead_diagnostic_strict_json.py",
+      "test_blob_sha": "76cbcc0b36a9a81ddcdc17abc30b77bafbe9356e",
+      "finding": "JSONL json.loads(parse_constant=...) rejects NaN/Infinity literal but silently converts valid numeric exponent 1e9999 to float inf in nested metadata. validated_records only validates public text fields and never checks nested float finiteness. Strict nonfinite provenance guard is incomplete.",
+      "severity": "P2",
+      "test_scope": "EXACT_GITHUB_SOURCE_PARSER_OPTIONS_ISOLATED_PYTHON313_NOT_FULL_CLI_SUITE",
+      "command": "python - <<'PY' # isolated unittest for exact json.loads object_pairs_hook/parse_constant options from PR43; two baseline assertions plus five proposed parse_float guard assertions",
+      "python_version": "3.13.5",
+      "exit_code": 0,
+      "passed": 7,
+      "failed": 0,
+      "baseline_cases": 2,
+      "proposed_guard_cases": 5,
+      "full_pr43_suite_executed": false,
+      "formal_test_exit_code": null,
+      "fix_proposal": "Add parse_float callback that rejects nonfinite float conversion, keep finite numeric values; add subprocess regression with 1e9999/-1e9999 and finite 1e308, then run full diagnostic CLI and repo suites on a disposable PR43 worktree.",
+      "evidence_urls": [
+        "https://github.com/lu403369069lu-prog/WoolRadar/blob/621871f9afc5ae43272d04bcff9d4763ae25fa5a/core/grant_lead_diagnostics.py",
+        "https://github.com/lu403369069lu-prog/WoolRadar/blob/621871f9afc5ae43272d04bcff9d4763ae25fa5a/tests/test_grant_lead_diagnostic_strict_json.py",
+        "https://github.com/lu403369069lu-prog/WoolRadar/pull/43"
+      ],
+      "business_accepted": false,
+      "native_receipt": false,
+      "next_action": "Fix parser overflow conversion on independent PR43 draft only after stable HEAD confirmation; add full CLI subprocess regression, run python -B -m unittest discover -s tests -p 'test_grant_lead_diagnostic*.py' -v; separately address existing best_section tie P2; no merge."
     }
   ],
   "run_history": [
@@ -699,13 +732,32 @@
       "checkpoint_status": "COMMIT_ATTEMPT_READBACK_REQUIRED",
       "actual_cases": "PR43 exact source/diff/test static audit; isolated exact regex tie-break assertion 1/1 PASS exit0; full PR43 suite unrun",
       "next_action": "After independent readback, set acceptance flags VERIFIED; PR43 P2 fix and formal tests next, preserve prior retry queue."
+    },
+    {
+      "origin": "SCHEDULED_ONE_WRITE_TEST",
+      "event_id": "scheduled-one-write-20261017-w43-jsonl-overflow",
+      "run_utc": "2026-10-17T13:07:20.810Z",
+      "read_previous_scheduled_event_ids": [
+        "scheduled-second-round-20261017-pr18-exact-helper4-pr14-static-guard",
+        "scheduled-third-round-20261017-w43-best-section-tie-repro"
+      ],
+      "read_previous_persisted_revision": 8,
+      "reviewed_keys": [
+        "WoolRadar#43"
+      ],
+      "head_sha": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+      "checkpoint_status": "COMMIT_ATTEMPT_READBACK_REQUIRED",
+      "test_scope": "EXACT_GITHUB_SOURCE_PARSER_OPTIONS_ISOLATED_PYTHON313_NOT_FULL_CLI_SUITE",
+      "actual_cases": "Exact json.loads options isolated: 2 baseline PASS exit0; proposed parse_float guard isolated 5 PASS exit0; full PR43 CLI suite not run.",
+      "previous_cross_run_evidence": "rev7 c281023133e5752836ffce6cbdd0c001856088e3 + rev8 fccfaf2f7db56f32edb37738f53e1790f3bd25b1; third round references second event and reviewed different PR; both now cold-read in this independent Scheduled run.",
+      "next_action": "Fix parser overflow conversion on independent PR43 draft only after stable HEAD confirmation; add full CLI subprocess regression, run python -B -m unittest discover -s tests -p 'test_grant_lead_diagnostic*.py' -v; separately address existing best_section tie P2; no merge."
     }
   ],
   "acceptance": {
     "scheduled_wakeup": "PROVED_TWICE_2026-10-17",
-    "scheduled_private_github_read": "VERIFIED_2026-10-17_SECOND_ROUND",
-    "scheduled_write": "PENDING_THIRD_ROUND_READBACK",
-    "stateful_cross_run_continuation": "PENDING_THIRD_ROUND_READBACK",
+    "scheduled_private_github_read": "VERIFIED_2026-10-17_SCHEDULED_COLD_READ",
+    "scheduled_write": "VERIFIED_WITH_PRIOR_EVIDENCE_2026-10-17",
+    "stateful_cross_run_continuation": "VERIFIED_WITH_PRIOR_EVIDENCE_2026-10-17",
     "backlog_actual_review": "PR39_PARTIAL_FIX_CANONICAL_DRAFT44_FULL_SUITE_PENDING"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
@@ -1449,6 +1501,16 @@
         "reason": "Static+isolated repro P2: best_section.all_signals false even though selected true. Formal suite unrun.",
         "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/43",
         "next_action": "On independent stable branch, change diagnostic best_section tie-breaking to prioritize self-contained all_signals when canonical selected, add two-section regression, run exact full PR43 tests in disposable worktree and compare source blobs. Do not modify Codex active branch or merge."
+      },
+      {
+        "id": "RETRY-WOOL-PR43-JSONL-OVERFLOW",
+        "status": "PENDING_NEXT_ELIGIBLE_RUN",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 43,
+        "head_sha": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+        "attempts": 0,
+        "last_error_code": null,
+        "next_action": "Fix parser overflow conversion on independent PR43 draft only after stable HEAD confirmation; add full CLI subprocess regression, run python -B -m unittest discover -s tests -p 'test_grant_lead_diagnostic*.py' -v; separately address existing best_section tie P2; no merge."
       }
     ],
     "summary": {

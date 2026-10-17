@@ -329,19 +329,12 @@
     "effect": "source-policy regex has i flag; cross-backend parity not yet agreed, no production change"
   },
   "active_backlog_next": [
-    "Batch source audit 50/50 classified and immutable Git tree 49/50 pointers confirmed (98% evidence only); WR-H17 protected by maintainer approval. Engineering release is nowhere near claimable 80%; do not conflate.",
-    "Wool current integrated draft PR39 exact complete producer original timestamp red9/10 → green real tests34+sampler/schema24=58/58 Linux; after owner approval run Windows full suite and genuinely new provider-time-window blind gold.",
-    "SAM PR15 three historical fake-hash fixtures corrected + new 572 rg matrix checked against actual POSIX policy, but full TS/zod/Node24/26 and direct/stdio MCP must still be run; no claim that these new TS formal files were executed.",
-    "Wool unified Draft PR39 based on PR23 exact 6bab (PR37 sampler and PR38 grant) authentic 47/47 isolated Python Linux. OWNER must review exactly once without duplicate merging PR37/38, run current Windows full 412+ suite, then genuinely fresh blind public holdout (old TP1/FN3 recall25%, false-split1) and actual approved 09:30 report bridge.",
-    "SAM PR15 now contains PR12 latest policy+PR13 enum+PR14 WorkBuddy+PR15 typed/hash code in one GitHub Draft head; 34/34 true source-module Linux Node22, still need exact full cards.ts/zod package Node24/26 Windows build and real MCP direct+stdio, source artifact mapping validation against 104-card gold.",
-    "Coordination PR9→PR11 true ancestor, PR7 adapter/HMAC preserved byte-exact, PR8 dry-run behavior statically retained, but PR11 diverges from main by 157 commits; run full actual relay test/safe integration review, no auto merge.",
-    "SAM H24 actual T031 approved Axis source/card evidence audit, no private text published",
-    "SAM PR14 real direct/stdio MCP tests",
-    "Wool WR-H13 new independent unseen public source window",
-    "Wool daily report output bridge actual user-approved same-SHA consumer",
-    "Wool H17 maintainer-approved sensitive test-fixture reachable history review (no numeric exposure)",
-    "SAM PR9 all formal diagnostic tests44/44 Linux pass; safe review of stacked PR9 vs main PR5, real teacher original61/522 and Windows Node24/26/MCP remain.",
-    "Coord PR11 existing owner Windows 57-test receipt matches latest source by Git blobs but still requires independent clean PR11 checkout/source test and safe main overlay; no unattended ChatGPT Scheduled write proof."
+    "Current interactive chat performs GitHub writebacks; four hourly engineering Scheduled automations paused and MUST NOT be delegated GitHub writes. Daily public benefits brief unchanged.",
+    "Codex accept: run coordination/HISTORICAL_CODEX_BATCH_RUNNER_20261017.py from clean disposable exact-SHA checkout, use 50-family JSON manifest; report 42 runnable entrypoints individually as PASS/FAIL/BLOCKED with commands/exit/log SHA. Current ready ≠ passed.",
+    "Review PR39 latest e31eea and PR15 latest 82bf exact, plus older relay PR11 27796; avoid duplicate merging PR37/38/39 or old PR9 vs ported PR15; no Codex V3 owner override.",
+    "Wool independent fresh public holdout original recall25% and false-split1, confirmed official eligibility and actual signed 09:30 consumer still unavailable.",
+    "SAM full real cards/zod Node24/26 direct/stdio MCP, 61 original source-bound questions(10 answered)/522 gold, T031/T009 correct evidential ground truth, dist pointer rollback and final rounds not verified.",
+    "WR-H17 sensitive historical fixture requires explicit maintainer review; no raw secrets in GitHub."
   ],
   "index_files": [
     "coordination/HISTORICAL_FIRST_RESUME_GATE.md",
@@ -484,5 +477,39 @@
       "interactive": "Wool main-based PR39 includes exact PR37 sampler source/test and confirms Python focused58/58",
       "unfinished": "new independent 47+ public holdout business metrics"
     }
-  ]
+  ],
+  "manual_coordination_20261017": {
+    "mode": "INTERACTIVE_CHAT_OWNS_GITHUB_WRITE; LOCAL_CODEX_OWNS_WINDOWS_EXECUTION",
+    "triggered_by": "user expressly instructed 80-percent bulk history processing this chat; do not delegate to periodic jobs",
+    "engineering_hourly_automations": {
+      "enabled": false,
+      "count": 4,
+      "ids": [
+        "6ad12723c0688191847dff2341c75eeb",
+        "6ad1273277fc8191baba4c506f6d4bd1",
+        "6ad13b3e1840819188807966573204cf",
+        "6ad0cbde024c8191ad6dbb3e3e0d8c8a"
+      ]
+    },
+    "daily_public_benefits_brief": "unchanged_enabled",
+    "family_count": 50,
+    "local_codex_ready": 42,
+    "external_gold_approval_or_policy": 8,
+    "independently_verified_entry_paths": "42/42 existing at immutable PR Git tree refs",
+    "ready_distinct_commands": 39,
+    "handoff": "coordination/HISTORICAL_80_PERCENT_CODEX_HANDOFF_20261017.md",
+    "jobs_manifest": "coordination/HISTORICAL_80_PERCENT_CODEX_JOBS_20261017.json",
+    "offline_runner": "coordination/HISTORICAL_CODEX_BATCH_RUNNER_20261017.py",
+    "pr9_real_port": "SAM PR15 SHA82bf36efa90cced8dafb56502812eb49f40515f3 contains nine exact-byte frozen teacher diagnostic files from old PR9",
+    "git_refs": {
+      "wool_pr39": "e31eea548ab0b05d26e6fd639907bd81cbabcdfc",
+      "sam_pr15": "82bf36efa90cced8dafb56502812eb49f40515f3",
+      "coord_pr11": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96"
+    },
+    "accuracy": "42/50 ready for local acceptance is 84% executable handoff, NOT 84% code tests passed or release",
+    "source_status": "historical original Scheduled runs unavailable; local Codex tests and real source gold remain pending",
+    "next": "Receive locally executed sanitized per-batch receipts in Issues Wool2/SAM1/Coord3; then revise only actual PASS_EXACT_HEAD, prioritize real 61/522 and independent 47-sample Gold",
+    "no_auto_merge": true,
+    "no_production_changes": true
+  }
 }

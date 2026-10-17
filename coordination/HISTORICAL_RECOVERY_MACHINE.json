@@ -526,11 +526,15 @@
       "reviewed_runner_source": "coordination/HISTORICAL_CODEX_BATCH_RUNNER_20261017.py",
       "runner_not_executed_in_full_local_repo": true,
       "receipt_guard": "coordination/HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py",
-      "receipt_guard_git_blob": "15f02c39a21a41b8c72ddbb03905aae01ef72c46",
+      "receipt_guard_git_blob": "e47debb9c39c473c78d82eccdbee8d77b13c52cb",
       "receipt_guard_test": "coordination/test_history_receipt_guard_20261017.py",
-      "receipt_guard_test_blob": "bb6dc55c21f52a691b1475db9da72d20a6dfba6b",
-      "receipt_guard_local_python": "Python3.13 6/6 pass exit0, exact Git blob source+test",
-      "prohibits_automatic_gold_promotion": true
+      "receipt_guard_test_blob": "681711fafe9f78c2c65a1d7cd587fb6d3dcc3d13",
+      "receipt_guard_local_python": "Python3.13 exact Git blobs 8/8 pass exit0; rejects nonzero, duplicate/missing batches, wrong SHA, skipped tests, unknown pass count; gold never auto green",
+      "prohibits_automatic_gold_promotion": true,
+      "runner_blob": "2740d556f24d2ffea563026628f5a904a7a3de73",
+      "runner_provenance_handshake_fixed": true,
+      "windows_npm_cmd_fixed": true,
+      "local_runner_full_worktree_test": "NOT_YET_EXECUTED; local Codex owns isolated Windows"
     },
     "interactive_command_integrity": {
       "state": "GITHUB_COMMITTED_PARTIAL_VERIFIED",

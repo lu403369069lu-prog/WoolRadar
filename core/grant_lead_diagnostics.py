@@ -121,7 +121,7 @@ def main() -> int:
                 if isinstance(data.get('text'), str):
                     value = data['text']
                 elif isinstance(data.get('title'), str) or isinstance(data.get('summary'), str):
-                    if any(key in data and not isinstance(data[key], str)
+                    if any(key in data and data[key] is not None and not isinstance(data[key], str)
                            for key in ('title', 'summary')):
                         raise ValueError('non-string public field')
                     value = (data.get('title') or '') + '\n' + (data.get('summary') or '')

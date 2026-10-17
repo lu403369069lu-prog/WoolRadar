@@ -16,7 +16,7 @@
       "id": "coord42",
       "repository": "lu403369069lu-prog/WoolRadar",
       "pr": 42,
-      "head_at_review": "08b1d43a186a4dd0d2364b048d84b0629f4d043e",
+      "head_at_review": "229be49401e53c77621a1a2f495d9df83d3c8311",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
       "scope": [
@@ -28,18 +28,18 @@
       "next_gate": "local Python and Node cross-module tests + frozen real 39 command batch",
       "isolated_qa_done": true,
       "isolated_qa_methods": 27,
-      "latest_tests": "SELECTED_LINUX_GREEN_NOT_WINDOWS_FROZEN_OR_FULL_REPO",
-      "isolated_linux_test_status": "PASS_NO_SKIP_SELECTED",
-      "isolated_linux_test_methods": 50
+      "latest_tests": "SELECTED_LINUX_GREEN_BUT_NATIVE_FROZEN_FULL_REPO_OPEN",
+      "isolated_linux_test_status": "PASS_SELECTED_ISOLATED_NO_SKIP",
+      "isolated_linux_test_methods": 53
     },
     {
       "id": "wool41",
       "repository": "lu403369069lu-prog/WoolRadar",
       "pr": 41,
-      "head_at_review": "e6f39a163f5edd29294422f3726886b7e04ec39a",
+      "head_at_review": "efb861999e38b76441137a8a5a381ddfb043c7f0",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_tests": "SELECTED_LINUX_GREEN_NOT_WINDOWS_FROZEN_OR_FULL_REPO",
+      "latest_tests": "SELECTED_LINUX_GREEN_BUT_NATIVE_FROZEN_FULL_REPO_OPEN",
       "scope": [
         "URL parser normalization rejection",
         "credential-like path and source metadata redaction"
@@ -47,8 +47,8 @@
       "next_gate": "Windows full suite + unseen source gold + actual daily delivery receipt",
       "isolated_qa_done": true,
       "isolated_qa_methods": 43,
-      "isolated_linux_test_status": "PASS_NO_SKIP_SELECTED",
-      "isolated_linux_test_methods": 59
+      "isolated_linux_test_status": "PASS_SELECTED_ISOLATED_NO_SKIP",
+      "isolated_linux_test_methods": 65
     },
     {
       "id": "sam17",
@@ -57,7 +57,7 @@
       "head_at_review": "7330d8cb858b869a36c3c1135b173c536945e61e",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_tests": "SELECTED_LINUX_GREEN_NOT_WINDOWS_FROZEN_OR_FULL_REPO",
+      "latest_tests": "SELECTED_LINUX_GREEN_BUT_NATIVE_FROZEN_FULL_REPO_OPEN",
       "scope": [
         "per-card review metadata preservation",
         "non-writing 0.4.0 migration preflight"
@@ -65,7 +65,7 @@
       "next_gate": "Windows Node24/26 release full test + real source read-only audit + real MCP + 61/522 gold",
       "isolated_qa_done": true,
       "isolated_qa_methods": 24,
-      "isolated_linux_test_status": "PASS_NO_SKIP_SELECTED",
+      "isolated_linux_test_status": "PASS_SELECTED_ISOLATED_NO_SKIP",
       "isolated_linux_test_methods": 39
     },
     {
@@ -75,7 +75,7 @@
       "head_at_review": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_tests": "SELECTED_LINUX_GREEN_NOT_WINDOWS_FROZEN_OR_FULL_REPO",
+      "latest_tests": "SELECTED_LINUX_GREEN_BUT_NATIVE_FROZEN_FULL_REPO_OPEN",
       "scope": [
         "diagnostic-only developer grant miss reasons without classifier mutation",
         "aggregate missing-signal counts without source text disclosure",
@@ -84,7 +84,7 @@
       "next_gate": "local 10+4 diagnostics tests + original developer grant suite + unseen source/time-window gold",
       "isolated_qa_done": true,
       "isolated_qa_methods": 31,
-      "isolated_linux_test_status": "PASS_NO_SKIP_SELECTED",
+      "isolated_linux_test_status": "PASS_SELECTED_ISOLATED_NO_SKIP",
       "isolated_linux_test_methods": 45
     }
   ],
@@ -100,19 +100,19 @@
   "pr43_recall_policy": "Old 56-row, FN2 developer-used freeze cannot become independent holdout by rescoring it.",
   "latest_local_qa": {
     "date": "2026-10-17",
-    "status": "PASS_SELECTED_ISOLATED_LINUX_NOT_FULL_REPO",
-    "methods": 193,
+    "status": "REAL_SELECTED_LINUX_202_PASS_NOT_FROZEN_NATIVE",
+    "methods": 202,
     "skipped": 0,
     "failed": 0,
     "by_track": {
-      "coord42": 50,
+      "coord42": 53,
       "sam17": 39,
-      "wool41": 59,
+      "wool41": 65,
       "wool43": 45
     },
-    "shared_wool_cross_module_methods": 104,
-    "shared_wool_cross_module_passed": 104,
-    "receipt_path": "coordination/FIRST_CLASS_LINUX_EXECUTED_193_AND_JOINT_104_20261017.json"
+    "shared_wool_cross_module_methods": 110,
+    "shared_wool_cross_module_passed": 110,
+    "receipt_path": "coordination/FIRST_CATEGORY_SELECTED_202_JOINT_110_20261017.json"
   },
   "frozen_source_verification": {
     "ready_families": 42,
@@ -127,28 +127,26 @@
   },
   "first_category_latest": {
     "date": "2026-10-17",
-    "status": "IDENTIFIED_CHAT_EXECUTABLE_MODULES_VERIFIED;FROZEN_NATIVE_AND_BUSINESS_GATES_OPEN",
-    "executed_selected_linux_methods": 193,
-    "passed": 193,
+    "status": "CHAT_AVAILABLE_SELECTED_CODE_QA_AND_STATIC_AUDITS_EXECUTED;REMAINDER_NEEDS_NATIVE_CHECKOUT_DEPS_OR_EXTERNAL_EVIDENCE",
+    "executed_selected_linux_methods": 202,
+    "passed": 202,
     "failed": 0,
     "skipped": 0,
-    "executed_combined_wool41_wool43_methods": 104,
-    "shared_passed": 104,
+    "executed_combined_wool41_wool43_methods": 110,
+    "combined_passed": 110,
     "source_blob_checks": true,
-    "evidence": "coordination/FIRST_CLASS_LINUX_EXECUTED_193_AND_JOINT_104_20261017.json",
+    "evidence": "coordination/FIRST_CATEGORY_SELECTED_202_JOINT_110_20261017.json",
     "frozen_partial_linux": {
       "distinct_commands": 10,
       "ready_families": 11,
       "methods": 105,
-      "exact_full_guard_accepted": false
+      "full_native_guard_accepted": false
     },
-    "external_remains": [
-      "Remaining 29 frozen commands, full pinned 39-command Windows receipt",
-      "Full repo native Node24/26 and local dependency/Windows security context",
-      "SAM actual legacy records, real 61/522/MCP, release and rollback",
-      "Wool independent fresh source gold and daily consumer receipt",
-      "8 external or policy gates"
-    ],
+    "native_gate_matrix": "coordination/FIRST_CATEGORY_29_FROZEN_COMMANDS_NATIVE_GATE_MATRIX_20261017.json",
+    "remaining_native_commands": 29,
+    "missing_node_tsx_legacy_commands": 17,
+    "unmounted_full_python_frozen_checkout_commands": 12,
+    "external_family_gates": 8,
     "historical_80_percent_not_accepted": true
   }
 }

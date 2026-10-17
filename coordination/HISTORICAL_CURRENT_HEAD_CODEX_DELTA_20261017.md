@@ -7,7 +7,7 @@
 | Unit | Frozen 50-family manifest SHA | Latest Draft candidate SHA, cold-read 2026-10-17 | Evidence state |
 |---|---|---|---|
 | WoolRadar PR39 | `80c5ea18769c1312e5be5fd99a39e4f3d498c64f` | `1aad1c98584dd2c7291ada30ef71e813dbfedd50` | producer host-scope + malformed UTF-8 code, current true focused **21/21 pass** Linux3.13 |
-| SAM PR15 | `82bf36efa90cced8dafb56502812eb49f40515f3` | `efe9a93f4bea4b6f3bf33f7fc9772e9008c8b3c0` | isolated original release atomic 6 + new real synthetic manifest builder5 = **11/11 pass** Node22 |
+| SAM PR15 | `82bf36efa90cced8dafb56502812eb49f40515f3` | `73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58` | isolated original release atomic6 + synthetic manifest builder5 + prevalidated 0.4.1 migration7 = **18/18 pass** Node22 |
 | historical Coord PR11 | `27796df5f9847c1bb5d48d2a445e418dfb3d8e96` | unchanged in this check | historical Windows57 provenance, new clean exec still needed |
 
 **Do not simply overwrite one of the three SHA constants.** Current original runner/JSON manifest both intentionally refuse any other SHA. Changing only the JSON leaves runner preflight failing; changing only the runner leaves JSON provenance stale. Prior direct GitHub runner source write was safety-blocked. The two historical snapshots are still valid as **old** frozen evidence; to run new code against the latest HEAD, either run the explicit manual commands below in new isolated worktrees, or after owner review update *both* runner and manifest together, with missing/mismatching-manifest negative tests before execution. Do not silently claim `80c5` tests cover `1aad`, nor `82bf` tests cover `efe9`.
@@ -32,10 +32,10 @@ After formal suite, owner still needs a **truly new** independent public time-wi
 
 ## Batch B: SAM — current true source efe9a...
 
-In a new clean, separate copy of [PR15](https://github.com/lu403369069lu-prog/YinQieJi/pull/15) exact `efe9a93f4bea4b6f3bf33f7fc9772e9008c8b3c0`, use `SAM/snapshot` as CWD. **Do not run `build-release-manifest.mjs` against its default real Windows registry paths.** The added safe test `tools/build-release-manifest.synthetic.test.mjs` creates its own temp synthetic Git/registry/card/artifacts/automations and uses `SAM_ENGINEERING_REGISTRY` pointing to its own fixture.
+In a new clean, separate copy of [PR15](https://github.com/lu403369069lu-prog/YinQieJi/pull/15) exact `73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58`, use `SAM/snapshot` as CWD. **Do not run `build-release-manifest.mjs` against its default real Windows registry paths.** The added safe test `tools/build-release-manifest.synthetic.test.mjs` creates its own temp synthetic Git/registry/card/artifacts/automations and uses `SAM_ENGINEERING_REGISTRY` pointing to its own fixture.
 
 ```powershell
-node --test tools/atomic-write.test.mjs tools/build-release-manifest.synthetic.test.mjs
+node --test tools/atomic-write.test.mjs tools/build-release-manifest.synthetic.test.mjs tools/migrate-release-041.synthetic.test.mjs
 node --test ../independent-review/20261016-0904-audit-coverage/*.test.mjs
 node --import tsx --test ../independent-review/20261016/rooted-source-authorization.test.ts ../independent-review/20261016/glob-case-parity.test.ts ../independent-review/20261016/glob-ripgrep-572-matrix.test.ts
 npm run build
@@ -55,3 +55,9 @@ For each unique invocation report `repo | exact_head | batch | command | OS+runt
 Return **Wool** to Issue [#2](https://github.com/lu403369069lu-prog/WoolRadar/issues/2), **SAM** to YinQieJi [#1](https://github.com/lu403369069lu-prog/YinQieJi/issues/1) and final integrated decision to Wool [#3](https://github.com/lu403369069lu-prog/WoolRadar/issues/3). Do not auto-merge PR37/38/39 or SAM PR9/12/13/14/15 in parallel; preserve Codex V3 main owner/lease/fence/CAS and leave all candidate PRs Draft until human review. No current source work changes Windows PLC, bank/card accounts, notifications, automations, or local production reports.
 
 `historical_recovery_closed=false`; `42 READY_FOR_LOCAL_CODEX` was handoff availability, not 42 PASS. The H17 and producer changes in this delta are **new real code/test contributions** beyond the 50-family evidence classification.
+
+## Subsequent source delta: actual 0.4.1 migration partial-overwrite red→green
+
+At the latest S15 head **`73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58`**, H17 migration source `tools/migrate-release-041.mjs` full exact Git blob **`893c9970c01bd99ffdb31f18282e68261902f705`** replaced old actual blob `6bbba264b4e963ebba0e7028b23e295b472f5e95`. The old script actually failed four of five newly created formal tests (exit1) by overwriting existing 0.4.1 teacher-eval before validating missing/invalid source claim audit, C001-K05 or teacher-evidence. The new version validates *all predictable* 0.4.0 data before touching 0.4.1, rejects invalid UTF-8, and uses the original atomic metadata helper individually for four target files. Exact new migration formal test blob **`1031e5662984df8314b234492eabc39816e75ded`**, seven methods including BOM/CRLF byte preservation. Current true Linux Node22 release tools **18/18 pass, exit0**; log SHA256 `b2bafad0e2d42d5565d15b3c8b49f4b9ae810a7a63cabf6aa9a358f0851f7f8e`. [Full current original-red/current-green evidence](https://github.com/lu403369069lu-prog/YinQieJi/blob/chatgpt/sam-recover-claim-audit-types-20261017/SAM/independent-review/20261016/H17_MIGRATION_SOURCE_RED4_GREEN16_20261017.md).
+
+**Explicit limitation:** per-file atomic rename is not a four-file/current.json transaction. No real release pointer activation/rollback, Windows24/26 or full installed source package was tested. Codex must inspect all candidate files and approved source digests before promoting `current.json`. Keep `HISTORICAL_RECOVERY_CLOSED=false`.

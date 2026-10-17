@@ -109,8 +109,11 @@ def freeze_public_sources(sources: list[tuple[dict, str]], limit: int = 8) -> di
             # bytes before sampling. No downstream algorithm can restore a
             # lost batch/offer identity. Exclude these rows from any new blind
             # corpus rather than counting potentially merged offers as unique.
-            if (row.get('url_identity_preserved') is False
-                    or (row.get('url_sanitized') is True and row.get('url_identity_preserved') is not True)):
+            # New blind denominators require explicit producer-backed
+            # identity proof, not truthy JSON strings/integers or absent legacy
+            # fields. Ambiguous metadata must never be upgraded to proof.
+            if (row.get('url_identity_preserved') is not True
+                    or ('url_sanitized' in row and type(row['url_sanitized']) is not bool)):
                 upstream_identity_loss += 1
                 continue
             url = canonical_public_url(row.get('url'))

@@ -82,6 +82,58 @@ def validate_manifest(manifest: Any) -> None:
         raise ValueError('FROZEN_EIGHT_GATE_MAPPING_DRIFT')
 
 
+
+def _is_reparse_or_link(item: os.stat_result) -> bool:
+    return stat.S_ISLNK(item.st_mode) or bool(
+        getattr(item, 'st_file_attributes', 0)
+        & getattr(stat, 'FILE_ATTRIBUTE_REPARSE_POINT', 0))
+
+
+def _read_safe_evidence_windows_fallback(root: Path, parts: tuple[str, ...]) -> bytes:
+    """Conservatively pin Win32 file identity across a bounded read.
+
+    This cannot provide the full POSIX descriptor-relative nofollow guarantee;
+    never promote it to Windows acceptance without testing the actual volume.
+    """
+    segments=[root]
+    for part in parts:
+        segments.append(segments[-1] / part)
+    pinned=[]
+    for index, path in enumerate(segments):
+        info=path.lstat()
+        expected_dir=index < len(segments)-1
+        if (_is_reparse_or_link(info)
+                or not (stat.S_ISDIR(info.st_mode) if expected_dir
+                        else stat.S_ISREG(info.st_mode))):
+            raise ValueError('EVIDENCE_NOT_REGULAR_OR_SYMLINK')
+        if info.st_ino == 0:
+            raise ValueError('EVIDENCE_UNVERIFIABLE_FILE_IDENTITY')
+        pinned.append((info.st_dev,info.st_ino))
+    if segments[-1].stat().st_size > MAX_BYTES:
+        raise ValueError('OVERSIZE_EVIDENCE')
+    flags = os.O_RDONLY | getattr(os,'O_BINARY',0) | getattr(os,'O_NONBLOCK',0)
+    fd = os.open(segments[-1],flags)
+    try:
+        opened=os.fstat(fd)
+        if (not stat.S_ISREG(opened.st_mode) or _is_reparse_or_link(opened)
+                or (opened.st_dev,opened.st_ino)!=pinned[-1]
+                or opened.st_size>MAX_BYTES):
+            raise ValueError('EVIDENCE_UNVERIFIABLE_FILE_IDENTITY')
+        with os.fdopen(os.dup(fd),'rb') as stream:
+            content=stream.read(MAX_BYTES+1)
+        if len(content)>MAX_BYTES:
+            raise ValueError('OVERSIZE_EVIDENCE')
+        for path,identity in zip(segments,pinned):
+            after=path.lstat()
+            if _is_reparse_or_link(after) or (after.st_dev,after.st_ino)!=identity:
+                raise ValueError('EVIDENCE_UNVERIFIABLE_FILE_IDENTITY')
+        return content
+    except OSError as exc:
+        raise ValueError('EVIDENCE_NOT_REGULAR_OR_SYMLINK') from exc
+    finally:
+        os.close(fd)
+
+
 def _read_safe_evidence(root: Path, rel: str) -> bytes:
     """Open through no-follow descriptors to prevent path-swap symlink reads."""
     if not isinstance(rel, str) or len(rel) > 256 or '\\' in rel or '\x00' in rel:
@@ -92,7 +144,7 @@ def _read_safe_evidence(root: Path, rel: str) -> bytes:
             rel.startswith('~')):
         raise ValueError('EVIDENCE_PATH_TRAVERSAL')
     if not hasattr(os, 'O_NOFOLLOW') or not hasattr(os, 'O_DIRECTORY'):
-        raise ValueError('SECURE_FILE_OPEN_UNSUPPORTED')
+        return _read_safe_evidence_windows_fallback(root, posix.parts)
     descriptors = []
     try:
         fd = os.open(root, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)

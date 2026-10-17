@@ -38,7 +38,10 @@
     "visible_pr_and_issue_api_census_complete": true,
     "visible_library_listing_complete": true,
     "archival_source_catalogue_complete_for_current_access": true,
-    "all_historical_hourly_task_runs_retrieved": false
+    "all_historical_hourly_task_runs_retrieved": false,
+    "visible_issue_body_sampling_analyzed": true,
+    "issue_body_sampling_expanded_families": 6,
+    "all_issue_comment_bodies_semantically_classified": false
   },
   "verified_draft_refs": {
     "wool_main_pr23": "6babbe12727652e8626e0fe6f554eb01fecd4a30",
@@ -234,6 +237,36 @@
       "id": "SAM-H21",
       "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
       "summary": "WorkBuddy exact source excerpt hash currently verified"
+    },
+    {
+      "id": "WR-H17",
+      "status": "MAINTAINER_APPROVAL_REQUIRED",
+      "summary": "older payment-like fixture in reachable Git history; no numeric details copied; history cleanup not automatic"
+    },
+    {
+      "id": "WR-H18",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "external send success but database CAS=0 must report uncertain, not exactly-once"
+    },
+    {
+      "id": "WR-H19",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "PR25 eleven primary official eligibility condition seeds, independently reviewed gold not frozen"
+    },
+    {
+      "id": "SAM-H22",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "PR9 audit coverage card-ID trims both card and claim ID; synthetic reviewer tests historical"
+    },
+    {
+      "id": "SAM-H23",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "ambiguous positive denominator previous bug, now main evaluator continues and excludes ambiguous"
+    },
+    {
+      "id": "SAM-H24",
+      "status": "REAL_SOURCE_GOLD_MISMATCH",
+      "summary": "T031 Axis question expected evidence card points to FSM path; do not promote source score"
     }
   ],
   "verified_draft_refs_note": "Historical observations only; always fetch live PR HEAD before edits. PR35 changes when this file is updated; no self-referential exact SHA is possible.",
@@ -248,6 +281,7 @@
     "effect": "source-policy regex has i flag; cross-backend parity not yet agreed, no production change"
   },
   "active_backlog_next": [
+    "SAM H24 actual T031 approved Axis source/card evidence audit, no private text published",
     "SAM H04 actual reviewed artifact SHA byte binding design + source policy",
     "SAM PR15 actual loader combined formal Node24/26 testing",
     "SAM PR14 real direct/stdio MCP tests",
@@ -255,7 +289,8 @@
     "Wool PR37 full formal 23 tests vs updated main HEAD",
     "Wool WR-H16 grant same-project evidence identity",
     "Wool WR-H13 new independent unseen public source window",
-    "Wool daily report output bridge actual user-approved same-SHA consumer"
+    "Wool daily report output bridge actual user-approved same-SHA consumer",
+    "Wool H17 maintainer-approved sensitive test-fixture reachable history review (no numeric exposure)"
   ],
   "index_files": [
     "coordination/HISTORICAL_FIRST_RESUME_GATE.md",

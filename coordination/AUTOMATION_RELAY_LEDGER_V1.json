@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 4,
+    "revision": 5,
     "last_persisted_worker_run_utc": "2026-10-17",
-    "last_completed_review_key": "YinQieJi#15",
+    "last_completed_review_key": "WoolRadar#39",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -47,7 +47,7 @@
       "YinQieJi#15/73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58/entailed-empty-evidence-redgreen-20261017",
       "retain-retry-items-and-write-diagnostic-20261017"
     ],
-    "write_diagnostic": "INTERACTIVE_ONLY__SCHEDULED_WRITE_NOT_VERIFIED",
+    "write_diagnostic": "INTERACTIVE_WRITE_CONFIRMED_ONLY_SCHEDULED_WRITE_UNVERIFIED",
     "last_write_error": null
   },
   "backlog": {
@@ -81,10 +81,12 @@
         "key": "WoolRadar#39",
         "repo": "lu403369069lu-prog/WoolRadar",
         "pr": 39,
-        "status": "PARTIAL_REVIEW_PATCH_PROPOSED",
+        "status": "PROVISIONAL_FINDING",
         "reviewed_head_sha": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
-        "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
-        "review_scope": "EXTRACTED_FUNCTION_RED_GREEN_4_NOT_FULL_GITHUB_SUITE"
+        "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/45",
+        "review_scope": "EXTRACTED_FUNCTION_RED_GREEN_4_NOT_FULL_GITHUB_SUITE",
+        "finding": "P2: exact home.arpa apex accepted as public DNS URL by downstream blind sampler while producer excludes it",
+        "disposition": "FIX_PROPOSED_IN_DRAFT_PR_45; SOURCE_UNIT_SUITE_UNVERIFIED"
       },
       {
         "key": "WoolRadar#38",
@@ -511,6 +513,30 @@
       ],
       "business_accepted": false,
       "native_receipt": false
+    },
+    {
+      "key": "WoolRadar#39:home.arpa-apex:1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "pr": 39,
+      "head_sha": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+      "status": "PROVISIONAL_FINDING",
+      "severity": "P2",
+      "scope": "SAMPLER_CANONICAL_PUBLIC_URL_APEX",
+      "source_blob_sha": "d9c3f9c2d4c88d5867ae00f7c5039f7bc9e63ab8",
+      "proposed_fix_draft_pr": 45,
+      "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/45",
+      "local_repro": {
+        "mode": "ISOLATED_EXTRACTED_FUNCTION_NOT_FULL_REPO_SUITE",
+        "command": "python -m unittest test_boundary_extract -v",
+        "passed": 4,
+        "failed": 0,
+        "exit_code": 0,
+        "baseline": "home.arpa and https://home.arpa were admitted before patch",
+        "fixed": "apex and subdomain denied, public control admitted"
+      },
+      "verdict": "PARTIAL_STATIC_REVIEW_DRAFT_FIX_NOT_MERGED",
+      "executor": "interactive_chat",
+      "scheduled_worker_wrote_this": false
     }
   ],
   "run_history": [
@@ -547,14 +573,23 @@
       "what": "Persist 3 incomplete source QA followups + separate scheduled-permission diagnostic; no new test results or business acceptance",
       "known_current_scheduled_error": "NOT_AVAILABLE_FROM_TASK_STATUS",
       "created_retry_items": 4
+    },
+    {
+      "kind": "INTERACTIVE_AUDIT",
+      "review_key": "WoolRadar#39",
+      "head_sha": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+      "outcome": "PR45_DRAFT_FIX_SUBMITTED",
+      "scheduled": false,
+      "checkpoint_status": "INTERACTIVE_PERSISTED",
+      "note": "Remote source+test patch inspected; isolated reproduction 4/4 PASS; entire original PR source suite and business acceptance pending"
     }
   ],
   "acceptance": {
     "scheduled_wakeup": "PROVED_TWICE_2026-10-17",
     "scheduled_private_github_read": "UNVERIFIED",
     "scheduled_write": "UNVERIFIED",
-    "stateful_cross_run_continuation": "UNVERIFIED",
-    "backlog_actual_review": "NOT_STARTED_BY_NEW_SCHEDULER"
+    "stateful_cross_run_continuation": "NOT_VERIFIED_IN_SCHEDULED_CONTEXT",
+    "backlog_actual_review": "PR39_PARTIAL_STATIC_REVIEW_ISSUE_FOUND_DRAFT45_FIX_PENDING"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

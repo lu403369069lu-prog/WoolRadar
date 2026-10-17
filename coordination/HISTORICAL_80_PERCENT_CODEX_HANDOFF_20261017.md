@@ -113,7 +113,7 @@ python -B .\HISTORICAL_CODEX_BATCH_RUNNER_20261017.py --project coord --repo C:\
 python -B .\HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py --receipt C:\temp\history-codex-wool-XXXX\receipt.json
 ```
 
-**验收器源码＋测试确实存在且已隔离执行**：[guard](HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py) Git blob `15f02c39a21a41b8c72ddbb03905aae01ef72c46`、[其六项正式测试](test_history_receipt_guard_20261017.py) Git blob `bb6dc55c21f52a691b1475db9da72d20a6dfba6b`，Linux Python3.13 **6/6 pass exit0**，本地完整Git blobs与远端一致。拒绝错HEAD、重复/漏批次、非零退出、无测试计数或日志SHA不合格。 `local_suite_receipt_accepted`即便为true仍永久强制 `business_gold_accepted=false` 与 `historical_recovery_closed=false`；严格防止把软件测试误充真实金标或最终发布。**回执正文与日志先人工脱敏，仅提交无秘密的family id/源SHA/exit/测试数量/日志hash到对应Issues；不得上传原始个人数据**。
+**验收器源码＋测试确实存在且已隔离执行**：[guard](HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py) Git blob `e47debb9c39c473c78d82eccdbee8d77b13c52cb`、[其六项正式测试](test_history_receipt_guard_20261017.py) Git blob `681711fafe9f78c2c65a1d7cd587fb6d3dcc3d13`，Linux Python3.13 **8/8 pass exit0**，本地完整Git blobs与远端一致。拒绝错HEAD、重复/漏批次、非零退出、无测试计数或日志SHA不合格。 `local_suite_receipt_accepted`即便为true仍永久强制 `business_gold_accepted=false` 与 `historical_recovery_closed=false`；严格防止把软件测试误充真实金标或最终发布。**回执正文与日志先人工脱敏，仅提交无秘密的family id/源SHA/exit/测试数量/日志hash到对应Issues；不得上传原始个人数据**。
 
 注意原始SHA已经固定在脚本内，若Codex修复代码使 HEAD 变化，重新审核新SHA并把本次回执标为`NEW_HEAD_REVALIDATION_REQUIRED`，不能直接改实参或脚本常量绕过原始基线判定。 
 
@@ -121,3 +121,5 @@ python -B .\HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py --receipt C:\temp\history
 - 当前PR39新HEAD为 `80c5ea18769c1312e5be5fd99a39e4f3d498c64f`；此前旧HEAD `e31eea548ab0b05d26e6fd639907bd81cbabcdfc` 的Linux58次结果**不能继续作为新HEAD的整包绿灯**。
 - [WR-H16 新增编号/Unicode列表识别实际红→绿](https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/wool-historical-integration-20261017/independent-quality/developer-grant-20261017/H16_NUMBERED_SCOPE_RED_GREEN.md)：精确Git blob匹配，旧11+新6真实正式测试共17项，旧源3失败exit1，新源17通过exit0；仍缺Windows整包、独立新窗口准确率与日报签名桥。
 - `HISTORICAL_CODEX_BATCH_RUNNER_20261017.py`中Wool EXPECTED已同步为上述新HEAD；先在隔离工作树新SHA上全批次检验，勿自动切换到旧SHA绕过校验。
+
+**2026-10-17集成器修订**：当前批次执行器Git blob `2740d556f24d2ffea563026628f5a904a7a3de73` 已修复Windows `npm.cmd`和来源回执协议对齐；上方8个真实正式测试涵盖含skip/未知通过数的回执拒绝。任何测试被skip都不算已全面验收，即使process exit0。未在三个完整项目Windows执行全部批次，不可冒充验收通过。

@@ -1,0 +1,83 @@
+{
+  "schema": 1,
+  "when": "2026-10-17",
+  "status": "ISOLATED_LINUX_SELECTED_MODULE_TESTS_GREEN",
+  "environment": {
+    "python": "3.13.5",
+    "node": "v22.16.0",
+    "platform": "Linux"
+  },
+  "tests_total": 125,
+  "skipped_total": 0,
+  "suites": [
+    {
+      "id": "COORD_42_GUARD",
+      "methods": 27,
+      "exit_code": 0,
+      "stdout_sha256": "37574ea096b1b323b0ecff8268f3e96824073a2381ecfc23fe355962cfed51c1",
+      "production_source_blob": "255d5bf735b7f58760ee5ac6464ec5539b4744e9",
+      "formal_guard_blob": "6dd9a83ac01f2f233437deb527fa2b9197b791cd",
+      "test_scope": "real Python/Node subprocesses, official guard positive/negative and old security tests"
+    },
+    {
+      "id": "SAM_MIGRATION",
+      "methods": 24,
+      "exit_code": 0,
+      "stdout_sha256": "a316c5fc541af0c2a939f11527f4ba91087d57fa51adc97b11937eb3cf61e547",
+      "production_source_blob": "3fa01b21ad82ff83908743f2714f4bcf05151711",
+      "test_scope": "synthetic, trust boundary, source provenance and read-only migration"
+    },
+    {
+      "id": "WOOL_PUBLIC_CORPUS",
+      "methods": 43,
+      "exit_code": 0,
+      "stdout_sha256": "79c5d9d50b3a36fbac022940f5791e880e746dae49fdec8532088e937dd7491a",
+      "production_source_blob": "1b9be2e54151a084daf00842b774990f229d714f",
+      "test_scope": "current 22 plus historical 21 host/Unicode/date unit tests"
+    },
+    {
+      "id": "WOOL_GRANT_DIAGNOSTICS",
+      "methods": 31,
+      "exit_code": 0,
+      "stdout_sha256": "2081071aac64738181c6a2bf6e8184e0eefb41f7dbe483cb2bedb2fb44ec726f",
+      "production_source_blobs": [
+        "8543c9c63543645e36fcd0ed3fea396081c258f7",
+        "4c5fec88b8bcd1b96840ab681d60f1111b7271f7"
+      ],
+      "test_scope": "current 14 diagnostics plus historical 17 project-scope/numbered-bullet tests"
+    }
+  ],
+  "negative_controls": [
+    {
+      "id": "WOOL_OLD",
+      "source_blob": "fbcea363097aaa90ff2a671340cfe2d975dd8ecf",
+      "tests": 11,
+      "failed_subtest_assertions": 18,
+      "exit_code": 1,
+      "stdout_sha256": "c58a4a39e7cc35f95daecb687bb55faa50df25fb6b26819ef78dbaf4ddb60f63"
+    },
+    {
+      "id": "SAM_OLD",
+      "source_blob": "5d4b21370eab5d4e057321ee79a5c5237346c510",
+      "tests": 13,
+      "passes": 7,
+      "failures": 6,
+      "exit_code": 1,
+      "stdout_sha256": "62ad40c748f5afb47be02132c5145a4333bba20b084209a8b659a5b8437a41dc"
+    }
+  ],
+  "manifest": {
+    "git_blob": "96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744",
+    "total": 50,
+    "ready": 42,
+    "unique_command_count": 39,
+    "externally_gated": 8
+  },
+  "caveats": [
+    "Original tests and source were independently matched to real Git blobs via git hash-object",
+    "Coordinator adjacent batch contract used extracted exact evaluate_run/summarize logic, not full checkout",
+    "Not full Windows suite, Node24/26, actual 39 frozen commands, real business gold, delivery consumer, or SAM MCP/rollback",
+    "No live production changes or secrets exported; raw logs not shared"
+  ],
+  "historical_recovery_closed": false
+}

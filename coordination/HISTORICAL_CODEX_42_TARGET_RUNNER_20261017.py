@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 import hashlib
 import json
 import os
+import platform
 from pathlib import Path, PurePosixPath
 import re
 import shlex
@@ -254,6 +255,28 @@ def main() -> int:
     if not args.run:
         return 0
     output = Path(tempfile.mkdtemp(prefix="codex-history-manifest-"))
+    # Redirect ordinary user-profile/temp resolution away from the host profile.
+    scratch_home = output / "home"
+    scratch_temp = output / "temp"
+    scratch_home.mkdir()
+    scratch_temp.mkdir()
+    scrub = re.compile(r"(TOKEN|PASSWORD|SECRET|API_KEY|CREDENTIAL|AUTH|COOKIE|PRIVATE)", re.I)
+    child_env = {k: v for k, v in os.environ.items() if not scrub.search(k)}
+    child_env.update({"HOME": str(scratch_home), "USERPROFILE": str(scratch_home),
+                      "APPDATA": str(scratch_home / "AppData"),
+                      "LOCALAPPDATA": str(scratch_home / "LocalAppData"),
+                      "TMP": str(scratch_temp), "TEMP": str(scratch_temp),
+                      "TMPDIR": str(scratch_temp), "PYTHONDONTWRITEBYTECODE": "1"})
+    child_env.pop("NODE_OPTIONS", None)
+    runtime = {"python": sys.version.split()[0], "platform": platform.platform(),
+               "os": os.name, "node": None}
+    if args.project == "sam":
+        try:
+            runtime["node"] = subprocess.run(["node", "--version"],
+                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                text=True, timeout=10, env=child_env).stdout.strip()
+        except (OSError, subprocess.TimeoutExpired):
+            runtime["node"] = "NOT_AVAILABLE"
     receipts = []
     for i, item in enumerate(plan, 1):
         rc = 125
@@ -262,8 +285,7 @@ def main() -> int:
             proc = subprocess.run(item["argv"], cwd=in_repo(repo, item["cwd"]),
                                   stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                   text=True, encoding="utf-8", errors="replace",
-                                  timeout=900, env={**os.environ,
-                                                    "PYTHONDONTWRITEBYTECODE": "1"})
+                                  timeout=900, env=child_env
             rc, result = proc.returncode, proc.stdout
         except (OSError, subprocess.TimeoutExpired) as exc:
             result = "%s: %s" % (type(exc).__name__, exc)
@@ -280,6 +302,7 @@ def main() -> int:
     receipt = {"schema_version": 1, "source": "disposable-local-codex",
                "created_at_utc": datetime.now(timezone.utc).isoformat(),
                "repo_sha": expected, "project": args.project,
+               "runtime": runtime,
                "tested_families": len(entries), "unique_commands": len(plan),
                "results": receipts, "no_real_gold_claim": True,
                "production_modified": False}

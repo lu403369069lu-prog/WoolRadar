@@ -166,3 +166,26 @@ python -B $guard --receipt "C:\temp\codex-history-manifest-XXXX\receipt.json" --
 
 **分层验收严格保持**：两套本地执行器与回执验收器即使全部PASS，也只可能证明指定提交的本地测试；`business_gold_accepted=false`、`historical_recovery_closed=false`、`windows_node24_and_26_both_verified=false` 仍必须保留，直到独立的真实来源金标/用户批准交付和跨平台正式证据另行完成。跑出的本地原始日志不得直接推到GitHub；仅在人工检查没有用户私有内容后向Issue #1/#2/#3发布脱敏的family_id、源SHA、exit、pass/fail/skip和日志SHA。
 
+
+
+## 2026-10-17 一次执行42项 / 39条去重命令（新增）
+
+**工程实现已提交**：[42 项单次执行器](https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/scheduled-checkpoint-contract-20261016/coordination/HISTORICAL_CODEX_42_JOB_EXECUTOR_20261017.py)，SHA-guard 旧执行器另见 `coordination/HISTORICAL_CODEX_BATCH_RUNNER_20261017.py`。实际源码与正式隔离测试已提交；**以下命令尚未在用户 Windows/Codex 执行**，不是实时工程通关。
+
+**部署结构必须区分两个独立本地克隆**：协调器脚本与 `HISTORICAL_80_PERCENT_CODEX_JOBS_20261017.json` 必须同处 *checkpoint* 分支目录；`--repo` 必须指向另一个干净、隔离的历史被测仓库克隆，且 HEAD 恰好是下列 SHA。不要试图在 PR39/PR15 中直接运行一份并不存在于它们代码树上的协调器脚本；不允许复制脚本后丢下相邻 manifest。四条每小时工程自动任务已暂停，以下仅为本人交接的本地 Codex 主动执行，不涉及 Scheduled GitHub writer。
+
+```powershell
+# 在另一个干净、隔离的 checkpoint 克隆中调用脚本（示意路径须按实际替换）
+$H = 'D:\temp\historical-checkpoint\coordination\HISTORICAL_CODEX_42_JOB_EXECUTOR_20261017.py'
+# 必须在执行前保证 $H 同目录存在 HISTORICAL_80_PERCENT_CODEX_JOBS_20261017.json
+python $H --project wool --repo D:\temp\wool-pr39 --expected-head 80c5ea18769c1312e5be5fd99a39e4f3d498c64f
+python $H --project sam --repo D:\temp\sam-pr15 --expected-head 82bf36efa90cced8dafb56502812eb49f40515f3
+python $H --project coord --repo D:\temp\wool-pr11 --expected-head 27796df5f9847c1bb5d48d2a445e418dfb3d8e96
+
+# 核验DRY_RUN输出与人工确认离线/依赖就绪以后，分别添加 --run 才真正运行。
+# 本程序不会自动下载依赖或checkout/merge；Node tsx/npm依赖不存在则必须报告NOT_RUN_BLOCKED。
+```
+
+当前机器清单严格分为：WoolRadar **15 家族**、SAM **21 家族**、Coord **6 家族**可本地验收，共 **42**；8 家族是用户批准、全新独立金标、敏感旧历史或调度写入受限。39 条唯一命令仅运行一次；同一测试映射多个家族在回执中共享同一原始 `log_sha256`。真实执行器逐任务复核当前仓库 `HEAD:<test_path>` Git blob SHA、路径及允许的 Python unittest/Node 测试 argv，并对源代码脏目录/产线目录不执行。全部真实测试原始日志仅落到本地系统临时目录，输出对应 `receipt.json`；**在上传到任何 Issue 之前必须人工脱敏检查原始日志和真实执行参数**。
+
+此执行器、SHA/manifest 契约及真假PASS判别在隔离合成模块上累计 **37项 unittest 全通过**（12 manifest、14 verdict、11 command/symlink/去重），但**无法替代真实被测仓库38/39个命令的执行**。受测三棵原始Git树在GitHub做过42/42源文件路径/blob/命令指向精确核对，0 mismatch；完整 Windows+真实T031/61/522/47盲测仍留红/未验收。任何工作树SHA变化必须手动更新合同并重新整批验证，严禁自动rewire或合并Codex持锁PR。

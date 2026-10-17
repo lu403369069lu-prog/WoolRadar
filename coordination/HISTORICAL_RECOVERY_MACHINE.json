@@ -58,7 +58,7 @@
     "sam_history_pr10": "f5e6562524b3438227e311fbc7ff0223b08a5a12",
     "sam_claimkind_pr13": "8719d75205e50209e9b11998a2af72c4d08ee975",
     "sam_workbuddy_pr14": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
-    "sam_audit_types_pr15": "efe9a93f4bea4b6f3bf33f7fc9772e9008c8b3c0",
+    "sam_audit_types_pr15": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
     "sam_rooted_pr12": "a92a870951e1bbf5f2517865faca46b56a6546e7",
     "sam_teacher_pr9": "ba2890004a45abe39d9a6da8b342db48162e9023",
     "wool_grant_pr38": "75021367f71ba550a95ef098789e1f1201b21bad",
@@ -209,7 +209,7 @@
     {
       "id": "SAM-H13",
       "status": "RELEASE_ACCEPTANCE_UNVERIFIED",
-      "summary": "dist/install/cache/upgrade rollback and final 3 rounds | 2026-10-17 actual current PR15 full build-release-manifest subprocess synthetic temp Git checks5/5 plus existing atomic helper6/6, but no Windows24/26 release, installed artifact pointer/rollback/61/522 gold, so release still UNVERIFIED."
+      "summary": "dist/install/cache/upgrade rollback and final 3 rounds | 2026-10-17 actual current PR15 full build-release-manifest subprocess synthetic temp Git checks5/5 plus existing atomic helper6/6, but no Windows24/26 release, installed artifact pointer/rollback/61/522 gold, so release still UNVERIFIED. | 2026-10-17 real original migration old red4 and corrected same-file atomic individual write source exact formal migration7/7, combined release tools18/18 Linux. Full production release pointer/rollback/gold still NOT VERIFIED."
     },
     {
       "id": "SAM-H14",
@@ -228,8 +228,8 @@
     },
     {
       "id": "SAM-H17",
-      "status": "PR15_REAL_BUILDER_EXACT_11_POSIX_PASS_CURRENT_POINTER_WINDOWS_PENDING",
-      "summary": "Original actual Git source builder0ed0..., atomic-write de5a..., original formal test7acb... + new real synthetic temporary Git/registry/card release full-builder test5b8e... byte-exact; Node22 atomic6 + full builder5=11/11 pass exit0. Not Windows Node24/26, installed skill, current.json multi-file pointer, rollback or final source gold."
+      "status": "PR15_EXACT_RELEASE_BUILDER_MIGRATION_RED4_GREEN18_LINUX_POINTER_WINDOWS_PENDING",
+      "summary": "Actual original source migration6bbba... red 1pass/4fail exit1 from partial target teacher overwrite after bad audit/teacher evidence; current exact code893c... pre-validates all predictable source inputs and uses atomic helper per file; original atomic6 + synthetic builder5 + real migration7 (incl malformed UTF8 refusal+BOM CRLF byte preservation)=18 distinct Node22 TAP pass exit0. Still no Windows24/26, multi-file current.json pointer commit, Skill installation or rollback."
     },
     {
       "id": "SAM-H18",
@@ -329,9 +329,10 @@
     "effect": "source-policy regex has i flag; cross-backend parity not yet agreed, no production change"
   },
   "active_backlog_next": [
+    "SAM current exact PR15 HEAD 73a3ff3c, original migration red4 real partial 0.4.1 overwrite then corrected fully-prevalidated atomic individual 0.4.1 files green migration7/7; + builder5 + atomic6 =18/18 Node22. H17 limited to predictable failure prevalidation, NOT cross-file atomic current.json pointer, Windows or gold.",
+    "Codex original immutable SAM manifest/runner pins 82bf, latest PR15 now 73a3; new exact acceptance commands in coordination/HISTORICAL_CURRENT_HEAD_CODEX_DELTA_20261017.md; do not silently change only one pin.",
     "Latest source head drift: PR39 moved from 80c5 to 1aad ahead7 and PR15 from 82bf to efe9 ahead2; 42/42 original formal tests blobs unchanged, 3 new formal tests not in 42 manifest. Validate new code and tests in separate clean checkouts, then explicitly re-pin only if Codex owner reviews; do not silently run old manifest on newer HEAD.",
     "CURRENT DELTA: Wool latest PR39 head1aad1c vs frozen 50-job runner head80c5; SAM PR15 headefe9 vs frozen runner 82bf. Use GitHub coordination/HISTORICAL_CURRENT_HEAD_CODEX_DELTA_20261017.md manual safe exact worktree commands; do NOT silently update one SHA side or claim old tests cover new head.",
-    "SAM H17 updated exact current full release builder original six + new five synthetic true subprocess tests 11/11 Linux Node22, full Windows/installed skill/current.json multi-file rollback STILL NOT VERIFIED.",
     "Codex handoff executable now SHA locks all 50 manifest entries and PINs 42 Git blobs, 39 unique commands mapped to 42 family receipts; 42/42 isolated synthetic safety/verdict/subprocess tests passed. Still requires three exact HEAD local Codex batches and real Windows/full gold, no historic release completion inferred.",
     "Wool producer current real 21/21 is only focused tests; rerun entire current-HEAD Windows 412+ and 24 sampler/real producer schema and 40 grant+data; new independent blind recall(old25%) and 09:30 OUTPUT_NOT_CONNECTED remain open.",
     "Wool current unified PR39 now HEAD80c5, exact grant numbered-scope formal code+test hash checked, isolated core40 + sampler24 =64/64 local Linux pass; this is NOT full Windows/new independent quality holdout.",
@@ -454,14 +455,18 @@
       "still_missing": "current HEAD full Windows suite, newly independent blind gold, signed daily report, owner merge"
     },
     "sam_current_release_builder": {
-      "source_head": "efe9a93f4bea4b6f3bf33f7fc9772e9008c8b3c0",
-      "atomic_source": "de5a34c509740e4eac44656379c7b6ed52ca5329",
-      "atomic_original_test": "7acb5d3fa6b645487cf1d2e4d5d9092c64bb8e89",
-      "manifest_builder": "0ed0bfb55851a092b73c0e30856f3926ce2f2b20",
-      "new_full_builder_formal_test": "5b8e99131748269ed7046ffd0d2396da3d30bc79",
-      "actual_isolated_test": "Node22 Linux real child-process + tempfile Git source SHA, 11/11 TAP, 0 failed/skip, exit0",
-      "log_sha256": "288bb78a6b3342a1c8f317bd60b4f3df26f41e3ee8f0e5905da1418020f13e3d",
-      "gap": "Windows24/26 real installation, pointer multi-file atomic, dist/skill sync, user-approved release and actual 61/522 source gold"
+      "source_head": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
+      "atomic_source_blob": "de5a34c509740e4eac44656379c7b6ed52ca5329",
+      "original_atomic_test": "7acb5d3fa6b645487cf1d2e4d5d9092c64bb8e89",
+      "real_builder_blob": "0ed0bfb55851a092b73c0e30856f3926ce2f2b20",
+      "builder_formal_test": "5b8e99131748269ed7046ffd0d2396da3d30bc79",
+      "original_migration_blob": "6bbba264b4e963ebba0e7028b23e295b472f5e95",
+      "corrected_migration_blob": "893c9970c01bd99ffdb31f18282e68261902f705",
+      "formal_migration_test": "1031e5662984df8314b234492eabc39816e75ded",
+      "red": "original exact source 5 formal migration tests, 1 passed/4 failed exit1 after actual preexisting 0.4.1 teacher-eval partial overwrites",
+      "green": "original atomic6 + builder5 + migration7 = 18 TAP passed 0fail 0skip exit0 Linux Node22",
+      "log_sha256": "b2bafad0e2d42d5565d15b3c8b49f4b9ae810a7a63cabf6aa9a358f0851f7f8e",
+      "limitations": "isolated fake data only, no cross-file transaction/current.json upgrade/rollback, Windows Node24/26, MCP or 61/522 gold"
     }
   },
   "historical_exact_remote_test_provenance": {
@@ -650,7 +655,7 @@
     "S": "82bf36efa90cced8dafb56502812eb49f40515f3",
     "C": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
     "latest_W": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
-    "latest_S": "efe9a93f4bea4b6f3bf33f7fc9772e9008c8b3c0",
+    "latest_S": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
     "manifest_and_runner_reconciliation": "NEEDS_CODEX_OWNER_REVIEW_NO_SILENT_SHA_BUMP"
   },
   "codex_historical_head_drift_20261017": {

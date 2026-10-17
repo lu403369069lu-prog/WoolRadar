@@ -16,7 +16,7 @@
       "id": "coord42",
       "repository": "lu403369069lu-prog/WoolRadar",
       "pr": 42,
-      "head_at_review": "d6d370c09b8cd17d036bcfb62d378ec5fabff4db",
+      "head_at_review": "728e0766612fcae7a674c5dacab59a8b8b664cf0",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
       "scope": [
@@ -28,18 +28,18 @@
       "next_gate": "local Python and Node cross-module tests + frozen real 39 command batch",
       "isolated_qa_done": true,
       "isolated_qa_methods": 27,
-      "latest_tests": "LINUX_SELECTED_GREEN_NOT_FORMAL_FROZEN_OR_REAL_BUSINESS",
-      "isolated_linux_test_status": "PASS_SELECTED_LINUX_NO_SKIP",
+      "latest_tests": "SELECTED_LINUX_GREEN_NOT_FROZEN_NATIVE_OR_EXTERNAL_BUSINESS",
+      "isolated_linux_test_status": "PASS_SELECTED_ISOLATED_ZERO_SKIPS",
       "isolated_linux_test_methods": 53
     },
     {
       "id": "wool41",
       "repository": "lu403369069lu-prog/WoolRadar",
       "pr": 41,
-      "head_at_review": "1208203b34d65f234d3819b6f45449afb75fc119",
+      "head_at_review": "6616b4d65949beb26b0bcfe20a293c633efd49f5",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_tests": "LINUX_SELECTED_GREEN_NOT_FORMAL_FROZEN_OR_REAL_BUSINESS",
+      "latest_tests": "SELECTED_LINUX_GREEN_NOT_FROZEN_NATIVE_OR_EXTERNAL_BUSINESS",
       "scope": [
         "URL parser normalization rejection",
         "credential-like path and source metadata redaction"
@@ -47,8 +47,8 @@
       "next_gate": "Windows full suite + unseen source gold + actual daily delivery receipt",
       "isolated_qa_done": true,
       "isolated_qa_methods": 43,
-      "isolated_linux_test_status": "PASS_SELECTED_LINUX_NO_SKIP",
-      "isolated_linux_test_methods": 77
+      "isolated_linux_test_status": "PASS_SELECTED_ISOLATED_ZERO_SKIPS",
+      "isolated_linux_test_methods": 82
     },
     {
       "id": "sam17",
@@ -57,7 +57,7 @@
       "head_at_review": "efcd73540587c482c93b8d487385de636d47fadd",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_tests": "LINUX_SELECTED_GREEN_NOT_FORMAL_FROZEN_OR_REAL_BUSINESS",
+      "latest_tests": "SELECTED_LINUX_GREEN_NOT_FROZEN_NATIVE_OR_EXTERNAL_BUSINESS",
       "scope": [
         "per-card review metadata preservation",
         "non-writing 0.4.0 migration preflight"
@@ -65,7 +65,7 @@
       "next_gate": "Windows Node24/26 release full test + real source read-only audit + real MCP + 61/522 gold",
       "isolated_qa_done": true,
       "isolated_qa_methods": 24,
-      "isolated_linux_test_status": "PASS_SELECTED_LINUX_NO_SKIP",
+      "isolated_linux_test_status": "PASS_SELECTED_ISOLATED_ZERO_SKIPS",
       "isolated_linux_test_methods": 43
     },
     {
@@ -75,7 +75,7 @@
       "head_at_review": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_tests": "LINUX_SELECTED_GREEN_NOT_FORMAL_FROZEN_OR_REAL_BUSINESS",
+      "latest_tests": "SELECTED_LINUX_GREEN_NOT_FROZEN_NATIVE_OR_EXTERNAL_BUSINESS",
       "scope": [
         "diagnostic-only developer grant miss reasons without classifier mutation",
         "aggregate missing-signal counts without source text disclosure",
@@ -84,7 +84,7 @@
       "next_gate": "local 10+4 diagnostics tests + original developer grant suite + unseen source/time-window gold",
       "isolated_qa_done": true,
       "isolated_qa_methods": 31,
-      "isolated_linux_test_status": "PASS_SELECTED_LINUX_NO_SKIP",
+      "isolated_linux_test_status": "PASS_SELECTED_ISOLATED_ZERO_SKIPS",
       "isolated_linux_test_methods": 45
     }
   ],
@@ -100,20 +100,20 @@
   "pr43_recall_policy": "Old 56-row, FN2 developer-used freeze cannot become independent holdout by rescoring it.",
   "latest_local_qa": {
     "date": "2026-10-17",
-    "status": "SELECTED_LINUX_PASS_NOT_FULL_FROZEN_NATIVE",
-    "methods": 218,
-    "passed": 218,
+    "status": "PASS_223_SELECTED_ISOLATED_AND_127_OVERLAPPING_JOINT_LINUX",
+    "methods": 223,
+    "passed": 223,
     "failed": 0,
     "skipped": 0,
     "by_track": {
       "coord42": 53,
-      "wool41": 77,
       "sam17": 43,
+      "wool41": 82,
       "wool43": 45
     },
-    "shared_wool_cross_module_methods": 122,
-    "shared_wool_cross_module_passed": 122,
-    "evidence": "coordination/FIRST_CATEGORY_218_SELECTED_122_JOINT_PRIVATE_EVIDENCE_20261017.json"
+    "shared_wool_cross_module_methods": 127,
+    "shared_wool_cross_module_passed": 127,
+    "evidence": "coordination/FIRST_CATEGORY_SELECTED_223_JOINT_127_20261017.json"
   },
   "frozen_source_verification": {
     "ready_families": 42,
@@ -128,25 +128,25 @@
   },
   "first_category_latest": {
     "date": "2026-10-17",
-    "status": "SELECTED_CHAT_EXECUTABLE_CODE_REGRESSION_AND_SOURCE_AUDIT_COMPLETED_TO_PRESENT_ENVIRONMENT_LIMITS;NATIVE_AND_BUSINESS_GATES_OPEN",
-    "executed_selected_linux_methods": 218,
-    "passed": 218,
-    "failed": 0,
-    "skipped": 0,
-    "executed_combined_wool41_wool43_methods": 122,
-    "shared_passed": 122,
-    "source_blob_checks": true,
-    "evidence": "coordination/FIRST_CATEGORY_218_SELECTED_122_JOINT_PRIVATE_EVIDENCE_20261017.json",
-    "frozen_partial_linux": {
-      "distinct_commands": 10,
-      "ready_families": 11,
+    "status": "CHAT_AVAILABLE_SELECTED_CODE_AND_STATIC_AUDITS_EXECUTED;FROZEN_NATIVE_FULL_TREE_AND_EXTERNAL_ACCEPTANCE_UNVERIFIED",
+    "selected_linux_methods": 223,
+    "selected_passed": 223,
+    "selected_failed": 0,
+    "selected_skipped": 0,
+    "combined_wool_modules": 127,
+    "combined_passed": 127,
+    "exact_git_blobs_matched": true,
+    "evidence": "coordination/FIRST_CATEGORY_SELECTED_223_JOINT_127_20261017.json",
+    "historical_frozen_partial_linux": {
+      "unique_commands": 10,
+      "ready_family_mappings": 11,
       "methods": 105,
-      "official_whole_batch_accepted": false
+      "whole_batch_guard_accepted": false
     },
-    "outstanding_native_commands": 29,
-    "missing_node_tsx_legacy_commands": 17,
-    "unmounted_full_python_frozen_checkout_commands": 12,
-    "external_or_policy_family_gates": 8,
+    "unexecuted_full_native_commands": 29,
+    "missing_tsx_and_full_sam_tree": 17,
+    "unmounted_full_legacy_python_checkout": 12,
+    "external_policy_family_gates": 8,
     "native_handoff": "coordination/CODEX_FROZEN_FULL_39_NATIVE_HANDOFF_20261017.md",
     "historical_80_percent_not_accepted": true
   }

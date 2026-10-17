@@ -5,6 +5,8 @@ import json
 import os
 import re
 import tempfile
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit, unquote_plus
 
@@ -78,6 +80,31 @@ def _clean_url_identity(value: str) -> tuple[str, bool]:
     except (ValueError, UnicodeError):
         return '[invalid URL redacted]', False
 
+def _clean_published_at(value: object) -> str:
+    """Admit only explicit-zone public ISO-8601 or RFC-2822 dates; render UTC.
+
+    This is untrusted public source metadata, not a scheduling or eligibility
+    authority. Unknown, private-looking or zone-free input is not a date.
+    """
+    if not isinstance(value, str) or not value or len(value) > 80:
+        return ''
+    candidate = value.strip()
+    if not candidate or any(ord(ch) < 32 for ch in candidate):
+        return ''
+    try:
+        if re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})', candidate):
+            stamp = datetime.fromisoformat(candidate.replace('Z', '+00:00'))
+        elif re.fullmatch(r'(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun),? \d{1,2} (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \d{4} \d{2}:\d{2}:\d{2} (?:GMT|UT|[+-]\d{4})', candidate, re.I):
+            stamp = parsedate_to_datetime(candidate)
+        else:
+            return ''
+        if stamp.tzinfo is None or stamp.utcoffset() is None:
+            return ''
+        return stamp.astimezone(timezone.utc).isoformat(timespec='seconds').replace('+00:00', 'Z')
+    except (ValueError, TypeError, OverflowError):
+        return ''
+
+
 def _clean_url(value: str) -> str:
     return _clean_url_identity(value)[0]
 
@@ -104,7 +131,7 @@ def record_public_sample(root: Path, node: str, source: dict, rows: list[dict], 
         title, summary = str(row.get('title', '')), str(row.get('summary', ''))
         clean_title, clean_summary = _clean_text(title), _clean_text(summary)
         sample_rows.append({'index': index, 'title': clean_title[:512], 'url': url[:2048],
-                            'summary': clean_summary[:20000], 'published_at': str(row.get('published_at', ''))[:80],
+                            'summary': clean_summary[:20000], 'published_at': _clean_published_at(row.get('published_at', '')),
                             'accepted': bool(accepted[index]), 'url_sanitized': url[:2048] != original,
                             'url_identity_preserved': identity_preserved and len(url) <= 2048,
                             'text_url_redacted': clean_title != title or clean_summary != summary,

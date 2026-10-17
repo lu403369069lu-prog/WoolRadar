@@ -82,34 +82,40 @@ def parse_actual_log_counts(raw: bytes) -> dict[str, int] | None:
         output = raw.decode("utf-8")
     except UnicodeDecodeError:
         return None
-    node_tests = re.findall(r"(?m)^# tests (\d+)\s*$", output)
-    if node_tests:
-        fields: dict[str, int] = {"tests": int(node_tests[-1])}
+    node_tests = re.findall(r"(?m)^# tests (\d+)[ \t]*$", output)
+    py_tests = re.findall(r"(?m)^Ran (\d+) tests? in [\d.]+s[ \t]*$", output)
+    # Never pick the last green summary after an earlier failed/skipped suite;
+    # one subprocess must present exactly ONE unambiguous framework aggregate.
+    if node_tests and py_tests:
+        return None
+    if len(node_tests) == 1:
+        fields: dict[str, int] = {"tests": int(node_tests[0])}
         for field, keyword in (("passed", "pass"), ("failed", "fail"),
                                ("skipped", "skipped")):
-            hits = re.findall(r"(?m)^# " + keyword + r" (\d+)\s*$", output)
-            if not hits:
+            hits = re.findall(r"(?m)^# " + keyword + r" (\d+)[ \t]*$", output)
+            if len(hits) != 1:
                 return None
-            fields[field] = int(hits[-1])
+            fields[field] = int(hits[0])
         return fields
-    py_tests = re.findall(r"(?m)^Ran (\d+) tests? in [\d.]+s\s*$", output)
-    if py_tests:
-        total = int(py_tests[-1])
-        ok = re.findall(r"(?m)^OK(?:\s*\(skipped=(\d+)\))?\s*$", output)
-        failed = re.findall(r"(?m)^FAILED \(([^)]*)\)\s*$", output)
+    if node_tests:
+        return None
+    if len(py_tests) == 1:
+        total = int(py_tests[0])
+        ok = re.findall(r"(?m)^OK(?:[ \t]*\(skipped=(\d+)\))?[ \t]*$", output)
+        failed = re.findall(r"(?m)^FAILED \(([^)]*)\)[ \t]*$", output)
+        if len(ok) + len(failed) != 1:
+            return None
         if failed:
             kv = {k: int(v) for k, v in
-                  re.findall(r"(failures|errors|skipped)=(\d+)", failed[-1])}
+                  re.findall(r"(failures|errors|skipped)=(\d+)", failed[0])}
             bad = kv.get("failures", 0) + kv.get("errors", 0)
             skip = kv.get("skipped", 0)
             return {"tests": total, "passed": max(0, total - bad - skip),
                     "failed": bad, "skipped": skip}
-        if ok:
-            skip = int(ok[-1]) if ok[-1] else 0
-            return {"tests": total, "passed": total - skip,
-                    "failed": 0, "skipped": skip}
+        skip = int(ok[0]) if ok[0] else 0
+        return {"tests": total, "passed": total - skip,
+                "failed": 0, "skipped": skip}
     return None
-
 
 def review(data: dict[str, Any], manifest: dict[str, Any], logdir: Path | None) -> dict[str, Any]:
     errors: list[str] = []

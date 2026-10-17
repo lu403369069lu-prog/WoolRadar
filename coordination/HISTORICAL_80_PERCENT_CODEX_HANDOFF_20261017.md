@@ -118,7 +118,7 @@ python -B .\HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py --receipt C:\temp\history
 注意原始SHA已经固定在脚本内，若Codex修复代码使 HEAD 变化，重新审核新SHA并把本次回执标为`NEW_HEAD_REVALIDATION_REQUIRED`，不能直接改实参或脚本常量绕过原始基线判定。 
 
 ### 2026-10-17 Wool PR39本轮新增红绿证据与SHA更新
-- 当前PR39新HEAD为 `80c5ea18769c1312e5be5fd99a39e4f3d498c64f`；此前旧HEAD `e31eea548ab0b05d26e6fd639907bd81cbabcdfc` 的Linux58次结果**不能继续作为新HEAD的整包绿灯**。
+- 当前PR39新HEAD为 `80c5ea18769c1312e5be5fd99a39e4f3d498c64f`；此前旧HEAD `80c5ea18769c1312e5be5fd99a39e4f3d498c64f` 的Linux58次结果**不能继续作为新HEAD的整包绿灯**。
 - [WR-H16 新增编号/Unicode列表识别实际红→绿](https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/wool-historical-integration-20261017/independent-quality/developer-grant-20261017/H16_NUMBERED_SCOPE_RED_GREEN.md)：精确Git blob匹配，旧11+新6真实正式测试共17项，旧源3失败exit1，新源17通过exit0；仍缺Windows整包、独立新窗口准确率与日报签名桥。
 - `HISTORICAL_CODEX_BATCH_RUNNER_20261017.py`中Wool EXPECTED已同步为上述新HEAD；先在隔离工作树新SHA上全批次检验，勿自动切换到旧SHA绕过校验。
 

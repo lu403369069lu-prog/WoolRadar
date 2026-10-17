@@ -73,4 +73,15 @@ class GrantDiagnosticParity(unittest.TestCase):
                 self.assertEqual(diagnose_developer_grant_lead(source)['selected'],
                                  is_developer_grant_lead(source))
 
+    def test_aggregate_missing_gate_types_without_mutating_classifier(self):
+        a='Open-source developer grants for maintainers. Grant amount: $500.'
+        b='Open-source developer funding for maintainers is being discussed.'
+        result=aggregate_diagnostics([a,b])
+        self.assertEqual(result['records'],2)
+        self.assertEqual(result['candidate_leads'],0)
+        self.assertEqual(result['missing_signals_in_best_section']['application'],2)
+        self.assertEqual(result['missing_signals_in_best_section']['award_or_named_amount'],1)
+        self.assertFalse(is_developer_grant_lead(a))
+        self.assertFalse(is_developer_grant_lead(b))
+
 if __name__=='__main__':unittest.main()

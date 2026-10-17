@@ -26,6 +26,9 @@ _TRACKING_QUERY = {'utm_source','utm_medium','utm_term','utm_content','fbclid',
 _PRIVATE_VALUE = re.compile(r'(?i)(?:@|\d{13,}|token|secret|bearer|password|session)')
 # Credential-bearing path segments must not enter supposedly public sample logs.
 _SENSITIVE_PATH = re.compile(r'(?i)/(?:token|secret|password|session|api[-_]?key)/[^/]+')
+# Identity-bearing addresses are private even inside public-feed resource paths.
+_EMAIL = re.compile(r'(?i)(?<![a-z0-9._%+-])[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}')
+_ENCODED_EMAIL = re.compile(r'(?i)(?<![a-z0-9._%+-])[a-z0-9._%+-]+%(?:25)*40[a-z0-9.-]+\.[a-z]{2,}')
 
 def _semantic_query(query: str) -> tuple[str, bool]:
     kept = {}
@@ -121,6 +124,8 @@ def _clean_url_identity(value: str) -> tuple[str, bool]:
         for _ in range(8):
             if _SENSITIVE_PATH.search(path_variant):
                 return '[sensitive path redacted]', False
+            if _EMAIL.search(path_variant):
+                return '[private path redacted]', False
             next_variant = unquote(path_variant)
             if next_variant == path_variant:
                 break
@@ -179,7 +184,9 @@ def _clean_url(value: str) -> str:
     return _clean_url_identity(value)[0]
 
 def _clean_text(value: str) -> str:
-    return re.sub(r'https?://[^\s<>"\']+', lambda match: _clean_url(match.group(0)), value, flags=re.I)
+    scrubbed = re.sub(r'https?://[^\s<>"\']+', lambda match: _clean_url(match.group(0)), value, flags=re.I)
+    scrubbed = _EMAIL.sub('[private email redacted]', scrubbed)
+    return _ENCODED_EMAIL.sub('[private email redacted]', scrubbed)
 
 
 def record_public_sample(root: Path, node: str, source: dict, rows: list[dict], accepted: list[bool]) -> Path | None:

@@ -38,6 +38,35 @@ class CleanSample(unittest.TestCase):
         self.assertEqual(canonical_public_url('https://example.org/claim?ref=inviteA'),
                          'https://example.org/claim?ref=inviteA')
         self.assertIsNone(canonical_public_url('https://example.org/claim?access_token=secret'))
+    def test_private_hosts_never_enter_public_blind_candidates(self):
+        blocked = [
+            'http://localhost/offer', 'http://sub.localhost/offer',
+            'http://127.0.0.1/offer', 'http://10.2.3.4/offer',
+            'http://172.16.9.9/offer', 'http://192.168.0.10/offer',
+            'http://169.254.1.1/offer', 'http://100.64.1.1/offer',
+            'http://0.0.0.0/offer', 'http://[::1]/offer',
+            'http://intranet/offer', 'http://nas.local/offer',
+            'http://staging.internal/offer', 'http://lab.lan/offer',
+            'http://router.home.arpa/offer', 'http://preview.test/offer',
+            'http://sample.invalid/offer', 'http://example.example/offer',
+            'http://hidden.onion/offer', 'http://127.1/offer',
+            'http://2130706433/offer',
+        ]
+        for url in blocked:
+            with self.subTest(url=url):
+                self.assertIsNone(canonical_public_url(url))
+        result=freeze_public_sources([sample('alpha',blocked+['https://example.org/offer'])],limit=8)
+        self.assertEqual(len(result['rows']),1)
+        self.assertEqual(result['sources'][0]['invalid_rows'],len(blocked))
+
+    def test_public_named_domains_still_keep_round_identity(self):
+        self.assertEqual(canonical_public_url('https://example.org/claim?batch=1'),
+                         'https://example.org/claim?batch=1')
+        self.assertEqual(canonical_public_url('https://sub.example.org/claim?batch=2'),
+                         'https://sub.example.org/claim?batch=2')
+        self.assertEqual(canonical_public_url('https://example.org/claim?utm_source=x&batch=2'),
+                         'https://example.org/claim?batch=2')
+
     def test_utm_campaign_may_encode_real_round_and_is_retained(self):
         first='https://example.org/apply?utm_campaign=fall'
         second='https://example.org/apply?utm_campaign=winter'

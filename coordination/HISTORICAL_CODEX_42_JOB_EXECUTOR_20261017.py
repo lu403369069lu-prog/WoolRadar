@@ -63,12 +63,12 @@ def pin_command(repo: Path, job: dict, blob_lookup=None) -> tuple[Path, list[str
     argv = shlex.split(job['run_command'])
     if (len(argv) == 10 and argv[:6] == ['python','-B','-m','unittest','discover','-s']
             and argv[7] == '-p' and argv[9] == '-v'):
-        candidate = _reject_symlink_chain(cwd, str(Path(argv[6]) / argv[8]))
+        candidate = _reject_symlink_chain(root, str(Path(job['local_cwd']) / argv[6] / argv[8]))
         argv[0] = sys.executable
     elif (len(argv) == 5 and argv[:4] == ['node','--import','tsx','--test']):
-        candidate = _reject_symlink_chain(cwd, argv[4])
+        candidate = _reject_symlink_chain(root, str(Path(job['local_cwd']) / argv[4]))
     elif (len(argv) == 3 and argv[:2] == ['node','--test']):
-        candidate = _reject_symlink_chain(cwd, argv[2])
+        candidate = _reject_symlink_chain(root, str(Path(job['local_cwd']) / argv[2]))
     else:
         raise RuntimeError('Not an allowlisted offline unit-test command.')
     if candidate != target:

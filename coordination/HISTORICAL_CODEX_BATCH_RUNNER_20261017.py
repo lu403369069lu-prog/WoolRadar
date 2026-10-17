@@ -93,18 +93,50 @@ def preflight(repo: Path, project: str, expected: str) -> str:
 
 
 def summarize(output: str) -> dict[str, int | None]:
-    # Informative; do not turn missing counts into implied pass.
-    node = re.search(r"(?m)^# tests (\d+)\s*$", output)
-    passed = re.search(r"(?m)^# pass (\d+)\s*$", output)
-    failed = re.search(r"(?m)^# fail (\d+)\s*$", output)
-    py = re.search(r"(?m)^Ran (\d+) tests? in [\d.]+s", output)
-    return {
-        "tests_reported": int(node.group(1)) if node else
-                          int(py.group(1)) if py else None,
-        "node_pass": int(passed.group(1)) if passed else None,
-        "node_fail": int(failed.group(1)) if failed else None,
-    }
+    """Parse one subprocess's actual test counts, never infer a pass from exit=0."""
+    node = re.search(r"(?m)^# tests (\\d+)\\s*$", output)
+    node_pass = re.search(r"(?m)^# pass (\\d+)\\s*$", output)
+    node_fail = re.search(r"(?m)^# fail (\\d+)\\s*$", output)
+    node_skip = re.search(r"(?m)^# skipped (\\d+)\\s*$", output)
+    py = re.search(r"(?m)^Ran (\\d+) tests? in [\\d.]+s", output)
+    py_ok = re.search(r"(?m)^OK(?:\\s*\\(skipped=(\\d+)\\))?\\s*$", output)
+    py_failed = re.search(r"(?m)^FAILED \\(([^)]*)\\)", output)
+    if node:
+        return {"tests_reported": int(node.group(1)),
+                "passed": int(node_pass.group(1)) if node_pass else None,
+                "failed": int(node_fail.group(1)) if node_fail else None,
+                "skipped": int(node_skip.group(1)) if node_skip else 0}
+    if py:
+        total = int(py.group(1))
+        skipped = int(py_ok.group(1)) if py_ok and py_ok.group(1) else 0
+        if py_failed:
+            fields = dict((k, int(n)) for k, n in
+                          re.findall(r"(failures|errors|skipped)=(\\d+)", py_failed.group(1)))
+            skipped = fields.get("skipped", 0)
+            failed = fields.get("failures", 0) + fields.get("errors", 0)
+            return {"tests_reported": total,
+                    "passed": max(0, total - failed - skipped),
+                    "failed": failed, "skipped": skipped}
+        return {"tests_reported": total,
+                "passed": total - skipped if py_ok else None,
+                "failed": 0 if py_ok else None, "skipped": skipped}
+    return {"tests_reported": None, "passed": None, "failed": None,
+            "skipped": None}
 
+
+def evaluate_run(label: str, exit_code: int, output: str) -> tuple[int, dict[str, int | None]]:
+    """A command that runs zero/no identifiable tests must not report PASS.
+
+    The compilation-only S-BUILD is the sole batch without a test-count contract.
+    This rejects Python unittest's successful exit code for 'Ran 0 tests'.
+    """
+    counts = summarize(output)
+    if exit_code == 0 and label != "S-BUILD":
+        if (counts["tests_reported"] is None or counts["tests_reported"] == 0
+                or counts["failed"] is None or counts["failed"] != 0
+                or counts["passed"] is None):
+            return 126, counts  # VALIDATION_NO_TESTS_OR_UNTRUSTWORTHY_SUMMARY
+    return exit_code, counts
 
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__)
@@ -146,9 +178,10 @@ def main() -> int:
             rc, stdout = 125, repr(exc)
         logpath = output_dir / (label + ".log")
         logpath.write_text(stdout, encoding="utf-8")
+        rc, counts = evaluate_run(label, rc, stdout)
         row = {"batch": label, "exit_code": rc,
                "log_sha256": hashlib.sha256(stdout.encode("utf-8")).hexdigest(),
-               "counts": summarize(stdout)}
+               "counts": counts}
         results.append(row)
         print(json.dumps(row))
     receipt = {"schema": 1, "repo_head": head, "project": args.project,

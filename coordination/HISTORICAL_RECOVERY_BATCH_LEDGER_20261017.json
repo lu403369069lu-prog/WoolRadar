@@ -19,14 +19,17 @@
       "head_at_review": "3a3017a58d0a6ae5084a77861b8e0302a22d52f2",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_cross_module_tests": "AUTHORED_NOT_EXECUTED",
+      "latest_cross_module_tests": "ISOLATED_LINUX_GREEN_NOT_FULL_FROZEN_CLI",
       "scope": [
         "legacy-to-official-guard receipt bridge",
         "raw byte-matched test-NNN logs",
         "strict non-UTF8 rejection",
         "official guard CLI gate"
       ],
-      "next_gate": "local Python and Node cross-module tests + frozen real 39 command batch"
+      "next_gate": "local Python and Node cross-module tests + frozen real 39 command batch",
+      "isolated_qa_done": true,
+      "isolated_qa_methods": 27,
+      "latest_tests": "ISOLATED_LINUX_GREEN_NOT_WINDOWS_FULL"
     },
     {
       "id": "wool41",
@@ -35,12 +38,14 @@
       "head_at_review": "d6988e825f6adde55bba21483feb613b4a97b2bd",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_tests": "AUTHORED_NOT_EXECUTED",
+      "latest_tests": "ISOLATED_LINUX_GREEN_NOT_WINDOWS_FULL",
       "scope": [
         "URL parser normalization rejection",
         "credential-like path and source metadata redaction"
       ],
-      "next_gate": "Windows full suite + unseen source gold + actual daily delivery receipt"
+      "next_gate": "Windows full suite + unseen source gold + actual daily delivery receipt",
+      "isolated_qa_done": true,
+      "isolated_qa_methods": 43
     },
     {
       "id": "sam17",
@@ -49,12 +54,14 @@
       "head_at_review": "d8f3344a4a680a6e262ccb571a35755263ec9c7d",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_tests": "AUTHORED_NOT_EXECUTED",
+      "latest_tests": "ISOLATED_LINUX_GREEN_NOT_WINDOWS_FULL",
       "scope": [
         "per-card review metadata preservation",
         "non-writing 0.4.0 migration preflight"
       ],
-      "next_gate": "Windows Node24/26 release full test + real source read-only audit + real MCP + 61/522 gold"
+      "next_gate": "Windows Node24/26 release full test + real source read-only audit + real MCP + 61/522 gold",
+      "isolated_qa_done": true,
+      "isolated_qa_methods": 24
     },
     {
       "id": "wool43",
@@ -63,13 +70,15 @@
       "head_at_review": "a4b969919603291849e0fddc535b0309628eb3c6",
       "state": "DRAFT_UNMERGED",
       "code_committed": true,
-      "latest_tests": "AUTHORED_NOT_EXECUTED",
+      "latest_tests": "ISOLATED_LINUX_GREEN_NOT_WINDOWS_FULL",
       "scope": [
         "diagnostic-only developer grant miss reasons without classifier mutation",
         "aggregate missing-signal counts without source text disclosure",
         "local stdin-only JSONL CLI"
       ],
-      "next_gate": "local 10+4 diagnostics tests + original developer grant suite + unseen source/time-window gold"
+      "next_gate": "local 10+4 diagnostics tests + original developer grant suite + unseen source/time-window gold",
+      "isolated_qa_done": true,
+      "isolated_qa_methods": 31
     }
   ],
   "prior_validation_scope": "Prior-turn isolated synthetic regressions exist in Issues. They do not certify the new heads.",
@@ -81,5 +90,18 @@
     "paid_ci_launched": false
   },
   "handoff": "coordination/HISTORICAL_42_RUNNER_HARDENED_HANDOFF_20261017.md",
-  "pr43_recall_policy": "Old 56-row, FN2 developer-used freeze cannot become independent holdout by rescoring it."
+  "pr43_recall_policy": "Old 56-row, FN2 developer-used freeze cannot become independent holdout by rescoring it.",
+  "latest_local_qa": {
+    "date": "2026-10-17",
+    "status": "PASS_SELECTED_ISOLATED_LINUX",
+    "methods": 125,
+    "skip": 0,
+    "breakdown": {
+      "coord42": 27,
+      "sam17": 24,
+      "wool41": 43,
+      "wool43": 31
+    },
+    "receipt_path": "coordination/INTERACTIVE_LINUX_QA_EXPANDED_125_20261017.json"
+  }
 }

@@ -32,13 +32,19 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 0,
-    "last_persisted_worker_run_utc": null,
-    "last_completed_review_key": null,
+    "revision": 1,
+    "last_persisted_worker_run_utc": "2026-10-17T12:04:18.578Z",
+    "last_completed_review_key": "YinQieJi#14",
     "incremental_last_seen": {},
-    "seen_branch_heads": {},
-    "processed_event_keys": [],
-    "write_diagnostic": "NOT_RUN_IN_SCHEDULED_CONTEXT",
+    "seen_branch_heads": {
+      "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+      "YinQieJi#14": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14"
+    },
+    "processed_event_keys": [
+      "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
+      "YinQieJi#14/0cdc3b4e81b9e143cb92fabde1828b6c8a913e14/exact-helper-15-20261017"
+    ],
+    "write_diagnostic": "INTERACTIVE_GITHUB_WRITE_NOT_SCHEDULED",
     "last_write_error": null
   },
   "backlog": {
@@ -72,9 +78,10 @@
         "key": "WoolRadar#39",
         "repo": "lu403369069lu-prog/WoolRadar",
         "pr": 39,
-        "status": "QUEUED_UNREVIEWED",
-        "reviewed_head_sha": null,
-        "evidence_url": null
+        "status": "PARTIAL_REVIEW_PATCH_PROPOSED",
+        "reviewed_head_sha": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+        "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
+        "review_scope": "EXTRACTED_FUNCTION_RED_GREEN_4_NOT_FULL_GITHUB_SUITE"
       },
       {
         "key": "WoolRadar#38",
@@ -328,9 +335,10 @@
         "key": "YinQieJi#14",
         "repo": "lu403369069lu-prog/YinQieJi",
         "pr": 14,
-        "status": "QUEUED_UNREVIEWED",
-        "reviewed_head_sha": null,
-        "evidence_url": null
+        "status": "TESTED_ISOLATED_HELPER",
+        "reviewed_head_sha": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
+        "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/14",
+        "review_scope": "EXACT_GITHUB_HELPER_BLOB_NODE_15_PASS_NOT_FULL_INTEGRATION"
       },
       {
         "key": "YinQieJi#13",
@@ -427,6 +435,16 @@
         "status": "QUEUED_UNREVIEWED",
         "reviewed_head_sha": null,
         "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#44",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 44,
+        "status": "AUTHOR_DRAFT_NOT_INDEPENDENTLY_REVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
+        "parent": "WoolRadar#39",
+        "submitted_head_sha": "1482f97e61b1163ccdc761906eda087fcba48628"
       }
     ],
     "blocked_external": {
@@ -434,8 +452,52 @@
       "gates_missing": 8
     }
   },
-  "review_receipts": [],
-  "run_history": [],
+  "review_receipts": [
+    {
+      "event_key": "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
+      "origin": "INTERACTIVE_CHAT_NOT_SCHEDULED",
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "pr": 39,
+      "head_sha": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+      "finding": "Sampler admits home.arpa exact private-use root when untrusted upstream identity flag asserts true; Draft PR44 fixes; isolated function red 3pass 1fail, green 4pass; formal 5 methods not yet executed",
+      "validation": "EXTRACTED_FUNCTION_RED_GREEN_4_NOT_FULL_GITHUB_SUITE",
+      "evidence_urls": [
+        "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
+        "https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/scheduled-review-ledger-20261017/coordination/BACKLOG_REAL_EXECUTION_20261017_W39_S14.md"
+      ],
+      "business_accepted": false,
+      "native_receipt": false
+    },
+    {
+      "event_key": "YinQieJi#14/0cdc3b4e81b9e143cb92fabde1828b6c8a913e14/exact-helper-15-20261017",
+      "origin": "INTERACTIVE_CHAT_NOT_SCHEDULED",
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "pr": 14,
+      "head_sha": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
+      "finding": "Node v22.16 exact Git-blob SHA 4576911ff63d91b9512b9d69c8512e5e1ac587c7, 15/15 isolated policy assertions pass; caller inspected static; full MCP/tsx native pending",
+      "validation": "EXACT_GITHUB_HELPER_BLOB_NODE_15_PASS_NOT_FULL_INTEGRATION",
+      "evidence_urls": [
+        "https://github.com/lu403369069lu-prog/YinQieJi/pull/14",
+        "https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/scheduled-review-ledger-20261017/coordination/BACKLOG_REAL_EXECUTION_20261017_W39_S14.md"
+      ],
+      "business_accepted": false,
+      "native_receipt": false
+    }
+  ],
+  "run_history": [
+    {
+      "origin": "INTERACTIVE_CHAT_NOT_SCHEDULED",
+      "event_id": "backlog-two-pr-w39-s14-20261017",
+      "reviewed_keys": [
+        "WoolRadar#39",
+        "YinQieJi#14"
+      ],
+      "created_draft_pr": "WoolRadar#44",
+      "report_url": "https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/scheduled-review-ledger-20261017/coordination/BACKLOG_REAL_EXECUTION_20261017_W39_S14.md",
+      "actual_cases": "W39 extracted 4 red/green; SAM14 exact blob 15 pass",
+      "source_receipts_pending": true
+    }
+  ],
   "acceptance": {
     "scheduled_wakeup": "PROVED_TWICE_2026-10-17",
     "scheduled_private_github_read": "UNVERIFIED",

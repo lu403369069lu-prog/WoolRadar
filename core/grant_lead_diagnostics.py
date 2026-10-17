@@ -104,14 +104,20 @@ def main() -> int:
         # source text or emit partial totals if a late record is malformed.
         line_number = 0
         while True:
-            line = sys.stdin.readline(32769)
-            if not line:
+            # Read raw bytes, not TextIOWrapper's permissive surrogateescape:
+            # malformed UTF-8 must never become an accepted source snippet.
+            raw = sys.stdin.buffer.readline(32769)
+            if not raw:
                 return
             line_number += 1
             if line_number > 10000:
                 raise ValueError("INVALID_INPUT: too many diagnostic records")
-            if len(line) > 32768:
+            if len(raw) > 32768:
                 raise ValueError(f"INVALID_INPUT: oversized JSONL record {line_number}")
+            try:
+                line = raw.decode('utf-8', errors='strict')
+            except UnicodeDecodeError:
+                raise ValueError(f"INVALID_INPUT: JSONL record {line_number}") from None
             if not line.strip():
                 continue
             try:

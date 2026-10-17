@@ -31,6 +31,8 @@ GROUPS = {
     ]
 }
 cwd = ROOT / "SAM/snapshot" if IS_SAM else ROOT
+if not IS_SAM:
+    (ROOT / ".test-tmp").mkdir(exist_ok=True)
 records = {}
 for group, commands in GROUPS.items():
     tests = []

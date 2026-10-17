@@ -49,3 +49,19 @@ This isolates a real historic integration decision: **PR11 is the latest PR9 rel
 Despite different blob hashes, exact full file source on PR8/PR9/PR11 was read and compared around its `dispatch(..., dry_run=True)` branch. PR8 used an in-memory SQLite connection and copied existing state via `mode=ro` source, no parent `mkdir`. PR9 and PR11 **still have that same fail-safe algorithm**, with changes: use `contextlib.closing(sqlite3.connect(..., uri=True))` to ensure the SQLite source handle closes and guard rollback on `conn.in_transaction`. So H04 dry-run **protection semantically appears retained and improved in PR9/11**, despite not being byte-identical. This is **STATIC_REVIEW_SAME_DESIGN**, NOT a newly run dry-run temp-DB test at those exact SHAs. The latest PR11 test suite remains the formal integration gate; do not revert PR11's connection-close improvement by transplanting an old PR8 file.
 
 The distinction matters: file SHA dedup alone would call the fix absent, whereas semantic diff identifies retained behavior with further hardening. Neither PR is merged into Wool main PR23; autonomous delivery remains unproven.
+
+
+## 2026-10-17 verification of PR11 historical actual Windows 57 tests
+
+New read-only recovery verification (NOT a new Windows test execution): [Draft PR11](https://github.com/lu403369069lu-prog/WoolRadar/pull/11) latest HEAD `27796df5f9847c1bb5d48d2a445e418dfb3d8e96` has an actual Windows test record `coordination/evidence/return-20261015/fixed-tests.json` Git blob `da0779b2d735f4a1468c04be015c0656cb8333c8`:
+`python -m unittest discover -s tests -v`, **57 tests / exit0** at tested implementation SHA `a2a67761105d13f7b9f8063c2d1c1a68062f4803`, environment **Windows Python3.12.14, Git2.53.0.windows.3**. This is an original *owner-provided durable run receipt* verified by present GitHub reads, **not independently executed today**. We do not infer all 57 tests passed at a different release tree without source checks.
+
+Actual GitHub `compare_commits(base=a2a677...,head=27796d...)` returns **ahead=1, behind=0**, with **only HANDOFF, PROTOCOL_V3, evidence and review documents changed**, no Python implementation or test file difference. Independently fetched+matched latest and tested SHA Git blobs:
+- `coordination/relay.py`: `37d1dc006773010529772c5409426ab4f3310c0c` **exact same**;
+- `coordination/relay_git.py`: `ea0333d04afc3e686999289941ebfc88b389a138` **exact same**;
+- `tests/test_return_sync.py`: `b86b930bce40b3b7ddf7e419ca84f2c15ddce48c` **exact same**.
+This substantiates that PR11's latest *Python source/test snapshot* remains identical to the historical Windows test-verified code. It does NOT validate untested new protocols or actual scheduled ChatGPT GitHub write permission. PR11 is still independent Draft/unmerged, diverges drastically from Wool main PR23 and cannot be safely auto-cherry-picked; no live task, credential, Windows production or paid API used in this current audit.
+
+Also read the original `live-recovery.json` blob `1c52f54d4f5d4997c8c02c31291cd3f39264c455`, which records a simulated/owner-executed crash+replay (intentional exit17), two retries and an acknowledged Git state revision; this is historical evidence **not current continuous autonomous capability**, and no sensitive Windows path or user identity was copied into this archive.
+
+**COORD-H06** now `REMOTE_HISTORICAL_WINDOWS_57_PASS_SOURCE_BLOB_EXACT_SAME_PR11_UNMERGED`; further gate: actual current PR11 full tests in an independent clean Python checkout, compare safe overlay onto main PR23 (157+ commits divergent), no automatic merge. The historical scheduled-autonomous direct writer remains `NOT_VERIFIED`.

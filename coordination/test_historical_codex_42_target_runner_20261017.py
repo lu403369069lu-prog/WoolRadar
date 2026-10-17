@@ -5,6 +5,9 @@ launch a real project test, modify a GitHub branch or touch production data.
 """
 import importlib.util
 import os
+import hashlib
+import subprocess
+import sys
 from pathlib import Path
 import tempfile
 import unittest
@@ -140,6 +143,35 @@ class ReceiptTruthTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             with self.assertRaises(runner.Blocked):
                 runner.in_repo(Path(directory).resolve(), "../outside.txt")
+
+
+
+class ExactChildBytesTests(unittest.TestCase):
+    """Raw-output digest must not silently rewrite malformed child bytes."""
+
+    def test_invalid_utf8_with_plausible_unittest_trailer_never_passes(self):
+        raw = b"\\xff\\xfe\\nRan 1 test in 0.001s\\n\\nOK\\n"
+        c, status = runner.audit_raw_log(raw, 0)
+        self.assertEqual(status, "BLOCKED_NON_UTF8_LOG")
+        self.assertIsNone(c["tests"])
+
+    def test_original_child_output_bytes_are_not_reencoded(self):
+        literal = b"\\xff\\xfe\\nRan 1 test in 0.001s\\n\\nOK\\n"
+        proc = subprocess.run(
+            [sys.executable, "-c",
+             "import sys;sys.stdout.buffer.write(" + repr(literal) + ")"],
+            check=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        self.assertEqual(proc.stdout, literal)
+        self.assertNotEqual(proc.stdout,
+                            proc.stdout.decode("utf-8", errors="replace").encode("utf-8"))
+        self.assertEqual(hashlib.sha256(proc.stdout).hexdigest(),
+                         hashlib.sha256(literal).hexdigest())
+
+    def test_true_utf8_summary_remains_accepted(self):
+        raw = b"Ran 2 tests in 0.001s\\n\\nOK\\n"
+        c, status = runner.audit_raw_log(raw, 0)
+        self.assertEqual(status, "PASS")
+        self.assertEqual(c, {"tests": 2, "passed": 2, "failed": 0, "skipped": 0})
 
 
 if __name__ == "__main__":

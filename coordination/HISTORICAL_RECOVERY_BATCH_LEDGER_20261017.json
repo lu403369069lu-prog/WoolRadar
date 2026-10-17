@@ -149,5 +149,26 @@
     "external_policy_family_gates": 8,
     "native_handoff": "coordination/CODEX_FROZEN_FULL_39_NATIVE_HANDOFF_20261017.md",
     "historical_80_percent_not_accepted": true
+  },
+  "external_eight_gate_readonly_checkpoint": {
+    "date": "2026-10-17",
+    "frozen_manifest_blob": "96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744",
+    "enumerated_families": 8,
+    "local_auditor_tests_executed": 26,
+    "local_auditor_tests_passed": 26,
+    "local_auditor_tests_failed": 0,
+    "local_auditor_tests_skipped": 0,
+    "execution_environment": "Linux Python 3.13.5 POSIX only",
+    "raw_test_log_sha256": "e4b8b5c8d9e68008535dda878a42e9c67e6536291ee78d6256d72f9745b39321",
+    "auditor_code_git_blob": "8d749b3183c442da3a81557f6e9c225c206b6d1d",
+    "auditor_test_git_blob": "b048841bdd0f6367d3fd98ec97af0349d9ad79f4",
+    "code_and_tests_written_to_draft_pr42": true,
+    "all_eight_review_matrix": "coordination/EXTERNAL_EIGHT_GATE_REVIEW_MATRIX_20261017.md",
+    "architecture_document_review_only": true,
+    "scheduler_instruction_review_only": true,
+    "independent_external_approvals_verified": 0,
+    "remaining_historical_frozen_full_native_commands_without_receipts": 29,
+    "all_external_gates_accepted": false,
+    "original_frozen_business_acceptance_closed": false
   }
 }

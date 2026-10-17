@@ -48,7 +48,7 @@
       "isolated_qa_done": true,
       "isolated_qa_methods": 43,
       "isolated_linux_test_status": "PASS_NO_SKIP",
-      "isolated_linux_test_methods": 53
+      "isolated_linux_test_methods": 56
     },
     {
       "id": "sam17",
@@ -101,16 +101,17 @@
   "latest_local_qa": {
     "date": "2026-10-17",
     "status": "PASS_SELECTED_ISOLATED_LINUX",
-    "methods": 138,
+    "methods": 150,
     "skipped": 0,
     "failed": 0,
     "by_track": {
-      "coord42": 27,
-      "sam17": 27,
-      "wool41": 53,
+      "coord42": 33,
+      "sam17": 30,
+      "wool41": 56,
       "wool43": 31
     },
-    "evidence": "coordination/INTERACTIVE_LINUX_QA_EXPANDED_138_20261017.json"
+    "shared_wool_cross_module_methods": 87,
+    "receipt_path": "coordination/FIRST_CLASS_SOURCE_QA_150_AND_SHARED_87_20261017.json"
   },
   "frozen_source_verification": {
     "ready_families": 42,
@@ -124,14 +125,23 @@
     "evidence": "coordination/FROZEN_42_GIT_TREE_SOURCE_AUDIT_20261017.json"
   },
   "first_category_latest": {
-    "current_status": "PARTIAL_REAL_CODE_AND_SELECTED_QA_COMPLETE_FULL_REPO_BLOCKED",
-    "selected_module_linux_green": 147,
-    "wool_cross_pr_module_integration_green": 84,
-    "new_guard_red_reproduced_5_of_6_tests": true,
-    "new_sam_claim_collision_red_reproduced_2_of_3_tests": true,
-    "qa_receipt": "coordination/INTERACTIVE_FIRST_CLASS_EXECUTED_147_20261017.json",
     "date": "2026-10-17",
-    "missing_full_repository_reason": "Current container lacks DNS access to direct private GitHub clone; connected GitHub plugin can read/write individual blobs and commit, not materialize full worktree automatically",
-    "no_claim_of_full_windows_or_business_gold": true
+    "status": "CURRENTLY_IDENTIFIED_ISOLATED_CODE_TASKS_TESTED;FULL_WAREHOUSE_EXTERNAL_OR_UNAVAILABLE",
+    "selected_module_linux_green": 150,
+    "joint_wool_public_plus_grant_linux_green": 87,
+    "source_and_test_git_blobs_verified": true,
+    "independent_old_code_red_controls": [
+      "coord duplicate TAP/unittest summaries",
+      "SAM existing (cardId,claimId) collisions",
+      "Wool hash-router sensitive credentials"
+    ],
+    "evidence": "coordination/FIRST_CLASS_SOURCE_QA_150_AND_SHARED_87_20261017.json",
+    "github_pr_file_overlap": 0,
+    "incomplete_external": [
+      "real full private worktree Windows suites and frozen 39 commands",
+      "Windows Node24 and Node26",
+      "SAM real source/MCP/release atomic publish and rollback",
+      "Wool real live source holdout, qualification, delivery consumer"
+    ]
   }
 }

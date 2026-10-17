@@ -32,3 +32,12 @@ There are 5 enabled; other historical tasks were disabled/completed. Time values
 Each hour: named task, execution UTC, source channel `scheduled/interactive/codex`, immutable repo/HEAD/blob, exact command/exit/test denominator and whether actually re-run, user-visible output reference, `DONE/PARTIAL/UNVERIFIED/BLOCKED_WRITE`, privacy/scope, dedupe event_key, and an actionable next-smallest item. A changed prompt, `last_run_time`, or GitHub workflow cron in Draft does **not** count as an execution. On Scheduled permission denial, never retry through an unapproved channel or invent upload; preserve an independently readable digest for the next authorized interactive conversation. This 2026-10-17 document is a single partial **backfill checkpoint**, not a complete historical task run export.
 
 GitHub cron Draft PR35 / YinQieJi PR10 remain unmerged and potentially bill private runner minutes; no activation. No auto merge, raw Windows reports, credentials, payments, third-party registrations, Work/Codex quota or paid AI APIs.
+
+
+## Follow-up independent historical-vs-business evidence reconciliation
+
+During the same authorized interactive backfill, main WoolRadar PR23 progressed **independently under Codex owner** from `8023232586fd5d017981ea83ea0785cf381f7cc2` to `6babbe12727652e8626e0fe6f554eb01fecd4a30`. The published clean Windows test receipt is for **source code SHA `3a71060b0134a55c60f5543382bd1758768a2b4a`**, 412/412 exit0. It does not validate the new sampler PR37, or any later code at a different SHA.
+
+The actual, independent new-window **read-only result accounting** was separately recomputed from immutable published redacted GitHub blobs `f326ec8ff80c83ddb68fcbc33b5b6bd860cee6d8` (evaluation) and `9498f58fd78358cff4370e46b8e666ceb6a6565c` (freeze): 7 public sources, 413 raw snapshot rows, 102 previously seen and 6 identity-unverified excluded, 305 eligible URLs, 47 unique reviewed rows. TP1/FP0/FN3/TN40/unknown3, independent recall 25% (1/4), **acceptance still FAILED**. Later replay TP4/FP0 on the already exposed 47 is development only, not an unseen holdout; one same-campaign different-URL false split remained. See [independent Issue2 recount](https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6227240468).
+
+Do not let green synthetics (sampler/private hosts or signed report) or `last_run_time` hide the red independent business window, or claim a real 09:30 report upload. `OUTPUT_NOT_CONNECTED` and `DELIVERY_BRIDGE_VERIFIED=false` continue.

@@ -32,15 +32,16 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 7,
-    "last_persisted_worker_run_utc": "2026-10-17T12:44:46.471Z",
-    "last_completed_review_key": "YinQieJi#18",
+    "revision": 8,
+    "last_persisted_worker_run_utc": "2026-10-17T12:53:15.964Z",
+    "last_completed_review_key": "WoolRadar#43",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
       "YinQieJi#14": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
       "YinQieJi#15": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
-      "YinQieJi#18": "4118010257ece04c302ac591f074daac798e9744"
+      "YinQieJi#18": "4118010257ece04c302ac591f074daac798e9744",
+      "WoolRadar#43": "621871f9afc5ae43272d04bcff9d4763ae25fa5a"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -48,9 +49,10 @@
       "YinQieJi#15/73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58/entailed-empty-evidence-redgreen-20261017",
       "retain-retry-items-and-write-diagnostic-20261017",
       "YinQieJi#18/4118010257ece04c302ac591f074daac798e9744/exact-helper-four-scheduled-20261017",
-      "YinQieJi#14/0cdc3b4e81b9e143cb92fabde1828b6c8a913e14/server-fallback-guard-static-scheduled-20261017"
+      "YinQieJi#14/0cdc3b4e81b9e143cb92fabde1828b6c8a913e14/server-fallback-guard-static-scheduled-20261017",
+      "WoolRadar#43/621871f9afc5ae43272d04bcff9d4763ae25fa5a/diagnostic-best-section-tie-repro-20261017"
     ],
-    "write_diagnostic": "SCHEDULED_SECOND_ROUND_GITHUB_WRITE_ATTEMPT_READBACK_REQUIRED_FIRST_ROUND_PERSISTENCE_UNVERIFIED",
+    "write_diagnostic": "SCHEDULED_THIRD_ROUND_CAS_COMMIT_PENDING_READBACK",
     "last_write_error": null
   },
   "backlog": {
@@ -60,9 +62,11 @@
         "key": "WoolRadar#43",
         "repo": "lu403369069lu-prog/WoolRadar",
         "pr": 43,
-        "status": "QUEUED_UNREVIEWED",
-        "reviewed_head_sha": null,
-        "evidence_url": null
+        "status": "PARTIAL_STATIC_REVIEW_FINDING_P2",
+        "reviewed_head_sha": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+        "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/43",
+        "review_scope": "EXACT_GITHUB_STATIC_PLUS_EXTRACTED_REGEX_ISOLATED_1_PASS_FORMAL_SUITE_UNRUN",
+        "finding": "Diagnostic best_section may be false on selected=True due to 4-signal tie; canonical classifier unaffected"
       },
       {
         "key": "WoolRadar#42",
@@ -584,6 +588,36 @@
       ],
       "business_accepted": false,
       "native_receipt": false
+    },
+    {
+      "event_key": "WoolRadar#43/621871f9afc5ae43272d04bcff9d4763ae25fa5a/diagnostic-best-section-tie-repro-20261017",
+      "origin": "SCHEDULED_THIRD_ROUND",
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "pr": 43,
+      "head_sha": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+      "source_path": "core/grant_lead_diagnostics.py",
+      "source_blob_sha": "6fe02aa7a83479c4eeea6a448b80f75988a13ffd",
+      "dependency_path": "core/developer_grants.py",
+      "dependency_blob_sha": "8543c9c63543645e36fcd0ed3fea396081c258f7",
+      "test_path": "tests/test_grant_lead_diagnostics.py",
+      "test_blob_sha": "c5e6287d13d49dd753a58f7e184c3efa297b847b",
+      "severity": "P2",
+      "finding": "best_section ties 4/5 signals by input order; when earlier non-applying section has scope/program/award/amount and later eligible section has scope/program/application/amount, selected=True while best_section.all_signals=False. Reason diagnostics inconsistent, canonical classifier selection unchanged.",
+      "validation": "EXACT_GITHUB_SOURCE_AND_TEST_STATIC_PLUS_EXTRACTED_REGEX_ISOLATED_ASSERT_1_OF_1_PASS_NOT_FULL_SUITE",
+      "command": "python - <<'PY' (isolated reproduction of exact GitHub regexes, section split, tie-break; assert selected and not best_section.all_signals)",
+      "exit_code": 0,
+      "passed": 1,
+      "failed": 0,
+      "formal_test_command": "python -B -m unittest discover -s tests -p 'test_grant_lead_diagnostic*.py' -v",
+      "formal_test_exit_code": null,
+      "full_suite_executed": false,
+      "full_integration_status": "NATIVE_RECEIPT_PENDING",
+      "evidence_urls": [
+        "https://github.com/lu403369069lu-prog/WoolRadar/pull/43",
+        "https://github.com/lu403369069lu-prog/WoolRadar/blob/621871f9afc5ae43272d04bcff9d4763ae25fa5a/core/grant_lead_diagnostics.py"
+      ],
+      "business_accepted": false,
+      "native_receipt": false
     }
   ],
   "run_history": [
@@ -651,13 +685,27 @@
       "actual_cases": "PR18 exact source 4/4 Node22 isolated exit0; PR14 server guard static only; formal/full native pending",
       "first_run_persistence": "UNVERIFIED",
       "next_action": "At next independent Scheduled run, read this event by new Git blob, skip same evidence signatures, review different eligible work, CAS persist and readback; only then mark cross-run VERIFIED."
+    },
+    {
+      "origin": "SCHEDULED_THIRD_ROUND",
+      "event_id": "scheduled-third-round-20261017-w43-best-section-tie-repro",
+      "run_utc": "2026-10-17T12:53:15.964Z",
+      "read_previous_scheduled_event_id": "scheduled-second-round-20261017-pr18-exact-helper4-pr14-static-guard",
+      "read_previous_scheduled_persisted_revision": 7,
+      "reviewed_keys": [
+        "WoolRadar#43"
+      ],
+      "head_sha": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+      "checkpoint_status": "COMMIT_ATTEMPT_READBACK_REQUIRED",
+      "actual_cases": "PR43 exact source/diff/test static audit; isolated exact regex tie-break assertion 1/1 PASS exit0; full PR43 suite unrun",
+      "next_action": "After independent readback, set acceptance flags VERIFIED; PR43 P2 fix and formal tests next, preserve prior retry queue."
     }
   ],
   "acceptance": {
     "scheduled_wakeup": "PROVED_TWICE_2026-10-17",
     "scheduled_private_github_read": "VERIFIED_2026-10-17_SECOND_ROUND",
-    "scheduled_write": "PENDING_READBACK_SECOND_ROUND_2026-10-17",
-    "stateful_cross_run_continuation": "NOT_VERIFIED_FIRST_RUN_PERSISTENCE_MISSING",
+    "scheduled_write": "PENDING_THIRD_ROUND_READBACK",
+    "stateful_cross_run_continuation": "PENDING_THIRD_ROUND_READBACK",
     "backlog_actual_review": "PR39_PARTIAL_FIX_CANONICAL_DRAFT44_FULL_SUITE_PENDING"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
@@ -1388,10 +1436,23 @@
         "reason": "Past scheduled write diagnostic described blocked by platform safety; interactive GitHub update succeeded through revision 3; no current scheduled write/readback receipt. Do not assume user prohibited scheduled writes.",
         "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/scheduled-review-ledger-20261017/coordination/AUTOMATION_RELAY_LEDGER_V1.json",
         "next_action": "This second Scheduled run is attempting a normal CAS ledger write/readback. If successful, first Scheduled write is proven but cross-run remains NOT_VERIFIED until next independent Scheduled run reads this receipt and advances a different task."
+      },
+      {
+        "id": "RETRY-WOOL-PR43-DIAGNOSTIC-BEST-SECTION-TIE",
+        "kind": "FOLLOW_UP_REVIEW",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 43,
+        "observed_head_sha": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+        "status": "PENDING_NEXT_ELIGIBLE_RUN",
+        "attempts": 0,
+        "last_error_code": null,
+        "reason": "Static+isolated repro P2: best_section.all_signals false even though selected true. Formal suite unrun.",
+        "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/43",
+        "next_action": "On independent stable branch, change diagnostic best_section tie-breaking to prioritize self-contained all_signals when canonical selected, add two-section regression, run exact full PR43 tests in disposable worktree and compare source blobs. Do not modify Codex active branch or merge."
       }
     ],
     "summary": {
-      "known_partial_followups": 3,
+      "known_partial_followups": 4,
       "scheduled_write_unverified": 1,
       "known_current_run_error": "UNKNOWN_NOT_EXPOSED",
       "prior_interactive_receipts_preserved": 3,

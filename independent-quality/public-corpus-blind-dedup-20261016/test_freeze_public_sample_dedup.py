@@ -9,7 +9,7 @@ from freeze_public_sample_dedup import freeze_public_sources, canonical_public_u
 
 D='a'*64
 def row(url, **kwargs):
-    return {'url':url,'title':'Public project','summary':'Public summary','accepted':True,**kwargs}
+    return {'url':url,'title':'Public project','summary':'Public summary','accepted':True,'url_identity_preserved':True,**kwargs}
 def sample(name, urls):
     return ({'schema_version':1,'public_only':True,'source_id':name,'rows':[row(u) for u in urls]},D)
 
@@ -84,10 +84,41 @@ class CleanSample(unittest.TestCase):
     def test_upstream_query_loss_makes_blind_identity_unverified(self):
         a=sample('alpha',['https://example.org/claim'])
         a[0]['rows'][0]['url_sanitized']=True
+        a[0]['rows'][0].pop('url_identity_preserved')
         result=freeze_public_sources([a])
         self.assertEqual(result['rows'],[])
         self.assertEqual(result['sources'][0]['upstream_url_identity_lost'],1)
         self.assertFalse(result['upstream_identity_fully_preserved'])
+    def test_legacy_unproven_url_cannot_enter_new_blind_denominator(self):
+        a=sample('alpha',['https://example.org/offer?batch=alpha'])
+        a[0]['rows'][0].pop('url_identity_preserved')
+        result=freeze_public_sources([a])
+        self.assertEqual(result['rows'],[])
+        self.assertEqual(result['sources'][0]['upstream_url_identity_lost'],1)
+
+    def test_identity_proof_rejects_truthy_and_nonboolean_json_values(self):
+        for forged in (None,1,0,'true','false',[],{},False):
+            with self.subTest(forged=str(forged)):
+                a=sample('alpha',['https://example.org/offer?batch=alpha'])
+                a[0]['rows'][0]['url_identity_preserved']=forged
+                result=freeze_public_sources([a])
+                self.assertEqual(result['rows'],[])
+                self.assertEqual(result['sources'][0]['upstream_url_identity_lost'],1)
+        valid=freeze_public_sources([sample('alpha',['https://example.org/offer?batch=alpha'])])
+        self.assertEqual(len(valid['rows']),1)
+
+    def test_ambiguous_sanitized_marker_cannot_borrow_valid_identity_proof(self):
+        for forged in (None,1,0,'true','false',[],{}):
+            with self.subTest(forged=str(forged)):
+                a=sample('alpha',['https://example.org/offer?batch=alpha'])
+                a[0]['rows'][0]['url_sanitized']=forged
+                result=freeze_public_sources([a])
+                self.assertEqual(result['rows'],[])
+                self.assertEqual(result['sources'][0]['upstream_url_identity_lost'],1)
+        clean=sample('alpha',['https://example.org/offer?batch=alpha'])
+        clean[0]['rows'][0]['url_sanitized']=False
+        self.assertEqual(len(freeze_public_sources([clean])['rows']),1)
+
     def test_duplicate_cross_sources_and_order_independent(self):
         a=sample('alpha',['https://example.org/campaign'])
         b=sample('beta',['https://example.org/campaign','https://example.org/new'])

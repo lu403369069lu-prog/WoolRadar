@@ -61,7 +61,8 @@
     "sam_audit_types_pr15": "028f2c38522bb49651101a402503e7751b9fe0a5",
     "sam_rooted_pr12": "a92a870951e1bbf5f2517865faca46b56a6546e7",
     "sam_teacher_pr9": "ba2890004a45abe39d9a6da8b342db48162e9023",
-    "wool_grant_pr38": "75021367f71ba550a95ef098789e1f1201b21bad"
+    "wool_grant_pr38": "75021367f71ba550a95ef098789e1f1201b21bad",
+    "wool_coord_return_pr11": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96"
   },
   "families": [
     {
@@ -306,8 +307,8 @@
     },
     {
       "id": "COORD-H06",
-      "status": "STAGED_OLDER_PR_NOT_MAIN",
-      "summary": "PR11 return Git synchronization/fence regression not deployed"
+      "status": "PR11_WINDOWS_57_HISTORICAL_RECEIPT_SOURCE_UNCHANGED_UNMERGED",
+      "summary": "Existing original Windows Python3.12.14 git return-sync unit result57 exit0 at a2a677, current PR11 27796 ahead1 doc/evidence only, actual relay.py relay_git.py and formal test exact same blob; independent new run and integration still pending"
     },
     {
       "id": "COORD-H07",
@@ -336,7 +337,8 @@
     "Wool daily report output bridge actual user-approved same-SHA consumer",
     "Wool H17 maintainer-approved sensitive test-fixture reachable history review (no numeric exposure)",
     "SAM PR9 all formal diagnostic tests44/44 Linux pass; safe review of stacked PR9 vs main PR5, real teacher original61/522 and Windows Node24/26/MCP remain.",
-    "Wool WR-H16 draft PR38 separated-project grammar red4→green11 Linux; merge-owner review with current collector, same-paragraph cross-project ambiguity, Windows full suite and independent provider-blind still open."
+    "Wool WR-H16 draft PR38 separated-project grammar red4→green11 Linux; merge-owner review with current collector, same-paragraph cross-project ambiguity, Windows full suite and independent provider-blind still open.",
+    "Coord PR11 existing owner Windows 57-test receipt matches latest source by Git blobs but still requires independent clean PR11 checkout/source test and safe main overlay; no unattended ChatGPT Scheduled write proof."
   ],
   "index_files": [
     "coordination/HISTORICAL_FIRST_RESUME_GATE.md",
@@ -358,5 +360,15 @@
     "sam_combined_one_pr_head": "PR15 now carries PR12 POSIX policy exactly; source module 30/30 official TAP pass exit0 at exact GitHub blob; PR15 remains Draft, Windows24/26/MCP not run",
     "sam_review_sha": "Old exact PR15 claim audit SHA 5722bbe... real new test4 2 pass2 fail; code H04 fixed SHA16db..., cards same-buffer7fe2..., test1b34..., new4/4 and full7 files 34/34 Node22 exit0; cards.ts import not dynamically run (zod absent); source gold unverified",
     "wool_grant": "PR38 actual main source SHA76994c old 11 methods red4, patched source SHAce53 and exact tests SHA26193 11/11 pass, historic18 denial cases direct pass; full collector/Windows/new independent blind not yet executed"
+  },
+  "historical_exact_remote_test_provenance": {
+    "artifact": "coordination/evidence/return-20261015/fixed-tests.json",
+    "sha": "da0779b2d735f4a1468c04be015c0656cb8333c8",
+    "original_tested_sha": "a2a67761105d13f7b9f8063c2d1c1a68062f4803",
+    "latest_pr11_sha": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "github_compare": "ahead1 behind0 docs/evidence only",
+    "historical_report": "Windows Python3.12.14 57 tests exit0",
+    "new_test_run": false,
+    "unmerged": true
   }
 }

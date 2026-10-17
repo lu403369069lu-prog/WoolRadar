@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "status": "COMPLETE_FOR_IDENTIFIED_SELECTED_ISOLATED_CODE_AND_STATIC_SOURCE_WORK;FULL_REPOSITORY_AND_BUSINESS_GATES_OPEN",
+  "execution_environment": {
+    "platform": "Linux",
+    "python": "3.13.5",
+    "node": "v22.16.0",
+    "execution": "local isolated subprocesses; no native Windows or production"
+  },
+  "selected_methods": {
+    "total": 151,
+    "passed": 151,
+    "failed": 0,
+    "skipped": 0,
+    "breakdown": [
+      {
+        "pr": 42,
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "suite": "coordination 42 runner and official guard",
+        "passed": 33,
+        "log_sha256": "26aa5e302426e052651d5829e9e58c99d9423fc4548a4cdfb72d47fbed8f4009",
+        "source_blobs": [
+          "92dfcc62f1a3ea42e952ceea3ca5a95019539e6b",
+          "2be2736a00b2b4aec3f54787949762b87c433de2",
+          "ef04f2332d52ae6cc4258575790ef88460c5dff8"
+        ]
+      },
+      {
+        "pr": 17,
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "suite": "synthetic 0.4.1 migration, strict review lineage, symlinks and duplicate claim IDs",
+        "passed": 31,
+        "log_sha256": "1978e59372a5a7f3624218bc9a8f395dd6759f34b6db90f8a68628eaa4e3458e",
+        "source_blobs": [
+          "26e81a8afbccdbcca4ee3f3056bff039a49d452f",
+          "e787e4f949b5c5d7e017b140510eea248e03b87f"
+        ]
+      },
+      {
+        "pr": 41,
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "suite": "public source safety/identity/date/privacy",
+        "passed": 56,
+        "log_sha256": "d200c369b6eb64791bda12ac7e7651a70adaa419ddf629a7dff392c969fae4b0",
+        "source_blobs": [
+          "2f9d57a692fd8d13f4bb58d11b995c699b51a258",
+          "1eb9ecb1440898fc105dc6aac07dc3d791f3d425"
+        ]
+      },
+      {
+        "pr": 43,
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "suite": "grant classifier compatibility and aggregate-only diagnostics",
+        "passed": 31,
+        "log_sha256": "f39fc12893a39ac6386b0ff1226aaecef828f9580472817cd30b52286e4b20ee",
+        "source_blobs": [
+          "8543c9c63543645e36fcd0ed3fea396081c258f7",
+          "4c5fec88b8bcd1b96840ab681d60f1111b7271f7"
+        ]
+      }
+    ]
+  },
+  "wool_shared_module_graph": {
+    "pr41_and_pr43_modules_staged_together": true,
+    "base_commit": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+    "overlapping_changed_files": 0,
+    "test_methods": 87,
+    "passed": 87,
+    "failed": 0,
+    "skipped": 0,
+    "log_sha256": "af2ea16a2051e6a06e20fd4dbfcb393478750d1be09a14224da38b5a0ebd6a50"
+  },
+  "red_then_green_evidence": [
+    {
+      "area": "ambiguous mixed Node/Python test summaries",
+      "original_exit": 1,
+      "old_cases_failed": 5,
+      "new_cases": 6,
+      "old_log_sha256": "a3bff101a21cc99c4bd6e5b82602673b45a8a1280684ec0852fae3551e272f28"
+    },
+    {
+      "area": "SAM added claim collides with old cardId+claimId",
+      "original_exit": 1,
+      "old_cases_failed": 2,
+      "new_cases": 3,
+      "old_log_sha256": "d5ef701a778594b619e0161cc5463dbdf2a1a9aba48744679ad712f91154fcbb"
+    },
+    {
+      "area": "SAM repeated old source claimId on non-target card",
+      "original_exit": 1,
+      "old_cases_failed": 1,
+      "new_cases": 4,
+      "old_log_sha256": "6ab172ebc5a7e2995f8bfaec218c6ec7427cfd8dae96bc88523d95b07528010f"
+    },
+    {
+      "area": "Wool SPA credential in hash-router fragment",
+      "original_exit": 1,
+      "old_failed_assertions": 4,
+      "new_cases": 3,
+      "old_log_sha256": "c92ce56e2cf4acb939c4696839989e1daac9a7c70200226ead74a2d8fe0ba6fb"
+    }
+  ],
+  "frozen_job_source_audit": {
+    "families_total": 50,
+    "ready": 42,
+    "exact_test_file_sha_matches": 42,
+    "allowed_argv_and_relative_targets": 42,
+    "distinct_commands": 39,
+    "external_gates": 8,
+    "git_trees_truncated": 0
+  },
+  "remote_pr_status": {
+    "draft_all": true,
+    "merged_any": false,
+    "remote_ci_status_contexts": 0
+  },
+  "limitations": {
+    "full_windows_frozen_commands_executed": 0,
+    "full_remote_private_repository_checkout": false,
+    "reason": "Container direct GitHub DNS unavailable; connector Git trees/individual source files used; no full repository test environment",
+    "real_mcp_and_teacher_gold_verified": false,
+    "actual_wool_delivery_consumer_verified": false,
+    "blind_real_source_metrics_verified": false,
+    "full_sam_release_transaction_and_rollback_verified": false,
+    "local_test_runner_uses_adjacent_contract_subset": true,
+    "no_production_or_paid_ci_modifications": true
+  },
+  "historical_recovery_closed": false
+}

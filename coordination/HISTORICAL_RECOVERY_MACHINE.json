@@ -63,7 +63,7 @@
     "sam_teacher_pr9": "ba2890004a45abe39d9a6da8b342db48162e9023",
     "wool_grant_pr38": "75021367f71ba550a95ef098789e1f1201b21bad",
     "wool_coord_return_pr11": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
-    "wool_unified_pr39": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f"
+    "wool_unified_pr39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50"
   },
   "families": [
     {
@@ -98,18 +98,18 @@
     },
     {
       "id": "WR-H07",
-      "status": "EXACT_PRODUCER_SAMPLER_13_PASS_LINUX",
-      "summary": "Main PR23 producer+test exact blob13/13 exit0, historical full Windows integration pending"
+      "status": "PR39_EXACT_PRODUCER_HOST_UNICODE_RED_GREEN21_LINUX_FULL_HOLDOUT_PENDING",
+      "summary": "Historical exact current PR39 producer true Git blob383f3ad... (old6768c5...) + exact formal host scope5dc830..., unicode e26a0..., original timestamp c90cb... 21/21 Python3.13 pass/exit0, old exact producer host formal six methods 23 failed subtest assertions, prior producer surrogate case five errors; current whole Windows full & new public blind+09:30 report not verified. "
     },
     {
       "id": "WR-H08",
-      "status": "UNIFIED_MAIN_HEAD_DRAFT_PR39_47_EXACT_PYTHON_PASS_NEW_GOLD_PENDING",
-      "summary": "Wool main PR23 SHA6bab integrated PR37 URL host+strict truth and PR38 separated-grant into Draft PR39 HEAD 76b017e00f7760417a9131d7fb07a4044f673076; actual exact Git bytes 24 producer/grant +23 sampler=47/47 Python3.13 Linux; Windows full and post-fix independent new blind/source identity still red or pending. | 2026-10-17 new exact PR39 HEAD80c5 changed grant paragraph/numbered/Unicode bullet parser source8543 and formal test9263; actual same-source Python tests40/40 and sampler+schema24/24 =64 distinct local pass exit0; whole Windows/new blind NOT RUN"
+      "status": "PR39_EXACT_PRODUCER_HOST_UNICODE_RED_GREEN21_LINUX_FULL_HOLDOUT_PENDING",
+      "summary": "Historical exact current PR39 producer true Git blob383f3ad... (old6768c5...) + exact formal host scope5dc830..., unicode e26a0..., original timestamp c90cb... 21/21 Python3.13 pass/exit0, old exact producer host formal six methods 23 failed subtest assertions, prior producer surrogate case five errors; current whole Windows full & new public blind+09:30 report not verified. Sampler was previously 24/24 on older code; must rerun at new current PR39 HEAD."
     },
     {
       "id": "WR-H09",
-      "status": "UNIFIED_MAIN_HEAD_DRAFT_PR39_47_EXACT_PYTHON_PASS_NEW_GOLD_PENDING",
-      "summary": "Wool main PR23 SHA6bab integrated PR37 URL host+strict truth and PR38 separated-grant into Draft PR39 HEAD 76b017e00f7760417a9131d7fb07a4044f673076; actual exact Git bytes 24 producer/grant +23 sampler=47/47 Python3.13 Linux; Windows full and post-fix independent new blind/source identity still red or pending. | 2026-10-17 new exact PR39 HEAD80c5 changed grant paragraph/numbered/Unicode bullet parser source8543 and formal test9263; actual same-source Python tests40/40 and sampler+schema24/24 =64 distinct local pass exit0; whole Windows/new blind NOT RUN"
+      "status": "PR39_EXACT_PRODUCER_HOST_UNICODE_RED_GREEN21_LINUX_FULL_HOLDOUT_PENDING",
+      "summary": "Historical exact current PR39 producer true Git blob383f3ad... (old6768c5...) + exact formal host scope5dc830..., unicode e26a0..., original timestamp c90cb... 21/21 Python3.13 pass/exit0, old exact producer host formal six methods 23 failed subtest assertions, prior producer surrogate case five errors; current whole Windows full & new public blind+09:30 report not verified. "
     },
     {
       "id": "WR-H10",
@@ -329,6 +329,8 @@
     "effect": "source-policy regex has i flag; cross-backend parity not yet agreed, no production change"
   },
   "active_backlog_next": [
+    "Codex immutable 50-family manifest/runner still pins Wool80c5; latest own PR39 now 1aad1c after real producer nonpublic host + malformed Unicode security repairs, exactly 21/21 producer Python test at latest Git blob. Treat manifest pin as old immutable snapshot, NOT same HEAD: require explicit coordinated manifest+runner bump before batch launch.",
+    "Wool producer current real 21/21 is only focused tests; rerun entire current-HEAD Windows 412+ and 24 sampler/real producer schema and 40 grant+data; new independent blind recall(old25%) and 09:30 OUTPUT_NOT_CONNECTED remain open.",
     "Wool current unified PR39 now HEAD80c5, exact grant numbered-scope formal code+test hash checked, isolated core40 + sampler24 =64/64 local Linux pass; this is NOT full Windows/new independent quality holdout.",
     "Codex accept: run coordination/HISTORICAL_CODEX_BATCH_RUNNER_20261017.py from clean disposable exact-SHA checkout, use 50-family JSON manifest; report 42 runnable entrypoints individually as PASS/FAIL/BLOCKED with commands/exit/log SHA. Current ready ≠ passed.",
     "Review PR39 latest e31eea and PR15 latest 82bf exact, plus older relay PR11 27796; avoid duplicate merging PR37/38/39 or old PR9 vs ported PR15; no Codex V3 owner override.",
@@ -434,6 +436,19 @@
       ],
       "new_independent_holdout": "NOT_RUN",
       "windows_full_suite": "NOT_RUN"
+    },
+    "wool_producer_public_scope_unicode": {
+      "pr39_head": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+      "old_exact_blob": "6768c5d1a2229c6b5410c70de270ef49dc65bc26",
+      "new_exact_blob": "383f3ad38930863fe5311260f8869b1ca65564ef",
+      "formal_host_test": "5dc8307b2666c3ba670f7d04ee260c7ce7f02326",
+      "formal_unicode_test": "e26a0ba16033de49c8544c2b03093ad103787e83",
+      "original_timestamp_test": "c90cb9eab13230d4c4086e51c9c1b3f6f034dd62",
+      "old_red": "6 unittest methods with 23 subtest failures on exact old Git blob, exit1; 5 Unicode cases errors on intermediate prior Git blob, exit1",
+      "new_green": "current exact Git source 21 unittest methods, pass21, fail0 skip0 exit0",
+      "log_sha256": "41fe1dedf0828743d347329bb2df35179f21338f925816f5e05ed61b7bffd144",
+      "scope": "isolated Python3.13 with synthetic temp feed and standard UTC stub; not full repository test",
+      "still_missing": "current HEAD full Windows suite, newly independent blind gold, signed daily report, owner merge"
     }
   },
   "historical_exact_remote_test_provenance": {

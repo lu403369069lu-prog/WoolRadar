@@ -199,7 +199,10 @@ def main() -> int:
         except ImportError:
             from coordination.HISTORICAL_CODEX_42_RECEIPT_GUARD_20261017 import load_verified_manifest
         manifest = load_verified_manifest(args.manifest)
-        receipt = strict_json(args.receipt.read_bytes())
+        # Bound and no-follow the receipt before parsing; read_bytes() could
+        # allocate arbitrarily large or follow a private symlink.
+        receipt = strict_json(_read_safe_evidence(
+            args.receipt.parent, args.receipt.name))
         verdict = audit(manifest, receipt, args.evidence_root)
     except (OSError, ValueError, TypeError) as exc:
         # No raw receipt/body content or local path in stderr.

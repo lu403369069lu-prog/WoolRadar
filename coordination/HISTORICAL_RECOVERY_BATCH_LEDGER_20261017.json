@@ -28,9 +28,9 @@
       "next_gate": "local Python and Node cross-module tests + frozen real 39 command batch",
       "isolated_qa_done": true,
       "isolated_qa_methods": 27,
-      "latest_tests": "LINUX_SELECTED_GREEN_NOT_FROZEN_NATIVE_OR_EXTERNAL_BUSINESS",
-      "isolated_linux_test_status": "SELECTED_COORDINATOR_PLUS_EXTERNAL_GATE_AUDITOR_83_GREEN_0_SKIP",
-      "isolated_linux_test_methods": 83
+      "latest_tests": "CANDIDATE_SELECTED_LINUX_PASS_NOT_FROZEN_NATIVE_OR_HUMAN_ACCEPTANCE",
+      "isolated_linux_test_status": "PASS_SELECTED_COORD_PLUS_EXTERNAL_GATES_AND_LOG_HARDENING_87_NO_SKIPS",
+      "isolated_linux_test_methods": 87
     },
     {
       "id": "wool41",
@@ -100,20 +100,20 @@
   "pr43_recall_policy": "Old 56-row, FN2 developer-used freeze cannot become independent holdout by rescoring it.",
   "latest_local_qa": {
     "date": "2026-10-17",
-    "status": "SELECTED_LINUX_QA_GREEN_253_METHODS_AND_OVERLAPPING_127_JOINT;NOT_NATIVE_FROZEN_OR_BUSINESS_ACCEPTANCE",
-    "methods": 253,
-    "passed": 253,
+    "status": "PASS_SELECTED_257_GIT_BLOB_MATCHED_LINUX_QA_PLUS_OVERLAPPING_127_WOOL_JOINT;NO_FROZEN_NATIVE_OR_REAL_GOLD_PASS",
+    "methods": 257,
+    "passed": 257,
     "failed": 0,
     "skipped": 0,
     "by_track": {
-      "coord42_plus_external8": 83,
+      "coord42_plus_external8_plus_pinned_guard": 87,
       "wool41": 82,
       "sam17": 43,
       "wool43": 45
     },
     "shared_wool_cross_module_methods": 127,
     "shared_wool_cross_module_passed": 127,
-    "evidence": "coordination/SELECTED_SOURCE_MATCHED_253_AND_JOINT_127_20261017.json"
+    "evidence": "coordination/SELECTED_257_GUARD_PINNED_LOGS_JOINT127_20261017.json"
   },
   "frozen_source_verification": {
     "ready_families": 42,
@@ -128,15 +128,15 @@
   },
   "first_category_latest": {
     "date": "2026-10-17",
-    "status": "CHAT_AVAILABLE_SOURCE_MATCHED_253_SELECTED_TESTS_AND_127_JOINT_PASS;NATIVE_FULL_TREE_AND_REAL_BUSINESS_GATES_REMAIN_OPEN",
-    "selected_linux_methods": 253,
-    "selected_passed": 253,
+    "status": "CHAT_AVAILABLE_257_SELECTED_CODE_AND_RUNTIME_BOUNDARY_TESTS_PASS;FROZEN_NATIVE_AND_HUMAN_SOURCE_OR_BUSINESS_GATES_STILL_OPEN",
+    "selected_linux_methods": 257,
+    "selected_passed": 257,
     "selected_failed": 0,
     "selected_skipped": 0,
     "combined_wool_modules": 127,
     "combined_passed": 127,
     "exact_git_blobs_matched": true,
-    "evidence": "coordination/SELECTED_SOURCE_MATCHED_253_AND_JOINT_127_20261017.json",
+    "evidence": "coordination/SELECTED_257_GUARD_PINNED_LOGS_JOINT127_20261017.json",
     "historical_frozen_partial_linux": {
       "unique_commands": 10,
       "ready_family_mappings": 11,
@@ -246,5 +246,15 @@
     "integrated_coord_tests": 83,
     "gate_human_approvals_verified": 0,
     "ledger_note": "83 incl old 53; do not add old and new coordinator counts"
+  },
+  "formal_raw_log_guard_20261017": {
+    "new_guard_blob": "e51ec61d5fab3b82e763f8c147f73b3486123110",
+    "new_regression_blob": "76acb4ca9a48a709af611a92ed9554c89165f77d",
+    "regression_old_3_fail_of_4": true,
+    "full_coord_selected_87_green": true,
+    "posix_nofollow": true,
+    "windows_native_fallback_unverified": true,
+    "max_raw_log_bytes": 8388608,
+    "full_native_acceptance": false
   }
 }

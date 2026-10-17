@@ -19,7 +19,7 @@ import tempfile
 
 EXPECTED = {
     "wool": "e31eea548ab0b05d26e6fd639907bd81cbabcdfc",
-    "sam": "11e87c629ec28e58fd91b629936b71ea235b4581",
+    "sam": "82bf36efa90cced8dafb56502812eb49f40515f3",
     "coord": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
 }
 

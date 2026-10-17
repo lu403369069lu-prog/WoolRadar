@@ -32,7 +32,7 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 10,
+    "revision": 11,
     "last_persisted_worker_run_utc": "2026-10-17T15:34:44Z",
     "last_completed_review_key": "SAM-H01:partial-boundary-review",
     "incremental_last_seen": {},
@@ -54,10 +54,12 @@
       "WoolRadar#43/621871f9afc5ae43272d04bcff9d4763ae25fa5a/strict-json-overflow-exponent-isolated-20261017",
       "WoolRadar#43/621871f9afc5ae43272d04bcff9d4763ae25fa5a/exact-source-patched-formal-subsets-20261017T2324",
       "YinQieJi/SAM-H01/81d8543aeae4a15ea6ecee32cde550808fa5f1c3/strict-jsonl-exact-source-12-boundaries-20261017T2324",
-      "WoolRadar#44/1482f97e61b1163ccdc761906eda087fcba48628/invalid-dns-labels-extracted-redgreen-20261017T2324"
+      "WoolRadar#44/1482f97e61b1163ccdc761906eda087fcba48628/invalid-dns-labels-extracted-redgreen-20261017T2324",
+      "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
     ],
     "write_diagnostic": "SCHEDULED_BATCH_CAS_COMMIT_PENDING_READBACK",
-    "last_write_error": null
+    "last_write_error": null,
+    "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
   "backlog": {
     "policy": "Old PR review at pinned HEAD; requeue if HEAD changed. After PR backlog, take cloud-verifiable historical families, keep local native receipt and human gates as BLOCKED_EXTERNAL until true evidence arrives.",
@@ -893,6 +895,18 @@
       "actual_cases": "W43 local candidate patch exact-source formal subsets 10+4+9+9 pass, strict file timeout; SAM-H01 exact strict JSONL source 12/12 isolated Node; W44 malformed DNS label red3 green3 extracted lexical function.",
       "strict_delivery": "FAIL_0_OF_2",
       "next_action": "First fix W44 producer+sampler malformed DNS labels in independent candidate and run original formal modules; retry W43 strict formal test timeout; continue SAM-H01 full loader/build and untouched family review. No PR merges."
+    },
+    {
+      "origin": "INTERACTIVE_RECOVERY_NOT_SCHEDULED",
+      "event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17",
+      "recovered_scheduled_reported_runs": 10,
+      "recovered_families": [
+        "SAM-H14",
+        "SAM-H17"
+      ],
+      "strict_deliveries_new": 0,
+      "retained_scheduled_latest_revision": 10,
+      "reason": "User requested interactive GitHub recovery due to intermittent Scheduled safety blocks; independently read source HEAD/blob; formal prior-run tests reported, not rerun."
     }
   ],
   "acceptance": {
@@ -900,7 +914,9 @@
     "scheduled_private_github_read": "VERIFIED_2026-10-17_SCHEDULED_COLD_READ",
     "scheduled_write": "VERIFIED_WITH_PRIOR_EVIDENCE_2026-10-17",
     "stateful_cross_run_continuation": "VERIFIED_WITH_PRIOR_EVIDENCE_2026-10-17",
-    "backlog_actual_review": "PR39_PARTIAL_FIX_CANONICAL_DRAFT44_FULL_SUITE_PENDING"
+    "backlog_actual_review": "RECOVERED_TWO_UNPERSISTED_SCHEDULED_PARTIAL_REPORTS; NOT_BUSINESS_ACCEPTED",
+    "scheduled_recent_write_status": "INTERMITTENT_OPENAI_SAFETY_BLOCK_POST_REV10",
+    "last_recovery_origin": "INTERACTIVE_CHAT_NOT_SCHEDULED"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {
@@ -1335,7 +1351,15 @@
         "code_review_key": null,
         "new_evidence_scope": null,
         "native_frozen_accepted": false,
-        "business_accepted": false
+        "business_accepted": false,
+        "recovered_scheduled_partial": {
+          "recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17",
+          "source_pr": 15,
+          "source_head_sha": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
+          "reported_cases": "42/42",
+          "verified_rerun_in_interactive": false,
+          "strict_status": "IN_PROGRESS"
+        }
       },
       {
         "family_id": "SAM-H15",
@@ -1374,7 +1398,15 @@
         "code_review_key": null,
         "new_evidence_scope": null,
         "native_frozen_accepted": false,
-        "business_accepted": false
+        "business_accepted": false,
+        "recovered_scheduled_partial": {
+          "recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17",
+          "source_pr": 18,
+          "source_head_sha": "4118010257ece04c302ac591f074daac798e9744",
+          "reported_cases": "32/32",
+          "verified_rerun_in_interactive": false,
+          "strict_status": "IN_PROGRESS"
+        }
       },
       {
         "family_id": "SAM-H18",
@@ -1624,12 +1656,12 @@
         "repo": "lu403369069lu-prog/WoolRadar",
         "ledger_branch": "chatgpt/scheduled-review-ledger-20261017",
         "ledger_path": "coordination/AUTOMATION_RELAY_LEDGER_V1.json",
-        "status": "PENDING_PERMISSION_CHANGE",
+        "status": "INTERMITTENT_WRITE_PLATFORM_SAFETY_BLOCK",
         "attempts": 0,
-        "last_error_code": "HISTORIC_PLATFORM_SAFETY_BLOCK; CURRENT_RUN_ERROR_UNAVAILABLE",
-        "reason": "Past scheduled write diagnostic described blocked by platform safety; interactive GitHub update succeeded through revision 3; no current scheduled write/readback receipt. Do not assume user prohibited scheduled writes.",
+        "last_error_code": "OPENAI_SAFETY_CHECK_BLOCK_REPORTED_AFTER_SOME_SUCCESSFUL_SCHEDULED_CAS",
+        "reason": "Actual scheduled CAS persisted in rev7-10, subsequent attempts were blocked by platform safety checks; background writeability is intermittent, and latest unpersisted work should not be misreported as committed.",
         "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/scheduled-review-ledger-20261017/coordination/AUTOMATION_RELAY_LEDGER_V1.json",
-        "next_action": "This second Scheduled run is attempting a normal CAS ledger write/readback. If successful, first Scheduled write is proven but cross-run remains NOT_VERIFIED until next independent Scheduled run reads this receipt and advances a different task."
+        "next_action": "Do not repeat blocked write requests until ordinary platform permissions materially change; future scheduled runs should do safe review work and output recoverable self-contained receipt."
       },
       {
         "id": "RETRY-WOOL-PR43-DIAGNOSTIC-BEST-SECTION-TIE",
@@ -1680,6 +1712,34 @@
         "reason": "Exact strict_json formal test file execution did not finish under current isolated runner; last visible test was test_wrong_type_authoritative_text_is_not_silently_ignored; no exit0/full suite acceptance.",
         "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/43",
         "next_action": "Run pinned exact test_grant_lead_diagnostic_strict_json.py in a reliable clean process with full timeout/exit capture, then run complete formal CLI suite on local patch; do not infer pass from partial stdout."
+      },
+      {
+        "id": "RETRY-RECOVER-SAM-H17-20261018",
+        "kind": "UNPERSISTED_SCHEDULED_CODE_RECOVERY",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "family_id": "SAM-H17",
+        "observed_head_sha": "4118010257ece04c302ac591f074daac798e9744",
+        "status": "NEEDS_SOURCE_PATCH_AND_FORMAL_BUILD",
+        "attempts": 0,
+        "last_error_code": "SCHEDULED_WRITE_SAFETY_BLOCK_REPORTED",
+        "reason": "Previous scheduled run reported isolated tests green, candidate fix was not committed. Do not claim business acceptance or regenerate work blindly.",
+        "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/18",
+        "next_action": "Persist independently validated candidate code/tests to authorized draft branch; Full npm build/runtime and original full integration; Node24/26 matrix; Real release/registry human approval",
+        "recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
+      },
+      {
+        "id": "RETRY-RECOVER-SAM-H14-20261018",
+        "kind": "UNPERSISTED_SCHEDULED_CODE_RECOVERY",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "family_id": "SAM-H14",
+        "observed_head_sha": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
+        "status": "NEEDS_SOURCE_PATCH_AND_FORMAL_BUILD",
+        "attempts": 0,
+        "last_error_code": "SCHEDULED_WRITE_SAFETY_BLOCK_REPORTED",
+        "reason": "Previous scheduled run reported isolated tests green, candidate fix was not committed. Do not claim business acceptance or regenerate work blindly.",
+        "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/15",
+        "next_action": "Commit proper unified case-normalization guard plus regression in independent draft branch; Run full loader and npm build; Node24/26 matrix and frozen teacher-gold source review",
+        "recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
       }
     ],
     "summary": {
@@ -1689,5 +1749,90 @@
       "prior_interactive_receipts_preserved": 3,
       "created_from": "interactive review of GitHub live state on 2026-10-17"
     }
-  }
+  },
+  "recovered_unpersisted_runs": [
+    {
+      "event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17",
+      "recorded_by": "INTERACTIVE_CHAT_USER_REQUESTED_RECOVERY_NOT_SCHEDULED_WRITE",
+      "recovery_date": "2026-10-18",
+      "source": "Prior Scheduled chat user-visible execution receipts recovered from conversation context; GitHub source files fetched afresh in this interactive turn; original scheduled process logs and uncommitted patch bytes not independently exported",
+      "runs": {
+        "period_beijing": "2026-10-17 21:24 through 2026-10-18 06:28",
+        "observed_receipt_count": 10,
+        "observed_local_run_starts": [
+          "2026-10-17 21:24",
+          "2026-10-17 22:21",
+          "2026-10-17 23:24",
+          "2026-10-18 00:23",
+          "2026-10-18 01:27",
+          "2026-10-18 02:23",
+          "2026-10-18 03:22",
+          "2026-10-18 04:19",
+          "2026-10-18 05:25",
+          "2026-10-18 06:28"
+        ],
+        "reconstructed_from": "conversation-records",
+        "direct_scheduler_execution_logs_available": false,
+        "last_run_time_utc": "2026-10-17T22:32:16.697060Z",
+        "durable_latest_prior_run": "2026-10-17T15:34:44Z"
+      },
+      "write_diagnostic": {
+        "prior_scheduled_success": "Remote GitHub ledger revision7-10 contains Scheduled-origin events persisted after first successful CAS updates",
+        "recent_failure_class": "OPENAI_PLATFORM_SAFETY_CHECK_BLOCK",
+        "reported_raw_error": "This tool call was blocked by OpenAI's safety checks",
+        "github_permission_denial_not_proved": true,
+        "last_scheduled_write_unpersisted": true,
+        "write_policy": "Do not retry identical blocked action or bypass restriction; preserve safe read-only work, use interactive review and separately authorized normal write if available."
+      },
+      "recovered_partial_tasks": [
+        {
+          "family_id": "SAM-H17",
+          "repo": "lu403369069lu-prog/YinQieJi",
+          "source_pr": 18,
+          "source_head_sha": "4118010257ece04c302ac591f074daac798e9744",
+          "source_path": "SAM/snapshot/tools/migrate-release-041.mjs",
+          "source_blob_sha": "893c9970c01bd99ffdb31f18282e68261902f705",
+          "reported_command": "cd SAM/snapshot && node --test tools/*.test.mjs",
+          "reported_node": "v22.16.0",
+          "reported_passed": 32,
+          "reported_total": 32,
+          "reported_exit": 0,
+          "reported_changes": "Uncommitted local candidate for Q Kelvin-symbol versus Qk identity normalization and nonseed claim/card duplicate identity; source migration script currently has no such newly committed fix.",
+          "recovery_verification": "GitHub PR/source HEAD and file contents fetched in interactive chat; original 32-test run is a prior Scheduled report, not rerun during recovery; patch SHA and test logs not materialized here.",
+          "remaining": [
+            "Persist independently validated candidate code/tests to authorized draft branch",
+            "Full npm build/runtime and original full integration",
+            "Node24/26 matrix",
+            "Real release/registry human approval"
+          ],
+          "strict_status": "IN_PROGRESS",
+          "business_accepted": false,
+          "source_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/18"
+        },
+        {
+          "family_id": "SAM-H14",
+          "repo": "lu403369069lu-prog/YinQieJi",
+          "source_pr": 15,
+          "source_head_sha": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
+          "source_path": "SAM/independent-review/20261016-0904-audit-coverage/holdout_identity_check.mjs",
+          "source_blob_sha": "62478485e5f54b2274933c5e6acb74d8aad42bd5",
+          "reported_passed": 42,
+          "reported_total": 42,
+          "reported_exit": 0,
+          "reported_changes": "Uncommitted local candidate for Unicode long-s U+017F vs ASCII s under divergent uppercase/lowercase QID identity normalization; current GitHub source uses row.qid.trim().toUpperCase().",
+          "recovery_verification": "GitHub PR/source HEAD and file contents fetched in interactive chat; reported 42-test run not rerun in this recovery; full unreleased patch not available.",
+          "remaining": [
+            "Commit proper unified case-normalization guard plus regression in independent draft branch",
+            "Run full loader and npm build",
+            "Node24/26 matrix and frozen teacher-gold source review"
+          ],
+          "strict_status": "IN_PROGRESS",
+          "business_accepted": false,
+          "source_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/15"
+        }
+      ],
+      "strict_delivery": "FAIL_0_OF_2",
+      "provenance_notice": "This object is a user-requested INTERACTIVE recovery write. It is NOT new Scheduled GitHub write evidence nor proof that 32/32 or 42/42 were rerun now."
+    }
+  ]
 }

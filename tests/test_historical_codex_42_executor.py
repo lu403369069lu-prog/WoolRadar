@@ -1,5 +1,8 @@
 """40+ history families via allowlisted command validation (synthetic checkout)."""
 import importlib.util
+import hashlib
+import shutil
+import sys
 from pathlib import Path
 import tempfile
 import unittest
@@ -59,6 +62,40 @@ class SafeCommands(unittest.TestCase):
         cmds,rows=EXEC.plan_jobs(self.root,'wool',{'jobs':[a,b]},self.lookup)
         self.assertEqual((len(cmds),len(rows)),(1,2))
         self.assertEqual(rows[0]['command_key'],rows[1]['command_key'])
+    def test_actual_subprocess_dedup_two_families_one_receipt(self):
+        command='SYNTHETIC-PYTHON-UNIT'
+        key=hashlib.sha256(command.encode()).hexdigest()
+        entry={'command':command,'key_sha256':key,'cwd':self.root,
+               'argv':[sys.executable,'-c',"print('Ran 2 tests in 0.001s\\n\\nOK')"]}
+        mapping=[{'family_id':x,'source_blob':'f'*40,'command_key':key}
+                 for x in ('SYN-H1','SYN-H2')]
+        rc,receipt,output=EXEC.run_commands([entry],mapping,'a'*40,'wool')
+        self.addCleanup(shutil.rmtree,output)
+        self.assertEqual(rc,0)
+        self.assertEqual((receipt['executed_commands'],receipt['covered_families']),(1,2))
+        self.assertEqual([x['status'] for x in receipt['results']],['PASS_EXACT_HEAD']*2)
+        self.assertEqual(receipt['results'][0]['log_sha256'],receipt['results'][1]['log_sha256'])
+        self.assertTrue((output/'receipt.json').is_file())
+    def test_actual_subprocess_zero_tests_is_blocked(self):
+        command='SYNTHETIC-ZERO'
+        key=hashlib.sha256(command.encode()).hexdigest()
+        entry={'command':command,'key_sha256':key,'cwd':self.root,
+               'argv':[sys.executable,'-c',"print('Ran 0 tests in 0.001s\\n\\nOK')"]}
+        rc,receipt,output=EXEC.run_commands([entry],[{'family_id':'SYN-H1','command_key':key,'source_blob':'f'*40}],'b'*40,'wool')
+        self.addCleanup(shutil.rmtree,output)
+        self.assertEqual(rc,1)
+        self.assertEqual(receipt['results'][0]['exit_code'],126)
+        self.assertEqual(receipt['results'][0]['status'],'NOT_RUN_BLOCKED')
+    def test_actual_subprocess_failing_exit_retained(self):
+        command='SYNTHETIC-ERROR'
+        key=hashlib.sha256(command.encode()).hexdigest()
+        entry={'command':command,'key_sha256':key,'cwd':self.root,
+               'argv':[sys.executable,'-c',"import sys; print('failed'); sys.exit(7)"]}
+        rc,receipt,output=EXEC.run_commands([entry],[{'family_id':'SYN-H1','command_key':key,'source_blob':'f'*40}],'c'*40,'wool')
+        self.addCleanup(shutil.rmtree,output)
+        self.assertEqual(rc,1)
+        self.assertEqual(receipt['results'][0]['exit_code'],7)
+        self.assertEqual(receipt['results'][0]['status'],'FAIL_REPRODUCED')
     def test_symlink_outside_checkout_denied(self):
         with tempfile.TemporaryDirectory() as outside:
             dest=Path(outside)/'secret.py';dest.write_text('private','utf-8')

@@ -28,6 +28,10 @@ class ShortSecretAndPhonePrivacy(unittest.TestCase):
         self.assertNotIn('13800138000',row['title'])
         self.assertTrue(row['text_url_redacted'])
 
+    def test_benign_bearer_word_not_mistaken_for_authorization(self):
+        row=self.save('The bearer of good news for developers','Open source grant is available')
+        self.assertEqual(row['title'],'The bearer of good news for developers')
+
     def test_benign_cost_and_year_still_readable(self):
         row=self.save('2026 Developer credits worth $500','No payment card required')
         self.assertEqual(row['title'],'2026 Developer credits worth $500')

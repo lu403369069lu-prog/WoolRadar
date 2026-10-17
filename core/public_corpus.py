@@ -134,6 +134,10 @@ def _clean_url_identity(value: str) -> tuple[str, bool]:
         fragment = ''
         if parsed.fragment:
             route, separator, fragment_query = parsed.fragment.partition('?')
+            # Hash-router paths are retained verbatim in public samples too.
+            # A credential route must be redacted, not certified as identity.
+            if _SENSITIVE_PATH.search(route):
+                return '[sensitive fragment redacted]', False
             if re.fullmatch(r'(?:/|!/)[A-Za-z0-9/_~.\-]*', route):
                 clean_query, route_preserved = _semantic_query(fragment_query)
                 if route_preserved:

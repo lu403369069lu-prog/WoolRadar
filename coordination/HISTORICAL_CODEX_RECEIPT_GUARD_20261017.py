@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 
 HEADS = {
-    'wool': 'e31eea548ab0b05d26e6fd639907bd81cbabcdfc',
+    'wool': '80c5ea18769c1312e5be5fd99a39e4f3d498c64f',
     'sam': '82bf36efa90cced8dafb56502812eb49f40515f3',
     'coord': '27796df5f9847c1bb5d48d2a445e418dfb3d8e96',
 }

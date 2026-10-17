@@ -10,6 +10,15 @@ class StreamingCliSafety(unittest.TestCase):
         return subprocess.run([sys.executable,'-m','core.grant_lead_diagnostics'],
                               input=text,text=True,capture_output=True,timeout=12)
 
+    def test_invalid_raw_utf8_bytes_fail_closed_without_echoing_source(self):
+        marker=b'SYNTHETIC_PRIVATE_UTF8_ROW'
+        out=subprocess.run([sys.executable,'-m','core.grant_lead_diagnostics'],
+                           input=b'{"text":"'+marker+b'\xff"}\n', capture_output=True, timeout=12)
+        self.assertNotEqual(out.returncode,0)
+        self.assertEqual(out.stdout,b'')
+        self.assertNotIn(marker,out.stderr)
+        self.assertIn(b'INVALID_INPUT',out.stderr)
+
     def test_large_line_cannot_be_accepted_as_normal_diagnostic_row(self):
         marker='SYNTHETIC_PRIVATE_ROW_' + 'q'*40000
         out=self.invoke(json.dumps({'text':marker})+'\n')

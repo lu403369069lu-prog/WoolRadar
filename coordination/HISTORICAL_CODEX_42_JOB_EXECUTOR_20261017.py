@@ -11,6 +11,7 @@ import importlib.util
 import hashlib
 import json
 import os
+import platform
 from pathlib import Path
 import shlex
 import subprocess
@@ -91,6 +92,7 @@ def plan_jobs(repo: Path, project: str, document: dict,
         key = job['run_command']
         if key not in commands:
             commands[key] = {'command':key, 'cwd':cwd, 'argv':argv,
+                             'cwd_contract':job['local_cwd'],
                              'key_sha256':hashlib.sha256(key.encode('utf-8')).hexdigest()}
         mapping.append({'family_id':job['family_id'], 'source_blob':job['verified_test_blob'],
                         'command_key':commands[key]['key_sha256']})
@@ -149,6 +151,12 @@ def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
         # for human-readable verdict parsing, never for evidence identity.
         (output / (key+'.log')).write_bytes(logbytes)
         verdict, counts = contract.evaluate_run('HISTORY-TEST',code,logbytes.decode('utf-8', errors='replace'))
+        # The official receipt guard requires strict UTF-8 raw log parsing.
+        try:
+            logbytes.decode('utf-8', errors='strict')
+        except UnicodeDecodeError:
+            if verdict == 0:
+                verdict = 126
         by_key[key] = {'command':item['command'], 'exit_code':verdict,
                        'observed_exit_code':code, 'counts':counts,
                        'log_sha256':hashlib.sha256(logbytes).hexdigest(),
@@ -160,7 +168,48 @@ def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
                'executed_commands':len(commands),'covered_families':len(rows),
                'results':rows, 'private_inputs_exported':False,
                'review_logs_before_sharing':True}
+    # The official family guard uses a grouped-command wire protocol,
+    # different from the legacy per-family receipt. Emit both explicitly.
+    formal_results = []
+    for index, item in enumerate(commands):
+        key = item['key_sha256']
+        stored = (output / (key + '.log')).read_bytes()
+        if hashlib.sha256(stored).hexdigest() != by_key[key]['log_sha256']:
+            raise RuntimeError('Raw process log changed before formal receipt.')
+        name = f'test-{index:03d}.log'
+        (output / name).write_bytes(stored)
+        n = by_key[key]['counts']
+        formal_results.append({
+            'cwd': item.get('cwd_contract', '.'),
+            'argv': item['argv'],
+            'family_ids': [m['family_id'] for m in mapping if m['command_key'] == key],
+            'local_log': name, 'sha256': by_key[key]['log_sha256'],
+            'exit_code': by_key[key]['exit_code'],
+            'status': 'PASS' if by_key[key]['exit_code'] == 0 else 'FAIL',
+            'counts': {'tests': n['tests_reported'], 'passed': n['passed'],
+                       'failed': n['failed'], 'skipped': n['skipped']}
+        })
+    runtime = {'python': sys.version.split()[0], 'platform': platform.platform()}
+    if project == 'sam':
+        try:
+            node_info = subprocess.run(['node', '--version'], stdout=subprocess.PIPE,
+                                       stderr=subprocess.DEVNULL, timeout=10, check=False,
+                                       env=_isolated_test_env(output))
+            runtime['node'] = (node_info.stdout.decode('ascii', 'replace').strip()
+                               if node_info.returncode == 0 else 'unavailable')
+        except (OSError, subprocess.TimeoutExpired):
+            runtime['node'] = 'unavailable'
+    formal_receipt = {
+        'schema_version': 1, 'source': 'disposable-local-codex',
+        'project': project, 'repo_sha': repo_head,
+        'unique_commands': len(formal_results),
+        'tested_families': len(mapping), 'no_real_gold_claim': True,
+        'production_modified': False, 'runtime': runtime,
+        'results': formal_results
+    }
     (output/'receipt.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
+    (output/'receipt-guard-v1.json').write_text(
+        json.dumps(formal_receipt,ensure_ascii=False,indent=2),encoding='utf-8')
     return (0 if all(r['exit_code'] == 0 for r in rows) else 1), receipt, output
 
 

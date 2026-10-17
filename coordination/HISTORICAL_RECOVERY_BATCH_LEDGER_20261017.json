@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "updated_utc": "2026-10-17",
+  "written_by": "interactive-chat-GitHub",
+  "overall_status": "PARTIAL_NOT_RELEASE_READY",
+  "historical_recovery_closed": false,
+  "history_family_total": 50,
+  "source_runnable_families": 42,
+  "externally_gated_families": 8,
+  "frozen_historical_command_count": 39,
+  "windows_historical_commands_executed_in_this_turn": 0,
+  "ai_delivery_receipt_received": false,
+  "new_independent_business_gold_accepted": false,
+  "candidate_tracks": [
+    {
+      "id": "coord42",
+      "repository": "lu403369069lu-prog/WoolRadar",
+      "pr": 42,
+      "head_at_review": "3a3017a58d0a6ae5084a77861b8e0302a22d52f2",
+      "state": "DRAFT_UNMERGED",
+      "code_committed": true,
+      "latest_cross_module_tests": "AUTHORED_NOT_EXECUTED",
+      "scope": [
+        "legacy-to-official-guard receipt bridge",
+        "raw byte-matched test-NNN logs",
+        "strict non-UTF8 rejection",
+        "official guard CLI gate"
+      ],
+      "next_gate": "local Python and Node cross-module tests + frozen real 39 command batch"
+    },
+    {
+      "id": "wool41",
+      "repository": "lu403369069lu-prog/WoolRadar",
+      "pr": 41,
+      "head_at_review": "d6988e825f6adde55bba21483feb613b4a97b2bd",
+      "state": "DRAFT_UNMERGED",
+      "code_committed": true,
+      "latest_tests": "AUTHORED_NOT_EXECUTED",
+      "scope": [
+        "URL parser normalization rejection",
+        "credential-like path and source metadata redaction"
+      ],
+      "next_gate": "Windows full suite + unseen source gold + actual daily delivery receipt"
+    },
+    {
+      "id": "sam17",
+      "repository": "lu403369069lu-prog/YinQieJi",
+      "pr": 17,
+      "head_at_review": "d8f3344a4a680a6e262ccb571a35755263ec9c7d",
+      "state": "DRAFT_UNMERGED",
+      "code_committed": true,
+      "latest_tests": "AUTHORED_NOT_EXECUTED",
+      "scope": [
+        "per-card review metadata preservation",
+        "non-writing 0.4.0 migration preflight"
+      ],
+      "next_gate": "Windows Node24/26 release full test + real source read-only audit + real MCP + 61/522 gold"
+    }
+  ],
+  "prior_validation_scope": "Prior-turn isolated synthetic regressions exist in Issues. They do not certify the new heads.",
+  "constraints": {
+    "auto_merge": false,
+    "live_production_modified": false,
+    "scheduled_github_writer": false,
+    "private_data_exported": false,
+    "paid_ci_launched": false
+  },
+  "handoff": "coordination/HISTORICAL_42_RUNNER_HARDENED_HANDOFF_20261017.md"
+}

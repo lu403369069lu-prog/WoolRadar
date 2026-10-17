@@ -30,7 +30,7 @@
       "isolated_qa_methods": 27,
       "latest_tests": "ISOLATED_LINUX_GREEN_NOT_FULL_WINDOWS",
       "isolated_linux_test_status": "PASS_NO_SKIP",
-      "isolated_linux_test_methods": 27
+      "isolated_linux_test_methods": 33
     },
     {
       "id": "wool41",
@@ -66,7 +66,7 @@
       "isolated_qa_done": true,
       "isolated_qa_methods": 24,
       "isolated_linux_test_status": "PASS_NO_SKIP",
-      "isolated_linux_test_methods": 27
+      "isolated_linux_test_methods": 30
     },
     {
       "id": "wool43",
@@ -122,5 +122,16 @@
     "tree_truncated": false,
     "verified_manifest_blob": "96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744",
     "evidence": "coordination/FROZEN_42_GIT_TREE_SOURCE_AUDIT_20261017.json"
+  },
+  "first_category_latest": {
+    "current_status": "PARTIAL_REAL_CODE_AND_SELECTED_QA_COMPLETE_FULL_REPO_BLOCKED",
+    "selected_module_linux_green": 147,
+    "wool_cross_pr_module_integration_green": 84,
+    "new_guard_red_reproduced_5_of_6_tests": true,
+    "new_sam_claim_collision_red_reproduced_2_of_3_tests": true,
+    "qa_receipt": "coordination/INTERACTIVE_FIRST_CLASS_EXECUTED_147_20261017.json",
+    "date": "2026-10-17",
+    "missing_full_repository_reason": "Current container lacks DNS access to direct private GitHub clone; connected GitHub plugin can read/write individual blobs and commit, not materialize full worktree automatically",
+    "no_claim_of_full_windows_or_business_gold": true
   }
 }

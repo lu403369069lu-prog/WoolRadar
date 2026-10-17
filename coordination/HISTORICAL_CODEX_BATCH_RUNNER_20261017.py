@@ -125,7 +125,7 @@ def summarize(output: str) -> dict[str, int | None]:
 
 
 def evaluate_run(label: str, exit_code: int, output: str) -> tuple[int, dict[str, int | None]]:
-    """A command that runs zero/no identifiable tests must not report PASS.
+    """A command with zero tests, all-skipped/partial skips or bad counts must not PASS.
 
     The compilation-only S-BUILD is the sole batch without a test-count contract.
     This rejects Python unittest's successful exit code for 'Ran 0 tests'.
@@ -134,7 +134,9 @@ def evaluate_run(label: str, exit_code: int, output: str) -> tuple[int, dict[str
     if exit_code == 0 and label != "S-BUILD":
         if (counts["tests_reported"] is None or counts["tests_reported"] == 0
                 or counts["failed"] is None or counts["failed"] != 0
-                or counts["passed"] is None):
+                or counts["passed"] is None or counts["passed"] == 0
+                or counts["skipped"] is None or counts["skipped"] != 0
+                or counts["passed"] + counts["failed"] + counts["skipped"] != counts["tests_reported"]):
             return 126, counts  # VALIDATION_NO_TESTS_OR_UNTRUSTWORTHY_SUMMARY
     return exit_code, counts
 

@@ -118,13 +118,16 @@ def _clean_url_identity(value: str) -> tuple[str, bool]:
         # Refuse to publish a credential path in either its raw or common
         # percent-decoded spellings (including one double-encoded layer).
         path_variant = parsed.path
-        for _ in range(3):
+        for _ in range(8):
             if _SENSITIVE_PATH.search(path_variant):
                 return '[sensitive path redacted]', False
             next_variant = unquote(path_variant)
             if next_variant == path_variant:
                 break
             path_variant = next_variant
+        else:
+            # Too many decoding layers to establish safe public identity.
+            return '[untrusted path encoding redacted]', False
         query, preserved = _semantic_query(parsed.query)
         if parsed.username is not None or parsed.password is not None:
             preserved = False

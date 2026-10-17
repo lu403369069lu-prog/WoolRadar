@@ -100,6 +100,11 @@ def _safe_public_text(value: str) -> str:
 def _clean_url_identity(value: str) -> tuple[str, bool]:
     try:
         value.encode('utf-8')  # reject malformed Unicode before URL identity admission
+        # urllib.urlsplit silently strips tabs/newlines and leading spaces.
+        # Never certify the silently rewritten resource as an original URL.
+        if (value != value.strip() or
+                any(ord(ch) < 32 or ord(ch) == 127 for ch in value)):
+            return '[invalid URL redacted]', False
         parsed = urlsplit(value)
         if parsed.scheme not in {'http', 'https'} or not parsed.hostname:
             return '', False

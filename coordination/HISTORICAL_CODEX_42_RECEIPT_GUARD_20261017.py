@@ -79,6 +79,8 @@ def expected_commands(manifest: dict[str, Any], project: str) -> dict[tuple[str,
 def review(data: dict[str, Any], manifest: dict[str, Any], logdir: Path | None) -> dict[str, Any]:
     errors: list[str] = []
     project = data.get("project")
+    if not isinstance(project, str):
+        project = None
     expected = expected_commands(manifest, project) if project in HEADS else {}
     if project not in HEADS:
         errors.append("UNKNOWN_PROJECT")
@@ -142,10 +144,15 @@ def review(data: dict[str, Any], manifest: dict[str, Any], logdir: Path | None) 
             seen_logs.add(filename)
             if logdir is not None:
                 try:
-                    contents = (logdir / filename).read_bytes()
-                    if sha256(contents).hexdigest() != row.get("sha256"):
-                        errors.append("LOG_SHA256_MISMATCH")
-                except OSError:
+                    logpath = logdir / filename
+                    if (logpath.is_symlink() or
+                            not logpath.resolve().is_relative_to(logdir.resolve())):
+                        errors.append("UNSAFE_LOG_SYMLINK_OR_ESCAPE")
+                    else:
+                        contents = logpath.read_bytes()
+                        if sha256(contents).hexdigest() != row.get("sha256"):
+                            errors.append("LOG_SHA256_MISMATCH")
+                except (OSError, ValueError):
                     errors.append("MISSING_RAW_LOG")
         if not isinstance(row.get("sha256"), str) or not HEX64.fullmatch(row["sha256"]):
             errors.append("INVALID_LOG_SHA256")

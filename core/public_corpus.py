@@ -71,6 +71,15 @@ def _is_lexical_public_host(host: str) -> bool:
             or canonical.startswith('-') or '.' not in canonical
             or canonical.rsplit('.', 1)[-1].isdigit()):
         return False
+    # RFC-style DNS labels must be nonempty, <=63 bytes and cannot begin/end
+    # in '-'. Dotted hex/decimal/octal IPv4 aliases may be interpreted by OS
+    # resolvers as loopback/private IP even when ipaddress rejects the spelling.
+    labels = canonical.split('.')
+    if (len(canonical) > 253 or any(
+            not re.fullmatch(r'[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?', label)
+            for label in labels) or all(
+            re.fullmatch(r'(?:0x[0-9a-f]+|[0-9]+)', label) for label in labels)):
+        return False
     denied = ('localhost', 'local', 'internal', 'home.arpa', 'lan',
               'onion', 'invalid', 'test', 'example')
     if any(canonical == suffix or canonical.endswith('.' + suffix)

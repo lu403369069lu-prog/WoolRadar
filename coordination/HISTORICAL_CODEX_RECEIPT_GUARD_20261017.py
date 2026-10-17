@@ -23,6 +23,8 @@ def review(data: dict, logs_dir: Path | None = None) -> dict:
     """Only certifies receipt structural consistency, never business readiness."""
     errors = []
     project = data.get('project')
+    if not isinstance(project, str):
+        project = None
     expected = HEADS.get(project)
     if expected is None:
         errors.append('UNKNOWN_PROJECT')
@@ -46,6 +48,9 @@ def review(data: dict, logs_dir: Path | None = None) -> dict:
             errors.append('MALFORMED_BATCH')
             continue
         key = result.get('batch')
+        if not isinstance(key, str):
+            errors.append('INVALID_BATCH_NAME')
+            continue
         if key in seen:
             errors.append('DUPLICATE_BATCH')
         seen.add(key)

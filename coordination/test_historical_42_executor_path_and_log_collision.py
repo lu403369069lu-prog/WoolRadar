@@ -91,6 +91,29 @@ class PathAndLogSecurity(unittest.TestCase):
                 blob_lookup=lambda _:'verified')
             self.assertEqual(cwd,root.resolve());self.assertEqual(argv[0],sys.executable)
 
+    def test_sam_sibling_command_path_remains_allowed(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)
+            (root/'SAM/snapshot').mkdir(parents=True)
+            (root/'SAM/independent-review').mkdir()
+            (root/'SAM/independent-review/rooted.test.mjs').write_text('// synthetic\n')
+            entry=job('SAM/independent-review/rooted.test.mjs','SAM/snapshot',
+                      'node --test ../independent-review/rooted.test.mjs')
+            cwd,argv=runner.pin_command(root,entry,blob_lookup=lambda _:'verified')
+            self.assertEqual(cwd,root/'SAM/snapshot')
+            self.assertEqual(argv[-1],'../independent-review/rooted.test.mjs')
+
+    def test_sam_command_escape_above_checkout_is_rejected(self):
+        with tempfile.TemporaryDirectory() as d:
+            root=Path(d)
+            (root/'SAM/snapshot').mkdir(parents=True)
+            (root/'SAM/independent-review').mkdir()
+            (root/'SAM/independent-review/rooted.test.mjs').write_text('// synthetic\n')
+            entry=job('SAM/independent-review/rooted.test.mjs','SAM/snapshot',
+                      'node --test ../../../outside/rooted.test.mjs')
+            with self.assertRaises(RuntimeError):
+                runner.pin_command(root,entry,blob_lookup=lambda _:'verified')
+
     def good_commands_and_mapping(self):
         key='f'*64
         cs=[{'argv':[sys.executable,'-c','print("OK")'],

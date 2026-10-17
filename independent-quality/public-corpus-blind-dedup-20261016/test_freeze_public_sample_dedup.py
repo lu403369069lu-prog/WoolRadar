@@ -59,6 +59,21 @@ class CleanSample(unittest.TestCase):
         self.assertEqual(len(result['rows']),1)
         self.assertEqual(result['sources'][0]['invalid_rows'],len(blocked))
 
+    def test_home_arpa_apex_is_never_public_review_identity(self):
+        blocked = [
+            'http://home.arpa/offer',
+            'https://home.arpa/private?batch=alpha',
+            'http://router.home.arpa/offer',
+        ]
+        for url in blocked:
+            with self.subTest(url=url):
+                self.assertIsNone(canonical_public_url(url))
+        self.assertEqual(canonical_public_url('https://home.arpa.info/offer'),
+                         'https://home.arpa.info/offer')
+        result = freeze_public_sources([sample('alpha', blocked + ['https://home.arpa.info/offer'])])
+        self.assertEqual(len(result['rows']), 1)
+        self.assertEqual(result['sources'][0]['invalid_rows'], len(blocked))
+
     def test_public_named_domains_still_keep_round_identity(self):
         self.assertEqual(canonical_public_url('https://example.org/claim?batch=1'),
                          'https://example.org/claim?batch=1')

@@ -1,0 +1,116 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "status": "SELECTED_LINUX_QA_GREEN_NATIVE_FROZEN_AND_REAL_BUSINESS_GATES_UNACCEPTED",
+  "execution_scope": "Actual isolated Linux subprocesses on Git blob-matched candidate sources; not complete frozen Git checkout or actual Git merge",
+  "platform": {
+    "python": "3.13.5",
+    "node": "v22.16.0"
+  },
+  "selected_tests": {
+    "total": 223,
+    "passed": 223,
+    "failed": 0,
+    "skipped": 0,
+    "by_pr": [
+      {
+        "pr": 42,
+        "track": "coord42",
+        "test_methods": 53,
+        "exit": 0,
+        "head": "728e0766612fcae7a674c5dacab59a8b8b664cf0",
+        "runner_blob": "08af6d6304758399282d7b1799604089570c7b09",
+        "guard_blob": "072ba64688fcd479795620b870a803ddb29dc78b",
+        "stdout_sha256": "fbe0979ad4ac5e7f8046b8d562ac205ee72e19af9b2c6e318f5427d9855f7f26"
+      },
+      {
+        "pr": 41,
+        "track": "wool-public-corpus",
+        "test_methods": 82,
+        "exit": 0,
+        "head": "6616b4d65949beb26b0bcfe20a293c633efd49f5",
+        "source_blob": "c9f6e031ba48d44e0091b89036c44aeae07864f3",
+        "new_test_blob": "14b4c90511a588a10b27851036543ea4dee6530a",
+        "stdout_sha256": "aa851a27f28cfaa73975f174910bea22458949256ec9db443306ff279cffed41"
+      },
+      {
+        "pr": 17,
+        "track": "sam-synthetic-migration",
+        "test_methods": 43,
+        "exit": 0,
+        "head": "efcd73540587c482c93b8d487385de636d47fadd",
+        "source_blob": "22582e67d9ac18aa66f4f43ac1d7556d6edc1476",
+        "byte_test_blob": "683327a3f353883b0e646a792da3365e17fd7874",
+        "stdout_sha256": "d5412ac6dbdf58afa885a9476c928432f0c66cd2cbf19c21ff686b953b3c73db"
+      },
+      {
+        "pr": 43,
+        "track": "wool-grant-diagnostic",
+        "test_methods": 45,
+        "exit": 0,
+        "head": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+        "source_blob": "6fe02aa7a83479c4eeea6a448b80f75988a13ffd",
+        "stdout_sha256": "f428aac66f9c991c677ca2866ec6ffa68580455f24d81be69bdf9e99a5439b41"
+      }
+    ]
+  },
+  "wool_joint": {
+    "pr_heads": {
+      "pr41": "6616b4d65949beb26b0bcfe20a293c633efd49f5",
+      "pr43": "621871f9afc5ae43272d04bcff9d4763ae25fa5a"
+    },
+    "tests": 127,
+    "passed": 127,
+    "failed": 0,
+    "skipped": 0,
+    "exit": 0,
+    "stdout_sha256": "b2a35c234503705c42319402626828840e8efce50633073ed66f6cbe30f572c8",
+    "meaning": "Manual same-directory candidate module/test staging, not a Git merge or independent business-family sample. Its test methods overlap the 223 selected total."
+  },
+  "added_adversarial_red_controls": [
+    {
+      "area": "source title/summary with api_key=abc, quoted password=xy, explicit Authorization Bearer abc, or 11-digit synthetic mobile number",
+      "old_new_test_cases": 4,
+      "old_failed": 3,
+      "old_exit": 1,
+      "old_stdout_sha256": "e2f729b57375e8e7c27271e0ce12ad83917a833caef47c37d098bc0995962292"
+    },
+    {
+      "area": "overbroad first fix mistook benign 'the bearer of good news' for credential",
+      "intermediate_methods": 5,
+      "intermediate_failed": 1,
+      "intermediate_exit": 1,
+      "intermediate_stdout_sha256": "953c8830811fa501b264974ceeaca0dba8593e8e2f96f97debbe457fa5234ac3",
+      "resolution": "Short bearer tokens redacted only in explicit Authorization headers; generic standalone Bearer token still requires >=12 credential characters. Benign public copy preserved."
+    }
+  ],
+  "preceding_new_red_green_evidence": "coordination/FIRST_CATEGORY_218_SELECTED_122_JOINT_PRIVATE_EVIDENCE_20261017.json",
+  "official_receipt_guard": {
+    "source_blob": "072ba64688fcd479795620b870a803ddb29dc78b",
+    "actual_log_count": 5,
+    "total_executed_methods_with_joint_overlap": 350,
+    "all_zero_fail_skip": true,
+    "full_39_command_guard_review_accepted": false
+  },
+  "frozen_history": {
+    "total_families": 50,
+    "ready": 42,
+    "external_or_policy_gated": 8,
+    "distinct_immutable_commands": 39,
+    "partial_linux_reconstructed_commands_run": 10,
+    "partial_linux_ready_families": 11,
+    "partial_linux_methods_green": 105,
+    "remaining_commands_without_full_native_receipt": 29,
+    "sam_tsx_blockers": 17,
+    "python_full_checkout_blockers": 12,
+    "run_handoff": "coordination/CODEX_FROZEN_FULL_39_NATIVE_HANDOFF_20261017.md"
+  },
+  "limits": [
+    "No full frozen old Git tree checkout in container; private GitHub DNS unavailable to runtime, and missing locked tsx dependency",
+    "No formal all-39 receipts, live native Windows Node24/26 or physical deployment",
+    "No SAM real legacy source, 61/522 gold, actual MCP, published version pointer or rollback",
+    "No independent Wool recall denominator, current personal eligibility or actual 09:30 daily consumer receipt",
+    "No production paths, PLC, paid CI, user credentials, scheduler GitHub writes or draft PR merges touched"
+  ],
+  "historical_recovery_closed": false
+}

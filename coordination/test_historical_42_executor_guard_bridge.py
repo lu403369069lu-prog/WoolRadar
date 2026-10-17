@@ -118,4 +118,43 @@ class FormalGuardIntegration(unittest.TestCase):
         self.assertTrue(result['local_full_family_receipt_accepted'],result['errors'])
         self.assertTrue(formal['runtime']['node'].startswith('v'))
 
+    def test_zero_python_tests_cannot_pass_official_guard(self):
+        item,mapping,doc=self.python_case()
+        (self.root/'tests/test_synthetic_ok.py').unlink()
+        rc,legacy,folder=runner.run_commands([item],mapping,guard.HEADS['wool'],'wool')
+        self.addCleanup(lambda:shutil.rmtree(folder,ignore_errors=True))
+        self.assertNotEqual(rc,0)
+        formal=json.loads((folder/'receipt-guard-v1.json').read_text('utf8'))
+        decision=guard.review(formal,doc,folder)
+        self.assertFalse(decision['local_full_family_receipt_accepted'])
+        self.assertIn('NONZERO_EXIT',decision['errors'])
+
+    def test_one_skipped_python_test_blocks_technical_acceptance(self):
+        item,mapping,doc=self.python_case()
+        (self.root/'tests/test_synthetic_ok.py').write_text(
+            'import unittest\nclass T(unittest.TestCase):\n'
+            ' def test_good(self): self.assertTrue(True)\n'
+            ' @unittest.skip("synthetic")\n def test_skip(self): pass\n')
+        rc,legacy,folder=runner.run_commands([item],mapping,guard.HEADS['wool'],'wool')
+        self.addCleanup(lambda:shutil.rmtree(folder,ignore_errors=True))
+        self.assertNotEqual(rc,0)
+        formal=json.loads((folder/'receipt-guard-v1.json').read_text('utf8'))
+        decision=guard.review(formal,doc,folder)
+        self.assertFalse(decision['local_full_family_receipt_accepted'])
+        self.assertIn('NO_COMPLETE_GREEN_TESTS',decision['errors'])
+
+    def test_multiple_families_share_one_actual_command_with_grouped_guard_receipt(self):
+        item,mapping,doc=self.python_case()
+        mapping.append({'family_id':'WR-SECOND','source_blob':'synthetic',
+                        'command_key':item['key_sha256']})
+        doc['jobs'].append({**doc['jobs'][0],'family_id':'WR-SECOND'})
+        rc,legacy,folder=runner.run_commands([item],mapping,guard.HEADS['wool'],'wool')
+        self.addCleanup(lambda:shutil.rmtree(folder,ignore_errors=True))
+        self.assertEqual(rc,0)
+        formal=json.loads((folder/'receipt-guard-v1.json').read_text('utf8'))
+        self.assertEqual(formal['unique_commands'],1)
+        self.assertEqual(formal['tested_families'],2)
+        decision=guard.review(formal,doc,folder)
+        self.assertTrue(decision['local_full_family_receipt_accepted'],decision['errors'])
+
 if __name__=='__main__': unittest.main()

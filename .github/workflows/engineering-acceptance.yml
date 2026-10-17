@@ -49,4 +49,5 @@ jobs:
           name: engineering-acceptance-${{ github.run_id }}-${{ github.run_attempt }}
           path: candidate/.engineering-acceptance/
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 30

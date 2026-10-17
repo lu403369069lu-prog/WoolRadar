@@ -132,6 +132,9 @@ def _clean_url_identity(value: str) -> tuple[str, bool]:
                 return '[sensitive path redacted]', False
             if _EMAIL.search(path_variant):
                 return '[private path redacted]', False
+            if (_LONG_DIGIT_SECRET.search(path_variant) or
+                    _GROUPED_CARD_NUMBER.search(path_variant)):
+                return '[private numeric path redacted]', False
             next_variant = unquote(path_variant)
             if next_variant == path_variant:
                 break
@@ -149,6 +152,9 @@ def _clean_url_identity(value: str) -> tuple[str, bool]:
             # A credential route must be redacted, not certified as identity.
             if _SENSITIVE_PATH.search(route):
                 return '[sensitive fragment redacted]', False
+            if (_LONG_DIGIT_SECRET.search(route) or
+                    _GROUPED_CARD_NUMBER.search(route)):
+                return '[private numeric fragment redacted]', False
             if re.fullmatch(r'(?:/|!/)[A-Za-z0-9/_~.\-]*', route):
                 clean_query, route_preserved = _semantic_query(fragment_query)
                 if route_preserved:

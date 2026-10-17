@@ -98,29 +98,47 @@ def main() -> int:
     if len(sys.argv) != 1:
         print("Usage: python -m core.grant_lead_diagnostics < local_public.jsonl", file=sys.stderr)
         return 2
-    messages = []
-    for line_number, line in enumerate(sys.stdin, start=1):
-        if line_number > 10000:
-            print("INVALID_INPUT: too many diagnostic records", file=sys.stderr)
-            return 2
-        if not line.strip():
-            continue
-        try:
-            data = json.loads(line)
-            if not isinstance(data, dict):
-                raise ValueError("not an object")
-            if isinstance(data.get("text"), str):
-                value = data["text"]
-            elif isinstance(data.get("title"), str) or isinstance(data.get("summary"), str):
-                value = str(data.get("title") or "") + "\n" + str(data.get("summary") or "")
-            else:
-                raise ValueError("missing public text fields")
-        except (ValueError, TypeError):
-            # Never echo bad input or secrets from a malformed JSON line.
-            print(f"INVALID_INPUT: JSONL record {line_number}", file=sys.stderr)
-            return 2
-        messages.append(value)
-    print(json.dumps(aggregate_diagnostics(messages), ensure_ascii=False, sort_keys=True))
+    def validated_records():
+        # readline(limit) bounds allocation even before the JSON parser sees a
+        # maliciously large record. Aggregate incrementally; never retain raw
+        # source text or emit partial totals if a late record is malformed.
+        line_number = 0
+        while True:
+            line = sys.stdin.readline(32769)
+            if not line:
+                return
+            line_number += 1
+            if line_number > 10000:
+                raise ValueError("INVALID_INPUT: too many diagnostic records")
+            if len(line) > 32768:
+                raise ValueError(f"INVALID_INPUT: oversized JSONL record {line_number}")
+            if not line.strip():
+                continue
+            try:
+                data = json.loads(line)
+                if not isinstance(data, dict):
+                    raise ValueError('not an object')
+                if isinstance(data.get('text'), str):
+                    value = data['text']
+                elif isinstance(data.get('title'), str) or isinstance(data.get('summary'), str):
+                    if any(key in data and not isinstance(data[key], str)
+                           for key in ('title', 'summary')):
+                        raise ValueError('non-string public field')
+                    value = (data.get('title') or '') + '\n' + (data.get('summary') or '')
+                else:
+                    raise ValueError('missing public text fields')
+            except (ValueError, TypeError):
+                # No parser exception or source fragment is ever returned.
+                raise ValueError(f"INVALID_INPUT: JSONL record {line_number}") from None
+            yield value
+
+    try:
+        totals = aggregate_diagnostics(validated_records())
+    except ValueError as exc:
+        # Only fixed, synthetic line-numbered errors are raised above.
+        print(str(exc), file=sys.stderr)
+        return 2
+    print(json.dumps(totals, ensure_ascii=False, sort_keys=True))
     return 0
 
 

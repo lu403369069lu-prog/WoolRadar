@@ -67,15 +67,24 @@ def aggregate_diagnostics(texts) -> dict[str, object]:
     """Aggregate a frozen iterable; no raw lead text, URLs or account data leave."""
     from collections import Counter
     reasons = Counter()
+    missing_gates = Counter()
     total = selected = 0
     for value in texts:
         total += 1
         r = diagnose_developer_grant_lead(value)
         reasons[r["reason"]] += 1
         selected += int(r["selected"])
+        if r["reason"] == "no_self_contained_positive_section" and r["best_section"]:
+            gates = r["best_section"]
+            for signal in ("scope", "program", "application"):
+                if not gates[signal]:
+                    missing_gates[signal] += 1
+            if not (gates["award"] or gates["named_amount"]):
+                missing_gates["award_or_named_amount"] += 1
     return {"records": total, "candidate_leads": selected,
             "not_a_claimability_verdict": True,
-            "reasons": dict(sorted(reasons.items()))}
+            "reasons": dict(sorted(reasons.items())),
+            "missing_signals_in_best_section": dict(sorted(missing_gates.items()))}
 
 
 def main() -> int:

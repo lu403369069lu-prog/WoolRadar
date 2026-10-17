@@ -47,7 +47,9 @@
       "WoolRadar-discovery-and-delivery",
       "YinQieJi-SAM",
       "Cross-Agent coordination relay"
-    ]
+    ],
+    "coordination_pr_ancestry_checked": true,
+    "coordination_exact_code_semantic_dedup_checked": true
   },
   "verified_draft_refs": {
     "wool_main_pr23": "6babbe12727652e8626e0fe6f554eb01fecd4a30",
@@ -291,8 +293,8 @@
     },
     {
       "id": "COORD-H04",
-      "status": "STAGED_OLDER_PR_NOT_MAIN",
-      "summary": "PR8 fix dispatcher dry-run writing; full latest checkout tests unrun"
+      "status": "LATER_RELAY_SOURCE_RETAINS_FIX_FORMAL_TEST_PENDING",
+      "summary": "PR8 dry-run no-disk write algorithm preserved in PR9/11; latest adds contextlib.closing source handle and conditional rollback. Static exact-source comparison only, unmerged."
     },
     {
       "id": "COORD-H05",
@@ -322,7 +324,7 @@
     "effect": "source-policy regex has i flag; cross-backend parity not yet agreed, no production change"
   },
   "active_backlog_next": [
-    "Coordination PR6/7/8/9/11 real offline dispatcher+relay integration into latest owner-respecting branch; no billed cron or real unattended writer claim",
+    "Coordination PR9→PR11 true ancestor, PR7 adapter/HMAC preserved byte-exact, PR8 dry-run behavior statically retained, but PR11 diverges from main by 157 commits; run full actual relay test/safe integration review, no auto merge.",
     "SAM H24 actual T031 approved Axis source/card evidence audit, no private text published",
     "SAM H04 actual reviewed artifact SHA byte binding design + source policy",
     "SAM PR15 actual loader combined formal Node24/26 testing",

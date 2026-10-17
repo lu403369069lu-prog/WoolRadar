@@ -28,9 +28,9 @@
       "next_gate": "local Python and Node cross-module tests + frozen real 39 command batch",
       "isolated_qa_done": true,
       "isolated_qa_methods": 27,
-      "latest_tests": "SOURCE_MATCHED_SELECTED_LINUX_PASS_NOT_WINDOWS_OR_REAL_BUSINESS",
-      "isolated_linux_test_status": "PASS_LINUX_SELECTED_89_INCLUDING_TWO_SIMULATED_WINDOWS_FALLBACK_CASES",
-      "isolated_linux_test_methods": 89
+      "latest_tests": "GREEN_SELECTED_LINUX_NOT_NATIVE_WINDOWS_OR_BUSINESS",
+      "isolated_linux_test_status": "PASS_SELECTED_SOURCE_MATCHED_91_COORD_AND_GATES_WIN_FALLBACK_SIMULATION",
+      "isolated_linux_test_methods": 91
     },
     {
       "id": "wool41",
@@ -100,20 +100,20 @@
   "pr43_recall_policy": "Old 56-row, FN2 developer-used freeze cannot become independent holdout by rescoring it.",
   "latest_local_qa": {
     "date": "2026-10-17",
-    "status": "259_BLOB_MATCHED_LINUX_SELECTED_PASS_127_WOOL_OVERLAPPING_JOINT_PASS_NOT_NATIVE_BUSINESS",
-    "methods": 259,
-    "passed": 259,
+    "status": "261_SELECTED_EXACT_GIT_BLOB_LINUX_PASS_127_JOINT_OVERLAPPING_PASS_NATIVE_FULL_TREE_NOT_VERIFIED",
+    "methods": 261,
+    "passed": 261,
     "failed": 0,
     "skipped": 0,
     "by_track": {
-      "coord42_plus_external8_guard": 89,
+      "coord42_plus_external8_and_two_windows_fallback_simulations": 91,
       "wool41": 82,
       "sam17": 43,
       "wool43": 45
     },
     "shared_wool_cross_module_methods": 127,
     "shared_wool_cross_module_passed": 127,
-    "evidence": "coordination/SELECTED_259_COORD89_JOINT127_20261017.json"
+    "evidence": "coordination/SELECTED_261_COORD91_JOINT127_20261017.json"
   },
   "frozen_source_verification": {
     "ready_families": 42,
@@ -128,15 +128,15 @@
   },
   "first_category_latest": {
     "date": "2026-10-17",
-    "status": "CHAT_AVAILABLE_259_SOURCE_MATCHED_TESTS_PASS;FROZEN_NATIVE_39_COMMANDS_AND_EXTERNAL_APPROVAL_OR_GOLD_STILL_OPEN",
-    "selected_linux_methods": 259,
-    "selected_passed": 259,
+    "status": "INTERACTIVE_CHAT_SOURCE_MATCHED_261_SELECTED_TESTS_PASS;FROZEN_NATIVE_AND_SOURCE_APPROVAL_EXTERNAL_GATES_OPEN",
+    "selected_linux_methods": 261,
+    "selected_passed": 261,
     "selected_failed": 0,
     "selected_skipped": 0,
     "combined_wool_modules": 127,
     "combined_passed": 127,
     "exact_git_blobs_matched": true,
-    "evidence": "coordination/SELECTED_259_COORD89_JOINT127_20261017.json",
+    "evidence": "coordination/SELECTED_261_COORD91_JOINT127_20261017.json",
     "historical_frozen_partial_linux": {
       "unique_commands": 10,
       "ready_family_mappings": 11,
@@ -237,22 +237,24 @@
   "external_eight_gate_auditor": {
     "read_only_gate_families": 8,
     "source_and_two_test_blobs_now_verified_on_PR42": true,
-    "source_blob": "f5ef4ba31c50e4b5e054834d7b903a2fc1958907",
+    "source_blob": "3237eb61d54ec62927bb06a15c1ba056e8f8fb42",
     "test_blobs": [
-      "b048841bdd0f6367d3fd98ec97af0349d9ad79f4",
+      "253e05c0bb35ba5664794e967b68d30f7b4e0997",
       "0c13596d89d4df2c4366591fb5ece51b588f4abf"
     ],
-    "subset_tests": 30,
-    "integrated_coord_tests": 83,
+    "subset_tests": 32,
+    "integrated_coord_tests": 91,
+    "windows_fallback_synthetic_checks": 2,
+    "windows_actual_native_verified": false,
     "gate_human_approvals_verified": 0,
-    "ledger_note": "83 incl old 53; do not add old and new coordinator counts"
+    "ledger_note": "91 includes earlier 53 coordinator methods; 127 joint Wool tests overlap overall selected"
   },
   "formal_raw_log_guard_20261017": {
     "new_guard_blob": "e51ec61d5fab3b82e763f8c147f73b3486123110",
     "new_regression_blob": "5ab8a2e602fbf1153012f7b9e307ec5622d87cb9",
     "old_raw_race_suite_failed": 3,
     "old_raw_race_suite_total": 4,
-    "full_coord_selected_green": 89,
+    "full_coord_selected_green": 91,
     "posix_nofollow": true,
     "win32_fallback_posix_sim_tests_green": 2,
     "actual_windows_native_pending": true,

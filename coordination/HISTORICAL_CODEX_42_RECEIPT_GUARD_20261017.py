@@ -96,6 +96,13 @@ def parse_actual_log_counts(raw: bytes) -> dict[str, int] | None:
             if len(hits) != 1:
                 return None
             fields[field] = int(hits[0])
+        # Node's cancelled/todo fields are not part of pass/fail/skipped,
+        # but a nonzero value still means this batch is incomplete. Reject
+        # duplicate optional counters instead of taking the last clean one.
+        for keyword in ('cancelled', 'todo'):
+            hits = re.findall(r"(?m)^# " + keyword + r" (\d+)[ \t]*$", output)
+            if len(hits) > 1 or (hits and int(hits[0]) != 0):
+                return None
         return fields
     if node_tests:
         return None
@@ -128,7 +135,8 @@ def review(data: dict[str, Any], manifest: dict[str, Any], logdir: Path | None) 
         errors.append("UNKNOWN_PROJECT")
     elif data.get("repo_sha") != HEADS[project]:
         errors.append("HEAD_MISMATCH")
-    if data.get("schema_version") != 1 or data.get("source") != "disposable-local-codex":
+    if (type(data.get("schema_version")) is not int or data["schema_version"] != 1
+            or data.get("source") != "disposable-local-codex"):
         errors.append("UNTRUSTED_PROVENANCE")
     if data.get("no_real_gold_claim") is not True:
         errors.append("UNSAFE_REAL_GOLD_CLAIM")
@@ -148,7 +156,8 @@ def review(data: dict[str, Any], manifest: dict[str, Any], logdir: Path | None) 
     if not isinstance(results, list):
         results = []
         errors.append("INVALID_RESULTS")
-    if data.get("unique_commands") != len(results):
+    if (type(data.get("unique_commands")) is not int
+            or data["unique_commands"] != len(results)):
         errors.append("COMMAND_COUNT_MISMATCH")
     seen: set[tuple[str, tuple[str, ...]]] = set()
     seen_family: set[str] = set()
@@ -225,7 +234,8 @@ def review(data: dict[str, Any], manifest: dict[str, Any], logdir: Path | None) 
         errors.append("INCOMPLETE_FAMILY_COVERAGE")
     if seen != set(expected):
         errors.append("INCOMPLETE_COMMAND_COVERAGE")
-    if data.get("tested_families") != len(all_expected):
+    if (type(data.get("tested_families")) is not int
+            or data["tested_families"] != len(all_expected)):
         errors.append("FAMILY_COUNT_MISMATCH")
     return {
         "project": project,

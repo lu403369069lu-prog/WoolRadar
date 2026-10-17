@@ -236,11 +236,14 @@ def main() -> int:
     args = parser.parse_args()
     if args.expected_head != contract.EXPECTED[args.project]:
         raise RuntimeError('Source SHA not in the reviewed contract.')
+    # Verify the exact frozen Git blob BEFORE planning, preflight or executing
+    # any command, rather than only when checking the receipt afterwards.
+    # Reuse this parsed immutable document: never reread unchecked manifest bytes.
+    frozen_jobs = formal_guard.load_verified_manifest(MANIFEST)
     contract.validate_handoff_manifest(MANIFEST,args.project,args.expected_head)
     root = args.repo.expanduser().resolve()
     head = contract.preflight(root,args.project,args.expected_head)
-    manifest = json.loads(MANIFEST.read_text(encoding='utf-8'))
-    commands,mapping = plan_jobs(root,args.project,manifest)
+    commands,mapping = plan_jobs(root,args.project,frozen_jobs)
     print(json.dumps({'project':args.project,'repo_head':head,'families':len(mapping),
                       'distinct_commands':len(commands),
                       'mode':'RUN' if args.run else 'DRY_RUN'},ensure_ascii=False))
@@ -252,7 +255,6 @@ def main() -> int:
     rc,receipt,output=run_commands(commands,mapping,head,args.project)
     # A successful subprocess batch is NOT an accepted historical-family
     # receipt until the separate frozen guard validates every raw log and job.
-    frozen_jobs = formal_guard.load_verified_manifest(MANIFEST)
     raw_formal = json.loads((output / 'receipt-guard-v1.json').read_text(encoding='utf-8'))
     guard_verdict = formal_guard.review(raw_formal, frozen_jobs, output)
     (output / 'guard-verdict.json').write_text(

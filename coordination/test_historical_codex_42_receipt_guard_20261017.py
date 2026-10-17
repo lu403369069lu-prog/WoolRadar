@@ -11,7 +11,7 @@ spec = importlib.util.spec_from_file_location("historical_receipt_guard_42", SOU
 guard = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(guard)
 
-SAMPLE_LOG = b"synthetic stdout, no private data\n"
+SAMPLE_LOG = b"test_a ... ok\ntest_b ... ok\ntest_c ... ok\n\nRan 3 tests in 0.003s\n\nOK\n"
 GOOD_HASH = hashlib.sha256(SAMPLE_LOG).hexdigest()
 COMMAND = "python -B -m unittest discover -s tests -p test_notifications.py -v"
 ARGS = ["python", "-B", "-m", "unittest", "discover", "-s", "tests",
@@ -154,6 +154,34 @@ class ReviewTruth(unittest.TestCase):
                 self.skipTest("Windows developer symlink permissions not available")
             result = guard.review(receipt(), manifest(), folder)
             self.assertIn("UNSAFE_LOG_SYMLINK_OR_ESCAPE", result["errors"])
+
+    def test_receipt_cannot_forge_pass_counts_while_raw_log_reports_failure(self):
+        d = receipt()
+        bad_log = b"Ran 3 tests in 0.003s\n\nFAILED (failures=1)\n"
+        d["results"][0]["sha256"] = hashlib.sha256(bad_log).hexdigest()
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "test-001.log"
+            path.write_bytes(bad_log)
+            result = guard.review(d, manifest(), Path(folder))
+        self.assertIn("LOG_COUNTS_DISAGREE_WITH_RECEIPT", result["errors"])
+        self.assertFalse(result["local_full_family_receipt_accepted"])
+
+    def test_matching_hash_to_arbitrary_log_is_not_test_proof(self):
+        d = receipt()
+        fake_log = b"all good but no tests truly reported\n"
+        d["results"][0]["sha256"] = hashlib.sha256(fake_log).hexdigest()
+        with tempfile.TemporaryDirectory() as folder:
+            (Path(folder) / "test-001.log").write_bytes(fake_log)
+            result = guard.review(d, manifest(), Path(folder))
+        self.assertIn("LOG_HAS_NO_GENUINE_TEST_SUMMARY", result["errors"])
+
+    def test_actual_node_tap_parser(self):
+        log = b"# tests 5\n# pass 4\n# fail 0\n# skipped 1\n"
+        self.assertEqual(guard.parse_actual_log_counts(log),
+                         {"tests": 5, "passed": 4, "failed": 0, "skipped": 1})
+
+    def test_non_utf8_log_cannot_be_receipt_evidence(self):
+        self.assertIsNone(guard.parse_actual_log_counts(b"\xff\xfe\xd0"))
 
     def test_tampered_manifest_fails_before_review(self):
         with tempfile.TemporaryDirectory() as tmp:

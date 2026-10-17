@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "verified_at": "2026-10-17",
+  "verification_mode": "github-immutable-tree-vs-manifest-not-test-execution",
+  "manifest": {
+    "repository": "lu403369069lu-prog/WoolRadar",
+    "blob_sha": "96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744",
+    "families_total": 50,
+    "ready_families": 42,
+    "external_gated": 8,
+    "distinct_ready_files": 39
+  },
+  "frozen_trees": [
+    {
+      "project": "W",
+      "repository": "lu403369069lu-prog/WoolRadar",
+      "commit": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f",
+      "tree_items": 299,
+      "tree_truncated": false,
+      "ready_matched": 15
+    },
+    {
+      "project": "S",
+      "repository": "lu403369069lu-prog/YinQieJi",
+      "commit": "82bf36efa90cced8dafb56502812eb49f40515f3",
+      "tree_items": 226,
+      "tree_truncated": false,
+      "ready_matched": 21
+    },
+    {
+      "project": "C",
+      "repository": "lu403369069lu-prog/WoolRadar",
+      "commit": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+      "tree_items": 58,
+      "tree_truncated": false,
+      "ready_matched": 6
+    }
+  ],
+  "conclusion": {
+    "ready_job_test_sources_checked": 42,
+    "git_blob_exact_matches": 42,
+    "missing_sources": 0,
+    "hash_mismatches": 0,
+    "frozen_commands_executed": 0,
+    "windows_receipts_accepted": 0,
+    "business_gold_accepted": false,
+    "historical_recovery_closed": false
+  },
+  "evidence": "GitHub connector GET Git recursive tree on each pinned commit (all truncated=false) vs each READY job verified_test_path and verified_test_blob from exact frozen manifest",
+  "limitations": [
+    "Existence and Git object identity only; no proof of local filesystem or Windows toolchain",
+    "No assertion that code dependencies install or tests pass",
+    "No real-user source material, payment, accounts or deployment accessed"
+  ]
+}

@@ -117,6 +117,7 @@ def parse_actual_log_counts(raw: bytes) -> dict[str, int] | None:
                 "failed": 0, "skipped": skip}
     return None
 
+
 def review(data: dict[str, Any], manifest: dict[str, Any], logdir: Path | None) -> dict[str, Any]:
     errors: list[str] = []
     project = data.get("project")

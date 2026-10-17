@@ -57,22 +57,26 @@ def _semantic_query(query: str) -> tuple[str, bool]:
     return urlencode(sorted(kept.items())), preserved
 
 def _is_lexical_public_host(host: str) -> bool:
-    """Fail closed on non-global IPs and obvious local hostnames.
+    """Require an ordinary public DNS hostname, matching sampler scope.
 
-    No network/DNS resolution is done here: the downstream sampler must also
-    apply its independent host checks before treating a URL as public gold.
+    Lexical check only: DNS resolution, redirects, ownership and the actual
+    claimability of a source need independent review.
     """
     canonical = host.lower().rstrip('.')
+    if (not re.fullmatch(r'[a-z0-9.-]+', canonical) or '..' in canonical
+            or canonical.startswith('-') or '.' not in canonical
+            or canonical.rsplit('.', 1)[-1].isdigit()):
+        return False
+    denied = ('localhost', 'local', 'internal', 'home.arpa', 'lan',
+              'onion', 'invalid', 'test', 'example')
+    if any(canonical == suffix or canonical.endswith('.' + suffix)
+           for suffix in denied):
+        return False
     try:
-        return ipaddress.ip_address(canonical).is_global
+        ipaddress.ip_address(canonical)
     except ValueError:
-        if re.fullmatch(r'[0-9.]+', canonical):
-            return False  # Ambiguous IPv4 variants, not a public DNS name.
-        if '.' not in canonical:
-            return False
-        denied = ('localhost', 'local', 'internal', 'home.arpa', 'lan', 'onion')
-        return not any(canonical == suffix or canonical.endswith('.' + suffix)
-                       for suffix in denied)
+        return True
+    return False
 
 
 def _clean_url_identity(value: str) -> tuple[str, bool]:

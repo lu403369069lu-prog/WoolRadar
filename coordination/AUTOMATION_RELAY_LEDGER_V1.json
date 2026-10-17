@@ -32,17 +32,19 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 1,
-    "last_persisted_worker_run_utc": "2026-10-17T12:04:18.578Z",
-    "last_completed_review_key": "YinQieJi#14",
+    "revision": 2,
+    "last_persisted_worker_run_utc": "2026-10-17T12:09:33.581Z",
+    "last_completed_review_key": "YinQieJi#15",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
-      "YinQieJi#14": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14"
+      "YinQieJi#14": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
+      "YinQieJi#15": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
-      "YinQieJi#14/0cdc3b4e81b9e143cb92fabde1828b6c8a913e14/exact-helper-15-20261017"
+      "YinQieJi#14/0cdc3b4e81b9e143cb92fabde1828b6c8a913e14/exact-helper-15-20261017",
+      "YinQieJi#15/73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58/entailed-empty-evidence-redgreen-20261017"
     ],
     "write_diagnostic": "INTERACTIVE_GITHUB_WRITE_NOT_SCHEDULED",
     "last_write_error": null
@@ -327,9 +329,10 @@
         "key": "YinQieJi#15",
         "repo": "lu403369069lu-prog/YinQieJi",
         "pr": 15,
-        "status": "QUEUED_UNREVIEWED",
-        "reviewed_head_sha": null,
-        "evidence_url": null
+        "status": "PARTIAL_REVIEW_PATCH_PROPOSED",
+        "reviewed_head_sha": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
+        "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/18",
+        "review_scope": "EXACT_GITHUB_TS_SOURCE_RED_2_2_GREEN_4_ISOLATED_FORMAL_PENDING"
       },
       {
         "key": "YinQieJi#14",
@@ -445,6 +448,16 @@
         "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
         "parent": "WoolRadar#39",
         "submitted_head_sha": "1482f97e61b1163ccdc761906eda087fcba48628"
+      },
+      {
+        "key": "YinQieJi#18",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 18,
+        "status": "AUTHOR_DRAFT_NOT_INDEPENDENTLY_REVIEWED",
+        "reviewed_head_sha": null,
+        "submitted_head_sha": "4118010257ece04c302ac591f074daac798e9744",
+        "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/18",
+        "parent": "YinQieJi#15"
       }
     ],
     "blocked_external": {
@@ -482,6 +495,21 @@
       ],
       "business_accepted": false,
       "native_receipt": false
+    },
+    {
+      "event_key": "YinQieJi#15/73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58/entailed-empty-evidence-redgreen-20261017",
+      "origin": "INTERACTIVE_CHAT_NOT_SCHEDULED",
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "pr": 15,
+      "head_sha": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
+      "finding": "entailed positive claim audit accepted evidenceIds=[] in actual file hash fd95d...; downstream warning only checks entailment and evidence tier; new draft PR18 requires nonempty referenced ID for positive",
+      "validation": "EXACT_GITHUB_FILE_HASH_RED2_PASS2_FAIL_GREEN4_PASS; NEW_THREE_FORMAL_TESTS_UNRUN",
+      "evidence_urls": [
+        "https://github.com/lu403369069lu-prog/YinQieJi/pull/18",
+        "https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/scheduled-review-ledger-20261017/coordination/BACKLOG_REAL_EXECUTION_20261017_W39_S14.md"
+      ],
+      "business_accepted": false,
+      "native_receipt": false
     }
   ],
   "run_history": [
@@ -496,6 +524,15 @@
       "report_url": "https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/scheduled-review-ledger-20261017/coordination/BACKLOG_REAL_EXECUTION_20261017_W39_S14.md",
       "actual_cases": "W39 extracted 4 red/green; SAM14 exact blob 15 pass",
       "source_receipts_pending": true
+    },
+    {
+      "origin": "INTERACTIVE_CHAT_NOT_SCHEDULED",
+      "event_id": "backlog-sam15-entailed-empty-20261017",
+      "reviewed_keys": [
+        "YinQieJi#15"
+      ],
+      "created_draft_pr": "YinQieJi#18",
+      "tests": "exact-binary Node RED 2 pass 2 fail; GREEN 4 pass exit0; formal 3 tests unrun"
     }
   ],
   "acceptance": {

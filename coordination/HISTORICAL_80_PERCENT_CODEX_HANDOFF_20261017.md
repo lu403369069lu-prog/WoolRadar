@@ -31,7 +31,7 @@
 | WR-H12 | P0 | 真实日报桥接必须获批 | W-EXTERNAL · `independent-quality/delivery-bridge-20261016/test_consume_preview.py` | USER_APPROVAL | USER_APPROVAL |
 | WR-H13 | P0 | 新独立盲测召回25%及漏合并 | W-EXTERNAL · `evidence/pipeline-integration-20261016/oct17/evaluation.json` | FRESH_GOLD | FRESH_GOLD |
 | WR-H14 | P1 | 定时任务不能GitHub写入 | W-EXTERNAL · `coordination/HISTORICAL_FIRST_RESUME_GATE.md` | SCHEDULED_BLOCKED | SCHEDULED_BLOCKED |
-| WR-H15 | P0 | 日报白名单/官方开放门禁 | W-DATA · `independent-quality/delivery-bridge-20261016/test_delivery_boundaries.py` | CODEX_RUN | python -B -m unittest discover -s independent-quality/public-corpus-blind-dedup-20261016 -p test_delivery_boundaries.py -v |
+| WR-H15 | P0 | 日报白名单/官方开放门禁 | W-DATA · `independent-quality/delivery-bridge-20261016/test_delivery_boundaries.py` | CODEX_RUN | python -B -m unittest discover -s independent-quality/delivery-bridge-20261016 -p test_delivery_boundaries.py -v |
 | WR-H16 | P1 | 资助跨项目拼接误判 | W-GRANT · `tests/test_developer_grant_project_scope.py` | CODEX_RUN | python -B -m unittest discover -s tests -p test_developer_grant_project_scope.py -v |
 | WR-H17 | P0 | 敏感历史测试数据审查 | W-EXTERNAL · `N/A` | MAINTAINER_APPROVAL | MAINTAINER_APPROVAL |
 | WR-H18 | P0 | 已发通知CAS不一致uncertain | W-DB · `tests/test_notify_reindex_transaction.py` | CODEX_RUN | python -B -m unittest discover -s tests -p test_notify_reindex_transaction.py -v |
@@ -92,3 +92,8 @@
 ## 结论
 
 **50/50有独立处置，42/50具有Codex具体执行入口，本次交接覆盖>=80%。但实际工程完成率尚未证实达到80%，故 `historical_recovery_closed=false`，所有PR为Draft未合并。**
+
+## 2026-10-17 执行命令安全校验补记
+- 针对全50行（其中42条CODEX_RUN）的表格做了精确 `-s/-p` 与声明相对路径静态一致性核对，发现并修正唯一不一致 **WR-H15**：之前误把`test_delivery_boundaries.py`指向公共采样器目录，该命令可能 `Ran 0 tests` 但退出0，属假绿风险。
+- `coordination/HISTORICAL_CODEX_BATCH_RUNNER_20261017.py` 新增对零测试、无法识别测试摘要的拒绝：`S-BUILD`属于纯编译不要求测试数，其余batch即使子进程exit0但无至少1项实际测试且没有成功摘要，判`exit_code=126`，不能计PASS；解析Python和Node的pass/fail/skip。详见同分支隔离回归测试。
+- 这是**执行交接可靠性修复**，不代表42项真的在Windows跑过，更不代表真实羊毛source/gold合格。

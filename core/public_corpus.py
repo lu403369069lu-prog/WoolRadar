@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import ipaddress
 import os
 import re
 import tempfile
@@ -55,6 +56,25 @@ def _semantic_query(query: str) -> tuple[str, bool]:
             kept[key] = value
     return urlencode(sorted(kept.items())), preserved
 
+def _is_lexical_public_host(host: str) -> bool:
+    """Fail closed on non-global IPs and obvious local hostnames.
+
+    No network/DNS resolution is done here: the downstream sampler must also
+    apply its independent host checks before treating a URL as public gold.
+    """
+    canonical = host.lower().rstrip('.')
+    try:
+        return ipaddress.ip_address(canonical).is_global
+    except ValueError:
+        if re.fullmatch(r'[0-9.]+', canonical):
+            return False  # Ambiguous IPv4 variants, not a public DNS name.
+        if '.' not in canonical:
+            return False
+        denied = ('localhost', 'local', 'internal', 'home.arpa', 'lan', 'onion')
+        return not any(canonical == suffix or canonical.endswith('.' + suffix)
+                       for suffix in denied)
+
+
 def _clean_url_identity(value: str) -> tuple[str, bool]:
     try:
         parsed = urlsplit(value)
@@ -62,6 +82,8 @@ def _clean_url_identity(value: str) -> tuple[str, bool]:
             return '', False
         # Port access validates malformed ports without making a network request.
         parsed.port
+        if not _is_lexical_public_host(parsed.hostname):
+            return '[non-public host redacted]', False
         query, preserved = _semantic_query(parsed.query)
         if parsed.username is not None or parsed.password is not None:
             preserved = False

@@ -97,6 +97,33 @@ class ReceiptTruthTests(unittest.TestCase):
             with self.assertRaises(runner.Blocked):
                 runner.validate_command(job, Path(directory).resolve())
 
+    def test_node_relative_source_path_resolves_to_reviewed_blob(self):
+        job = {"family_id": "SAM-H05",
+               "run_command": "node --import tsx --test ../independent-review/20261016/rooted-source-authorization.test.ts",
+               "verified_test_path": "SAM/independent-review/20261016/rooted-source-authorization.test.ts",
+               "local_cwd": "SAM/snapshot"}
+        with tempfile.TemporaryDirectory() as directory:
+            cwd, argv = runner.validate_command(job, Path(directory).resolve())
+        self.assertEqual(cwd, "SAM/snapshot")
+        self.assertEqual(argv[:4], ["node", "--import", "tsx", "--test"])
+
+    def test_node_proof_path_mismatch_rejected(self):
+        job = {"family_id": "SAM-H05",
+               "run_command": "node --import tsx --test ../independent-review/20261016/rooted-source-authorization.test.ts",
+               "verified_test_path": "SAM/snapshot/test/rooted-source-authorization.test.ts",
+               "local_cwd": "SAM/snapshot"}
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(runner.Blocked, "Node command/test path mismatch"):
+                runner.validate_command(job, Path(directory).resolve())
+
+    def test_globbed_unittest_pattern_cannot_satisfy_single_family_proof(self):
+        job = {"family_id": "WR-H01",
+               "run_command": "python -B -m unittest discover -s tests -p test_*.py -v",
+               "verified_test_path": "tests/test_notifications.py", "local_cwd": "."}
+        with tempfile.TemporaryDirectory() as directory:
+            with self.assertRaisesRegex(runner.Blocked, "unsafe test pattern"):
+                runner.validate_command(job, Path(directory).resolve())
+
     def test_bad_manifest_bytes_rejected_before_execution(self):
         with tempfile.TemporaryDirectory() as directory:
             src = Path(directory) / "tampered.json"

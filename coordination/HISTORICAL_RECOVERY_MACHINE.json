@@ -14,11 +14,17 @@
       "woolradar_reindex_upsert_atomicity.patch",
       "test_woolradar_reindex_upsert_atomicity.py",
       "woolradar_reindex_upsert_race_probe.py"
-    ]
+    ],
+    "conversation_visible_files": 6,
+    "individually_accessible_hourly_run_bodies": "INCOMPLETE",
+    "library_folders_checked": [
+      "/SAM-WoolRadar-Checkpoints",
+      "/Google Drive"
+    ],
+    "library_unrelated_drive_not_used": true
   },
   "verified_draft_refs": {
     "wool_main_pr23": "6babbe12727652e8626e0fe6f554eb01fecd4a30",
-    "wool_history_pr35": "87f79e5578fe9d53c71fb00262feee512e2c951c",
     "wool_sampler_pr37": "96abd1b8e902e93a6c56d98aeb9d043bdb1175aa",
     "sam_main_pr5": "5aeb852577cc53da76f9a0b5e78dfef63a83a35b",
     "sam_history_pr10": "f5e6562524b3438227e311fbc7ff0223b08a5a12",
@@ -212,5 +218,16 @@
       "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
       "summary": "WorkBuddy exact source excerpt hash currently verified"
     }
-  ]
+  ],
+  "verified_draft_refs_note": "Historical observations only; always fetch live PR HEAD before edits. PR35 changes when this file is updated; no self-referential exact SHA is possible.",
+  "verified_case_sensitive_rg_on_linux": {
+    "command": "rg --files -g '!secret.txt'",
+    "ripgrep_version": "14.1.1",
+    "files_returned": [
+      "Secret.txt",
+      "data.txt"
+    ],
+    "result": "case-sensitive on tested Linux",
+    "effect": "source-policy regex has i flag; cross-backend parity not yet agreed, no production change"
+  }
 }

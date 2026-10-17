@@ -26,6 +26,8 @@ _TRACKING_QUERY = {'utm_source','utm_medium','utm_term','utm_content','fbclid',
 _PRIVATE_VALUE = re.compile(r'(?i)(?:@|\d{13,}|token|secret|bearer|password|session)')
 # Credential-bearing path segments must not enter supposedly public sample logs.
 _SENSITIVE_PATH = re.compile(r'(?i)/(?:token|secret|password|session|api[-_]?key)/[^/]+')
+# Never publish personal account routes as public opportunity identities.
+_PRIVATE_ACCOUNT_ROUTE = re.compile(r'(?i)/(?:account|accounts|users?|profiles?|settings|dashboard|billing|login|signin|auth)(?:/|$)')
 # Identity-bearing addresses are private even inside public-feed resource paths.
 _EMAIL = re.compile(r'(?i)(?<![\w.+%\-])[\w.+%\-]+@[a-z0-9.-]+\.[a-z]{2,}')
 _ENCODED_EMAIL = re.compile(r'(?i)(?<![\w.+%\-])[\w.+%\-]+%(?:25)*40[a-z0-9.-]+\.[a-z]{2,}')
@@ -133,6 +135,8 @@ def _clean_url_identity(value: str) -> tuple[str, bool]:
         for _ in range(8):
             if _SENSITIVE_PATH.search(path_variant):
                 return '[sensitive path redacted]', False
+            if _PRIVATE_ACCOUNT_ROUTE.search(path_variant):
+                return '[private account path redacted]', False
             if _EMAIL.search(path_variant):
                 return '[private path redacted]', False
             if (_LONG_DIGIT_SECRET.search(path_variant) or
@@ -155,6 +159,8 @@ def _clean_url_identity(value: str) -> tuple[str, bool]:
             # A credential route must be redacted, not certified as identity.
             if _SENSITIVE_PATH.search(route):
                 return '[sensitive fragment redacted]', False
+            if _PRIVATE_ACCOUNT_ROUTE.search(route):
+                return '[private account fragment redacted]', False
             if (_LONG_DIGIT_SECRET.search(route) or
                     _GROUPED_CARD_NUMBER.search(route)):
                 return '[private numeric fragment redacted]', False

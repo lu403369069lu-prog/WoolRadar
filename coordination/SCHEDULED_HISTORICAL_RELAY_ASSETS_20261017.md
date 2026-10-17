@@ -26,3 +26,20 @@ At source SHA `6babbe12727652e8626e0fe6f554eb01fecd4a30`, the central WoolRadar 
 4. This track is **historic code with genuine engineering value**; the user's request to prioritize historical assets means it must not be lost behind a list of URL/public-sample quality issues.
 
 No auto merge, force push, paid runner, Work/Codex API, credentials, external webhook registration, Windows PLC/SQLite production changes, or background execution asserted.
+
+## Exact branch ancestry and file-level dedup checked in this interactive turn
+
+Real GitHub compare results at the immutable PR HEADs above, not guessed from titles:
+- PR6→PR7: **ahead6/behind0**; PR7 extends PR6. Importing both wholesale is duplicative.
+- PR7→PR8: **diverged** (PR8 ahead2/behind6); PR8 was an independent dry-run fix, not directly stacked over all PR7 adapter changes.
+- PR8→PR9: **diverged** (PR9 ahead9/behind2); PR9 contains a **different dispatcher source** than PR8, not byte-identical.
+- PR9→PR11: **ahead2/behind0**; PR11 extends PR9.
+- Current main PR23 versus PR9: **diverged**, PR9 ahead17/behind157; current main versus PR11: PR11 ahead19/behind157. Both old coordination branches differ drastically from main.
+
+Actual Git blob comparisons:
+- `coordination/github_event_adapter.py` PR7→PR9→PR11 stays byte-exact `3c9ffb3d33f01691ad69772e810991d36f276f20`.
+- `coordination/github_webhook.py` PR7→PR9→PR11 byte-exact `40eab23c5a3f7875b02a0c637c826db00a218ba3`; its test blob `97432b303f7a75966d805459b6380e350d345635` also exact across the three PR snapshots.
+- `coordination/dispatcher.py` PR8 blob `fc3df29d9fbd4aab4c8149606b4353e69547df07` differs from PR9/PR11 `a4c51d33f1d3be998218a46090d84a137ecd9696`; formal `tests/test_dispatcher.py` PR8 `0ce7492f65c89b73b010ab461310da1dcc21ccd4` differs from PR9/11 `0565d808e63cbf84c61b7402994de8cec3821272`. **Do not claim PR8 dry-run fix survives unchanged in PR9**: an actual code comparison and a test are required. Both PR9 and PR11 are byte-identical for those dispatcher files.
+- Main PR23 at exact source SHA `6babbe12727652e8626e0fe6f554eb01fecd4a30` still lacks the four coordination source files noted above.
+
+This isolates a real historic integration decision: **PR11 is the latest PR9 relay descendant, but its base diverges 157 commits from main and the PR8 dry-run hotfix cannot be treated as included byte-for-byte**. Proper work is a carefully reviewed current-head overlay with tests and owner authorization, never blindly merge old PRs in number order. Do not spend private Actions runner minutes without user approval.

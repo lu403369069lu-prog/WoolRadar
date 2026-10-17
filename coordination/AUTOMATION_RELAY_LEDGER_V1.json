@@ -1,0 +1,447 @@
+{
+  "schema_version": "1.0",
+  "purpose": "PERSISTENT_VERIFIABLE_PROGRESS_ACROSS_INDEPENDENT_SCHEDULED_RUNS",
+  "created_date_utc": "2026-10-17",
+  "write_policy": {
+    "status": "SCHEDULED_WRITE_UNVERIFIED_PREVIOUS_ATTEMPT_BLOCKED",
+    "first_write_window": "2026-10-17T12:00:00Z/2026-10-18T12:00:00Z",
+    "rule": "Try one minimal meaningful ledger update in the first eligible scheduled worker run; reread the exact file+branch to verify; if blocked, do not switch accounts or bypass guardrails, label CHECKPOINT_NOT_PERSISTED, stop falsely claiming relay. No repeated probing once result is known. Never merge or touch production."
+  },
+  "ownership": {
+    "single_worker": "Codex双仓有状态接力",
+    "scope": "both repos; incremental commits plus frozen historical backlog",
+    "ledger_branch": "chatgpt/scheduled-review-ledger-20261017",
+    "ledger_path": "coordination/AUTOMATION_RELAY_LEDGER_V1.json",
+    "other_engineering_worker_should_run": false,
+    "do_not_modify_codex_branches": true,
+    "never_modify_relay_v3_machine_state": true
+  },
+  "baseline": {
+    "frozen_pr_inventory_date": "2026-10-17",
+    "inventory_only_not_reviewed": true,
+    "woolradar_open_prs_known": 33,
+    "yinqieji_open_prs_known": 15,
+    "pr_heads_observed": {
+      "WoolRadar#42": "841702579311591d03d66a6c06d60b453b0e5505",
+      "YinQieJi#17": "0adf08324f612d343dfafe386bfd2503ada5beae"
+    },
+    "historical_manifest": "coordination/HISTORICAL_ALL_50_FAMILY_STATUS_20261017.json",
+    "families_inventoried": 50,
+    "full_business_acceptance_not_claimed": true,
+    "missing_native_receipt_commands": 29,
+    "external_policy_gates": 8
+  },
+  "checkpoint": {
+    "revision": 0,
+    "last_persisted_worker_run_utc": null,
+    "last_completed_review_key": null,
+    "incremental_last_seen": {},
+    "seen_branch_heads": {},
+    "processed_event_keys": [],
+    "write_diagnostic": "NOT_RUN_IN_SCHEDULED_CONTEXT",
+    "last_write_error": null
+  },
+  "backlog": {
+    "policy": "Old PR review at pinned HEAD; requeue if HEAD changed. After PR backlog, take cloud-verifiable historical families, keep local native receipt and human gates as BLOCKED_EXTERNAL until true evidence arrives.",
+    "queue": [
+      {
+        "key": "WoolRadar#43",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 43,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#42",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 42,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#41",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 41,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#39",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 39,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#38",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 38,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#37",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 37,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#36",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 36,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#35",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 35,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#30",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 30,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#27",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 27,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#25",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 25,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#24",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 24,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#23",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 23,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#22",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 22,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#21",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 21,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#20",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 20,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#19",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 19,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#18",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 18,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#17",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 17,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#16",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 16,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#15",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 15,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#14",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 14,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#13",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 13,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#12",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 12,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#11",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 11,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#10",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 10,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#9",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 9,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#8",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 8,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#7",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 7,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#6",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 6,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#5",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 5,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#4",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 4,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "WoolRadar#1",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 1,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "YinQieJi#17",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 17,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "YinQieJi#15",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 15,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "YinQieJi#14",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 14,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "YinQieJi#13",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 13,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "YinQieJi#12",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 12,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "YinQieJi#11",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 11,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "YinQieJi#10",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 10,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "YinQieJi#9",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 9,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "YinQieJi#8",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 8,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "YinQieJi#7",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 7,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "YinQieJi#6",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 6,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "YinQieJi#5",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 5,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "YinQieJi#4",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 4,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "YinQieJi#3",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 3,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      },
+      {
+        "key": "YinQieJi#2",
+        "repo": "lu403369069lu-prog/YinQieJi",
+        "pr": 2,
+        "status": "QUEUED_UNREVIEWED",
+        "reviewed_head_sha": null,
+        "evidence_url": null
+      }
+    ],
+    "blocked_external": {
+      "native_frozen_commands_missing": 29,
+      "gates_missing": 8
+    }
+  },
+  "review_receipts": [],
+  "run_history": [],
+  "acceptance": {
+    "scheduled_wakeup": "PROVED_TWICE_2026-10-17",
+    "scheduled_private_github_read": "UNVERIFIED",
+    "scheduled_write": "UNVERIFIED",
+    "stateful_cross_run_continuation": "UNVERIFIED",
+    "backlog_actual_review": "NOT_STARTED_BY_NEW_SCHEDULER"
+  },
+  "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks."
+}

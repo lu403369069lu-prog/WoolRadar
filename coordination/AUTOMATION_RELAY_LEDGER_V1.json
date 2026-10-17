@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 9,
-    "last_persisted_worker_run_utc": "2026-10-17T13:07:20.810Z",
-    "last_completed_review_key": "WoolRadar#43",
+    "revision": 10,
+    "last_persisted_worker_run_utc": "2026-10-17T15:34:44Z",
+    "last_completed_review_key": "SAM-H01:partial-boundary-review",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -51,9 +51,12 @@
       "YinQieJi#18/4118010257ece04c302ac591f074daac798e9744/exact-helper-four-scheduled-20261017",
       "YinQieJi#14/0cdc3b4e81b9e143cb92fabde1828b6c8a913e14/server-fallback-guard-static-scheduled-20261017",
       "WoolRadar#43/621871f9afc5ae43272d04bcff9d4763ae25fa5a/diagnostic-best-section-tie-repro-20261017",
-      "WoolRadar#43/621871f9afc5ae43272d04bcff9d4763ae25fa5a/strict-json-overflow-exponent-isolated-20261017"
+      "WoolRadar#43/621871f9afc5ae43272d04bcff9d4763ae25fa5a/strict-json-overflow-exponent-isolated-20261017",
+      "WoolRadar#43/621871f9afc5ae43272d04bcff9d4763ae25fa5a/exact-source-patched-formal-subsets-20261017T2324",
+      "YinQieJi/SAM-H01/81d8543aeae4a15ea6ecee32cde550808fa5f1c3/strict-jsonl-exact-source-12-boundaries-20261017T2324",
+      "WoolRadar#44/1482f97e61b1163ccdc761906eda087fcba48628/invalid-dns-labels-extracted-redgreen-20261017T2324"
     ],
-    "write_diagnostic": "SCHEDULED_ONE_WRITE_TEST_CAS_COMMIT_PENDING_READBACK",
+    "write_diagnostic": "SCHEDULED_BATCH_CAS_COMMIT_PENDING_READBACK",
     "last_write_error": null
   },
   "backlog": {
@@ -454,11 +457,13 @@
         "key": "WoolRadar#44",
         "repo": "lu403369069lu-prog/WoolRadar",
         "pr": 44,
-        "status": "AUTHOR_DRAFT_NOT_INDEPENDENTLY_REVIEWED",
-        "reviewed_head_sha": null,
+        "status": "PARTIAL_STATIC_REVIEW_FINDING_P2",
+        "reviewed_head_sha": "1482f97e61b1163ccdc761906eda087fcba48628",
         "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
         "parent": "WoolRadar#39",
-        "submitted_head_sha": "1482f97e61b1163ccdc761906eda087fcba48628"
+        "submitted_head_sha": "1482f97e61b1163ccdc761906eda087fcba48628",
+        "review_scope": "EXTRACTED_LEXICAL_HOST_BOUNDARY_RED3_GREEN3_FULL_FORMAL_UNRUN",
+        "finding": "Malformed DNS label shapes pass producer and sampler lexical public hostname gate; new formal regression and patch needed."
       },
       {
         "key": "YinQieJi#18",
@@ -651,6 +656,124 @@
       "business_accepted": false,
       "native_receipt": false,
       "next_action": "Fix parser overflow conversion on independent PR43 draft only after stable HEAD confirmation; add full CLI subprocess regression, run python -B -m unittest discover -s tests -p 'test_grant_lead_diagnostic*.py' -v; separately address existing best_section tie P2; no merge."
+    },
+    {
+      "event_key": "WoolRadar#43/621871f9afc5ae43272d04bcff9d4763ae25fa5a/exact-source-patched-formal-subsets-20261017T2324",
+      "origin": "SCHEDULED",
+      "family_id": null,
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "pr": 43,
+      "head_sha": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+      "source_blobs": {
+        "core/developer_grants.py": "8543c9c63543645e36fcd0ed3fea396081c258f7",
+        "core/grant_lead_diagnostics.py": "6fe02aa7a83479c4eeea6a448b80f75988a13ffd"
+      },
+      "finding": "Known P2 best_section tie and JSONL 1e9999 exponent overflow: local unmerged candidate patch independently exercised against exact GitHub source blobs.",
+      "test_scope": "EXACT_SOURCE_AND_FOUR_EXACT_GITHUB_FORMAL_TEST_BLOBS_RECONSTRUCTED; PATCHED_FORMAL_SUBSETS_NOT_ALL_SUITE",
+      "tests": [
+        {
+          "command": "PYTHONPATH=. python -B -m unittest discover -s tests -p 'test_grant_lead_diagnostics.py' -v",
+          "passed": 10,
+          "failed": 0,
+          "exit_code": 0,
+          "log_sha256": "7721fc93ede119bff2dbd6c197bc185ae38fdbdc88861c69b29110559fe2bd6b"
+        },
+        {
+          "command": "PYTHONPATH=. python -B -m unittest discover -s tests -p 'test_grant_lead_diagnostic_cli.py' -v",
+          "passed": 4,
+          "failed": 0,
+          "exit_code": 0,
+          "log_sha256": "9de1b4425ed98fae6d576f5d468ddd15e21bdedecc27144be108be379eda0805"
+        },
+        {
+          "command": "PYTHONPATH=. python -B -m unittest discover -s tests -p 'test_grant_lead_diagnostic_stream_safety.py' -v",
+          "passed": 9,
+          "failed": 0,
+          "exit_code": 0,
+          "log_sha256": "17b1044c7af649d865a5e132f76ae6ac2d2589595558867c874cc0076036b0ab"
+        },
+        {
+          "command": "PYTHONPATH=. python -B -m unittest discover -s tests -p 'test_grant_lead_diagnostic_new_edges_20261017.py' -v",
+          "passed": 9,
+          "failed": 0,
+          "exit_code": 0,
+          "log_sha256": "defe5fca79eb7f2ea28b2929676b5b0a5e8e3f5e85ddb190e21c65f140735a4b"
+        }
+      ],
+      "incomplete": "Original strict-json formal test file exact blob 76cbcc0b36a9a81ddcdc17abc30b77bafbe9356e was attempted but runner timed out mid-file (last visible test test_wrong_type_authoritative_text_is_not_silently_ignored). No exit 0 or full-suite PASS claimed; full repository tests not run.",
+      "patch_local_only": "/mnt/data/w43_grant_diagnostic_fix_20261017.patch",
+      "patch_applied_locally": true,
+      "evidence_urls": [
+        "https://github.com/lu403369069lu-prog/WoolRadar/pull/43"
+      ],
+      "business_accepted": false,
+      "native_receipt": false
+    },
+    {
+      "event_key": "YinQieJi/SAM-H01/81d8543aeae4a15ea6ecee32cde550808fa5f1c3/strict-jsonl-exact-source-12-boundaries-20261017T2324",
+      "origin": "SCHEDULED",
+      "family_id": "SAM-H01",
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "pr": 13,
+      "head_sha": "8719d75205e50209e9b11998a2af72c4d08ee975",
+      "source_path": "SAM/snapshot/src/strict-jsonl.ts",
+      "source_blob_sha": "81d8543aeae4a15ea6ecee32cde550808fa5f1c3",
+      "test_scope": "EXACT_GITHUB_SOURCE_BLOB_NODE22_STRIP_TYPES_SYNTHETIC_12_NOT_FULL_SAM_BUILD",
+      "command": "node --experimental-strip-types --test strict-jsonl-boundary.test.ts",
+      "exit_code": 0,
+      "passed": 12,
+      "failed": 0,
+      "skipped": 0,
+      "log_sha256": "396e6dddb58e04db1368730494112abd5c1e3732dcae4ada298f1ea7f5142932",
+      "finding": "No new failure in 12 focused strict-JSONL parser boundaries; duplicate escaped keys, nested duplicate, NaN, exponent overflow, BOM and invalid UTF8 rejected; full loader/npm build/Node24-26 still pending.",
+      "evidence_urls": [
+        "https://github.com/lu403369069lu-prog/YinQieJi/blob/8719d75205e50209e9b11998a2af72c4d08ee975/SAM/snapshot/src/strict-jsonl.ts"
+      ],
+      "business_accepted": false,
+      "native_receipt": false
+    },
+    {
+      "event_key": "WoolRadar#44/1482f97e61b1163ccdc761906eda087fcba48628/invalid-dns-labels-extracted-redgreen-20261017T2324",
+      "origin": "SCHEDULED",
+      "family_ids": [
+        "WR-H07",
+        "WR-H08"
+      ],
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "pr": 44,
+      "head_sha": "1482f97e61b1163ccdc761906eda087fcba48628",
+      "source_paths": [
+        "core/public_corpus.py",
+        "independent-quality/public-corpus-blind-dedup-20261016/freeze_public_sample_dedup.py"
+      ],
+      "source_blobs": [
+        "383f3ad38930863fe5311260f8869b1ca65564ef",
+        "46750d3aad01b2f915ba00713909b064bcb10c42"
+      ],
+      "severity": "P2",
+      "finding": "Both producer and offline sampler lexical hostname validators accept malformed DNS label shapes .example.org, a-.example.org, a.-b.example.org as public. This can contaminate a new public-only blind sample; not a live DNS/SSRF proof.",
+      "test_scope": "FAITHFUL_EXTRACTED_LEXICAL_FUNCTION_TRANSCRIPTION_ONLY_NOT_FULL_MODULE",
+      "red": {
+        "command": "python -B host_scope_regression.py -v",
+        "tests": 3,
+        "failures": 3,
+        "exit_code": 1,
+        "log_sha256": "8525ecf2115237671ce6401762a348e94a38557f21fcdadfc1c6527a5813843b"
+      },
+      "green": {
+        "command": "python -B host_scope_regression_fixed.py -v",
+        "tests": 3,
+        "passed": 3,
+        "exit_code": 0,
+        "log_sha256": "e703fcd37c2fd136cd85eddfe839cc51e7e743b3e6661283c10dec0c2d95a96c"
+      },
+      "fix_proposal": "Validate each ASCII DNS label: 1..63 chars, begins/ends alnum, internal alnum/hyphen; total host length <=253, before admitting as public. Apply to both producer and sampler and add committed formal integration regressions. Keep home.arpa root denial and public controls.",
+      "evidence_urls": [
+        "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
+        "https://github.com/lu403369069lu-prog/WoolRadar/blob/1482f97e61b1163ccdc761906eda087fcba48628/core/public_corpus.py"
+      ],
+      "business_accepted": false,
+      "native_receipt": false
     }
   ],
   "run_history": [
@@ -751,6 +874,25 @@
       "actual_cases": "Exact json.loads options isolated: 2 baseline PASS exit0; proposed parse_float guard isolated 5 PASS exit0; full PR43 CLI suite not run.",
       "previous_cross_run_evidence": "rev7 c281023133e5752836ffce6cbdd0c001856088e3 + rev8 fccfaf2f7db56f32edb37738f53e1790f3bd25b1; third round references second event and reviewed different PR; both now cold-read in this independent Scheduled run.",
       "next_action": "Fix parser overflow conversion on independent PR43 draft only after stable HEAD confirmation; add full CLI subprocess regression, run python -B -m unittest discover -s tests -p 'test_grant_lead_diagnostic*.py' -v; separately address existing best_section tie P2; no merge."
+    },
+    {
+      "origin": "SCHEDULED",
+      "event_id": "SCHEDULED-20261017T153444Z-multi-family-w43-samh01-wrh07",
+      "run_utc": "2026-10-17T15:34:44Z",
+      "reviewed_keys": [
+        "WoolRadar#43",
+        "YinQieJi/SAM-H01",
+        "WoolRadar#44"
+      ],
+      "source_heads": [
+        "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+        "8719d75205e50209e9b11998a2af72c4d08ee975",
+        "1482f97e61b1163ccdc761906eda087fcba48628"
+      ],
+      "checkpoint_status": "PENDING_READBACK",
+      "actual_cases": "W43 local candidate patch exact-source formal subsets 10+4+9+9 pass, strict file timeout; SAM-H01 exact strict JSONL source 12/12 isolated Node; W44 malformed DNS label red3 green3 extracted lexical function.",
+      "strict_delivery": "FAIL_0_OF_2",
+      "next_action": "First fix W44 producer+sampler malformed DNS labels in independent candidate and run original formal modules; retry W43 strict formal test timeout; continue SAM-H01 full loader/build and untouched family review. No PR merges."
     }
   ],
   "acceptance": {
@@ -850,10 +992,10 @@
         "goal": "公开生产者URL身份",
         "original_disposition": "READY_FOR_LOCAL_CODEX",
         "gate": null,
-        "review_state": "LOCAL_NATIVE_RECEIPT_PENDING",
-        "recent_evidence_url": null,
-        "code_review_key": null,
-        "new_evidence_scope": null,
+        "review_state": "NEW_CLOUD_CODE_EVIDENCE_PARTIAL",
+        "recent_evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
+        "code_review_key": "WoolRadar#44",
+        "new_evidence_scope": "Malformed DNS labels accepted in producer/sampler extracted red 3 failed green 3 pass; full modules/formal suite pending",
         "native_frozen_accepted": false,
         "business_accepted": false
       },
@@ -866,7 +1008,7 @@
         "review_state": "NEW_CLOUD_CODE_EVIDENCE_PARTIAL",
         "recent_evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
         "code_review_key": "WoolRadar#39",
-        "new_evidence_scope": "root home.arpa gap found; extracted function red/green, new formal tests pending",
+        "new_evidence_scope": "root home.arpa gap found; extracted function red/green, new formal tests pending; new malformed DNS-label extracted red/green P2; full source formal pending",
         "native_frozen_accepted": false,
         "business_accepted": false
       },
@@ -1019,10 +1161,10 @@
         "goal": "严格JSONL重复键",
         "original_disposition": "READY_FOR_LOCAL_CODEX",
         "gate": null,
-        "review_state": "LOCAL_NATIVE_RECEIPT_PENDING",
-        "recent_evidence_url": null,
-        "code_review_key": null,
-        "new_evidence_scope": null,
+        "review_state": "NEW_CLOUD_CODE_EVIDENCE_PARTIAL",
+        "recent_evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/13",
+        "code_review_key": "YinQieJi#13",
+        "new_evidence_scope": "Exact strict-jsonl Git blob 12/12 isolated Node22; full loader/build/Node24/26 not run",
         "native_frozen_accepted": false,
         "business_accepted": false
       },
@@ -1511,6 +1653,33 @@
         "attempts": 0,
         "last_error_code": null,
         "next_action": "Fix parser overflow conversion on independent PR43 draft only after stable HEAD confirmation; add full CLI subprocess regression, run python -B -m unittest discover -s tests -p 'test_grant_lead_diagnostic*.py' -v; separately address existing best_section tie P2; no merge."
+      },
+      {
+        "id": "RETRY-WOOL-PR44-DNS-LABEL-BOUNDARY",
+        "kind": "FOLLOW_UP_REVIEW",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 44,
+        "observed_head_sha": "1482f97e61b1163ccdc761906eda087fcba48628",
+        "status": "PENDING_NEXT_ELIGIBLE_RUN",
+        "attempts": 0,
+        "last_error_code": null,
+        "severity": "P2",
+        "reason": "New isolated lexical red3 green3: malformed DNS labels .example.org/a-.example.org/a.-b.example.org admitted as public by producer and sampler.",
+        "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/44",
+        "next_action": "On independent branch after HEAD stability, add label-by-label DNS validation to producer and sampler, committed formal regressions for invalid and public controls; run exact original test_public_sample_private_root_20261017.py plus full producer/sampler modules; no duplicate PR45."
+      },
+      {
+        "id": "RETRY-WOOL-PR43-STRICT-FORMAL-RUNTIME",
+        "kind": "TRANSIENT_TEST_EXECUTION",
+        "repo": "lu403369069lu-prog/WoolRadar",
+        "pr": 43,
+        "observed_head_sha": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+        "status": "RETRY_NEXT_RUN",
+        "attempts": 1,
+        "last_error_code": "ISOLATED_RUNNER_TIMEOUT_MID_TEST_FILE",
+        "reason": "Exact strict_json formal test file execution did not finish under current isolated runner; last visible test was test_wrong_type_authoritative_text_is_not_silently_ignored; no exit0/full suite acceptance.",
+        "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/43",
+        "next_action": "Run pinned exact test_grant_lead_diagnostic_strict_json.py in a reliable clean process with full timeout/exit capture, then run complete formal CLI suite on local patch; do not infer pass from partial stdout."
       }
     ],
     "summary": {

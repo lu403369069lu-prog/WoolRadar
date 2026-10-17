@@ -24,3 +24,12 @@
 Both PRs remain Draft; the newly created PR44 is also Draft. Nothing merged, shipped or touched the Windows/PLC/SQLite production runtime. The historical 50-family manifest remains **inventory only**; 29 native frozen command receipts and 8 external/policy gates cannot be zeroed by these tests.
 
 The cross-run Scheduled writer was still **UNVERIFIED** as of the last read (`checkpoint.revision=0`); ledger updates made interactively must say `INTERACTIVE_ONLY`, never `SCHEDULED_PERSISTED`.
+
+## SAM historical PR15 — second independent verified defect + Draft PR18
+
+- Original [SAM PR15](https://github.com/lu403369069lu-prog/YinQieJi/pull/15) exact HEAD `73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58`, source `SAM/snapshot/src/claim-audit-field-types.ts` original Git blob `fd95d6954872942db03e050648e3987f80420049`.
+- Confirmed code-level trust invariant gap: `evidenceIds: []` passed runtime type validation for a positive `entailment: 'entailed'`. The downstream `cards.ts` warning condition uses `entailment/evidenceTier`, not number of evidence IDs. These are synthetic offline tests, not proof of incorrect historic card answer.
+- Copied exact source to isolated Node v22.16 environment; `git hash-object` **matched GitHub original blob**. Four assertions: before patch **2 pass, 2 fail, exit 1**, after patch **4/4 pass, exit 0**. The corrected source rejects empty evidence IDs for entailed claims, but retains empty evidence IDs on `missing` verdicts.
+- Submitted separate stacked [SAM Draft PR18](https://github.com/lu403369069lu-prog/YinQieJi/pull/18), based on PR15 exact SHA, corrected source blob `f649a530e1616134b3008f7d08d7b07d29d331ce`. New repo-level **three test cases** in `SAM/snapshot/test/claim-audit-positive-evidence.test.ts` new blob `2d9293bbe89dfecaea39c34eb2b9de490c1b84c3`, including real JSONL loader validation.
+- **Pending:** run 3 new formal tests plus adjacent existing tests on actual PR18 checkout with lockfile-pinned `tsx`/Node; collect TAP counts and exit, test legacy frozen inputs for positive records with zero evidence IDs, obtain maintainer signoff before merge. No main branch, actual user source registry or production PLC read/write changed.
+

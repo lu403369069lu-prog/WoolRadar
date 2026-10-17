@@ -22,7 +22,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.target_ref || github.sha }}
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Checkout frozen engineering candidate
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.target_ref || 'e81ef59bc2b0b05fad5acfbb231ead92c0d2925e' }}
+          path: candidate
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
@@ -34,12 +40,13 @@ jobs:
         id: acceptance
         shell: bash
         run: |
-          python .github/scripts/engineering_acceptance.py
+          cd candidate
+          python ../.github/scripts/engineering_acceptance.py
       - name: Upload checkpoint even on test failure
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: engineering-acceptance-${{ github.run_id }}-${{ github.run_attempt }}
-          path: .engineering-acceptance/
+          path: candidate/.engineering-acceptance/
           if-no-files-found: error
           retention-days: 30

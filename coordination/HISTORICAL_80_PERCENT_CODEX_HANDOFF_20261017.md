@@ -118,8 +118,51 @@ python -B .\HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py --receipt C:\temp\history
 注意原始SHA已经固定在脚本内，若Codex修复代码使 HEAD 变化，重新审核新SHA并把本次回执标为`NEW_HEAD_REVALIDATION_REQUIRED`，不能直接改实参或脚本常量绕过原始基线判定。 
 
 ### 2026-10-17 Wool PR39本轮新增红绿证据与SHA更新
-- 当前PR39新HEAD为 `80c5ea18769c1312e5be5fd99a39e4f3d498c64f`；此前旧HEAD `80c5ea18769c1312e5be5fd99a39e4f3d498c64f` 的Linux58次结果**不能继续作为新HEAD的整包绿灯**。
+- 当前 PR39 冻结 HEAD 为 `80c5ea18769c1312e5be5fd99a39e4f3d498c64f`；上一版此句将“旧 HEAD”误写成同一个 SHA，现已纠正：旧回执的精确来源需以其各自 Git blob 为准，**不得仅凭历史 Linux58次局部回归推定当前 HEAD 的 Windows 整包绿灯**。
 - [WR-H16 新增编号/Unicode列表识别实际红→绿](https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/wool-historical-integration-20261017/independent-quality/developer-grant-20261017/H16_NUMBERED_SCOPE_RED_GREEN.md)：精确Git blob匹配，旧11+新6真实正式测试共17项，旧源3失败exit1，新源17通过exit0；仍缺Windows整包、独立新窗口准确率与日报签名桥。
 - `HISTORICAL_CODEX_BATCH_RUNNER_20261017.py`中Wool EXPECTED已同步为上述新HEAD；先在隔离工作树新SHA上全批次检验，勿自动切换到旧SHA绕过校验。
 
 **2026-10-17集成器修订**：当前批次执行器Git blob `2740d556f24d2ffea563026628f5a904a7a3de73` 已修复Windows `npm.cmd`和来源回执协议对齐；上方8个真实正式测试涵盖含skip/未知通过数的回执拒绝。任何测试被skip都不算已全面验收，即使process exit0。未在三个完整项目Windows执行全部批次，不可冒充验收通过。
+
+
+## 2026-10-17 冻结清单逐家族执行（更新版）
+
+为避免“42条交接就绪”只成为纸面分类，此次在**不改 Codex 主分支或生产文件**的前提下，新增第二套以真实家族为单位的可执行验收链路：
+
+- [42家族精确测试执行器](HISTORICAL_CODEX_42_TARGET_RUNNER_20261017.py)：校验当前仓库 **HEAD 必须完全等于冻结SHA**、工作树干净、独立副本非生产目录；校验完整 manifest Git blob 为 `96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744`、每条 `verified_test_path` 的 **HEAD Git blob 与磁盘实际字节一致**、CLI只在白名单的 `python -B -m unittest` 或 `node --test` 范围；42条任务按真实命令去重为39次。默认只检查并输出命令，**只有显式 `--run` 才执行**。以隔离的临时 HOME/TEMP 和清除常见环境凭据执行，日志/回执只放本地临时目录。跳过、零测试、命令不匹配或统计异常一律不算完整PASS。
+- [42家族逐任务回执验收器](HISTORICAL_CODEX_42_RECEIPT_GUARD_20261017.py)：检查39条命令和42个家族是否一一完整覆盖（分别对应15个Wool、21个SAM、6个Coord），每条命令的实际argv/cwd、运行SHA、日志文件名/字节SHA256、计数/退出码和Python/Node/OS版本；部分跳过/缺少家族/伪造命令/漏批次/无真实原始日志一律拒绝。**该新验收器的协议与上方旧整批 `HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py` 不同，严禁混用。**
+- 对应[执行器20个回归测试源码](test_historical_codex_42_target_runner_20261017.py)及[新回执验收器18个对抗测试源码](test_historical_codex_42_receipt_guard_20261017.py)已提交；**当前对话尚未实际在本地Python执行这38个正式测试，状态为 TEST_SOURCE_COMMITTED_UNEXECUTED**，应由 Codex 首先运行它们。不要将提交测试文件冒充绿灯。
+- 对42项清单重新逐条核对 `run_command` 的测试路径与GitHub冻结Git树的目标Git blob，**42/42精确匹配、0个残留路径错误、0个SHA错配**（此前WR-H15独立修复）。[逐家族可核对 JSON 回执](HISTORICAL_42_TARGET_ATTESTATION_20261017.json)。这仍仅是静态完整性核验，非42项执行通过。
+
+### Codex 立即执行（独立交接目录 + 三份只读仓库副本）
+
+先将本目录的执行器、验收器与 machine manifest **按原始字节**放在一个与三份待测Git checkout分离的本地交接目录。不可用可能修改编码或加BOM的PowerShell旧版文本重定向来制作manifest；如果Git blob核验失败，重新复制原始文件，不要修改脚本里的预期SHA以绕过。
+
+```powershell
+# 下面三个 --repo 都必须是新建、干净、与生产完全隔离的仓库副本。
+# 不可在 C:\WoolRadar、运行中的PLC/TwinCAT目录或真实SQLite仓库中执行。
+$handoff = "C:\temp\historical-handoff"
+$runner = "$handoff\HISTORICAL_CODEX_42_TARGET_RUNNER_20261017.py"
+$guard = "$handoff\HISTORICAL_CODEX_42_RECEIPT_GUARD_20261017.py"
+$manifest = "$handoff\HISTORICAL_80_PERCENT_CODEX_JOBS_20261017.json"
+
+# Step 1: 先验证工具自身，禁止跳过（当前尚未在本对话执行）
+python -B -m unittest discover -s $handoff -p "test_historical_codex_42_target_runner_20261017.py" -v
+python -B -m unittest discover -s $handoff -p "test_historical_codex_42_receipt_guard_20261017.py" -v
+
+# Step 2: 每个repo先只读预检，不执行任何测试
+python -B $runner --project wool --repo "C:\temp\wool-history-qa" --manifest $manifest
+python -B $runner --project sam --repo "C:\temp\sam-history-qa" --manifest $manifest
+python -B $runner --project coord --repo "C:\temp\coord-history-qa" --manifest $manifest
+
+# Step 3: 验证预检及源代码SHA均正确后才显式 --run；保持Node24和26各自独立回执
+python -B $runner --project wool --repo "C:\temp\wool-history-qa" --manifest $manifest --run
+python -B $runner --project sam --repo "C:\temp\sam-history-qa" --manifest $manifest --run
+python -B $runner --project coord --repo "C:\temp\coord-history-qa" --manifest $manifest --run
+
+# Step 4: 从输出的 RECEIPT_DIRECTORY 选择各自的receipt.json，以同一个manifest做原始日志检验
+python -B $guard --receipt "C:\temp\codex-history-manifest-XXXX\receipt.json" --manifest $manifest
+```
+
+**分层验收严格保持**：两套本地执行器与回执验收器即使全部PASS，也只可能证明指定提交的本地测试；`business_gold_accepted=false`、`historical_recovery_closed=false`、`windows_node24_and_26_both_verified=false` 仍必须保留，直到独立的真实来源金标/用户批准交付和跨平台正式证据另行完成。跑出的本地原始日志不得直接推到GitHub；仅在人工检查没有用户私有内容后向Issue #1/#2/#3发布脱敏的family_id、源SHA、exit、pass/fail/skip和日志SHA。
+

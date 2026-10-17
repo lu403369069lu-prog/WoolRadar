@@ -187,8 +187,8 @@
     "draft_pr": 17,
     "production_source": "SAM/snapshot/src/source-qualified.ts",
     "old_blob": "0f7b8c15f6d2bf221a0a7cbddc47f4251a8af72b",
-    "fixed_blob": "9708d860dce46c529b048963cd43d00ad93a7688",
-    "new_test_blob": "2124eacfc2f2a3ca3e73a2bab19ff65605ef418c",
+    "fixed_blob": "d0f0c2f51e743889bf2101e6f3a5268c0831d747",
+    "new_test_blob": "51c8dc4fe54feb0f7922d01ce5801320e15b0bce",
     "actual_node22_type_strip_negative_tests_before": {
       "tests": 7,
       "passed": 3,
@@ -213,6 +213,25 @@
     "official_full_repo_tsx_run_completed": false,
     "source_human_review_accepted": false,
     "real_mcp_validated": false,
-    "raw_win_node24_26_validated": false
+    "raw_win_node24_26_validated": false,
+    "additional_old_negative_tests": {
+      "tests": 11,
+      "passed": 8,
+      "failed": 3,
+      "exit_code": 1
+    },
+    "latest_joint_sam_node22": {
+      "tests": 54,
+      "passed": 54,
+      "failed": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "raw_stdout_sha256": "7dd9563641c786686b5eca80935d765f4330956cb92929cadacd6e7029dd407e"
+    },
+    "still_unverified": [
+      "Full project npm test with pinned tsx",
+      "Native Windows Node24/26",
+      "Real SAM MCP, 61-case/522-source gold and T009/T031 human review"
+    ]
   }
 }

@@ -189,6 +189,8 @@ def record_public_sample(root: Path, node: str, source: dict, rows: list[dict], 
     if any(type(decision) is not bool for decision in accepted):
         raise ValueError('CORPUS_DECISION_TYPE_MISMATCH')
     directory = Path(root) / 'data/public-corpus'
+    if ((Path(root) / 'data').is_symlink() or directory.is_symlink()):
+        raise ValueError('CORPUS_SYMLINK_PATH_FORBIDDEN')
     if not directory.resolve().is_relative_to(Path(root).resolve()):
         raise ValueError('CORPUS_PATH_OUTSIDE_ROOT')
     directory.mkdir(parents=True, exist_ok=True)

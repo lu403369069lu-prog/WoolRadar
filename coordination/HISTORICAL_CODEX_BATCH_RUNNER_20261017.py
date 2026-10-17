@@ -177,7 +177,9 @@ def main() -> int:
         except (OSError, subprocess.TimeoutExpired) as exc:
             rc, stdout = 125, repr(exc)
         logpath = output_dir / (label + ".log")
-        logpath.write_text(stdout, encoding="utf-8")
+        # Write literal UTF-8 bytes: Windows text newline translation would
+        # make the receipt digest differ from the on-disk log digest.
+        logpath.write_bytes(stdout.encode("utf-8"))
         rc, counts = evaluate_run(label, rc, stdout)
         row = {"batch": label, "exit_code": rc,
                "log_sha256": hashlib.sha256(stdout.encode("utf-8")).hexdigest(),

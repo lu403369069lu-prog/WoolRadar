@@ -20,7 +20,7 @@ class RunnerEvidenceIntegrity(unittest.TestCase):
         mapping=[{'family_id':'WR-HQ','source_blob':'synthetic','command_key':cmd['key_sha256']}]
         rc,receipt,folder=runner.run_commands([cmd],mapping,'test-commit','wool')
         self.addCleanup(lambda: shutil.rmtree(folder,ignore_errors=True))
-        self.assertEqual(rc,0)
+        self.assertNotEqual(rc,0)  # non-UTF8 output cannot pass strict official guard
         self.assertEqual((folder/('a'*64+'.log')).read_bytes(),raw)
         self.assertEqual(receipt['results'][0]['log_sha256'],hashlib.sha256(raw).hexdigest())
 

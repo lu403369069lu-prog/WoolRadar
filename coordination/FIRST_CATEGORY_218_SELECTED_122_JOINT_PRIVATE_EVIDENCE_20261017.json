@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-17",
+  "status": "REAL_SELECTED_LINUX_QA_PASS_WITH_NATIVE_FULL_REPO_AND_REAL_BUSINESS_GATES_OPEN",
+  "execution_env": {
+    "os": "Linux",
+    "python": "3.13.5",
+    "node": "v22.16.0",
+    "source_scope": "selected Git blob-matched modules in disposable temporary directories; not complete private repository checkout"
+  },
+  "selected_methods": {
+    "total": 218,
+    "passed": 218,
+    "failed": 0,
+    "skipped": 0,
+    "suites": [
+      {
+        "project": "coord42",
+        "pr": 42,
+        "test_methods": 53,
+        "exit_code": 0,
+        "git_head": "d6d370c09b8cd17d036bcfb62d378ec5fabff4db",
+        "runner_blob": "08af6d6304758399282d7b1799604089570c7b09",
+        "guard_blob": "072ba64688fcd479795620b870a803ddb29dc78b",
+        "raw_stdout_sha256": "fbe0979ad4ac5e7f8046b8d562ac205ee72e19af9b2c6e318f5427d9855f7f26"
+      },
+      {
+        "project": "wool41",
+        "pr": 41,
+        "test_methods": 77,
+        "exit_code": 0,
+        "git_head": "1208203b34d65f234d3819b6f45449afb75fc119",
+        "source_blob": "ee60eb926bef7f4624f49c94256a070510b36b01",
+        "new_test_blobs": [
+          "9aeee0fb7c4353a1bbf191ef43b407924cd85f3e",
+          "4c5dad72e71f8244b722bf982a67831dec05c36d"
+        ],
+        "raw_stdout_sha256": "49a733d55915a4f2154264454f9d3b7a3e7c2f1b2a2135034de1f228a3fd57b4"
+      },
+      {
+        "project": "sam17",
+        "pr": 17,
+        "test_methods": 43,
+        "exit_code": 0,
+        "git_head": "efcd73540587c482c93b8d487385de636d47fadd",
+        "source_blob": "22582e67d9ac18aa66f4f43ac1d7556d6edc1476",
+        "new_test_blob": "683327a3f353883b0e646a792da3365e17fd7874",
+        "raw_stdout_sha256": "d5412ac6dbdf58afa885a9476c928432f0c66cd2cbf19c21ff686b953b3c73db"
+      },
+      {
+        "project": "grant43",
+        "pr": 43,
+        "test_methods": 45,
+        "exit_code": 0,
+        "git_head": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
+        "source_blob": "6fe02aa7a83479c4eeea6a448b80f75988a13ffd",
+        "raw_stdout_sha256": "f428aac66f9c991c677ca2866ec6ffa68580455f24d81be69bdf9e99a5439b41"
+      }
+    ]
+  },
+  "joint_source_module_graph": {
+    "pr_heads": {
+      "wool41": "1208203b34d65f234d3819b6f45449afb75fc119",
+      "grant43": "621871f9afc5ae43272d04bcff9d4763ae25fa5a"
+    },
+    "selected_tests": 122,
+    "passed": 122,
+    "failed": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "raw_stdout_sha256": "826b057b6b8f1d7b072b93a4ed0d176498d0562096f57a465b85ba9078f37a58",
+    "scope": "Manually co-staged exact candidate core files and test files; not actual Git merge or full repo",
+    "overlaps_selected_218": true
+  },
+  "negative_controls": [
+    {
+      "problem": "Sensitive account/profile/billing routes and percent-encoded users path leaked username into public samples",
+      "old_cases": 3,
+      "old_failed_assertions": 7,
+      "old_exit": 1,
+      "old_raw_log_sha256": "a39f968af45dd301cef7751ac2e6de927cf7d396bc970875ad6a7cfbde5c74fc",
+      "new_cases": 3,
+      "green": true
+    },
+    {
+      "problem": "Personally identifying referral query ref= was retained and accepted as campaign identity, including SPA hash-route",
+      "old_cases": 3,
+      "old_failed_assertions": 3,
+      "old_exit": 1,
+      "old_raw_log_sha256": "f08d91945b88599a542fe9f47c76c02d6282a341c8f09f7797bb5c4c52b7cc0e",
+      "new_cases": 3,
+      "green": true
+    },
+    {
+      "problem": "SAM 0.4.0 pre-reviewed JSONL escaped strings/whitespace/precise decimal lexical text reserialized rather than preserved",
+      "old_cases": 3,
+      "old_failed": 2,
+      "old_exit": 1,
+      "old_raw_log_sha256": "196f8334d876040a10769c9c3ccf0322aeffefbf19e5eb25ad36805d2570f6ab",
+      "new_cases": 3,
+      "green": true
+    },
+    {
+      "problem": "SAM teacher reviewed JSONL without final newline got an extra newline on intermediate patch",
+      "old_cases": 4,
+      "old_failed": 1,
+      "old_exit": 1,
+      "old_raw_log_sha256": "96c6039f0d50a1e938cf7f78c0b0f27fe5acbb7879aaab11370285269fe78d4f",
+      "new_cases": 4,
+      "green": true
+    }
+  ],
+  "official_guard_raw_log_grammar": {
+    "guard_blob": "072ba64688fcd479795620b870a803ddb29dc78b",
+    "five_raw_logs_checked": 5,
+    "all_counts_match": true,
+    "total_runs_count_including_joint_duplicates": 340,
+    "duplicate_coverage_must_not_be_summed": true
+  },
+  "frozen_historical": {
+    "families": 50,
+    "ready": 42,
+    "external_policy_gated": 8,
+    "distinct_commands": 39,
+    "partially_ran_in_reconstructed_Linux_tree": 10,
+    "partial_family_coverage": 11,
+    "partial_methods_passed": 105,
+    "missing_exact_full_native_receipts": 29,
+    "typescript_tsx_missing": 17,
+    "python_missing_complete_old_checkout": 12,
+    "full_guard_review_accepted": false,
+    "native_contract": "coordination/CODEX_FROZEN_FULL_39_NATIVE_HANDOFF_20261017.md",
+    "command_matrix": "coordination/FIRST_CATEGORY_29_FROZEN_COMMANDS_NATIVE_GATE_MATRIX_20261017.json"
+  },
+  "limitations": [
+    "No full old Git worktree mounted, and private GitHub cannot be cloned via network from isolated container (DNS resolution unavailable).",
+    "There are no real native Windows Node24/Node26 complete full repository tests or acceptance receipts.",
+    "SAM real 0.4.0 artifacts, 61/522 heldout, MCP, release pointer and rollback remain untested.",
+    "Wool actual fresh independent source gold, eligibility and 09:30 consumer receipts remain untested.",
+    "Four PRs are Draft and unmerged; repo-level mergeable does not imply cross-branch CI or runtime acceptance.",
+    "No local production, accounts, authentication material, PLC, paid CI, scheduler-based GitHub writes, or automated PR merges touched."
+  ],
+  "historical_recovery_closed": false
+}

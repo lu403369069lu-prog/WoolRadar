@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import ipaddress
 import json
 import math
 import os
@@ -30,6 +31,21 @@ def canonical_public_url(raw: object) -> str | None:
             return None
         host = p.hostname.lower().rstrip('.')
         if not re.fullmatch(r'[a-z0-9.-]+', host) or '..' in host or host.startswith('-'):
+            return None
+        # A blind review source must refer to an ordinary public hostname.
+        # IP literals and private-only DNS namespaces are not public offers.
+        # This is a lexical check; it does not claim to verify live DNS,
+        # redirects, publisher authenticity, or personal eligibility.
+        if ('.' not in host or host.rsplit('.', 1)[-1].isdigit()
+                or host.endswith(('.localhost', '.local', '.internal', '.lan',
+                                   '.home.arpa', '.invalid', '.test',
+                                   '.example', '.onion'))):
+            return None
+        try:
+            ipaddress.ip_address(host)
+        except ValueError:
+            pass
+        else:
             return None
         # Never collapse business-significant query parameters or app routes.
         # Remove only known marketing trackers; a query such as ?batch=2

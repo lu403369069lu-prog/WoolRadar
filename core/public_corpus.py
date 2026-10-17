@@ -29,6 +29,12 @@ _SENSITIVE_PATH = re.compile(r'(?i)/(?:token|secret|password|session|api[-_]?key
 # Identity-bearing addresses are private even inside public-feed resource paths.
 _EMAIL = re.compile(r'(?i)(?<![\w.+%\-])[\w.+%\-]+@[a-z0-9.-]+\.[a-z]{2,}')
 _ENCODED_EMAIL = re.compile(r'(?i)(?<![\w.+%\-])[\w.+%\-]+%(?:25)*40[a-z0-9.-]+\.[a-z]{2,}')
+_SENSITIVE_TEXT_ASSIGNMENT = re.compile(
+    r'(?i)\b(?:api[_ -]?key|access[_ -]?token|refresh[_ -]?token|password|'
+    r'client[_ -]?secret|session[_ -]?id)\s*[:=]\s*[\"\']?[^\s\"\';,]{4,}')
+_BEARER_CREDENTIAL = re.compile(r'(?i)\bBearer[ \t]+[A-Za-z0-9._~+/\-]{12,}')
+_LONG_DIGIT_SECRET = re.compile(r'(?<![A-Za-z0-9])\d{13,}(?![A-Za-z0-9])')
+_GROUPED_CARD_NUMBER = re.compile(r'(?<!\d)(?:\d{4}[ -]){3}\d{4}(?!\d)')
 
 def _semantic_query(query: str) -> tuple[str, bool]:
     kept = {}
@@ -186,7 +192,11 @@ def _clean_url(value: str) -> str:
 def _clean_text(value: str) -> str:
     scrubbed = re.sub(r'https?://[^\s<>"\']+', lambda match: _clean_url(match.group(0)), value, flags=re.I)
     scrubbed = _EMAIL.sub('[private email redacted]', scrubbed)
-    return _ENCODED_EMAIL.sub('[private email redacted]', scrubbed)
+    scrubbed = _ENCODED_EMAIL.sub('[private email redacted]', scrubbed)
+    scrubbed = _SENSITIVE_TEXT_ASSIGNMENT.sub('[private credential redacted]', scrubbed)
+    scrubbed = _BEARER_CREDENTIAL.sub('[private credential redacted]', scrubbed)
+    scrubbed = _LONG_DIGIT_SECRET.sub('[private number redacted]', scrubbed)
+    return _GROUPED_CARD_NUMBER.sub('[private number redacted]', scrubbed)
 
 
 def record_public_sample(root: Path, node: str, source: dict, rows: list[dict], accepted: list[bool]) -> Path | None:

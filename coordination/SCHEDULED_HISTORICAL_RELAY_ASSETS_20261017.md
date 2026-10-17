@@ -43,3 +43,9 @@ Actual Git blob comparisons:
 - Main PR23 at exact source SHA `6babbe12727652e8626e0fe6f554eb01fecd4a30` still lacks the four coordination source files noted above.
 
 This isolates a real historic integration decision: **PR11 is the latest PR9 relay descendant, but its base diverges 157 commits from main and the PR8 dry-run hotfix cannot be treated as included byte-for-byte**. Proper work is a carefully reviewed current-head overlay with tests and owner authorization, never blindly merge old PRs in number order. Do not spend private Actions runner minutes without user approval.
+
+## Functional readback of diverged PR8 dispatcher dry-run branch
+
+Despite different blob hashes, exact full file source on PR8/PR9/PR11 was read and compared around its `dispatch(..., dry_run=True)` branch. PR8 used an in-memory SQLite connection and copied existing state via `mode=ro` source, no parent `mkdir`. PR9 and PR11 **still have that same fail-safe algorithm**, with changes: use `contextlib.closing(sqlite3.connect(..., uri=True))` to ensure the SQLite source handle closes and guard rollback on `conn.in_transaction`. So H04 dry-run **protection semantically appears retained and improved in PR9/11**, despite not being byte-identical. This is **STATIC_REVIEW_SAME_DESIGN**, NOT a newly run dry-run temp-DB test at those exact SHAs. The latest PR11 test suite remains the formal integration gate; do not revert PR11's connection-close improvement by transplanting an old PR8 file.
+
+The distinction matters: file SHA dedup alone would call the fix absent, whereas semantic diff identifies retained behavior with further hardening. Neither PR is merged into Wool main PR23; autonomous delivery remains unproven.

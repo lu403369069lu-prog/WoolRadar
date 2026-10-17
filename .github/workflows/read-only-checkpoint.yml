@@ -1,0 +1,37 @@
+# Candidate only: schedule executes on the default branch AFTER an explicitly reviewed merge.
+# Does not execute an AI agent, access local Windows reports, or modify repository state.
+name: WoolRadar read-only checkpoint
+on:
+  schedule:
+    - cron: '5 * * * *'
+    - cron: '30 1 * * *'
+  workflow_dispatch:
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read current issue and pull request metadata
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          {
+            echo "## WoolRadar read-only checkpoint"
+            echo "- UTC run: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+            echo "- Event: ${{ github.event_name }}"
+            echo "- Only GitHub Issue/PR metadata is checked. No AI, source crawl, production test, or delivery confirmation."
+            for n in 2 3; do
+              gh api "repos/$GITHUB_REPOSITORY/issues/$n" --jq '"- Issue #\(.number): state=\(.state); updated=\(.updated_at)"'
+            done
+            echo "- Open PRs (dynamic, repository API pages):"
+            gh api --paginate "repos/$GITHUB_REPOSITORY/pulls?state=open&per_page=100" --jq '.[] | "- PR #\(.number): state=\(.state); draft=\(.draft); head=\(.head.sha)"'
+          } >> "$GITHUB_STEP_SUMMARY"

@@ -1,0 +1,24 @@
+--- a/core/db.py
++++ b/core/db.py
+@@ -123,12 +123,15 @@
+     def upsert_candidate(self, candidate: Candidate) -> UpsertResult:
+         with self.connect() as conn:
++            # Serialize review lookup + key derivation with reindex's write
++            # transaction. Otherwise a migration can commit between the read
++            # and the insert, reintroducing a stale key and duplicate alert.
++            conn.execute('BEGIN IMMEDIATE')
+             link = conn.execute('SELECT review_json FROM campaign_links WHERE url=?', (normalize_url(candidate.url),)).fetchone()
+-        if link:
+-            candidate.metadata = {**candidate.metadata, 'campaign_review': json.loads(link[0])}
+-        key = canonical_key(candidate)
+-        batch = candidate.batch_id or ''
+-        now = candidate.discovered_at or utc_now()
+-        with self.connect() as conn:
++            if link:
++                candidate.metadata = {**candidate.metadata, 'campaign_review': json.loads(link[0])}
++            key = canonical_key(candidate)
++            batch = candidate.batch_id or ''
++            now = candidate.discovered_at or utc_now()
+             # The lookup and insertion must not race across collection nodes.
+             # SQLite resolves the unique-key conflict atomically, and rowcount
+             # distinguishes the first sighting from concurrent duplicates.

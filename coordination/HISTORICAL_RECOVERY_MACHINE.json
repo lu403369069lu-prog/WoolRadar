@@ -1,0 +1,691 @@
+{
+  "schema": 1,
+  "updated_utc": "2026-10-17",
+  "historical_recovery_closed": false,
+  "historical_first": true,
+  "all_scheduled_run_logs_complete": "UNKNOWN_SOURCE_UNAVAILABLE",
+  "user_notifications_change_requested": false,
+  "source_sweep": {
+    "library_recursive_items": 25,
+    "library_oct14_17_items": 14,
+    "archive_zip_inspected": 2,
+    "full_scheduled_execution_transcripts_available": false,
+    "text_only_origins": [
+      "woolradar_reindex_upsert_atomicity.patch",
+      "test_woolradar_reindex_upsert_atomicity.py",
+      "woolradar_reindex_upsert_race_probe.py"
+    ],
+    "conversation_visible_files": 6,
+    "individually_accessible_hourly_run_bodies": "INCOMPLETE",
+    "library_folders_checked": [
+      "/SAM-WoolRadar-Checkpoints",
+      "/Google Drive"
+    ],
+    "library_unrelated_drive_not_used": true,
+    "visible_github_pr_census": {
+      "wool": 35,
+      "sam": 14,
+      "all": 49,
+      "covered_first_page_max_100": true
+    },
+    "visible_github_issue_comment_census": {
+      "WoolRadar#2": 61,
+      "WoolRadar#3": 83,
+      "YinQieJi#1": 56,
+      "total": 200,
+      "detectable_event_keys": 109
+    },
+    "visible_pr_and_issue_api_census_complete": true,
+    "visible_library_listing_complete": true,
+    "archival_source_catalogue_complete_for_current_access": true,
+    "all_historical_hourly_task_runs_retrieved": false,
+    "visible_issue_body_sampling_analyzed": true,
+    "issue_body_sampling_expanded_families": 6,
+    "all_issue_comment_bodies_semantically_classified": false,
+    "coordination_historical_families": 7,
+    "visible_user_goal_tracks": [
+      "WoolRadar-discovery-and-delivery",
+      "YinQieJi-SAM",
+      "Cross-Agent coordination relay"
+    ],
+    "coordination_pr_ancestry_checked": true,
+    "coordination_exact_code_semantic_dedup_checked": true
+  },
+  "verified_draft_refs": {
+    "wool_main_pr23": "6babbe12727652e8626e0fe6f554eb01fecd4a30",
+    "wool_sampler_pr37": "743591b92e7da383f21f6d3a16cfd13bb4cbd65c",
+    "sam_main_pr5": "5aeb852577cc53da76f9a0b5e78dfef63a83a35b",
+    "sam_history_pr10": "f5e6562524b3438227e311fbc7ff0223b08a5a12",
+    "sam_claimkind_pr13": "8719d75205e50209e9b11998a2af72c4d08ee975",
+    "sam_workbuddy_pr14": "0cdc3b4e81b9e143cb92fabde1828b6c8a913e14",
+    "sam_audit_types_pr15": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
+    "sam_rooted_pr12": "a92a870951e1bbf5f2517865faca46b56a6546e7",
+    "sam_teacher_pr9": "ba2890004a45abe39d9a6da8b342db48162e9023",
+    "wool_grant_pr38": "75021367f71ba550a95ef098789e1f1201b21bad",
+    "wool_coord_return_pr11": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "wool_unified_pr39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50"
+  },
+  "families": [
+    {
+      "id": "WR-H01",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "main PR23 notification SENT finality; old raw SQL patch archived"
+    },
+    {
+      "id": "WR-H02",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "main PR23 BEGIN IMMEDIATE; WAL/reindex synthetic text assets archived"
+    },
+    {
+      "id": "WR-H03",
+      "status": "HISTORICAL_CANDIDATE_UNVERIFIED",
+      "summary": "CLAIMED lease + WAL backup old synthetic only"
+    },
+    {
+      "id": "WR-H04",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "notification STALE reuse candidate / PR22"
+    },
+    {
+      "id": "WR-H05",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "evidence transaction and PR22"
+    },
+    {
+      "id": "WR-H06",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "preview order PR28 merged reported, verify current source"
+    },
+    {
+      "id": "WR-H07",
+      "status": "PR39_EXACT_PRODUCER_HOST_UNICODE_RED_GREEN21_LINUX_FULL_HOLDOUT_PENDING",
+      "summary": "Historical exact current PR39 producer true Git blob383f3ad... (old6768c5...) + exact formal host scope5dc830..., unicode e26a0..., original timestamp c90cb... 21/21 Python3.13 pass/exit0, old exact producer host formal six methods 23 failed subtest assertions, prior producer surrogate case five errors; current whole Windows full & new public blind+09:30 report not verified. "
+    },
+    {
+      "id": "WR-H08",
+      "status": "PR39_EXACT_PRODUCER_HOST_UNICODE_RED_GREEN21_LINUX_FULL_HOLDOUT_PENDING",
+      "summary": "Historical exact current PR39 producer true Git blob383f3ad... (old6768c5...) + exact formal host scope5dc830..., unicode e26a0..., original timestamp c90cb... 21/21 Python3.13 pass/exit0, old exact producer host formal six methods 23 failed subtest assertions, prior producer surrogate case five errors; current whole Windows full & new public blind+09:30 report not verified. Sampler was previously 24/24 on older code; must rerun at new current PR39 HEAD."
+    },
+    {
+      "id": "WR-H09",
+      "status": "PR39_EXACT_PRODUCER_HOST_UNICODE_RED_GREEN21_LINUX_FULL_HOLDOUT_PENDING",
+      "summary": "Historical exact current PR39 producer true Git blob383f3ad... (old6768c5...) + exact formal host scope5dc830..., unicode e26a0..., original timestamp c90cb... 21/21 Python3.13 pass/exit0, old exact producer host formal six methods 23 failed subtest assertions, prior producer surrogate case five errors; current whole Windows full & new public blind+09:30 report not verified. "
+    },
+    {
+      "id": "WR-H10",
+      "status": "PR39_EXACT_PRODUCER_TIMESTAMP_RED9_GREEN58_LINUX_MAIN_WINDOWS_PENDING",
+      "summary": "New independent exact core/public_corpus.py blob6768.. fixes RFC2822/ISO8601 zone-aware UTC-only, original complete producer blob412a.. fails9/10 new genuine test. Current integrated PR39 tests/ 34/34 + sampler23 and exact original producer schema1 =24/24, 58 distinct Python3.13 unittest methods pass. Full Windows/new blind/provider claimability pending | 2026-10-17 new exact PR39 HEAD80c5 changed grant paragraph/numbered/Unicode bullet parser source8543 and formal test9263; actual same-source Python tests40/40 and sampler+schema24/24 =64 distinct local pass exit0; whole Windows/new blind NOT RUN"
+    },
+    {
+      "id": "WR-H11",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "developer grants fee negation and PR29 source"
+    },
+    {
+      "id": "WR-H12",
+      "status": "HISTORICAL_PROTOTYPE_ONLY",
+      "summary": "synthetic signing 22/22 not 09:30 verified"
+    },
+    {
+      "id": "WR-H13",
+      "status": "REAL_BUSINESS_ACCEPTANCE_FAILED",
+      "summary": "47 independent cases TP1 FN3, 25 percent recall and false split"
+    },
+    {
+      "id": "WR-H14",
+      "status": "BLOCKED_AUTONOMOUS_WRITER",
+      "summary": "no Scheduled direct GitHub write verified"
+    },
+    {
+      "id": "WR-H15",
+      "status": "HISTORICAL_CANDIDATE_UNVERIFIED",
+      "summary": "delivery whitelist/official status old synthetic tests only"
+    },
+    {
+      "id": "WR-H16",
+      "status": "PR39_NUMBERED_UNICODE_SCOPE_EXACT64_LINUX_MAIN_GOLD_PENDING",
+      "summary": "Wool Draft PR39 Git core blob8543c9c.. and 6 new formal blob9263786.. exact source bytes verified by git hash-object. Existing 11 + new6: original exact ce53bfd.. red 3/17 exit1; new exact8543c.. green17/17 exit0 on local isolated Linux Python. Full new PR39 Windows tests, actual external gold, recall25%, signed daily bridge remain NOT_VERIFIED. | 2026-10-17 new exact PR39 HEAD80c5 changed grant paragraph/numbered/Unicode bullet parser source8543 and formal test9263; actual same-source Python tests40/40 and sampler+schema24/24 =64 distinct local pass exit0; whole Windows/new blind NOT RUN"
+    },
+    {
+      "id": "SAM-H01",
+      "status": "EXACT_LOADER_COMBINED_14_PASS_LINUX",
+      "summary": "PR15 stacked exact loader/strict JSONL/policy real Node22 combined 14/14; full Windows/MCP pending"
+    },
+    {
+      "id": "SAM-H02",
+      "status": "EXACT_LOADER_COMBINED_14_PASS_LINUX",
+      "summary": "PR13 claimKind/PR15 typed combined original 14 failed3 then fixed on PR15 14pass exit0"
+    },
+    {
+      "id": "SAM-H03",
+      "status": "EXACT_LOADER_COMBINED_14_PASS_LINUX",
+      "summary": "PR15 types+PR13 enum+PR11 strict JSONL actual source Node22 14/14, needs Node24/26/MCP"
+    },
+    {
+      "id": "SAM-H04",
+      "status": "SHA_BOUND_DRAFT_REAL_FILE_4_PASS_CARDS_FULL_BUILD_PENDING",
+      "summary": "PR15 bound reviewedArtifactSha256 to real authorized whole cards JSONL bytes; old exact loader red2/4, fixed green4/4 and combined genuine 34/34 Node22; cards.ts same-buffer code committed but zod/full build/MCP not run; previous 3 other dependent formal test fixtures (quality-gates, inheritance-source-gate, iteration-fixes) corrected to hash exact reviewed cards bytes on PR15; full zod/MCP formal execution still pending"
+    },
+    {
+      "id": "SAM-H05",
+      "status": "EXACT_ROOTED_FORMAL_13_PASS_LINUX",
+      "summary": "PR12 original12 tests + actual POSIX rg case parity1 all13/13 exit0, Windows/MCP pending"
+    },
+    {
+      "id": "SAM-H06",
+      "status": "PR15_EXACT_POSIX_RG572_FORMAL_1_PASS_WINDOWS_PENDING",
+      "summary": "Actual entire committed TS formal test blob77a277 imported and passed Node22 1 TAP method with 572 real ripgrep14.1 comparisons and zero mismatches; combined35/35 later39/39; Windows parity untested"
+    },
+    {
+      "id": "SAM-H07",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "PR6 registered FTS locator scope"
+    },
+    {
+      "id": "SAM-H08",
+      "status": "REAL_BUSINESS_ACCEPTANCE_FAILED",
+      "summary": "61 positives only 10 source bound, 51 refused"
+    },
+    {
+      "id": "SAM-H09",
+      "status": "PR9_ALL_44_EXACT_FORMAL_LINUX_PASS_UNMERGED",
+      "summary": "All five real formal *.test.mjs at PR9 and four runtime .mjs files exact Git blobs, Node22 TAP44/44 exit0; real source gold and full SAM package still pending."
+    },
+    {
+      "id": "SAM-H10",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "older PR3 URL and symlink races"
+    },
+    {
+      "id": "SAM-H11",
+      "status": "SOURCE_GOLD_NOT_VERIFIED",
+      "summary": "T009 synthetic projection"
+    },
+    {
+      "id": "SAM-H12",
+      "status": "HISTORICAL_CANDIDATE_UNVERIFIED",
+      "summary": "claim scope order isolation"
+    },
+    {
+      "id": "SAM-H13",
+      "status": "RELEASE_ACCEPTANCE_UNVERIFIED",
+      "summary": "dist/install/cache/upgrade rollback and final 3 rounds | 2026-10-17 actual current PR15 full build-release-manifest subprocess synthetic temp Git checks5/5 plus existing atomic helper6/6, but no Windows24/26 release, installed artifact pointer/rollback/61/522 gold, so release still UNVERIFIED. | 2026-10-17 real original migration old red4 and corrected same-file atomic individual write source exact formal migration7/7, combined release tools18/18 Linux. Full production release pointer/rollback/gold still NOT VERIFIED."
+    },
+    {
+      "id": "SAM-H14",
+      "status": "PR9_ALL_44_EXACT_FORMAL_LINUX_PASS_UNMERGED",
+      "summary": "All five real formal *.test.mjs at PR9 and four runtime .mjs files exact Git blobs, Node22 TAP44/44 exit0; real source gold and full SAM package still pending."
+    },
+    {
+      "id": "SAM-H15",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "PR14 explicit WorkBuddy filter fallback guard"
+    },
+    {
+      "id": "SAM-H16",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "WorkBuddy Promise.all rank order already in current main"
+    },
+    {
+      "id": "SAM-H17",
+      "status": "PR15_EXACT_RELEASE_BUILDER_MIGRATION_RED4_GREEN18_LINUX_POINTER_WINDOWS_PENDING",
+      "summary": "Actual original source migration6bbba... red 1pass/4fail exit1 from partial target teacher overwrite after bad audit/teacher evidence; current exact code893c... pre-validates all predictable source inputs and uses atomic helper per file; original atomic6 + synthetic builder5 + real migration7 (incl malformed UTF8 refusal+BOM CRLF byte preservation)=18 distinct Node22 TAP pass exit0. Still no Windows24/26, multi-file current.json pointer commit, Skill installation or rollback."
+    },
+    {
+      "id": "SAM-H18",
+      "status": "PR15_EXACT_POSIX_RG572_FORMAL_1_PASS_WINDOWS_PENDING",
+      "summary": "Same actual formal POSIX rg572 and original old glob-case regression; current PR15 code and test matched Git blobs, Windows semantics pending"
+    },
+    {
+      "id": "SAM-H19",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "PR14 empty WorkBuddy lines full source Node22 3/3"
+    },
+    {
+      "id": "SAM-H20",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "normative version/date null and PR5 refusal"
+    },
+    {
+      "id": "SAM-H21",
+      "status": "CURRENT_CODE_NEEDS_FORMAL_REGRESSION",
+      "summary": "WorkBuddy exact source excerpt hash currently verified"
+    },
+    {
+      "id": "WR-H17",
+      "status": "MAINTAINER_APPROVAL_REQUIRED",
+      "summary": "older payment-like fixture in reachable Git history; no numeric details copied; history cleanup not automatic"
+    },
+    {
+      "id": "WR-H18",
+      "status": "SOURCE_AND_EXACT_OFFICIAL_NEGATIVE_TEST_PRESENT_REEXECUTION_PENDING",
+      "summary": "Actual main core/notify.py blob f2b330... emits uncertain on external success but DB CAS0; tests/test_notify_reindex_transaction.py blob ac5ec... asserts sent=0 uncertain=1 and replacement stays PENDING. Current source/test existence verified; test itself not newly executed this turn"
+    },
+    {
+      "id": "WR-H19",
+      "status": "STAGED_DRAFT_TEST_PENDING",
+      "summary": "PR25 eleven primary official eligibility condition seeds, independently reviewed gold not frozen"
+    },
+    {
+      "id": "SAM-H22",
+      "status": "PR9_ALL_44_EXACT_FORMAL_LINUX_PASS_UNMERGED",
+      "summary": "All five real formal *.test.mjs at PR9 and four runtime .mjs files exact Git blobs, Node22 TAP44/44 exit0; real source gold and full SAM package still pending."
+    },
+    {
+      "id": "SAM-H23",
+      "status": "EXACT_EVAL_CONTRACT_ORIGINAL_FORMAL_4_PASS_LINUX_REAL_GOLD_PENDING",
+      "summary": "Actual original eval-contract.ts blob78fbe..., original eval-input.test.ts blob4f92..., and strict-jsonl source blob81d85... locally exact; Node22 4/4 pass, combined true-module 39/39 exit0; no actual 61-question source gold"
+    },
+    {
+      "id": "SAM-H24",
+      "status": "REAL_SOURCE_GOLD_MISMATCH",
+      "summary": "T031 Axis question expected evidence card points to FSM path; do not promote source score"
+    },
+    {
+      "id": "COORD-H01",
+      "status": "STAGED_OLDER_PR_NOT_MAIN",
+      "summary": "PR6 offline standardlib dispatcher/idempotency; source absent from Wool main PR23"
+    },
+    {
+      "id": "COORD-H02",
+      "status": "STAGED_OLDER_PR_NOT_MAIN",
+      "summary": "PR7 GitHub event provenance adapter not deployed"
+    },
+    {
+      "id": "COORD-H03",
+      "status": "STAGED_OLDER_PR_NOT_MAIN",
+      "summary": "PR7 HMAC webhook verifier and formal tests not deployed"
+    },
+    {
+      "id": "COORD-H04",
+      "status": "LATER_RELAY_SOURCE_RETAINS_FIX_FORMAL_TEST_PENDING",
+      "summary": "PR8 dry-run no-disk write algorithm preserved in PR9/11; latest adds contextlib.closing source handle and conditional rollback. Static exact-source comparison only, unmerged."
+    },
+    {
+      "id": "COORD-H05",
+      "status": "HISTORICAL_UNIT_GREEN_REAL_AUTONOMY_UNVERIFIED",
+      "summary": "PR9 V3/V5 relay, historical Windows 50/50 + five simulated rounds, real ChatGPT/Codex handoff not proven"
+    },
+    {
+      "id": "COORD-H06",
+      "status": "PR11_WINDOWS_57_HISTORICAL_RECEIPT_SOURCE_UNCHANGED_UNMERGED",
+      "summary": "Existing original Windows Python3.12.14 git return-sync unit result57 exit0 at a2a677, current PR11 27796 ahead1 doc/evidence only, actual relay.py relay_git.py and formal test exact same blob; independent new run and integration still pending"
+    },
+    {
+      "id": "COORD-H07",
+      "status": "REVIEW_ARTIFACT_ONLY",
+      "summary": "PR10/PR12 independent relay review advisory, no production agent automation proof"
+    }
+  ],
+  "verified_draft_refs_note": "Historical observations only; always fetch live PR HEAD before edits. PR35 changes when this file is updated; no self-referential exact SHA is possible.",
+  "verified_case_sensitive_rg_on_linux": {
+    "command": "rg --files -g '!secret.txt'",
+    "ripgrep_version": "14.1.1",
+    "files_returned": [
+      "Secret.txt",
+      "data.txt"
+    ],
+    "result": "case-sensitive on tested Linux",
+    "effect": "source-policy regex has i flag; cross-backend parity not yet agreed, no production change"
+  },
+  "active_backlog_next": [
+    "SAM current exact PR15 HEAD 73a3ff3c, original migration red4 real partial 0.4.1 overwrite then corrected fully-prevalidated atomic individual 0.4.1 files green migration7/7; + builder5 + atomic6 =18/18 Node22. H17 limited to predictable failure prevalidation, NOT cross-file atomic current.json pointer, Windows or gold.",
+    "Codex original immutable SAM manifest/runner pins 82bf, latest PR15 now 73a3; new exact acceptance commands in coordination/HISTORICAL_CURRENT_HEAD_CODEX_DELTA_20261017.md; do not silently change only one pin.",
+    "Latest source head drift: PR39 moved from 80c5 to 1aad ahead7 and PR15 from 82bf to efe9 ahead2; 42/42 original formal tests blobs unchanged, 3 new formal tests not in 42 manifest. Validate new code and tests in separate clean checkouts, then explicitly re-pin only if Codex owner reviews; do not silently run old manifest on newer HEAD.",
+    "CURRENT DELTA: Wool latest PR39 head1aad1c vs frozen 50-job runner head80c5; SAM PR15 headefe9 vs frozen runner 82bf. Use GitHub coordination/HISTORICAL_CURRENT_HEAD_CODEX_DELTA_20261017.md manual safe exact worktree commands; do NOT silently update one SHA side or claim old tests cover new head.",
+    "Codex handoff executable now SHA locks all 50 manifest entries and PINs 42 Git blobs, 39 unique commands mapped to 42 family receipts; 42/42 isolated synthetic safety/verdict/subprocess tests passed. Still requires three exact HEAD local Codex batches and real Windows/full gold, no historic release completion inferred.",
+    "Wool producer current real 21/21 is only focused tests; rerun entire current-HEAD Windows 412+ and 24 sampler/real producer schema and 40 grant+data; new independent blind recall(old25%) and 09:30 OUTPUT_NOT_CONNECTED remain open.",
+    "Wool current unified PR39 now HEAD80c5, exact grant numbered-scope formal code+test hash checked, isolated core40 + sampler24 =64/64 local Linux pass; this is NOT full Windows/new independent quality holdout.",
+    "Codex accept: run coordination/HISTORICAL_CODEX_BATCH_RUNNER_20261017.py from clean disposable exact-SHA checkout, use 50-family JSON manifest; report 42 runnable entrypoints individually as PASS/FAIL/BLOCKED with commands/exit/log SHA. Current ready ≠ passed.",
+    "Review PR39 latest e31eea and PR15 latest 82bf exact, plus older relay PR11 27796; avoid duplicate merging PR37/38/39 or old PR9 vs ported PR15; no Codex V3 owner override.",
+    "Wool independent fresh public holdout original recall25% and false-split1, confirmed official eligibility and actual signed 09:30 consumer still unavailable.",
+    "SAM full real cards/zod Node24/26 direct/stdio MCP, 61 original source-bound questions(10 answered)/522 gold, T031/T009 correct evidential ground truth, dist pointer rollback and final rounds not verified.",
+    "WR-H17 sensitive historical fixture requires explicit maintainer review; no raw secrets in GitHub.",
+    "New PR39 source change after previously green Linux58: run full exact new HEAD Python suite, maintain external Wool source recall25% RED until fresh gold; 6 synthetic numbered-list contracts are committed but full module tests NOT_RUN.",
+    "Codex historical runner zero-test guard static and isolated parser 10 cases pass; run committed coordination/test_historical_batch_contract_20261017.py against exact checkout before trusting 42 path contracts."
+  ],
+  "index_files": [
+    "coordination/HISTORICAL_FIRST_RESUME_GATE.md",
+    "coordination/HISTORICAL_GITHUB_CENSUS_20261017.json",
+    "coordination/SCHEDULED_HISTORICAL_ENGINEERING_RECOVERY_20261017.md",
+    "coordination/SCHEDULED_RESULTS_LEDGER_20261017.md",
+    "https://github.com/lu403369069lu-prog/YinQieJi/blob/chatgpt/scheduled-checkpoint-contract-20261016/SAM/independent-review/SCHEDULED_HISTORICAL_ENGINEERING_RECOVERY_20261017.md",
+    "coordination/SCHEDULED_HISTORICAL_RELAY_ASSETS_20261017.md"
+  ],
+  "exact_formal_backfill_20261017": {
+    "provenance": "authorized interactive local tests on exact GitHub blobs, not Scheduled-origin GitHub commits",
+    "wool_sampler": "PR37 real official23/23 exit0 + main producer/test 13/13 exit0, Python3.13 Linux, no new unseen holdout",
+    "sam_audit": "PR15 exact stacked loader 14 TAP red11pass3fail then enum ordering fix 14pass exit0 Node22 with PR12 canonical policy",
+    "sam_root": "PR12 original exact12 tests pass + real POSIX ripgrep14.1 red1→green1; combined13/13 and loader14/14 after fix",
+    "blocker": "Windows Node24/26 full repo/MCP and integrated current-head remains unverified",
+    "issue_wool": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6227957375",
+    "issue_sam": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6227987028",
+    "sam_teacher": "PR9 ALL five submitted formal tests + four implementations exact nine Git blobs, actual spawned CLI / audit / QID test Node22 44/44 exit0; earlier32 subset, not additive, Issue1 #6228049779.",
+    "sam_combined_one_pr_head": "PR15 now carries PR12 POSIX policy exactly; source module 30/30 official TAP pass exit0 at exact GitHub blob; PR15 remains Draft, Windows24/26/MCP not run",
+    "sam_review_sha": "Old exact PR15 claim audit SHA 5722bbe... real new test4 2 pass2 fail; code H04 fixed SHA16db..., cards same-buffer7fe2..., test1b34..., new4/4 and full7 files 34/34 Node22 exit0; cards.ts import not dynamically run (zod absent); source gold unverified",
+    "wool_grant": "PR38 actual main source SHA76994c old 11 methods red4, patched source SHAce53 and exact tests SHA26193 11/11 pass, historic18 denial cases direct pass; full collector/Windows/new independent blind not yet executed",
+    "wool_single_main_base_integration": {
+      "sha": "76b017e00f7760417a9131d7fb07a4044f673076",
+      "base": "6babbe12727652e8626e0fe6f554eb01fecd4a30",
+      "command1": "PYTHONPATH=$PWD python -B -m unittest discover -s tests -p 'test_*' -v",
+      "result1": "24/24 exit0",
+      "command2": "python -B -m unittest discover -s independent-quality/public-corpus-blind-dedup-20261016 -p test_freeze_public_sample_dedup.py -v",
+      "result2": "23/23 exit0",
+      "all": "47 distinct tests exit0",
+      "original_provenance": "authorized interactive local exact full Git blobs incl core/models",
+      "not_yet": "main Windows412, new public holdout/cross-URL merge, real signed 9:30 report bridge, region/card eligibility, coordinator merge"
+    },
+    "new_H10": {
+      "source": "9f5bced16dd12e07a24134b046b64d981634a4f2",
+      "red": "9 of 10 real producer tests failed on source 412a",
+      "green": "new real producer cases10/10, full focused current producer+grants34/34, sampler23/23, 57 different unittest methods",
+      "source_git_blob": "6768c5d1a2229c6b5410c70de270ef49dc65bc26",
+      "test_git_blob": "c90cb9eab13230d4c4086e51c9c1b3f6f034dd62",
+      "windows": "NOT_RUN",
+      "holdout": "NOT_RUN"
+    },
+    "new_glob_matrix": {
+      "source": "e7c4056a8594045c856cca86c8c51a56e91c9d07",
+      "rg": "ripgrep14.1.1",
+      "scope": "26 globs x22 paths",
+      "compared": 572,
+      "mismatches": 0,
+      "source_sha": "0cb6ead5e4764aa8b7364ba92d3137b0b8171f5b",
+      "new_formal_test_blob": "77a27796d2bd3cd696cd2b72993aaf6dfd7acdea",
+      "formal_file_executed": false,
+      "windows": "NOT_RUN"
+    },
+    "sam_full_rg572_and_eval39": {
+      "actual_formal_test_blob": "77a27796d2bd3cd696cd2b72993aaf6dfd7acdea",
+      "rg_actual": "ripgrep14.1.1 x 26 patterns x22 paths=572 comparisons, zero differences, original committed test Node22 one TAP pass exit0",
+      "teacher_original_source": "78fbe586ff2a5907e03bdab99d696f2f2343bae9",
+      "teacher_original_test": "4f92b03944f9a097ba0d166a2403e9933b7f0bc7",
+      "teacher_result": "4/4 pass",
+      "combined": "39/39 pass exit0",
+      "log_sha256": "6af39642c699f262601517a0b03dad80702608c6cfb73a18eeaf195f91eae381",
+      "scope": "isolated real GitHub source modules Linux22; no full zod/cards/MCP Node24/26 Windows"
+    },
+    "wool_timestamp_current58": {
+      "source_pr39_sha": "e31eea548ab0b05d26e6fd639907bd81cbabcdfc",
+      "real_producer_sha": "6768c5d1a2229c6b5410c70de270ef49dc65bc26",
+      "test10_sha": "c90cb9eab13230d4c4086e51c9c1b3f6f034dd62",
+      "original_real_schema_sha": "5e5daca26df04ff27aa4c2080eb17d5925cbf404",
+      "red": "9/10 old real producer tests fail, exit1",
+      "green": "34/34 tests/ +24/24 independent sampler and real-schema, 58 distinct formal unittest methods, both exit0",
+      "new_business_gold": "NOT_VERIFIED"
+    },
+    "sam_current39": {
+      "pr15_head": "e0247b42e9878c3363269c5a322090b8720cabab",
+      "authentic_source_files": [
+        "source-policy.ts:0cb6ead5",
+        "claim-audit.ts:16db7077",
+        "eval-contract.ts:78fbe586",
+        "strict-jsonl.ts:81d8543a"
+      ],
+      "actual_full_test": "39/39 Linux Node22 TAP pass, exit0, 0 skips",
+      "rg_matrix": "one original formal TAP contains 572 actual rg 14.1.1 comparisons",
+      "testlog_sha256": "6af39642c699f262601517a0b03dad80702608c6cfb73a18eeaf195f91eae381",
+      "unrun": "three corrected SHA-fixture full TS tests, cards.ts/zod, Windows24/26, direct stdio MCP"
+    },
+    "wool_pr39_current64": {
+      "head": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f",
+      "prior_head": "e31eea548ab0b05d26e6fd639907bd81cbabcdfc",
+      "scope": "prior head→current ahead3 commits: one grant source edit, one numbered-scope formal test, one evidence note",
+      "verified_new_source_blob": "8543c9c63543645e36fcd0ed3fea396081c258f7",
+      "verified_new_test_blob": "9263786f4165696a4647fbbd1f62b6a96ea33110",
+      "python_run": "40/40 core/producer/grant, 24/24 sampler+real schema, Python3.13 two exit0",
+      "logs_sha256": [
+        "1b43444c9984ea2d33a167a804fe6a8c90ee7f31cc9c89b9759cc7480855ef57",
+        "17fbb6de4104057b432532b2436faa227cf078d13ddf9f59dfd4ca938ba5ad09"
+      ],
+      "new_independent_holdout": "NOT_RUN",
+      "windows_full_suite": "NOT_RUN"
+    },
+    "wool_producer_public_scope_unicode": {
+      "pr39_head": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+      "old_exact_blob": "6768c5d1a2229c6b5410c70de270ef49dc65bc26",
+      "new_exact_blob": "383f3ad38930863fe5311260f8869b1ca65564ef",
+      "formal_host_test": "5dc8307b2666c3ba670f7d04ee260c7ce7f02326",
+      "formal_unicode_test": "e26a0ba16033de49c8544c2b03093ad103787e83",
+      "original_timestamp_test": "c90cb9eab13230d4c4086e51c9c1b3f6f034dd62",
+      "old_red": "6 unittest methods with 23 subtest failures on exact old Git blob, exit1; 5 Unicode cases errors on intermediate prior Git blob, exit1",
+      "new_green": "current exact Git source 21 unittest methods, pass21, fail0 skip0 exit0",
+      "log_sha256": "41fe1dedf0828743d347329bb2df35179f21338f925816f5e05ed61b7bffd144",
+      "scope": "isolated Python3.13 with synthetic temp feed and standard UTC stub; not full repository test",
+      "still_missing": "current HEAD full Windows suite, newly independent blind gold, signed daily report, owner merge"
+    },
+    "sam_current_release_builder": {
+      "source_head": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
+      "atomic_source_blob": "de5a34c509740e4eac44656379c7b6ed52ca5329",
+      "original_atomic_test": "7acb5d3fa6b645487cf1d2e4d5d9092c64bb8e89",
+      "real_builder_blob": "0ed0bfb55851a092b73c0e30856f3926ce2f2b20",
+      "builder_formal_test": "5b8e99131748269ed7046ffd0d2396da3d30bc79",
+      "original_migration_blob": "6bbba264b4e963ebba0e7028b23e295b472f5e95",
+      "corrected_migration_blob": "893c9970c01bd99ffdb31f18282e68261902f705",
+      "formal_migration_test": "1031e5662984df8314b234492eabc39816e75ded",
+      "red": "original exact source 5 formal migration tests, 1 passed/4 failed exit1 after actual preexisting 0.4.1 teacher-eval partial overwrites",
+      "green": "original atomic6 + builder5 + migration7 = 18 TAP passed 0fail 0skip exit0 Linux Node22",
+      "log_sha256": "b2bafad0e2d42d5565d15b3c8b49f4b9ae810a7a63cabf6aa9a358f0851f7f8e",
+      "limitations": "isolated fake data only, no cross-file transaction/current.json upgrade/rollback, Windows Node24/26, MCP or 61/522 gold"
+    }
+  },
+  "historical_exact_remote_test_provenance": {
+    "artifact": "coordination/evidence/return-20261015/fixed-tests.json",
+    "sha": "da0779b2d735f4a1468c04be015c0656cb8333c8",
+    "original_tested_sha": "a2a67761105d13f7b9f8063c2d1c1a68062f4803",
+    "latest_pr11_sha": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "github_compare": "ahead1 behind0 docs/evidence only",
+    "historical_report": "Windows Python3.12.14 57 tests exit0",
+    "new_test_run": false,
+    "unmerged": true
+  },
+  "evidence_coverage_20261017": {
+    "total": 50,
+    "classified": 50,
+    "immutable_git_primary_source_verified": 49,
+    "maintainer_sensitivity_approval_excluded": [
+      "WR-H17"
+    ],
+    "evidence_coverage_fraction": "49/50 (98%)",
+    "engineering_completed_80_percent": false,
+    "caveat": "not an engineering or release-completion metric",
+    "report": "coordination/HISTORICAL_50_FAMILY_EVIDENCE_SWEEP_20261017.md"
+  },
+  "historical_scheduled_results_reconciled_20261017": [
+    {
+      "key": "SAM-H17-a",
+      "scheduled": "BLOCKED_WRITE; original H17-build-manifest-atomic.patch ZIP cannot materialize, reported 5/5 unverified in this environment",
+      "interactive": "TRUE_GITHUB_COMMIT",
+      "branch": "chatgpt/sam-recover-claim-audit-types-20261017",
+      "head": "11e87c629ec28e58fd91b629936b71ea235b4581",
+      "evidence": "https://github.com/lu403369069lu-prog/YinQieJi/blob/chatgpt/sam-recover-claim-audit-types-20261017/SAM/independent-review/20261017/SCHEDULED_H17A_ATOMIC_MANIFEST_INTERACTIVE_RECOVERY.md",
+      "tested": "5/5 actual helper filesystem; +1 minimum reconstructed script callsite static =6/6 exit0",
+      "unfinished": "cross-file release pointer transaction, Windows24/26 complete real builder"
+    },
+    {
+      "key": "SAM-H04",
+      "scheduled": "BLOCKED_WRITE; original standalone patch not byte-recovered",
+      "interactive": "PR15 real claim-audit+cards bytes hash code committed; original real red 2/4, green 4/4 and module combined Node22 39/39",
+      "unfinished": "full cards.ts/zod/Windows actual MCP/approved 104-card original"
+    },
+    {
+      "key": "WR-H10",
+      "scheduled": "BLOCKED_WRITE; old timestamp candidate not byte-recovered",
+      "interactive": "Wool PR39 reimplemented actual producer timezone UTC validation; real source red9/10, integrated focused 58/58 Python3.13",
+      "unfinished": "Windows full suite, independent blind provider gold"
+    },
+    {
+      "key": "SAM-H18",
+      "scheduled": "BLOCKED_WRITE; old Linux glob parity patch not byte-recovered",
+      "interactive": "SAM PR12 and unified PR15 exact policy and formal test; 572 actual rg comparisons formal pass in combined39/39",
+      "unfinished": "Windows ripgrep parity, real direct/stdio"
+    },
+    {
+      "key": "WR-H08/H09",
+      "scheduled": "BLOCKED_WRITE; original synthetic traces not all raw bytes",
+      "interactive": "Wool main-based PR39 includes exact PR37 sampler source/test and confirms Python focused58/58",
+      "unfinished": "new independent 47+ public holdout business metrics"
+    }
+  ],
+  "manual_coordination_20261017": {
+    "mode": "INTERACTIVE_CHAT_OWNS_GITHUB_WRITE; LOCAL_CODEX_OWNS_WINDOWS_EXECUTION",
+    "triggered_by": "user expressly instructed 80-percent bulk history processing this chat; do not delegate to periodic jobs",
+    "engineering_hourly_automations": {
+      "enabled": false,
+      "count": 4,
+      "ids": [
+        "6ad12723c0688191847dff2341c75eeb",
+        "6ad1273277fc8191baba4c506f6d4bd1",
+        "6ad13b3e1840819188807966573204cf",
+        "6ad0cbde024c8191ad6dbb3e3e0d8c8a"
+      ]
+    },
+    "daily_public_benefits_brief": "unchanged_enabled",
+    "family_count": 50,
+    "local_codex_ready": 42,
+    "external_gold_approval_or_policy": 8,
+    "independently_verified_entry_paths": "42/42 existing at immutable PR Git tree refs",
+    "ready_distinct_commands": 39,
+    "handoff": "coordination/HISTORICAL_80_PERCENT_CODEX_HANDOFF_20261017.md",
+    "jobs_manifest": "coordination/HISTORICAL_80_PERCENT_CODEX_JOBS_20261017.json",
+    "offline_runner": "coordination/HISTORICAL_CODEX_BATCH_RUNNER_20261017.py",
+    "pr9_real_port": "SAM PR15 SHA82bf36efa90cced8dafb56502812eb49f40515f3 contains nine exact-byte frozen teacher diagnostic files from old PR9",
+    "git_refs": {
+      "wool_pr39": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f",
+      "sam_pr15": "82bf36efa90cced8dafb56502812eb49f40515f3",
+      "coord_pr11": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96"
+    },
+    "accuracy": "42/50 ready for local acceptance is 84% executable handoff, NOT 84% code tests passed or release",
+    "source_status": "historical original Scheduled runs unavailable; local Codex tests and real source gold remain pending",
+    "next": "Receive locally executed sanitized per-batch receipts in Issues Wool2/SAM1/Coord3; then revise only actual PASS_EXACT_HEAD, prioritize real 61/522 and independent 47-sample Gold",
+    "no_auto_merge": true,
+    "no_production_changes": true,
+    "ready_for_codex_jobs_manifest": "coordination/HISTORICAL_80_PERCENT_CODEX_JOBS_20261017.json",
+    "codex_local_validation": {
+      "full_immutable_github_test_paths": "42/42 verified against current 3 PR trees",
+      "distinct_test_commands": 39,
+      "source_historical_files_transferred": "SAM old PR9 9 files 9/9 original Git blob match in PR15",
+      "remote_repository_heads": {
+        "wool_pr39": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f",
+        "sam_pr15": "82bf36efa90cced8dafb56502812eb49f40515f3",
+        "relay_pr11": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96"
+      },
+      "reviewed_runner_source": "coordination/HISTORICAL_CODEX_BATCH_RUNNER_20261017.py",
+      "runner_not_executed_in_full_local_repo": true,
+      "receipt_guard": "coordination/HISTORICAL_CODEX_RECEIPT_GUARD_20261017.py",
+      "receipt_guard_git_blob": "102c9c273ad3cd439b59bc6d6180c34aaed903cd",
+      "receipt_guard_test": "coordination/test_history_receipt_guard_20261017.py",
+      "receipt_guard_test_blob": "681711fafe9f78c2c65a1d7cd587fb6d3dcc3d13",
+      "receipt_guard_local_python": "Exact Python3.13 8/8 pass exit0, bound to Wool PR39 80c5 and SAM PR15 82bf",
+      "prohibits_automatic_gold_promotion": true,
+      "runner_blob": "2740d556f24d2ffea563026628f5a904a7a3de73",
+      "runner_provenance_handshake_fixed": true,
+      "windows_npm_cmd_fixed": true,
+      "local_runner_full_worktree_test": "NOT_YET_EXECUTED; local Codex owns isolated Windows",
+      "sha_pin_refreshed_after_real_diff": true
+    },
+    "interactive_command_integrity": {
+      "state": "GITHUB_COMMITTED_PARTIAL_VERIFIED",
+      "total_family_rows": 50,
+      "codex_runnable_rows": 42,
+      "exact_discovery_directory_mismatches_found": 1,
+      "exact_discovery_directory_mismatches_fixed": 1,
+      "source_blob_runner": "888fd36459bd23aef35a78a35681c17b038bc6df",
+      "test_blob": "804eb98c8d8d87e928b5cc870d4c5861955ead1b",
+      "isolated_parser_scenarios_passed": 10,
+      "repo_self_test_full_run": "NOT_RUN_LOCAL_REPO_UNAVAILABLE",
+      "github_scheduled_direct_write": "UNSUPPORTED",
+      "remaining_business_gates": [
+        "Wool fresh independent recall/source",
+        "Wool 09:30 safe delivery requires approval",
+        "SAM Node24/26+MCP+522 gold",
+        "Coordinator V3 owner Windows relay"
+      ],
+      "wool_current_head": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f",
+      "grant_exact_red_green": {
+        "old_blob": "ce53bfdcfb75d1f9b4927f0dad762a20b9bd5bc2",
+        "new_blob": "8543c9c63543645e36fcd0ed3fea396081c258f7",
+        "formal_old_failed": 3,
+        "formal_new_passed": 17,
+        "old_exit": 1,
+        "new_exit": 0,
+        "official_gold": "NOT_RUN",
+        "evidence": "independent-quality/developer-grant-20261017/H16_NUMBERED_SCOPE_RED_GREEN.md"
+      }
+    }
+  },
+  "codex_historical_batch_executor_20261017": {
+    "status": "READY_FOR_LOCAL_CODEX_EXECUTION_NOT_TESTED_ON_LOCAL_WINDOWS",
+    "source": "coordination/HISTORICAL_CODEX_42_JOB_EXECUTOR_20261017.py",
+    "source_blob": "167d415c92dca86d1211c6fa2541c5b84c398ecf",
+    "contract_runner_blob": "d60f10c5c01d876b8ab663ad31f9c1dd703b8323",
+    "manifest_blob": "96c71aad1e26e5bf7b0aa12ac1e4b62ddcb98744",
+    "manifest_test_blob": "f29ff052831e8437c45a70e106d3245c2c3ccb97",
+    "verdict_test_blob": "433a3d31bb0ef53294897d2beb22b57f571dbece",
+    "executor_test_blob": "03a446ab7db3e4e20f8187c2244ed0fb6539ee14",
+    "isolated_synthetic_tests": {
+      "methods": 42,
+      "passed": 42,
+      "failed": 0,
+      "exit_code": 0,
+      "log_sha256": "50b1f3c568ad8b95e35af154a41791fcc06ef54e6ae32411dddd960608eac2e0",
+      "caveat": "exact new executor code and source-matched helper functions in isolated local harness, not full Windows repo test run"
+    },
+    "verified_immutable_git_tree_sources": {
+      "Wool_PR39": 15,
+      "SAM_PR15": 21,
+      "Coord_PR11": 6,
+      "unique_commands": 39,
+      "identity_mismatches": 0
+    },
+    "family_engineering_jobs_executed_this_turn": 0,
+    "historic_engineering_completion_claim_80_percent": false,
+    "retained_gates": [
+      "Windows full repo suites",
+      "Node24/26 zod/MCP direct+stdio",
+      "SAM original61/522/T031 approved gold",
+      "Wool fresh real holdout and 09:30 verified report bridge",
+      "Scheduled unattended GitHub write remains blocked"
+    ],
+    "historic_recovery_closed": false
+  },
+  "current_head_codex_handoff_delta_20261017": "coordination/HISTORICAL_CURRENT_HEAD_CODEX_DELTA_20261017.md",
+  "runner_manifest_frozen_at": {
+    "W": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f",
+    "S": "82bf36efa90cced8dafb56502812eb49f40515f3",
+    "C": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "latest_W": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+    "latest_S": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
+    "manifest_and_runner_reconciliation": "NEEDS_CODEX_OWNER_REVIEW_NO_SILENT_SHA_BUMP"
+  },
+  "codex_historical_head_drift_20261017": {
+    "status": "STOP_AUTOREPIN_SOURCE_DRIFT_REVIEW_REQUIRED",
+    "frozen_source_contract": {
+      "W": "80c5ea18769c1312e5be5fd99a39e4f3d498c64f",
+      "S": "82bf36efa90cced8dafb56502812eb49f40515f3",
+      "C": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96"
+    },
+    "newer_unmerged_head_observed": {
+      "W": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
+      "S": "efe9a93f4bea4b6f3bf33f7fc9772e9008c8b3c0",
+      "C": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96"
+    },
+    "github_compare": {
+      "W": "ahead7 behind0, core/public_corpus changed+2 new formal tests",
+      "S": "ahead2 behind0, release builder synthetic test+evidence",
+      "C": "unchanged"
+    },
+    "old_test_blob_integrity_against_new_heads": "42/42 exact original reviewed test Git blob identities unchanged, 0 mismatch",
+    "added_formal_files_not_in_original_42": {
+      "W": [
+        "tests/test_public_corpus_nonpublic_urls.py:5dc8307b2666c3ba670f7d04ee260c7ce7f02326",
+        "tests/test_public_corpus_invalid_unicode.py:e26a0ba16033de49c8544c2b03093ad103787e83"
+      ],
+      "S": [
+        "SAM/snapshot/tools/build-release-manifest.synthetic.test.mjs:5b8e99131748269ed7046ffd0d2396da3d30bc79"
+      ]
+    },
+    "note": "Old exact immutable checkout can run frozen 42 manifest; newer moving HEAD is deliberately blocked until explicit reviewed repin. New tests require delta acceptance first.",
+    "documentation": "coordination/HISTORICAL_LATEST_HEAD_DRIFT_20261017.md"
+  }
+}

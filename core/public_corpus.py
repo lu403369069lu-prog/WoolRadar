@@ -27,8 +27,8 @@ _PRIVATE_VALUE = re.compile(r'(?i)(?:@|\d{13,}|token|secret|bearer|password|sess
 # Credential-bearing path segments must not enter supposedly public sample logs.
 _SENSITIVE_PATH = re.compile(r'(?i)/(?:token|secret|password|session|api[-_]?key)/[^/]+')
 # Identity-bearing addresses are private even inside public-feed resource paths.
-_EMAIL = re.compile(r'(?i)(?<![a-z0-9._%+-])[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}')
-_ENCODED_EMAIL = re.compile(r'(?i)(?<![a-z0-9._%+-])[a-z0-9._%+-]+%(?:25)*40[a-z0-9.-]+\.[a-z]{2,}')
+_EMAIL = re.compile(r'(?i)(?<![\w.+%\-])[\w.+%\-]+@[a-z0-9.-]+\.[a-z]{2,}')
+_ENCODED_EMAIL = re.compile(r'(?i)(?<![\w.+%\-])[\w.+%\-]+%(?:25)*40[a-z0-9.-]+\.[a-z]{2,}')
 
 def _semantic_query(query: str) -> tuple[str, bool]:
     kept = {}

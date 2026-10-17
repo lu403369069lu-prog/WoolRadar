@@ -57,6 +57,50 @@ BATCHES = {
 }
 
 
+
+def validate_handoff_manifest(manifest_path: Path, project: str, expected: str) -> dict:
+    """Fail closed when 50-family manifest and reviewed execution contract disagree."""
+    if not manifest_path.is_file():
+        raise RuntimeError('Missing adjacent historical 50-family jobs manifest.')
+    try:
+        doc = json.loads(manifest_path.read_text(encoding='utf-8'))
+    except (ValueError, UnicodeError) as exc:
+        raise RuntimeError('Cannot parse historical jobs manifest.') from exc
+    jobs = doc.get('jobs')
+    refs = doc.get('immutable_refs')
+    if doc.get('total_families') != 50 or not isinstance(jobs, list) or len(jobs) != 50:
+        raise RuntimeError('Unexpected historical family count; manual review required.')
+    if not isinstance(refs, dict) or any(key not in refs for key in ('W','S','C')):
+        raise RuntimeError('Missing reviewed project refs in historical manifest.')
+    key = {'wool':'W','sam':'S','coord':'C'}[project]
+    if refs[key].get('sha') != expected or EXPECTED[project] != expected:
+        raise RuntimeError('Runner and jobs manifest source SHA mismatch.')
+    projects = {'W':'WoolRadar','S':'YinQieJi-SAM','C':'WoolRadar-Coord'}
+    used = set()
+    ready = 0
+    for job in jobs:
+        fid = job.get('family_id')
+        if not isinstance(fid, str) or not fid or fid in used:
+            raise RuntimeError('Missing or repeated historical family identifier.')
+        used.add(fid)
+        matched = next((k for k,v in projects.items() if v == job.get('project')), None)
+        if matched is None or job.get('required_head_sha') != refs[matched].get('sha') or job.get('repo') != refs[matched].get('repo'):
+            raise RuntimeError('Historical job is not pinned to its project source.')
+        mode = job.get('disposition')
+        if mode == 'READY_FOR_LOCAL_CODEX':
+            ready += 1
+            if not (job.get('run_command') and job.get('verified_test_blob') and job.get('verified_test_path')):
+                raise RuntimeError('Runnable history job missing required test evidence.')
+        elif mode != 'EXTERNAL_OR_POLICY_GATED':
+            raise RuntimeError('Unknown historical job disposition.')
+    if ready != 42 or doc.get('ready_for_local_codex') != 42 or doc.get('external_or_policy_gated') != 8:
+        raise RuntimeError('Historical 42/8 readiness contract changed.')
+    if not any(job['project'] == projects[key] for job in jobs):
+        raise RuntimeError('Selected project has no reviewed jobs.')
+    return {'families':len(jobs),'ready':ready,'project':project,'source':expected}
+
+
+
 def git(args: list[str], cwd: Path) -> str:
     p = subprocess.run(["git", *args], cwd=cwd, text=True,
                        stdout=subprocess.PIPE, stderr=subprocess.PIPE,
@@ -157,6 +201,9 @@ def main() -> int:
     if expected != EXPECTED[args.project]:
         raise RuntimeError("Requested SHA differs from reviewed historical contract."
                            " Update manifest by explicit review, not silently.")
+    validate_handoff_manifest(
+        Path(__file__).resolve().with_name("HISTORICAL_80_PERCENT_CODEX_JOBS_20261017.json"),
+        args.project, expected)
     head = preflight(repo, args.project, expected)
     print(json.dumps({"project": args.project, "head": head,
                       "mode": "RUN" if args.run else "DRY_RUN",

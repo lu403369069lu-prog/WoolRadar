@@ -51,5 +51,18 @@
     "Existence and Git object identity only; no proof of local filesystem or Windows toolchain",
     "No assertion that code dependencies install or tests pass",
     "No real-user source material, payment, accounts or deployment accessed"
-  ]
+  ],
+  "verified_static_argv_contract": {
+    "method": "Each READY manifest command independently matched exact current pin_command argument-count and prefix allowlist; POSIX-normalized candidate test path equals verified_test_path",
+    "commands_allowlisted": 42,
+    "path_matches": 42,
+    "unrecognized": 0,
+    "commands_with_quotes_or_backslashes": 0,
+    "by_pattern": {
+      "python_unittest_discover": 21,
+      "node_import_tsx_test": 19,
+      "node_test": 2
+    },
+    "runtime_execution_count": 0
+  }
 }

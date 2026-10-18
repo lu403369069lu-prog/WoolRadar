@@ -53,7 +53,7 @@ class RelaySafetyTests(unittest.TestCase):
             "source_subdir": "." if q["repo"] == "WoolRadar" else "SAM/snapshot",
             "verified_business_complete": False, "checked_utc": "2026-10-18T00:00:00Z",
             "status": "PASS", "exit_code": 0, "total": 5, "passed": 5, "failed": 0,
-            "failed_test_names": []
+            "skipped": 0, "todo": 0, "cancelled": 0, "failed_test_names": []
         }
         if integration_sha is not None:
             integration["source_commit"] = integration_sha

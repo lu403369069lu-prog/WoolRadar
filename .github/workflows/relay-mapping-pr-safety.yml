@@ -1,0 +1,61 @@
+name: WoolRadar relay mapping PR formal
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - '.github/relay/**'
+      - '.github/workflows/relay-mapping-pr-safety.yml'
+  push:
+    branches:
+      - 'chatgpt/coord-h06-failclosed-map-20261018'
+    paths:
+      - '.github/relay/**'
+      - '.github/workflows/relay-mapping-pr-safety.yml'
+permissions:
+  contents: read
+concurrency:
+  group: woolradar-relay-mapping-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify-relay-mapping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Assert queue and actual PR source identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rev-parse HEAD
+          test -f .github/relay/worker.py
+          test -f .github/relay/queue.json
+          test -f .github/relay/test_worker.py
+      - name: Run isolated replay, mapping and fail-closed contract tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import sys
+          import unittest
+          from pathlib import Path
+          queue=json.loads(Path('.github/relay/queue.json').read_text(encoding='utf-8'))
+          assert queue['repo']=='WoolRadar', 'wrong relay repo'
+          assert queue['families'] and len({x['id'] for x in queue['families']}) == len(queue['families']), 'invalid family IDs'
+          suite=unittest.defaultTestLoader.discover('.github/relay', pattern='test_*.py')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          print('STRICT_RELAY_RESULTS', 'total', result.testsRun,
+                'failed',len(result.failures),'errors',len(result.errors),
+                'skipped',len(result.skipped),
+                'expected_failures',len(result.expectedFailures))
+          sys.exit(0 if result.wasSuccessful() and result.testsRun>0
+                   and not result.skipped and not result.expectedFailures
+                   and not result.unexpectedSuccesses else 1)
+          PY

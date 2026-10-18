@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 22,
-    "last_persisted_worker_run_utc": "2026-10-18T01:33:11.640Z",
-    "last_completed_review_key": "interactive-20261018-100-minimal-stage2-sam-h06-wr-h18-source-native",
+    "revision": 23,
+    "last_persisted_worker_run_utc": "2026-10-18T03:52:00Z",
+    "last_completed_review_key": "interactive-20261018-live-controller-five-family-protection-and-wr-h03-native",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -52,7 +52,10 @@
       "YinQieJi#21": "ba24b3db342fc5c648effd95d477eda154cff909",
       "WoolRadar#48": "24781d17ee1ce68668932e883c76cc6f56d007e9",
       "YinQieJi#23": "5f49318555b187cd8d67692f2072cdcb64b229b2",
-      "WoolRadar#49": "9d0f78ae6bfa181f31101a3b6ce0a56f192534db"
+      "WoolRadar#49": "9d0f78ae6bfa181f31101a3b6ce0a56f192534db",
+      "WoolRadar/main-controller": "f2b4e3bb599b942f5b4a15cd900ecd1871575d1b",
+      "YinQieJi/main-controller": "c918ac8b5512be176addc4e33d147a32436456db",
+      "WoolRadar#50": "c444233ae885cb793bd289a6d7b55aa019f47490"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -77,7 +80,8 @@
       "interactive-20261018-pr-acceptance-zero-skips-real-run",
       "interactive-20261018-ten-minimal-actions-five-false-mappings-two-drafts",
       "interactive-20261018-100-minimal-stage1-relay-ci-mappings",
-      "interactive-20261018-100-minimal-stage2-sam-h06-wr-h18-source-native"
+      "interactive-20261018-100-minimal-stage2-sam-h06-wr-h18-source-native",
+      "interactive-20261018-live-controller-five-family-protection-and-wr-h03-native"
     ],
     "write_diagnostic": "INTERACTIVE_REAL_SOURCE_CI_STAGE2_PENDING_READBACK",
     "last_write_error": null,
@@ -1633,6 +1637,88 @@
       "business_accepted": false,
       "native_frozen_accepted": false,
       "next_action": "Integrate true WR-H18 test with source-pinned machine queue without unrelated test; additional approved native/real notification provenance required for strict complete."
+    },
+    {
+      "event_key": "interactive-20261018-live-controller-five-family-protection-and-wr-h03-native/WoolRadar-main",
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "controller_commit": "f2b4e3bb599b942f5b4a15cd900ecd1871575d1b",
+      "changed_paths": [
+        ".github/relay/queue.json",
+        ".github/relay/test_worker.py"
+      ],
+      "families_corrected": [
+        "WR-H03",
+        "WR-H18",
+        "COORD-H01",
+        "COORD-H02",
+        "COORD-H06"
+      ],
+      "ci_url": "https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39094979589",
+      "unit_tests": {
+        "ran": 9,
+        "passed": 9,
+        "skipped": 0
+      },
+      "checkpoint_revision_after_ci": 16,
+      "integration": {
+        "ran": 359,
+        "strict_status": "FAIL_DUE_TO_KNOWN_SINGLE_SKIP"
+      },
+      "business_accepted": false,
+      "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-live-controller-five-family-protection-and-wr-h03-native/YinQieJi-main",
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "controller_commit": "c918ac8b5512be176addc4e33d147a32436456db",
+      "changed_paths": [
+        ".github/relay/queue.json",
+        ".github/relay/worker.py",
+        ".github/relay/test_worker.py"
+      ],
+      "families_corrected": [
+        "SAM-H06",
+        "SAM-H13"
+      ],
+      "ci_url": "https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39094999469",
+      "unit_tests": {
+        "ran": 10,
+        "passed": 10,
+        "skipped": 0
+      },
+      "checkpoint_revision_after_ci": 21,
+      "integration": {
+        "ran": 294,
+        "passed": 288,
+        "failed": 6,
+        "strict_status": "FAIL_MISSING_FROZEN_INPUT"
+      },
+      "business_accepted": false,
+      "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-live-controller-five-family-protection-and-wr-h03-native/WR-H03-native",
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "family_ids": [
+        "WR-H03"
+      ],
+      "source_pr_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/50",
+      "source_sha": "c444233ae885cb793bd289a6d7b55aa019f47490",
+      "native_ci_url": "https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39093421083",
+      "checks": [
+        {
+          "name": "Windows WAL backup snapshot plus CLAIMED lease recovered",
+          "total": 2,
+          "passed": 2,
+          "skipped": 0,
+          "errors": 0,
+          "failed": 0,
+          "exit_code": 0
+        }
+      ],
+      "strictly_complete": false,
+      "business_accepted": false,
+      "remaining": "User-approved frozen/native source, production-safe evidence review and real family acceptance not done."
     }
   ],
   "run_history": [
@@ -1948,6 +2034,23 @@
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_ACCEPTANCES",
       "checkpoint_status": "CAS_PENDING_READBACK",
       "next_action": "Continue remaining eligible cloud work for selected business classes; Codex only receives true local-only native/manual gates."
+    },
+    {
+      "event_id": "interactive-20261018-live-controller-five-family-protection-and-wr-h03-native",
+      "origin": "INTERACTIVE_CHAT_ATOMIC_MAIN_CONTROLLER_SYNC_AND_REAL_ACTIONS_LOGS",
+      "actual_cases": "Copied only reviewed PR48/PR23 relay controller safeguards to both existing main branches via single CAS-protected fast-forward commit per repo. GitHub readback confirmed 5 exact target blobs. New push Actions ran authentic queue/controller replay tests WR 9/9 and SAM 10/10, zero skips; evaluate succeeded and persist wrote WR engine rev16 and SAM engine rev21 before strict integration gate exited 1 as intended. Also inspected actual Windows PR50 source test run WR-H03: 2/2 no skip. No draft PR merged, no cadence change, no production or secret access; business strict count remains zero.",
+      "minimal_task_units_new_this_request": 5,
+      "cumulative_actual_minimal_tasks_this_request": 15,
+      "task_unit_ids": [
+        "WR-MAIN-QUEUE-ATOMIC",
+        "SAM-MAIN-QUEUE-ATOMIC",
+        "WR-MAIN-RELAY-9-OF-9-AND-REV16",
+        "SAM-MAIN-RELAY-10-OF-10-AND-REV21",
+        "WR-H03-WINDOWS-WAL-2-OF-2"
+      ],
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "checkpoint_status": "COMMIT_PENDING_READBACK",
+      "next_action": "Do not repeat WR main f2b4e3b or SAM main c918ac8 on same SHA. Investigate SAM-H22 actual failed 3-test family and six true missing release artifacts; native WR-H03 strict frozen/real approval still pending. Continue other eligible families. Original hourly schedule unchanged."
     }
   ],
   "acceptance": {
@@ -1968,7 +2071,10 @@
     "sam_full_native": "TOTAL_294_PASS_288_FAIL_6_SKIPPED_0_TRUE_FROZEN_FILES_MISSING",
     "pr_acceptance_no_false_green": "DUAL_REAL_PR_CI_VERIFIED_20261018_WR_ONE_SKIP_AND_SAM_SIX_FAILED",
     "strict_completed_family_count": 0,
-    "ten_round_minimal_phase": "FIVE_FALSE_MAPPINGS_FIXED_IN_TWO_UNMERGED_DRAFTS_NEW_PR_CI_UNRUN_STRICT_0_OF_50"
+    "ten_round_minimal_phase": "FIVE_FALSE_MAPPINGS_FIXED_IN_TWO_UNMERGED_DRAFTS_NEW_PR_CI_UNRUN_STRICT_0_OF_50",
+    "live_controller_queue_guards": "DUAL_MAIN_ATOMIC_PUBLISHED_AND_REAL_ACTIONS_9_10_PASS_20261018",
+    "main_relay_checkpoint_after_guard": "WR_REV16_SAM_REV21_PERSISTED_LATER_STRICT_INTEGRATION_FAIL",
+    "wr_h03_wal_claimed_native": "WINDOWS_SYNTHETIC_2_OF_2_PASS_STRICT_BUSINESS_PENDING"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

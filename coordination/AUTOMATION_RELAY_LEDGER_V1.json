@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 17,
+    "revision": 18,
     "last_persisted_worker_run_utc": "2026-10-18T01:33:11.640Z",
-    "last_completed_review_key": "interactive-20261018-sam-h18-native-win32-real-rg-pr22",
+    "last_completed_review_key": "interactive-20261018-minimal-skip-failclosed-wool-sam-codex",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -69,9 +69,10 @@
       "interactive-20261018-sam-ci-exact-294-test-diagnostic",
       "interactive-20261018-actions-windows359-sam288-frozen6",
       "interactive-20261018-codex-handoff-coord48-wr359-sam288",
-      "interactive-20261018-sam-h18-native-win32-real-rg-pr22"
+      "interactive-20261018-sam-h18-native-win32-real-rg-pr22",
+      "interactive-20261018-minimal-skip-failclosed-wool-sam-codex"
     ],
-    "write_diagnostic": "SAM_H18_NATIVE_WIN32_CAS_PENDING_READBACK",
+    "write_diagnostic": "DUAL_SKIP_FENCE_CAS_PENDING_READBACK",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -1281,6 +1282,125 @@
       "codex_task_url": "https://github.com/lu403369069lu-prog/YinQieJi/blob/main/CODEX_NEXT_TASKS_20261018.md",
       "issue_comment": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6244585375",
       "next_action": "Do not repeat identical SHA/synthetic Windows test. Codex only real proprietary Windows filesystem/config integrations and authentic frozen releases; do not fabricate assets or mark entire H18 complete."
+    },
+    {
+      "event_key": "interactive-20261018-minimal-skip-failclosed-wool-sam-codex/WoolRadar",
+      "origin": "INTERACTIVE_CI_ACTUAL_GITHUB",
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "family_ids": [
+        "WR-H03",
+        "WR-H04",
+        "WR-H12"
+      ],
+      "source_sha": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+      "controller_commit": "5b6dc16397927631dbdfa2d341d47b2863ab3c01",
+      "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39089777897",
+      "checks": [
+        {
+          "group": "relay-skip-failclosed-unit-regressions",
+          "command": "python -m unittest discover -s .github/relay -p 'test_*.py' -v",
+          "total": 8,
+          "passed": 8,
+          "failed": 0,
+          "skipped": 0,
+          "exit_code": 0
+        },
+        {
+          "group": "WR-H03",
+          "command": "python -m unittest discover -s tests -p test_config_backup.py -v",
+          "total": 6,
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0,
+          "exit_code": 0
+        },
+        {
+          "group": "WR-H04",
+          "command": "python -m unittest discover -s tests -p test_reindex_notification_collision.py -v",
+          "total": 5,
+          "passed": 5,
+          "failed": 0,
+          "skipped": 0,
+          "exit_code": 0
+        },
+        {
+          "group": "full-original-Windows",
+          "command": "python -m unittest discover -s tests -p test_*.py",
+          "total": 359,
+          "passed": 358,
+          "failed": 0,
+          "skipped": 1,
+          "exit_code": 0,
+          "final_ci_conclusion": "FAIL_AFTER_EVIDENCE_PERSISTED",
+          "skip_source": "tests/test_digest_runtime.py#test_upstream_provider_http_is_budgeted_across_process_invocations"
+        }
+      ],
+      "status": "CLOUD_FENCE_FIXED_358_PASS_1_SKIPPED_UPSTREAM_CODEX_REQUIRED",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "blocked_family": "WR-H12",
+      "codex_status": "CODEX_REQUIRED_AND_USER_APPROVAL_NOT_CLAIMED",
+      "codex_task_url": "https://github.com/lu403369069lu-prog/WoolRadar/blob/main/CODEX_NEXT_TASKS_20261018.md",
+      "next_action": "Codex only if authorized: verify actual Windows upstream C:/WoolRadar/nodes/digest-ai-agent/upstream/.venv/Scripts/python.exe and httpx then execute original test in safe isolated worktree; if absent BLOCKED_UPSTREAM_RUNTIME, never fake venv or delete skip."
+    },
+    {
+      "event_key": "interactive-20261018-minimal-skip-failclosed-wool-sam-codex/YinQieJi",
+      "origin": "INTERACTIVE_CI_ACTUAL_GITHUB",
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "family_ids": [
+        "SAM-H15",
+        "SAM-H16",
+        "SAM-H22"
+      ],
+      "source_sha": "ba24b3db342fc5c648effd95d477eda154cff909",
+      "controller_commit": "1bff244f162ae0f011d70b02d286670e65bd898e",
+      "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39089836129",
+      "checks": [
+        {
+          "group": "relay-skip-failclosed-unit-regressions",
+          "command": "python -m unittest discover -s .github/relay -p 'test_*.py' -v",
+          "total": 8,
+          "passed": 8,
+          "failed": 0,
+          "skipped": 0,
+          "exit_code": 0
+        },
+        {
+          "group": "SAM-H15",
+          "command": "node --import tsx --test test/workbuddy-filter-fallback.test.ts",
+          "total": 3,
+          "passed": 3,
+          "failed": 0,
+          "skipped": 0,
+          "exit_code": 0
+        },
+        {
+          "group": "SAM-H16",
+          "command": "node --import tsx --test test/workbuddy-rank-order.test.ts",
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "exit_code": 0
+        },
+        {
+          "group": "full-original-SAM",
+          "command": "npm test",
+          "total": 294,
+          "passed": 288,
+          "failed": 6,
+          "skipped": 0,
+          "exit_code": 1
+        }
+      ],
+      "status": "CLOUD_FENCE_FIXED_SAM_288_PASS_6_FROZEN_ENOENT",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "codex_status": "CODEX_REQUIRED_ORIGINAL_RELEASE_PROVENANCE_NOT_CLAIMED",
+      "codex_task_url": "https://github.com/lu403369069lu-prog/YinQieJi/blob/main/CODEX_NEXT_TASKS_20261018.md",
+      "next_action": "Authorized local-only Codex inspect six genuine frozen release files, verify SHA and signer provenance, disclose redacted validation only; do not weaken tests or invent evidence."
     }
   ],
   "run_history": [
@@ -1495,6 +1615,22 @@
       "strict_delivery": "CLOUD_NATIVE_WIN32_SYNTHETIC_ONLY; ZERO_NEW_STRICT_FAMILY_ACCEPTANCES",
       "checkpoint_status": "CAS_PENDING_READBACK",
       "next_action": "Codex must only finish genuinely native local/proprietary and frozen business gates; main SAM full-suite still 288/294 due six missing legitimate signed release artifacts."
+    },
+    {
+      "event_id": "interactive-20261018-minimal-skip-failclosed-wool-sam-codex",
+      "origin": "INTERACTIVE_GITHUB_CODE_AND_REAL_RUNS",
+      "reviewed_keys": [
+        "WR-H03",
+        "WR-H04",
+        "WR-H12",
+        "SAM-H15",
+        "SAM-H16",
+        "SAM-H22"
+      ],
+      "actual_cases": "Committed fail-closed skip/TODO/cancelled/count validation in both main relay worker/integration_gate + 2 regression tests; separate GitHub read-write runners verified 8/8 in each repo. Wool full original Windows Ran359 pass358 skipped1 exit0 incorrectly claimed complete by prior script; new integration FAIL after CAS persisted. One skipped real upstream runtime test requires authorized local Codex. SAM original npm test 288/294 fail6 skipped0; six original frozen release files absent.",
+      "strict_delivery": "ZERO_NEW_STRICT_ACCEPTANCES; ONE_REAL_UNRUN_UPSTREAM_GATE_IDENTIFIED_AND_ASSIGNED_CODEX",
+      "checkpoint_status": "CAS_PENDING_READBACK",
+      "next_action": "Prioritize source-only minimal tasks and CODEx original upstream/frozen provenance, no fake skip clearance or business COMPLETE."
     }
   ],
   "acceptance": {
@@ -1507,9 +1643,12 @@
     "last_recovery_origin": "INTERACTIVE_CHAT_NOT_SCHEDULED",
     "native_github_actions": "DUAL_MAIN_FORMAL_READ_RUN_CAS_PERSIST_VERIFIED_20261018",
     "github_actions_arbitrary_ai_repairs": "NOT_CONFIGURED_NO_INVOKABLE_CODING_MODEL_ENTITLEMENT",
-    "codex_handoff_task_router": "MAIN_AGENTS_ISSUES_ROUTER_WRITTEN; READBACK_OF_PRIOR_REV16_VERIFIED",
+    "codex_handoff_task_router": "UPDATED_WR_H12_UPSTREAM_AND_SAM_FROZEN_MAIN_TASKS_NOT_CLAIMED",
     "cloud_unprivileged_pr_ci": "WR_359_OF_359_AND_COORD_48_OF_48_PASS_SAM_288_OF_294_EXPECTED_FAIL_20261018",
-    "sam_h18_native_windows": "CLOUD_SYNTHETIC_RG_1_OF_1_PASS_20261018_STRICT_NOT_ACCEPTED"
+    "sam_h18_native_windows": "CLOUD_SYNTHETIC_RG_1_OF_1_PASS_20261018_STRICT_NOT_ACCEPTED",
+    "skip_todo_cancelled_false_pass_protection": "GITHUB_ACTIONS_VERIFIED_BOTH_20261018",
+    "wr_full_windows": "RAN_359_PASS_358_SKIPPED_1_EXIT_0_STRICT_INTEGRATION_FAIL_CODEX_REQUIRED",
+    "sam_full_native": "TOTAL_294_PASS_288_FAIL_6_SKIPPED_0_TRUE_FROZEN_FILES_MISSING"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

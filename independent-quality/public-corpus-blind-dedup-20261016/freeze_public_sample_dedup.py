@@ -46,6 +46,22 @@ def _has_private_path(value: str) -> bool:
     return '%' in candidate or bool(_PRIVATE_URL_PATH.search(candidate))
 
 
+_PRIVATE_QUERY_VALUE = re.compile(r'(?i)(?:@|\d{13,}|token|secret|password|session|bearer)')
+
+def _unsafe_encoded_query(query: str) -> bool:
+    # Never let untrusted producer identity metadata certify nested URL escapes.
+    # Single-encoded contact addresses and long IDs are private too.
+    for item in query.split('&'):
+        if not item:
+            continue
+        raw_key, _, raw_value = item.partition('=')
+        for value in (raw_key, raw_value):
+            decoded = unquote_plus(value)
+            if '%' in decoded or _PRIVATE_QUERY_VALUE.search(decoded):
+                return True
+    return False
+
+
 def canonical_public_url(raw: object) -> str | None:
     if not isinstance(raw, str) or len(raw) > 2048 or not raw:
         return None
@@ -77,7 +93,9 @@ def canonical_public_url(raw: object) -> str | None:
         else:
             return None
         if (_has_private_path(p.path)
-                or _has_private_path(p.fragment.partition('?')[0].lstrip('!'))):
+                or _has_private_path(p.fragment.partition('?')[0].lstrip('!'))
+                or _unsafe_encoded_query(p.query)
+                or _unsafe_encoded_query(p.fragment.partition('?')[2])):
             return None
         # Never collapse business-significant query parameters or app routes.
         # Remove only known marketing trackers; a query such as ?batch=2

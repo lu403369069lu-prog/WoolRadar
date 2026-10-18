@@ -1,7 +1,7 @@
-name: WR H07 multi-decoded URL path producer/sampler native guard (advisory)
+name: WR H07 nested query native canonical guard (advisory)
 on:
   push:
-    branches: [chatgpt/wr-h07-multi-encoded-path-20261018]
+    branches: [chatgpt/wr-h07-nested-query-canonical-20261018]
 permissions:
   contents: read
 concurrency:

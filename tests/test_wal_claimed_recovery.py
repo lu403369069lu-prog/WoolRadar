@@ -5,7 +5,7 @@ Only disposable synthetic SQLite files; never restore over a production DB.
 import sqlite3
 import tempfile
 import unittest
-from contextlib import closing
+from contextlib import closing, ExitStack
 from pathlib import Path
 
 from core.db import Database
@@ -25,7 +25,6 @@ class WALClaimedBackupTests(unittest.TestCase):
         queue = NotificationQueue(db)
         self.assertTrue(queue.enqueue(event, "", "telegram", "synthetic WAL notice"))
         writer = sqlite3.connect(db.path)
-        self.addCleanup(writer.close)
         writer.execute("PRAGMA journal_mode=WAL")
         writer.execute("PRAGMA wal_autocheckpoint=0")
         writer.execute("UPDATE notifications SET result='CLAIMED',attempts=3,"
@@ -36,8 +35,10 @@ class WALClaimedBackupTests(unittest.TestCase):
         return db, event, writer
 
     def test_live_wal_claim_and_lease_included_in_reindex_backup(self):
-        with tempfile.TemporaryDirectory(dir=TEST_ROOT) as td:
+        with ExitStack() as stack:
+            td = stack.enter_context(tempfile.TemporaryDirectory(dir=TEST_ROOT))
             db, event, writer = self.make_claimed_wal(Path(td))
+            stack.callback(writer.close)
             report = db.reindex()
             self.assertEqual(report["merged"], 0)
             backup = Path(report["backup"])
@@ -56,9 +57,10 @@ class WALClaimedBackupTests(unittest.TestCase):
                 self.assertEqual(tuple(record), ("CLAIMED", 3, 9999999999))
 
     def test_restored_backup_preserves_claim_and_blocks_duplicate_send(self):
-        with tempfile.TemporaryDirectory(dir=TEST_ROOT) as td:
-            root = Path(td)
+        with ExitStack() as stack:
+            root = Path(stack.enter_context(tempfile.TemporaryDirectory(dir=TEST_ROOT)))
             db, event, writer = self.make_claimed_wal(root)
+            stack.callback(writer.close)
             backup = Path(db.reindex()["backup"])
             restored_path = root / "restored.db"
             with closing(sqlite3.connect(backup)) as source:

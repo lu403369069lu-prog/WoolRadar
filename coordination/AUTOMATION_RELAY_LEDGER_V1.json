@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 35,
+    "revision": 36,
     "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
-    "last_completed_review_key": "interactive-20261018-100-minimal-stage13-dual-integration-exact-sha-binding",
+    "last_completed_review_key": "interactive-20261018-100-minimal-stage14-source-producer-execution-smoke",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -69,8 +69,8 @@
       "YinQieJi#28": "0e82f5154e40b3f3cca791f01bdab723f4cc6648",
       "WoolRadar#57": "f5c0a23523a22d9e53e17ce0dd6ca03d47c1a3cd",
       "YinQieJi#29": "b9f2a5ce116b4515e6dde743608bdf7dd71cd67a",
-      "WoolRadar#58": "7ab976d285bfdbf4b21679335d5c1b40a569a969",
-      "YinQieJi#30": "ac7a224049bf9d1a9e4d23968fba0dbfd7b20356"
+      "WoolRadar#58": "38dc3f207c53bfe54f3adb20343cd58e7705a3f6",
+      "YinQieJi#30": "39b5dd97e6ef208de6692859e04f1ee532e57ed5"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -108,9 +108,10 @@
       "interactive-20261018-100-minimal-stage10-wr-h07-nested-query-laundering",
       "interactive-20261018-100-minimal-stage11-dual-relay-expectedfailure-native",
       "interactive-20261018-100-minimal-stage12-dual-relay-explicit-counter-authority",
-      "interactive-20261018-100-minimal-stage13-dual-integration-exact-sha-binding"
+      "interactive-20261018-100-minimal-stage13-dual-integration-exact-sha-binding",
+      "interactive-20261018-100-minimal-stage14-source-producer-execution-smoke"
     ],
-    "write_diagnostic": "DUAL_RELAYS_SOURCE_SHA_INTEGRATION_FINGERPRINT_AUTHORITY_NATIVE_WORKER",
+    "write_diagnostic": "DUAL_INTEGRATION_GATE_ACTUAL_MODULE_EXECUTION_GIT_SHA_SMOKE_WITH_STUB_TEST_PROCESS",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -2053,6 +2054,31 @@
       "test_evidence": "6x18 native persisted source-contract tests, 4 red canary cases, zero skips final; integration producer modified but not separately full-suite-run",
       "business_accepted": false,
       "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage14-source-producer-execution-smoke/WR",
+      "repo": "WoolRadar",
+      "family": "COORD-HISTORY-GATE",
+      "status": "REAL_GIT_CHECKOUT_SHA_PRODUCER_SMOKE_STUB_SUITE",
+      "pr": 58,
+      "head": "38dc3f207c53bfe54f3adb20343cd58e7705a3f6",
+      "green_run": 39104119834,
+      "test_evidence": "6x16/16 native test worker including actual integration_gate.run with real git checkout identity, synthetic no-op subprocess, zero skips; not full source suite",
+      "business_accepted": false,
+      "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage14-source-producer-execution-smoke/SAM",
+      "repo": "YinQieJi",
+      "family": "COORD-HISTORY-GATE",
+      "status": "REAL_GIT_CHECKOUT_SHA_PRODUCER_SMOKE_DISPOSABLE_SAM_DIR",
+      "pr": 30,
+      "head": "39b5dd97e6ef208de6692859e04f1ee532e57ed5",
+      "first_red_run": 39104123670,
+      "green_run": 39104210291,
+      "test_evidence": "6x19/19 native test worker including integration_gate.run git identity with disposable empty SAM directory and synthetic no-op subprocess; earlier six red due main missing SAM/snapshot; not original SAM suite",
+      "business_accepted": false,
+      "strictly_complete": false
     }
   ],
   "run_history": [
@@ -2813,6 +2839,37 @@
       },
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
       "next_action": "Prove actual integration_gate producer runtime generates candidate exact SHA and report persisted source pairing end-to-end, not just synthetically. Drafts require review/merge before main scheduled acceptance uses them."
+    },
+    {
+      "event_id": "interactive-20261018-100-minimal-stage14-source-producer-execution-smoke",
+      "origin": "INTERACTIVE_CHAT_DUAL_NATIVE_INTEGRATION_SOURCE_PRODUCER_EXECUTION_SMOKE",
+      "minimal_task_units_new_this_request": 3,
+      "cumulative_actual_minimal_tasks_this_request": 81,
+      "task_unit_ids": [
+        "WR-INTEGRATION-GATE-TRUE-CHECKOUT-SHA-RUNTIME-STUB-SMOKE",
+        "SAM-INTEGRATION-GATE-EMPTY-SNAPSHOT-STUB-RED_FIX",
+        "SAM-INTEGRATION-GATE-TRUE-GIT-CHECKOUT-SHA-RUNTIME-STUB-GREEN"
+      ],
+      "actual_cases": "Add source module-level producer smoke to existing PR58 and PR30 native matrix. Exercise actual integration_gate.run() with real current Git checkout source_sha and synthetic subprocess results, check report source_commit equals git HEAD and verified_business_complete is false. Wool 6x16 pass Actions39104119834. SAM first all six red Actions39104123670 because coordinator-only main checkout lacked SAM/snapshot dir; CI smoke explicitly creates/removes disposable empty synthetic SAM/snapshot path and does not claim original business suite; final six jobs 19/19 Actions39104210291. No external npm or real test suite launched during smoke. Existing consumer native red/green stage13 preserved; entire chain still not original business acceptance.",
+      "evidence": {
+        "wool": {
+          "pr": 58,
+          "head": "38dc3f207c53bfe54f3adb20343cd58e7705a3f6",
+          "run": 39104119834,
+          "jobs": 6,
+          "tests_per_job": 16
+        },
+        "sam": {
+          "pr": 30,
+          "first_red_run": 39104123670,
+          "head": "39b5dd97e6ef208de6692859e04f1ee532e57ed5",
+          "green_run": 39104210291,
+          "jobs": 6,
+          "tests_per_job": 19
+        }
+      },
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "next_action": "Check independent full integration PASS counters also fail closed to omission/boolean. All draft PRs unmerged; no production/schedule revision."
     }
   ],
   "acceptance": {
@@ -2854,7 +2911,7 @@
     "wr_h07_nested_query_privacy": "REAL_SOURCE_SAMPLER_NESTED_QUERY_6X52_GREEN_STRICT_PENDING_20261018",
     "dual_relay_python_expectedfailure": "TWO_DRAFT_REAL_SOURCE_6X13_WR_AND_6X16_SAM_NATIVE_RED_GREEN_20261018_BUSINESS_PENDING",
     "dual_relay_complete_pass_counters": "TWO_NATIVE_DRAFTS_WR_6X14_SAM_6X17_TYPED_ZERO_REJECT_20261018_STRICT_PENDING",
-    "dual_integration_source_sha": "TWO_DRAFTS_SOURCE_CONTRACT_PARSER_NATIVE_6X15_WR_AND_6X18_SAM_GREEN_COMPLETE_RUNTIME_SUITES_NOT_RUN"
+    "dual_integration_source_sha": "TWO_DRAFTS_CONSUMER_AND_REAL_GIT_PRODUCER_STUB_SMOKE_6X16_WR_6X19_SAM_STRICT_PENDING"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

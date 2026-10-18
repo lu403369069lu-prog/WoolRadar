@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 26,
+    "revision": 27,
     "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
-    "last_completed_review_key": "interactive-20261018-100-minimal-stage4-crossplatform-source-native",
+    "last_completed_review_key": "interactive-20261018-100-minimal-stage5-sam-h17-native-atomic",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -58,7 +58,8 @@
       "WoolRadar#50": "c444233ae885cb793bd289a6d7b55aa019f47490",
       "WoolRadar#51": "d7baaa2229216814d041a56012dc9c07fed73e79",
       "YinQieJi#24": "2eddea76131851ad4fa4235bd0ff3ddd19d6012f",
-      "YinQieJi#25": "9fff6434b0bf1eeda2c6afa3e8489193806695e0"
+      "YinQieJi#25": "9fff6434b0bf1eeda2c6afa3e8489193806695e0",
+      "YinQieJi#26": "9471fc3a5d5bff14aab82c535a792889b95b27a8"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -87,7 +88,8 @@
       "interactive-20261018-live-controller-five-family-protection-and-wr-h03-native",
       "interactive-20261018-stage3-sam-h22-h09-node-allowlist",
       "interactive-20261018-50-family-fixed-sha-mapping-provenance-audit",
-      "interactive-20261018-100-minimal-stage4-crossplatform-source-native"
+      "interactive-20261018-100-minimal-stage4-crossplatform-source-native",
+      "interactive-20261018-100-minimal-stage5-sam-h17-native-atomic"
     ],
     "write_diagnostic": "INTERACTIVE_REAL_SOURCE_CI_STAGE2_PENDING_READBACK",
     "last_write_error": null,
@@ -1864,6 +1866,22 @@
         ],
         "scope": "read-only local synthetic git tests; no real GitHub return write"
       }
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage5-sam-h17-native-atomic",
+      "origin": "REAL_NATIVE_GITHUB_ACTIONS_H17",
+      "source_sha": "ba24b3db342fc5c648effd95d477eda154cff909",
+      "repo": "YinQieJi",
+      "pr": 26,
+      "head": "9471fc3a5d5bff14aab82c535a792889b95b27a8",
+      "run": 39100494642,
+      "passed_synthetic_subsets": {
+        "windows": "3x13/13",
+        "linux": "3x18/18"
+      },
+      "business_accepted": false,
+      "strictly_complete": false,
+      "reason": "Safe synthetic regression only; release original artifacts and pointer install/rollback unverified."
     }
   ],
   "run_history": [
@@ -2307,6 +2325,37 @@
         "coord_tests_per_job": 57
       },
       "next_action": "Keep all PRs unmerged. Coordination 57 original synthetic tests are native subset only, source is separate from main queue checkout; do not mark H01/H02/H06 formally mapped without provenance and end-to-end verified events. SAM-H14 still requires frozen original teacher assets, native review and all business gates. Continue source-specific evidence / actual business class acceptance."
+    },
+    {
+      "event_id": "interactive-20261018-100-minimal-stage5-sam-h17-native-atomic",
+      "origin": "INTERACTIVE_CHAT_ORIGINAL_SOURCE_H17_ATOMIC_NATIVE_REVIEW",
+      "minimal_task_units_new_this_request": 3,
+      "cumulative_actual_minimal_tasks_this_request": 34,
+      "task_unit_ids": [
+        "SAM-H17-SYNTHETIC-SOURCE-AND-WINDOWS-PATH-SAFETY-AUDIT",
+        "SAM-H17-NATIVE-SIX-JOB-WORKFLOW-PR26",
+        "SAM-H17-REAL-13WIN-18LINUX-CI"
+      ],
+      "actual_cases": "Reviewed SAM original SHA ba24b3db342fc5c648effd95d477eda154cff909 atomic-write, migrate-release-041 and synthetic manifest-builder tests/source. Original builder hardcodes literal C:\\Users\\SAM_LOCAL\\.codex\\automations paths; withheld builder synthetic on Windows to prevent writes outside intended isolated fixture. New Draft PR26 head 9471fc3a5d5bff14aab82c535a792889b95b27a8 adds read-only Windows/Linux × Node22/24/26 native regression with explicit TAP and exact counts. GitHub Actions 39100494642 completed success: Windows three jobs each 13/13; Linux three jobs each 18/18; all 6 zero failed/error/skipped/todo/cancelled. Real original release promotion, complete atomic multi-file transaction, install/rollback and frozen teacher files remain unverified; no production/cadence changes or merge.",
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "evidence": {
+        "repo": "YinQieJi",
+        "pr": 26,
+        "head": "9471fc3a5d5bff14aab82c535a792889b95b27a8",
+        "source_sha": "ba24b3db342fc5c648effd95d477eda154cff909",
+        "run": 39100494642,
+        "jobs": 6,
+        "windows": {
+          "jobs": 3,
+          "tests_per_job": 13
+        },
+        "linux": {
+          "jobs": 3,
+          "tests_per_job": 18
+        },
+        "strictly_complete": false
+      },
+      "next_action": "Do not run hardcoded original manifest builder against Windows real filesystem before path containment fix + negative tests; SAM-H17 genuine pointer promotion rollback, original private frozen release source and install require Codex/user authorization."
     }
   ],
   "acceptance": {
@@ -2339,7 +2388,8 @@
     "fixed_sha_family_mapping_audit": "coordination/HISTORICAL_50_FAMILY_MACHINE_MAPPING_AUDIT_20261018.json",
     "python_discovery_roots": "WR_15_APPROVED_PAIRS_SAM_DENY_NO_PYTHON_RUNS_ACTIONS_11_14_PASS",
     "coord_native_original_windows_linux": "SOURCE_SHA_27796_WINDOW_LINUX_57_OF_57_EACH_20261018_STRICT_NOT_ACCEPTED",
-    "sam_h14_native_matrix": "SOURCE_H14_N22_24_26_WINDOWS_LINUX_6X18_PASS_20261018_STRICT_NOT_ACCEPTED"
+    "sam_h14_native_matrix": "SOURCE_H14_N22_24_26_WINDOWS_LINUX_6X18_PASS_20261018_STRICT_NOT_ACCEPTED",
+    "sam_h17_native_synthetic_atomic": "WINDOWS_3X13_AND_LINUX_3X18_ALL_PASS_STRICT_RELEASE_PENDING_20261018"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

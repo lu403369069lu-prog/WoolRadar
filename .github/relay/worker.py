@@ -239,8 +239,14 @@ def persist(a):
     s["processed_run_keys"] = s["processed_run_keys"][-250:]
     s.setdefault("families", {})
     for x in receipt["results"]:
-        s["families"][x["id"]] = {"status": x["status"], "source_commit": receipt["source_commit"],
-                                "run_key": key, "strictly_complete": False}
+        old = s["families"].get(x["id"], {})
+        record = {"status": x["status"], "source_commit": receipt["source_commit"],
+                  "run_key": key, "strictly_complete": False}
+        if x["id"] == priority_id:
+            record["last_recheck_revision"] = s["revision"]
+        elif x["status"] == "FORMAL_CHECK_FAILED_OR_BLOCKED" and "last_recheck_revision" in old:
+            record["last_recheck_revision"] = old["last_recheck_revision"]
+        s["families"][x["id"]] = record
     save(state_path, s)
     with (root / "history.jsonl").open("a", encoding="utf-8") as stream:
         stream.write(json.dumps(receipt, sort_keys=True, ensure_ascii=False) + "\n")

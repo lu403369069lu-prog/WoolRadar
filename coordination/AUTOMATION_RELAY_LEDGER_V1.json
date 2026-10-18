@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 16,
+    "revision": 17,
     "last_persisted_worker_run_utc": "2026-10-18T01:33:11.640Z",
-    "last_completed_review_key": "interactive-20261018-codex-handoff-coord48-wr359-sam288",
+    "last_completed_review_key": "interactive-20261018-sam-h18-native-win32-real-rg-pr22",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -68,9 +68,10 @@
       "interactive-20261018-formal-ci-wrh07h08-samh14h17-h05h19",
       "interactive-20261018-sam-ci-exact-294-test-diagnostic",
       "interactive-20261018-actions-windows359-sam288-frozen6",
-      "interactive-20261018-codex-handoff-coord48-wr359-sam288"
+      "interactive-20261018-codex-handoff-coord48-wr359-sam288",
+      "interactive-20261018-sam-h18-native-win32-real-rg-pr22"
     ],
-    "write_diagnostic": "CODEX_HANDOFF_AND_PR_CI_CAS_PENDING_READBACK",
+    "write_diagnostic": "SAM_H18_NATIVE_WIN32_CAS_PENDING_READBACK",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -1243,6 +1244,43 @@
       "codex_task_url": "https://github.com/lu403369069lu-prog/YinQieJi/blob/main/CODEX_NEXT_TASKS_20261018.md",
       "issue_comment": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6244529735",
       "next_action": "Codex must inspect truly reviewed local-only frozen-release artifacts and SHA/approval, cannot fabricate gold, source manifest, release pointer or weakened assertions."
+    },
+    {
+      "event_key": "interactive-20261018-sam-h18-native-win32-real-rg-pr22/YinQieJi-SAM-H18",
+      "origin": "INTERACTIVE_CHAT_REAL_WINDOWS_ACTIONS",
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "family_ids": [
+        "SAM-H18"
+      ],
+      "source_sha": "80c0b390f63407f3142efe8477bd15d17ef45a86",
+      "source_pr": 22,
+      "workflow_commit": "000e475f876ff76c9212d682838e463d11011bd0",
+      "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39088993315",
+      "checks": [
+        {
+          "group": "SAM-H18-Windows-native-real-rg-mixed-case",
+          "command": "node --import tsx --test ../independent-review/20261018/windows-source-denials.test.ts",
+          "cwd": "SAM/snapshot",
+          "passed": 1,
+          "total": 1,
+          "failed": 0,
+          "exit_code": 0,
+          "native_os": "windows-latest",
+          "observed": "Real rg with -g !private/** still enumerates synthetically named Private/Secret.txt; runtime isExcluded/authorizeSourcePath/authorizeRegisteredRead deny; six exclusion glob forms tested."
+        },
+        {
+          "group": "SAM-native-Windows-build",
+          "command": "npm run build",
+          "exit_code": 0
+        }
+      ],
+      "status": "CLOUD_WIN32_RG_SYNTHETIC_1_OF_1_PASS_REAL_LOCAL_AND_BUSINESS_GATES_PENDING",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "codex_task_url": "https://github.com/lu403369069lu-prog/YinQieJi/blob/main/CODEX_NEXT_TASKS_20261018.md",
+      "issue_comment": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6244585375",
+      "next_action": "Do not repeat identical SHA/synthetic Windows test. Codex only real proprietary Windows filesystem/config integrations and authentic frozen releases; do not fabricate assets or mark entire H18 complete."
     }
   ],
   "run_history": [
@@ -1446,6 +1484,17 @@
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_ACCEPTANCES; GITHUB_FILES_AND_ISSUES_ARE_NOT_A_CODEX_CLAIM",
       "checkpoint_status": "CAS_PENDING_READBACK",
       "next_action": "Codex reads live worktree and issues, checks V3 ownership, verifies actual local SAM release provenance, native Windows/frozen business gates; cloud keeps failing gates red and never auto-merges."
+    },
+    {
+      "origin": "INTERACTIVE_CHAT_GITHUB_VERIFIED_AND_CODEX_SCOPE_REDUCTION",
+      "event_id": "interactive-20261018-sam-h18-native-win32-real-rg-pr22",
+      "reviewed_keys": [
+        "SAM-H18/PR22/80c0b390f63407f3142efe8477bd15d17ef45a86"
+      ],
+      "actual_cases": "Added draft SAM PR22 with synthetic Windows-only real rg and runtime policy integration test; installed read-only native Win32 GitHub Actions on default branch; initial run #39088993315 success 1/1 exit0, build exit0. Demonstrated rg mixed-case glob mismatch and runtime registered deny successful. Updated SAM Codex task/router and issues.",
+      "strict_delivery": "CLOUD_NATIVE_WIN32_SYNTHETIC_ONLY; ZERO_NEW_STRICT_FAMILY_ACCEPTANCES",
+      "checkpoint_status": "CAS_PENDING_READBACK",
+      "next_action": "Codex must only finish genuinely native local/proprietary and frozen business gates; main SAM full-suite still 288/294 due six missing legitimate signed release artifacts."
     }
   ],
   "acceptance": {
@@ -1458,8 +1507,9 @@
     "last_recovery_origin": "INTERACTIVE_CHAT_NOT_SCHEDULED",
     "native_github_actions": "DUAL_MAIN_FORMAL_READ_RUN_CAS_PERSIST_VERIFIED_20261018",
     "github_actions_arbitrary_ai_repairs": "NOT_CONFIGURED_NO_INVOKABLE_CODING_MODEL_ENTITLEMENT",
-    "codex_handoff_task_router": "ISSUES_WR2_SAM1_COORD3_AND_MAIN_AGENT_FILES_WRITTEN_PENDING_LEDGER_READBACK",
-    "cloud_unprivileged_pr_ci": "WR_359_OF_359_AND_COORD_48_OF_48_PASS_SAM_288_OF_294_EXPECTED_FAIL_20261018"
+    "codex_handoff_task_router": "MAIN_AGENTS_ISSUES_ROUTER_WRITTEN; READBACK_OF_PRIOR_REV16_VERIFIED",
+    "cloud_unprivileged_pr_ci": "WR_359_OF_359_AND_COORD_48_OF_48_PASS_SAM_288_OF_294_EXPECTED_FAIL_20261018",
+    "sam_h18_native_windows": "CLOUD_SYNTHETIC_RG_1_OF_1_PASS_20261018_STRICT_NOT_ACCEPTED"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

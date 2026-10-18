@@ -13,7 +13,7 @@
 | WoolRadar 原仓 Windows 云端完整测试 | [#39088415016](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39088415016)，固定业务源 `a0fc93c4b54d16f399c28ffb401d682fa823b107`，359/359 exit0 | **ChatGPT/Actions 已做**，Codex无需对相同源与环境原样重测；Codex 继续真实本地生产脱敏副本/冻结 SQLite/外部审批 |
 | COORD-H03/H04/H05/H06 原协调单测 | [#39088393940](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39088393940)，`codex/relay-return-20261015` SHA `27796df5f9847c1bb5d48d2a445e418dfb3d8e96`，6+11+15+5+4+7 = 48/48 exit0 | **ChatGPT/Actions 云端专项已做**；Codex 负责 Windows 本地/真 Git fence/跨 PR 回归、将独立工作流映射回50项机器队列的可信证据协议 |
 | SAM 原仓完整 Node 测试 | [#39088430854](https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39088430854)，实际候选 `ba24b3db342fc5c648effd95d477eda154cff909`，构建 exit0，测试 288/294、6 fail、exit1 | **云端继续保留红灯**；**Codex 必须从本地原插件工作区核验六份真实冻结发布资产**，不得伪造指针、清单、答案或源哈希 |
-| SAM-H18 Windows 大小写语义 | POSIX对照已有且在PR20合理跳过Windows，不构成Windows原生验收 | **Codex 本地 Windows** 补真 NTFS/rg/path 边界对照及正式可复现用例 |
+| SAM-H18 Windows 大小写语义 | [PR22](https://github.com/lu403369069lu-prog/YinQieJi/pull/22) 的真正 Windows / rg [Actions #39088993315](https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39088993315) **1/1 exit0**：rg 在混合大小写时仍枚举合成受保护文件，但 SAM 策略正确拒绝；源 SHA `80c0b390f63407f3142efe8477bd15d17ef45a86` | **ChatGPT/Actions 已做原生合成用例**；Codex 不必同SHA重测，只需补真实更多 Windows 设备/FS及跨入口集成；仍非严格完成 |
 | 独立金标/业务审批等外部门槛 | 原历史家族 50 中有8项 gated | **用户/授权维护者/合格业务证据**；Codex不能代为签收 |
 
 ## 已部署的 Actions 能力

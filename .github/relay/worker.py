@@ -109,7 +109,9 @@ def evaluate(a):
         (cwd / ".test-tmp").mkdir(exist_ok=True)
     sha = source_sha(src)
     n = min(a.limit, len(families))
-    selected = [families[(s["cursor"] + i) % len(families)] for i in range(n)]
+    regular = [families[(s["cursor"] + i) % len(families)] for i in range(n)]
+    priority = choose_recheck(s, families, {x["id"] for x in regular}) if n < 3 else None
+    selected = ([priority] if priority else []) + regular
     results = []
     for item in selected:
         checks = []
@@ -130,7 +132,9 @@ def evaluate(a):
                "run_key": os.environ.get("GITHUB_RUN_ID", "0") + "/" + os.environ.get("GITHUB_RUN_ATTEMPT", "1"),
                "generated_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
                "source_commit": sha, "source_ref": q["source_ref"], "queue_sha256": hashlib.sha256(raw).hexdigest(),
-               "previous_cursor": s["cursor"], "next_cursor": (s["cursor"] + n) % len(families),
+               "previous_cursor": s["cursor"], "regular_count": n,
+               "priority_recheck": priority["id"] if priority else None,
+               "next_cursor": (s["cursor"] + n) % len(families),
                "results": results, "strict_new_acceptances": 0}
     save(a.output, receipt)
     print(json.dumps({"evaluation": "COMPLETE", "source_commit": sha, "count": n, "next_cursor": receipt["next_cursor"]}))

@@ -259,7 +259,7 @@ def persist(a):
         else:
             if [x.get("argv") for x in checks] != commands:
                 raise ValueError("test mapping mismatch")
-            all_pass = all(x.get("status") == "PASS" and x.get("exit_code") == 0
+            all_pass = all(x.get("status") == "PASS" and type(x.get("exit_code")) is int and x["exit_code"] == 0
                            and type(x.get("total")) is int and x["total"] > 0
                            and type(x.get("passed")) is int and x["passed"] == x["total"]
                            and "failed" in x and (x["failed"] is None or

@@ -7,6 +7,7 @@ import time
 from pathlib import Path
 import urllib.parse
 import urllib.request
+import urllib.error
 from .models import utc_now, Candidate
 from .verifier import VerificationEngine
 
@@ -106,6 +107,7 @@ class NotificationQueue:
                          item['attempts'], item['next_attempt'])).rowcount
             if not claimed:
                 continue
+            retry_delay = max(0, retry_seconds)
             try:
                 if local:
                     output = Path(local_dir)
@@ -163,6 +165,20 @@ class NotificationQueue:
                         temporary.unlink(missing_ok=True)
                 else:
                     result = (sender or TelegramNotifier(policy).send)(item['payload'])
+            except urllib.error.HTTPError as exc:
+                # A server-declared 429 cooldown is a definite throttling
+                # response, not confirmation of a sent message. Do not store
+                # exception text (the request URL can contain a bot token).
+                if not local and exc.code == 429:
+                    raw_delay = exc.headers.get('Retry-After') if exc.headers else None
+                    try:
+                        seconds = int(raw_delay)
+                    except (TypeError, ValueError, OverflowError):
+                        seconds = 0
+                    retry_delay = max(retry_delay, min(3600, max(0, seconds)))
+                    result = 'RATE_LIMITED'
+                else:
+                    result = 'UNCERTAIN' if not local else 'FAILED'
             except Exception:
                 # Exceptions can contain a bot token in a request URL. Never persist them.
                 # Network timeouts may occur after Telegram accepted the send.
@@ -175,7 +191,7 @@ class NotificationQueue:
                     AND result='CLAIMED' AND attempts=? AND next_attempt=?
                     AND event_id IS ? AND batch_id=? AND channel=? AND created_at=? AND payload=?''',
                     ('SENT' if success else 'UNCERTAIN' if result == 'UNCERTAIN' else 'RETRY',
-                     0 if success else now + max(0, retry_seconds),
+                     0 if success else now + retry_delay,
                      item['id'], item['attempts'] + 1, claim_deadline, item['event_id'],
                      item['batch_id'], item['channel'], item['created_at'], item['payload'])).rowcount
             if confirmed != 1:

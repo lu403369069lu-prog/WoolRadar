@@ -1,0 +1,30 @@
+name: Second100 W1 Telegram rate-limit fault injection
+on:
+  push:
+    branches: [chatgpt/second100-w1-telegram-429-20261018]
+  pull_request:
+    branches: [chatgpt/second100-w1-telegram-unknown-20261018]
+permissions:
+  contents: read
+jobs:
+  rate-limit:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        python: ['3.11', '3.12']
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Rate limit 429 and disconnected network fault injection
+        run: python -X utf8 -m unittest discover -s tests -p test_telegram_rate_limit.py -v
+      - name: Unknown timeout + retry persistence
+        run: python -X utf8 -m unittest discover -s tests -p test_telegram_timeout_uncertainty.py -v
+      - name: Original notification contract
+        run: python -X utf8 -m unittest discover -s tests -p test_notifications.py -v

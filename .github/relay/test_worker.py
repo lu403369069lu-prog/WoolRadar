@@ -98,6 +98,23 @@ class RelaySafetyTests(unittest.TestCase):
         self.assertEqual(
             worker.parse_test_summary("Ran 1 test in 0.001s\n", 0)["status"], "FAIL")
 
+    def test_forged_pass_receipt_requires_explicit_zero_counters(self):
+        q = self.queue()
+        for field in ("failed", "skipped", "todo", "cancelled"):
+            with self.subTest(missing=field), tempfile.TemporaryDirectory() as tmp:
+                receipt = self.receipt(q)
+                checks = receipt["results"][0]["checks"]
+                self.assertTrue(checks, "requires a real mapped family")
+                checks[0].pop(field, None)
+                with self.assertRaises(ValueError):
+                    self.run_persist(Path(tmp), q, receipt)
+        for field in ("failed", "skipped", "todo", "cancelled"):
+            with self.subTest(boolean=field), tempfile.TemporaryDirectory() as tmp:
+                receipt = self.receipt(q)
+                receipt["results"][0]["checks"][0][field] = False
+                with self.assertRaises(ValueError):
+                    self.run_persist(Path(tmp), q, receipt)
+
     def test_forged_skipped_receipt_rejected(self):
         q = self.queue()
         with tempfile.TemporaryDirectory() as tmp:

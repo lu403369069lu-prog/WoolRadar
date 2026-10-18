@@ -174,6 +174,32 @@ def persist(a):
             raise ValueError("incorrect task disposition")
     if any(x.get("strictly_complete") is not False or x.get("business_accepted") is not False for x in receipt["results"]):
         raise ValueError("never auto-accept a family")
+    # Attach the independent whole-source regression evidence to the durable
+    # history. This is NOT a business/native acceptance gate.
+    integration = load(Path(a.receipt).with_name("integration.json"))
+    expected_integration = ([sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py"]
+                            if a.repo == "WoolRadar" else ["npm", "test"])
+    # The runner's absolute Python executable varies by host. Validate argv structure.
+    integration_command = integration.get("command")
+    valid_cmd = (isinstance(integration_command, list) and
+                 ((a.repo == "WoolRadar" and len(integration_command) == 7
+                   and integration_command[1:] == expected_integration[1:])
+                  or (a.repo == "YinQieJi" and integration_command == expected_integration)))
+    if (integration.get("schema_version") != 1 or integration.get("repo") != a.repo
+            or not valid_cmd or integration.get("verified_business_complete") is not False
+            or integration.get("status") not in ("PASS", "FAIL", "BLOCKED")):
+        raise ValueError("invalid independent integration report")
+    if integration["status"] == "PASS" and (
+            integration.get("exit_code") != 0 or
+            not isinstance(integration.get("total"), int) or integration["total"] <= 0 or
+            integration.get("failed") not in (None, 0)):
+        raise ValueError("forged integration success")
+    receipt["integration"] = integration
+    s["integration"] = {"status": integration["status"],
+                        "source_commit": receipt["source_commit"],
+                        "run_key": key, "total": integration.get("total"),
+                        "passed": integration.get("passed"),
+                        "failed": integration.get("failed")}
     s["cursor"] = receipt["next_cursor"]
     s["revision"] = s.get("revision", 0) + 1
     s["last_source_commit"] = receipt["source_commit"]

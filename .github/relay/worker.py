@@ -292,14 +292,15 @@ def persist(a):
             or integration["source_commit"] != receipt["source_commit"]):
         raise ValueError("invalid independent integration report")
     if integration["status"] == "PASS" and (
-            integration.get("exit_code") != 0 or
-            not isinstance(integration.get("total"), int) or integration["total"] <= 0 or
-            integration.get("failed") not in (None, 0) or
+            type(integration.get("exit_code")) is not int or integration["exit_code"] != 0 or
+            type(integration.get("total")) is not int or integration["total"] <= 0 or
             type(integration.get("passed")) is not int or
             integration["passed"] != integration["total"] or
-            integration.get("skipped", 0) != 0 or
-            integration.get("todo", 0) != 0 or
-            integration.get("cancelled", 0) != 0):
+            "failed" not in integration or
+            not (integration["failed"] is None or
+                 type(integration["failed"]) is int and integration["failed"] == 0) or
+            any(type(integration.get(key)) is not int or integration[key] != 0
+                for key in ("skipped", "todo", "cancelled"))):
         raise ValueError("forged integration success")
     receipt["integration"] = integration
     s["integration"] = {"status": integration["status"],

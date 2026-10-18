@@ -25,6 +25,20 @@ _TRACKING_QUERY = {'utm_source','utm_medium','utm_term','utm_content','fbclid',
                    'gclid','msclkid','mc_cid','mc_eid'}
 _PRIVATE_VALUE = re.compile(r'(?i)(?:@|\d{13,}|token|secret|bearer|password|session)')
 
+
+# Token-like path segments, contact identifiers, and large bare identifiers
+# are not an ordinary public producer identity. Do not archive these raw URLs.
+_PRIVATE_PATH = re.compile(
+    r'(?i)(?:^|/)(?:tokens?|secrets?|passwords?|sessions?|'
+    r'access[_-]?tokens?|refresh[_-]?tokens?|api[_-]?keys?|'
+    r'client[_-]?secrets?|credentials?|private|account|'
+    r'auth|oauth|reset)(?=/|$)|@|(?<!\d)\d{13,}(?!\d)')
+
+
+def _sensitive_url_path(value: str) -> bool:
+    return bool(_PRIVATE_PATH.search(unquote_plus(value)))
+
+
 def _semantic_query(query: str) -> tuple[str, bool]:
     kept = {}
     preserved = True
@@ -100,6 +114,9 @@ def _clean_url_identity(value: str) -> tuple[str, bool]:
         parsed.port
         if not _is_lexical_public_host(parsed.hostname):
             return '[non-public host redacted]', False
+        if (_sensitive_url_path(parsed.path)
+                or _sensitive_url_path(parsed.fragment.partition('?')[0])):
+            return '[private URL path redacted]', False
         query, preserved = _semantic_query(parsed.query)
         if parsed.username is not None or parsed.password is not None:
             preserved = False

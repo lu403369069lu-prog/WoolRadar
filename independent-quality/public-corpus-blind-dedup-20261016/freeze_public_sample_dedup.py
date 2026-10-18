@@ -21,6 +21,19 @@ MAX_OUTPUT = 4_000_000
 SOURCE_ID = re.compile(r"[A-Za-z0-9_-]{1,64}\Z")
 
 
+
+# Recheck producer privacy independently; metadata claims are untrusted.
+_PRIVATE_URL_PATH = re.compile(
+    r'(?i)(?:^|/)(?:tokens?|secrets?|passwords?|sessions?|'
+    r'access[_-]?tokens?|refresh[_-]?tokens?|api[_-]?keys?|'
+    r'client[_-]?secrets?|credentials?|private|account|'
+    r'auth|oauth|reset)(?=/|$)|@|(?<!\d)\d{13,}(?!\d)')
+
+
+def _has_private_path(value: str) -> bool:
+    return bool(_PRIVATE_URL_PATH.search(unquote_plus(value)))
+
+
 def canonical_public_url(raw: object) -> str | None:
     if not isinstance(raw, str) or len(raw) > 2048 or not raw:
         return None
@@ -50,6 +63,9 @@ def canonical_public_url(raw: object) -> str | None:
         except ValueError:
             pass
         else:
+            return None
+        if (_has_private_path(p.path)
+                or _has_private_path(p.fragment.partition('?')[0].lstrip('!'))):
             return None
         # Never collapse business-significant query parameters or app routes.
         # Remove only known marketing trackers; a query such as ?batch=2

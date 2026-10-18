@@ -17,6 +17,18 @@
 - 已部署 **[WoolRadar 新源码 PR Windows 验收工作流](https://github.com/lu403369069lu-prog/WoolRadar/actions/workflows/agent-pr-acceptance.yml)**；从实际 `a0fc93c4b54d16f399c28ffb401d682fa823b107` 源检出，正式 [Actions #39088415016](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39088415016) **359/359 exit0**。
 - **Codex 不要再无条件重跑 H03~H06 的同一固定源码、同一测试、同一 Linux 环境**。以下命令保留作版本升级/Windows 原生或修复后重新验证的复现规范。Codex 的增量任务是本机/真实 Git 断点、跨 PR 叠加差异、审批和冻结外部证据，以及把正式测试逐家族联到既有 Actions 自动队列；云端全绿不能取代本地现场验收。
 
+## 新发现的最小本机阻塞 — WR-H12 / DIGEST-UPSTREAM-01（CODEX_REQUIRED；尚未认领）
+
+**2026-10-18 GitHub 独立正式取证，不再把 Ran359 误写成359个真正通过：** 双仓 Actions 已修复“测试成功退出却全部/部分跳过”的错误PASS判定。WoolRadar main 修复 commit `5b6dc16397927631dbdfa2d341d47b2863ab3c01`，原业务候选 SHA `a0fc93c4b54d16f399c28ffb401d682fa823b107`，正式 [Windows Actions #39089777897](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39089777897)：runner防伪回归 **8/8 exit0**，历史 WR-H03 **6/6** 与 WR-H04 **5/5** 真正通过；全量原业务源码 `python -m unittest discover -s tests -p 'test_*.py'` **Ran 359 / passed 358 / skipped 1 / exit0**，新 fail-closed 集成状态 **FAIL**，已写独立状态分支 Rev15。此 FAIL 是*未执行的原生上游门槛*，不等于358条断言失败。
+
+**静态溯源**：`tests/test_digest_runtime.py` 真实 Git Blob `6fad926bbccecc6bab957486099647e18f8ef98b`，用 `@unittest.skipUnless(PYTHON.exists(), 'installed upstream runtime required')` 跳过 `test_upstream_provider_http_is_budgeted_across_process_invocations`，`PYTHON = Path('C:/WoolRadar/nodes/digest-ai-agent/upstream/.venv/Scripts/python.exe')`。它需要本地已安装真实上游、真实依赖 `httpx` 与其消费逻辑。云端没有该 Windows 路径，不能为了绿灯伪造目录、创建假exe、删除skip或模拟已经验收的原生服务；对应 WR-H12 日报/真实上游桥接仍要求用户授权。
+
+**Codex 下一最小动作**：先 `git status --porcelain=v1`、读既有 owner/lease 与本地源 HEAD，在真正授权的隔离 worktree/测试复制件中确认该原始 `.venv/Scripts/python.exe` 是否存在及其依赖，确认上游文件确实是正确的被测版本；不要修改生产环境、运行真实网络任务或创建假依赖。若存在且授权，只在离线 `httpx.MockTransport` 条件下执行：
+`python -m unittest discover -s tests -p 'test_digest_runtime.py' -v`
+预期 **1项实际执行且pass，skip=0，exit0**；保留原工作目录和固定SHA、Python/httpx版本、最小脱敏回执。若缺失或未经允许，标 `BLOCKED_UPSTREAM_RUNTIME_OR_APPROVAL`，附缺失前置条件后转去下一家族，不得冒充已完成或重复跑同一个 skip。
+
+注意：此项 `CODEX_REQUIRED` 是将 WR-H12 所涉上游预算/日报桥接子门槛分配给本机 Codex，不代表 WR-H12 family 完整业务范围已覆盖；WR-H12 严格仍需用户许可。**当前所有50家族严格完成数仍0。**
+
 ## 1. 优先给 Codex 的可执行工作包
 
 ### WR-CODEX-01 / COORD-H03：Webhook HMAC 验收（本地已有源码，不许重建）

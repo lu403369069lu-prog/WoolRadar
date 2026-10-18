@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 18,
+    "revision": 19,
     "last_persisted_worker_run_utc": "2026-10-18T01:33:11.640Z",
-    "last_completed_review_key": "interactive-20261018-minimal-skip-failclosed-wool-sam-codex",
+    "last_completed_review_key": "interactive-20261018-pr-acceptance-zero-skips-real-run",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -70,9 +70,10 @@
       "interactive-20261018-actions-windows359-sam288-frozen6",
       "interactive-20261018-codex-handoff-coord48-wr359-sam288",
       "interactive-20261018-sam-h18-native-win32-real-rg-pr22",
-      "interactive-20261018-minimal-skip-failclosed-wool-sam-codex"
+      "interactive-20261018-minimal-skip-failclosed-wool-sam-codex",
+      "interactive-20261018-pr-acceptance-zero-skips-real-run"
     ],
-    "write_diagnostic": "DUAL_SKIP_FENCE_CAS_PENDING_READBACK",
+    "write_diagnostic": "PR_STRICT_SKIP_GATE_CAS_PENDING_READBACK",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -1401,6 +1402,68 @@
       "codex_status": "CODEX_REQUIRED_ORIGINAL_RELEASE_PROVENANCE_NOT_CLAIMED",
       "codex_task_url": "https://github.com/lu403369069lu-prog/YinQieJi/blob/main/CODEX_NEXT_TASKS_20261018.md",
       "next_action": "Authorized local-only Codex inspect six genuine frozen release files, verify SHA and signer provenance, disclose redacted validation only; do not weaken tests or invent evidence."
+    },
+    {
+      "event_key": "interactive-20261018-pr-acceptance-zero-skips-real-run/WR",
+      "origin": "INTERACTIVE_CHAT_REAL_GITHUB_PR_WORKFLOW_VERIFIED",
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "family_ids": [
+        "WR-H12"
+      ],
+      "source_sha": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+      "controller_commit": "dd9a4c6582253410ab90b47237960bdad45355cc",
+      "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39090361701",
+      "checks": [
+        {
+          "group": "Windows-real-source-PR-full-suite-strict-result",
+          "command": "python - [inline unittest.defaultTestLoader.discover and TextTestRunner]",
+          "total": 359,
+          "passed": 358,
+          "skipped": 1,
+          "failed": 0,
+          "errors": 0,
+          "expected_failures": 0,
+          "exit_code": 1
+        }
+      ],
+      "status": "PR_FORMAL_FAIL_CLOSED_ON_DIGEST_UPSTREAM_UNEXECUTED",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "codex_status": "CODEX_REQUIRED_AND_USER_APPROVAL_UNCLAIMED",
+      "codex_task_url": "https://github.com/lu403369069lu-prog/WoolRadar/blob/main/CODEX_NEXT_TASKS_20261018.md",
+      "next_action": "Verify original real installed upstream .venv only in authorized isolated local Codex context; run test_digest_runtime.py with skip0 or record BLOCKED, do not synthesize upstream or modify production."
+    },
+    {
+      "event_key": "interactive-20261018-pr-acceptance-zero-skips-real-run/SAM",
+      "origin": "INTERACTIVE_CHAT_REAL_GITHUB_PR_WORKFLOW_VERIFIED",
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "family_ids": [
+        "SAM-H22"
+      ],
+      "source_sha": "ba24b3db342fc5c648effd95d477eda154cff909",
+      "controller_commit": "2739010eba92cbc81e11e5dab2692c679ea08bcf",
+      "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39090554100",
+      "checks": [
+        {
+          "group": "Node-original-full-suite-inline-TAP-strict-validation",
+          "command": "npm test; inspect real TAP totals/pass/fail/cancelled/skipped/todo",
+          "total": 294,
+          "passed": 288,
+          "failed": 6,
+          "skipped": 0,
+          "todo": 0,
+          "cancelled": 0,
+          "exit_code": 1
+        }
+      ],
+      "status": "PR_FORMAL_FAIL_CLOSED_SIX_ORIGINAL_FROZEN_FILES_MISSING",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "codex_status": "CODEX_REQUIRED_ORIGINAL_RELEASE_PROVENANCE_UNCLAIMED",
+      "codex_task_url": "https://github.com/lu403369069lu-prog/YinQieJi/blob/main/CODEX_NEXT_TASKS_20261018.md",
+      "next_action": "Inspect authorized true local-only six frozen 0.4.1/0.4.2 artifacts and verify SHA/signature/version; no fake CI, no private source upload."
     }
   ],
   "run_history": [
@@ -1631,6 +1694,18 @@
       "strict_delivery": "ZERO_NEW_STRICT_ACCEPTANCES; ONE_REAL_UNRUN_UPSTREAM_GATE_IDENTIFIED_AND_ASSIGNED_CODEX",
       "checkpoint_status": "CAS_PENDING_READBACK",
       "next_action": "Prioritize source-only minimal tasks and CODEx original upstream/frozen provenance, no fake skip clearance or business COMPLETE."
+    },
+    {
+      "event_id": "interactive-20261018-pr-acceptance-zero-skips-real-run",
+      "origin": "INTERACTIVE_CHAT_GITHUB_PR_CI_VERIFIED",
+      "reviewed_keys": [
+        "WR-H12/real upstream skip",
+        "SAM-H22/six source files"
+      ],
+      "actual_cases": "Fixed a second pass-leak path: PR acceptance workflows, not only scheduled durable relay. Real PR Workflow WoolRadar #39090361701 on actual candidate Windows source computed 359 ran /358 executed pass/1 skipped/0 failed, failed strict job exit1. SAM final inline TAP checked 294/288/6fail/0 skipped/0 todo/0 cancelled and failed strict job exit1 #39090554100. Intermediate SAM workflow corrections superseded by final verified commit 2739010eba92cbc81e11e5dab2692c679ea08bcf. Both real CI run outputs and Codex entry docs readback.",
+      "strict_delivery": "ZERO_NEW_STRICT_FAMILY_ACCEPTANCES; NO_FALSE_GREEN_PR_GATES",
+      "checkpoint_status": "CAS_PENDING_READBACK",
+      "next_action": "Continue smallest cloud formal COORD-H03/04/05 mapping or independent original source fix; Codex authentic upstream and frozen assets on local only."
     }
   ],
   "acceptance": {
@@ -1648,7 +1723,9 @@
     "sam_h18_native_windows": "CLOUD_SYNTHETIC_RG_1_OF_1_PASS_20261018_STRICT_NOT_ACCEPTED",
     "skip_todo_cancelled_false_pass_protection": "GITHUB_ACTIONS_VERIFIED_BOTH_20261018",
     "wr_full_windows": "RAN_359_PASS_358_SKIPPED_1_EXIT_0_STRICT_INTEGRATION_FAIL_CODEX_REQUIRED",
-    "sam_full_native": "TOTAL_294_PASS_288_FAIL_6_SKIPPED_0_TRUE_FROZEN_FILES_MISSING"
+    "sam_full_native": "TOTAL_294_PASS_288_FAIL_6_SKIPPED_0_TRUE_FROZEN_FILES_MISSING",
+    "pr_acceptance_no_false_green": "DUAL_REAL_PR_CI_VERIFIED_20261018_WR_ONE_SKIP_AND_SAM_SIX_FAILED",
+    "strict_completed_family_count": 0
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

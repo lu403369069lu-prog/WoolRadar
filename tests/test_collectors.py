@@ -120,6 +120,44 @@ class CollectorTests(unittest.TestCase):
                     budgeted_read(urllib.request.Request(target))
                 build.assert_not_called()
 
+    def test_dns_private_or_mixed_answers_never_open_a_socket(self):
+        from core.collector import _connect_public_peer, SourcePaused
+        public = (socket.AF_INET, socket.SOCK_STREAM, 6, '', ('8.8.8.8', 443))
+        private = (socket.AF_INET, socket.SOCK_STREAM, 6, '', ('127.0.0.1', 443))
+        for answers in ([private], [public, private], []):
+            with self.subTest(answers=answers):
+                with patch('core.collector.socket.getaddrinfo', return_value=answers), \
+                     patch('core.collector.socket.socket') as create_socket:
+                    with self.assertRaisesRegex(SourcePaused, 'NON_PUBLIC_RESOLVED_PEER'):
+                        _connect_public_peer(('public.example', 443), timeout=5)
+                    create_socket.assert_not_called()
+
+    def test_dns_public_address_is_pinned_for_tls_connection(self):
+        from core.collector import _PublicPeerHTTPSConnection
+        from unittest.mock import Mock
+        target = ('8.8.8.8', 443)
+        endpoint = (socket.AF_INET, socket.SOCK_STREAM, 6, '', target)
+        context = Mock()
+        with patch('core.collector.socket.getaddrinfo', return_value=[endpoint]) as resolve, \
+             patch('core.collector.socket.socket') as create_socket:
+            connection = _PublicPeerHTTPSConnection('public.example', timeout=5, context=context)
+            connection.connect()
+            resolve.assert_called_once_with('public.example', 443, type=socket.SOCK_STREAM)
+            create_socket.return_value.connect.assert_called_once_with(target)
+            context.wrap_socket.assert_called_once()
+            self.assertEqual(context.wrap_socket.call_args.kwargs['server_hostname'], 'public.example')
+
+    def test_budgeted_fetch_disables_environment_connect_proxies(self):
+        from core.collector import budgeted_read
+        from urllib.request import ProxyHandler
+        with patch('core.collector.urllib.request.build_opener') as build:
+            build.return_value.open.return_value.__enter__.return_value.read.return_value = b'example'
+            self.assertEqual(budgeted_read(urllib.request.Request('https://public.example/')), b'example')
+            handlers = build.call_args.args
+            proxy_handlers = [handler for handler in handlers if isinstance(handler, ProxyHandler)]
+            self.assertEqual(len(proxy_handlers), 1)
+            self.assertEqual(proxy_handlers[0].proxies, {})
+
     def test_public_https_redirect_still_succeeds_with_each_hop_checked(self):
         from core.collector import budgeted_read
         with tempfile.TemporaryDirectory(dir=ROOT / '.test-tmp') as td:

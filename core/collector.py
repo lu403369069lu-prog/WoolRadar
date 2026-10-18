@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import html
+import http.client
 import ipaddress
 import io
 import json
@@ -443,6 +444,51 @@ def _safe_public_fetch_url(url: str) -> bool:
         return False
 
 
+def _connect_public_peer(address, timeout=socket._GLOBAL_DEFAULT_TIMEOUT, source_address=None):
+    """Resolve once, reject every nonpublic answer and connect to that exact IP.
+
+    ``socket.create_connection`` resolves again, so a separate DNS precheck
+    would leave a rebinding window between validation and the actual connect.
+    """
+    host, port = address
+    endpoints = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
+    if not endpoints or any(not ipaddress.ip_address(item[4][0]).is_global for item in endpoints):
+        raise SourcePaused('NON_PUBLIC_RESOLVED_PEER')
+    last_error = None
+    for family, socktype, proto, _, peer in endpoints:
+        sock = None
+        try:
+            sock = socket.socket(family, socktype, proto)
+            if timeout is not socket._GLOBAL_DEFAULT_TIMEOUT:
+                sock.settimeout(timeout)
+            if source_address:
+                sock.bind(source_address)
+            sock.connect(peer)
+            return sock
+        except OSError as exc:
+            last_error = exc
+            if sock is not None:
+                sock.close()
+    if last_error is not None:
+        raise last_error
+    raise SourcePaused('NON_PUBLIC_RESOLVED_PEER')
+
+
+class _PublicPeerHTTPSConnection(http.client.HTTPSConnection):
+    def connect(self):
+        # A configured proxy owns the CONNECT tunnel and its destination DNS.
+        # This guard protects direct origin connections; proxy enforcement
+        # needs its own independent network-boundary acceptance.
+        if not self._tunnel_host:
+            self._create_connection = _connect_public_peer
+        super().connect()
+
+
+class _PublicPeerHTTPSHandler(urllib.request.HTTPSHandler):
+    def https_open(self, request):
+        return self.do_open(_PublicPeerHTTPSConnection, request, context=self._context)
+
+
 def budgeted_read(request, budget: RequestBudget | None = None, max_bytes: int = 2_000_000, validate=None) -> bytes:
     class NoRedirect(urllib.request.HTTPRedirectHandler):
         def redirect_request(self, req, fp, code, msg, headers, newurl):
@@ -457,7 +503,10 @@ def budgeted_read(request, budget: RequestBudget | None = None, max_bytes: int =
         if budget is not None and not budget.acquire_http(url):
             raise SourcePaused('REQUEST_BUDGET')
         if opener is None:
-            opener = urllib.request.build_opener(NoRedirect())
+            # Explicitly disable environment proxies: a CONNECT proxy resolves
+            # the origin itself and would bypass the pinned-public-peer check.
+            opener = urllib.request.build_opener(NoRedirect(), urllib.request.ProxyHandler({}),
+                                                 _PublicPeerHTTPSHandler())
         try:
             with opener.open(request, timeout=20) as response:
                 payload = response.read(max_bytes)

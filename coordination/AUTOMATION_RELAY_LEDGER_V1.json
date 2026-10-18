@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 12,
+    "revision": 13,
     "last_persisted_worker_run_utc": "2026-10-17T23:30:25.571Z",
-    "last_completed_review_key": "WoolRadar#44:DNS_LABEL_CODE_PATCH_FORMAL_UNRUN",
+    "last_completed_review_key": "WoolRadar#47:CI_75_OF_75_NATIVE_PENDING",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -44,7 +44,10 @@
       "WoolRadar#43": "621871f9afc5ae43272d04bcff9d4763ae25fa5a",
       "WoolRadar#44": "e81ef59bc2b0b05fad5acfbb231ead92c0d2925e",
       "WoolRadar#38": "75021367f71ba550a95ef098789e1f1201b21bad",
-      "YinQieJi#13": "8719d75205e50209e9b11998a2af72c4d08ee975"
+      "YinQieJi#13": "8719d75205e50209e9b11998a2af72c4d08ee975",
+      "WoolRadar#47": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+      "WoolRadar#46": "b8e7ed073d467194743f6794da579e0dbe0e1b82",
+      "YinQieJi#19": "b7ff0bec08e5cbe2c8065ac98ef8f9175a5fbd0c"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -59,7 +62,8 @@
       "YinQieJi/SAM-H01/81d8543aeae4a15ea6ecee32cde550808fa5f1c3/strict-jsonl-exact-source-12-boundaries-20261017T2324",
       "WoolRadar#44/1482f97e61b1163ccdc761906eda087fcba48628/invalid-dns-labels-extracted-redgreen-20261017T2324",
       "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17",
-      "interactive-20261018-backfill-wrh16-samh02-w44-dns-fix"
+      "interactive-20261018-backfill-wrh16-samh02-w44-dns-fix",
+      "interactive-20261018-formal-ci-wrh07h08-samh14h17-h05h19"
     ],
     "write_diagnostic": "SCHEDULED_BATCH_CAS_COMMIT_PENDING_READBACK",
     "last_write_error": null,
@@ -842,6 +846,97 @@
       "status": "CODE_PATCH_COMMITTED_FORMAL_PENDING",
       "native_frozen_accepted": false,
       "business_accepted": false
+    },
+    {
+      "event_key": "interactive-20261018-formal-ci-wrh07h08-samh14h17-h05h19/WR-H07-H08/75-of-75/source-a0fc93c",
+      "origin": "INTERACTIVE_CHAT_REAL_GITHUB_ACTIONS_VERIFIED",
+      "family_ids": [
+        "WR-H07",
+        "WR-H08"
+      ],
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "pr": 47,
+      "head_sha": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+      "ci_pr": 46,
+      "ci_run_id": 39082441724,
+      "ci_run_url": "https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39082441724",
+      "source_patch_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/47",
+      "source_commit_url": "https://github.com/lu403369069lu-prog/WoolRadar/commit/a0fc93c4b54d16f399c28ffb401d682fa823b107",
+      "tests": [
+        {
+          "command": "python -m unittest discover -s independent-quality/public-corpus-blind-dedup-20261016 -p test_*.py",
+          "passed": 24,
+          "total": 24,
+          "exit_code": 0
+        },
+        {
+          "command": "python -m unittest discover -s tests -p test_public_corpus*.py",
+          "passed": 46,
+          "total": 46,
+          "exit_code": 0
+        },
+        {
+          "command": "python -m unittest discover -s tests -p test_public_sample*.py",
+          "passed": 5,
+          "total": 5,
+          "exit_code": 0
+        }
+      ],
+      "finding": "Previously formal 1/46 failure from public.example reserved DNS hostname in long URL test; fixed only synthetic fixture to public.example.org, kept production guard unchanged. Linux CI 75/75.",
+      "status": "CLOUD_FORMAL_PASS_NATIVE_FROZEN_BUSINESS_UNACCEPTED",
+      "strictly_complete": false,
+      "native_frozen_accepted": false,
+      "business_accepted": false,
+      "next_action": "Review Draft PR47 stacked atop PR44; validate Windows/frozen source corpus and actual business denominator before strict completion. Do not merge automatically."
+    },
+    {
+      "event_key": "interactive-20261018-formal-ci-wrh07h08-samh14h17-h05h19/SAM-H14-H17-H05-H19/source-73a3ff3",
+      "origin": "INTERACTIVE_CHAT_REAL_GITHUB_ACTIONS_VERIFIED",
+      "family_ids": [
+        "SAM-H14",
+        "SAM-H17",
+        "SAM-H05",
+        "SAM-H19"
+      ],
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "pr": 19,
+      "source_pr": 15,
+      "head_sha": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
+      "ci_run_id": 39082287301,
+      "ci_run_url": "https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39082287301",
+      "checks": [
+        {
+          "group": "SAM-H17",
+          "command": "node --test tools/atomic-write.test.mjs tools/build-release-manifest.synthetic.test.mjs tools/migrate-release-041.synthetic.test.mjs",
+          "exit_code": 0,
+          "status": "PASS"
+        },
+        {
+          "group": "SAM-H14",
+          "command": "node --test ../independent-review/20261016-0904-audit-coverage/holdout_identity_check.test.mjs ../independent-review/20261016-0904-audit-coverage/holdout_identity_cli.test.mjs",
+          "exit_code": 0,
+          "status": "PASS"
+        },
+        {
+          "group": "SAM-H05-H19",
+          "command": "npm run build",
+          "exit_code": 0,
+          "status": "PASS"
+        },
+        {
+          "group": "SAM-H05-H19",
+          "command": "npm test",
+          "exit_code": 1,
+          "status": "FAIL",
+          "reported_failures": 26
+        }
+      ],
+      "finding": "SAM formal integration npm test fails 26 cases, some depend on absent artifacts/knowledge-release/0.4.2/teacher-capability-map.json and code_fallback undefined. Artifact absence independently confirmed via GitHub source directory 404. Do not fabricate frozen artifact and do not claim suite accepted.",
+      "status": "CLOUD_PARTIAL_FORMAL_NPM_TEST_FAILED",
+      "strictly_complete": false,
+      "native_frozen_accepted": false,
+      "business_accepted": false,
+      "next_action": "Separate missing frozen published release artifacts from source regressions by matching authoritative manifest and exact failing tests; obtain proper release provenance, rerun npm test. No source changes if prerequisite unavailable."
     }
   ],
   "run_history": [
@@ -988,6 +1083,19 @@
       "actual_cases": "W44 producer+sampler DNS guard source commits with 5 formal tests added, local extracted harness 4/4 pass exit0, formal module UNRUN; WR-H16 and SAM-H02 prior Scheduled chat 11/11 and 9/9 reports revalidated only by PR code+test presence, not independent test execution.",
       "strict_delivery": "NO_FAMILY_BUSINESS_ACCEPTANCE_CLAIMED",
       "next_action": "Run original formal suites and missing build/native gates, no auto merge; retry permission failures only after state change."
+    },
+    {
+      "origin": "INTERACTIVE_CHAT_NOT_SCHEDULED",
+      "event_id": "interactive-20261018-formal-ci-wrh07h08-samh14h17-h05h19",
+      "reviewed_keys": [
+        "WoolRadar#47",
+        "WoolRadar#46",
+        "YinQieJi#19"
+      ],
+      "actual_cases": "GitHub Actions WoolRadar 75/75 original formal regression passed exit0 after fixture-only Draft PR47. SAM independent H17 and H14 suites plus TypeScript build passed, npm test failed exit1 with 26 failures; exact-source tests and blocker documented.",
+      "strict_delivery": "ZERO_STRICT_BUSINESS_ACCEPTANCE; PARTIAL_ONLY",
+      "checkpoint_status": "CAS_PENDING_READBACK",
+      "next_action": "Native/frozen review for WR-H07-H08; diagnose SAM 26 integration failures and missing release artifact; keep CI read-only and PRs draft, never auto merge."
     }
   ],
   "acceptance": {

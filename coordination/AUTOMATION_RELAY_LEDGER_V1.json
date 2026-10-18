@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 20,
+    "revision": 21,
     "last_persisted_worker_run_utc": "2026-10-18T01:33:11.640Z",
-    "last_completed_review_key": "interactive-20261018-ten-minimal-actions-five-false-mappings-two-drafts",
+    "last_completed_review_key": "interactive-20261018-100-minimal-stage1-relay-ci-mappings",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -49,7 +49,9 @@
       "WoolRadar#46": "b8e7ed073d467194743f6794da579e0dbe0e1b82",
       "YinQieJi#19": "b7ff0bec08e5cbe2c8065ac98ef8f9175a5fbd0c",
       "YinQieJi#20": "ac1a36e543851d1ec4708664cfaab918537450a6",
-      "YinQieJi#21": "ba24b3db342fc5c648effd95d477eda154cff909"
+      "YinQieJi#21": "ba24b3db342fc5c648effd95d477eda154cff909",
+      "WoolRadar#48": "24781d17ee1ce68668932e883c76cc6f56d007e9",
+      "YinQieJi#23": "f2d5463bbd531fd222fddb5b888b0a0fe100ecce"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -72,9 +74,10 @@
       "interactive-20261018-sam-h18-native-win32-real-rg-pr22",
       "interactive-20261018-minimal-skip-failclosed-wool-sam-codex",
       "interactive-20261018-pr-acceptance-zero-skips-real-run",
-      "interactive-20261018-ten-minimal-actions-five-false-mappings-two-drafts"
+      "interactive-20261018-ten-minimal-actions-five-false-mappings-two-drafts",
+      "interactive-20261018-100-minimal-stage1-relay-ci-mappings"
     ],
-    "write_diagnostic": "INTERACTIVE_TEN_ROUND_STAGE_CAS_PENDING_READBACK",
+    "write_diagnostic": "INTERACTIVE_REAL_PR_MAPPING_CI_VERIFIED_PENDING_LEDGER_READBACK",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -1504,6 +1507,69 @@
       "native_frozen_accepted": false,
       "issue_comment_url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6244877153",
       "next_action": "Run exact PR HEAD formal CI; replace rawroot-only mapping with correctly source-pinned 572-case rg/glob matrix checks using safe runner path logic; Windows original semantics still need real native comparison."
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage1-relay-ci-mappings/WR",
+      "origin": "INTERACTIVE_CHAT_GITHUB_PR_CI_VERIFIED",
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "family_ids": [
+        "WR-H18",
+        "WR-H03",
+        "COORD-H01",
+        "COORD-H02",
+        "COORD-H06"
+      ],
+      "source_sha": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+      "controller_commit": "24781d17ee1ce68668932e883c76cc6f56d007e9",
+      "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39092640524",
+      "checks": [
+        {
+          "group": "isolated-pr-relay-safety",
+          "command": "python unittest discover(.github/relay, test_*.py) + no-skips/expected-failures check",
+          "total": 9,
+          "passed": 9,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0,
+          "expected_failures": 0,
+          "exit_code": 0
+        }
+      ],
+      "status": "PR_RELAY_SAFETY_PASS_NOT_BUSINESS_ACCEPTED",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "next_action": "Draft PR48 remains unmerged. Verify actual original-source WAL CLAIMED and sent notification uncertain CAS; for COORD-H01/H02/H06 use correctly pinned independent coordination branch tests. No redundant false-mapping PR."
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage1-relay-ci-mappings/SAM",
+      "origin": "INTERACTIVE_CHAT_GITHUB_PR_CI_VERIFIED",
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "family_ids": [
+        "SAM-H06",
+        "SAM-H13"
+      ],
+      "source_sha": "ba24b3db342fc5c648effd95d477eda154cff909",
+      "controller_commit": "f2d5463bbd531fd222fddb5b888b0a0fe100ecce",
+      "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39092641772",
+      "checks": [
+        {
+          "group": "isolated-pr-relay-safety",
+          "command": "python unittest discover(.github/relay, test_*.py) + no-skips/expected-failures check",
+          "total": 9,
+          "passed": 9,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0,
+          "expected_failures": 0,
+          "exit_code": 0
+        }
+      ],
+      "status": "PR_RELAY_SAFETY_PASS_NOT_BUSINESS_ACCEPTED",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "next_action": "Draft PR23 remains unmerged. Replace SAM-H06 mapping with genuine 572-case rg matrix & compare Windows semantics. SAM-H13 requires true dist install/upgrade/rollback test, not build-manifest synthesis; real frozen publication source6 still blocked."
     }
   ],
   "run_history": [
@@ -1776,6 +1842,29 @@
       "strict_delivery": "ZERO_NEW_STRICT_FAMILY_ACCEPTANCES_CI_UNRUN",
       "checkpoint_status": "CAS_PENDING_READBACK",
       "next_action": "Cold-read HEAD/current CI of Draft PR48 and PR23; proper original-source checkout/mapping + tests and Codex native release sources; continue next 10-stage in scheduled worker without resetting existing ledger."
+    },
+    {
+      "event_id": "interactive-20261018-100-minimal-stage1-relay-ci-mappings",
+      "origin": "INTERACTIVE_CHAT_GITHUB_SOURCE_AND_REAL_CI",
+      "reviewed_keys": [
+        "WoolRadar/PR48/controller-24781d17ee1ce68668932e883c76cc6f56d007e9",
+        "YinQieJi/PR23/controller-f2d5463bbd531fd222fddb5b888b0a0fe100ecce",
+        "WR-H18",
+        "SAM-H13"
+      ],
+      "actual_cases": "Created per-PR isolated read-only safety workflows on existing two Draft branches. First WoolRadar workflow 39092496897 failed due brittle hard-coded family index in unit test; fixed runnable-family selection in both repos and got real 9/9 zero-skip runs WoolRadar 39092640524, SAM 39092641772. Compared true original tests and corrected two more unrelated family mappings: WR-H18 notifications.py cannot prove SENT CAS uncertain; SAM-H13 synthetic release-manifest cannot prove dist install/upgrade/rollback. No PR merge, no main queue or original business source changes.",
+      "minimal_task_units_new_this_request": 6,
+      "task_unit_ids": [
+        "CI-WR-RELAY-PR",
+        "CI-SAM-RELAY-PR",
+        "WR-QUEUE-FAILED-PRIORITY-TEST",
+        "SAM-QUEUE-FAILED-PRIORITY-TEST",
+        "WR-H18-INVALID-MAPPING",
+        "SAM-H13-INVALID-MAPPING"
+      ],
+      "strict_delivery": "ZERO_NEW_STRICT_ACCEPTANCES; BOTH_RELAY_PR_CI_9_OF_9_PASS",
+      "checkpoint_status": "CAS_PENDING_READBACK",
+      "next_action": "Continue original-source bounded family tests and real main/PR CI gate; avoid repeating 7 now-blocked false mappings; complete only with native and frozen business acceptance."
     }
   ],
   "acceptance": {

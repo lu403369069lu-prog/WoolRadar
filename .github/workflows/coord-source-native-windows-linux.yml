@@ -52,7 +52,7 @@ jobs:
           for name in required:
               if not (Path("tests") / name).is_file():
                   raise SystemExit("MISSING_REQUIRED_ORIGINAL_TEST")
-          suite = unittest.defaultTestLoader.discover("tests", pattern="test_*.py", top_level_dir=".")
+          suite = unittest.defaultTestLoader.discover("tests", pattern="test_*.py")
           result = unittest.TextTestRunner(verbosity=2).run(suite)
           if not result.wasSuccessful() or result.skipped or result.expectedFailures or result.unexpectedSuccesses or result.testsRun < 40:
               raise SystemExit("NATIVE_COORDINATION_SUITE_INCOMPLETE")

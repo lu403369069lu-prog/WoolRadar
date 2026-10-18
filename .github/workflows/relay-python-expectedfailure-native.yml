@@ -1,7 +1,7 @@
-name: Original relay integration run-id attempt binding strict native gate (advisory)
+name: Original relay trusted Actions-run context anti-replay native gate (advisory)
 on:
   push:
-    branches: [chatgpt/relay-integration-run-key-20261018]
+    branches: [chatgpt/relay-trusted-run-context-20261018]
 permissions:
   contents: read
 concurrency:

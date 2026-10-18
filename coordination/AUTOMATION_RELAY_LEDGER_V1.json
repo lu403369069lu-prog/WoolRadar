@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 15,
+    "revision": 16,
     "last_persisted_worker_run_utc": "2026-10-18T01:33:11.640Z",
-    "last_completed_review_key": "GitHubActions-dual-main-full-suite-WR359-SAM288-frozen6",
+    "last_completed_review_key": "interactive-20261018-codex-handoff-coord48-wr359-sam288",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -67,9 +67,10 @@
       "interactive-20261018-backfill-wrh16-samh02-w44-dns-fix",
       "interactive-20261018-formal-ci-wrh07h08-samh14h17-h05h19",
       "interactive-20261018-sam-ci-exact-294-test-diagnostic",
-      "interactive-20261018-actions-windows359-sam288-frozen6"
+      "interactive-20261018-actions-windows359-sam288-frozen6",
+      "interactive-20261018-codex-handoff-coord48-wr359-sam288"
     ],
-    "write_diagnostic": "ACTIONS_DUAL_MAIN_VERIFIED_CAS_PENDING_READBACK",
+    "write_diagnostic": "CODEX_HANDOFF_AND_PR_CI_CAS_PENDING_READBACK",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -1112,6 +1113,136 @@
       "business_accepted": false,
       "native_frozen_accepted": false,
       "next_action": "Retrieve actual reviewed release artifacts from authorized Windows or original signed archive; verify hashes/lineage; cannot synthesize them. Existing free Actions does not author arbitrary source fixes without separate coding-agent entitlement."
+    },
+    {
+      "event_key": "interactive-20261018-codex-handoff-coord48-wr359-sam288/WoolRadar-Coord",
+      "origin": "INTERACTIVE_CHAT_REAL_GITHUB_ACTIONS",
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "family_ids": [
+        "COORD-H03",
+        "COORD-H04",
+        "COORD-H05",
+        "COORD-H06"
+      ],
+      "source_sha": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+      "source_branch": "codex/relay-return-20261015",
+      "workflow_commit": "b344cf7cbb86a703cb6b0647f18a316e62d96d05",
+      "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39088393940",
+      "checks": [
+        {
+          "group": "HMAC",
+          "command": "python -m unittest discover -s tests -p test_github_webhook.py -v",
+          "passed": 6,
+          "total": 6,
+          "exit_code": 0
+        },
+        {
+          "group": "dry-run-dispatch",
+          "command": "python -m unittest discover -s tests -p test_dispatcher.py -v",
+          "passed": 11,
+          "total": 11,
+          "exit_code": 0
+        },
+        {
+          "group": "relay-V3-V5",
+          "command": "python -m unittest discover -s tests -p test_relay.py -v",
+          "passed": 15,
+          "total": 15,
+          "exit_code": 0
+        },
+        {
+          "group": "relay-faults",
+          "command": "python -m unittest discover -s tests -p test_relay_faults.py -v",
+          "passed": 5,
+          "total": 5,
+          "exit_code": 0
+        },
+        {
+          "group": "git-concurrency",
+          "command": "python -m unittest discover -s tests -p test_relay_git.py -v",
+          "passed": 4,
+          "total": 4,
+          "exit_code": 0
+        },
+        {
+          "group": "return-sync",
+          "command": "python -m unittest discover -s tests -p test_return_sync.py -v",
+          "passed": 7,
+          "total": 7,
+          "exit_code": 0
+        }
+      ],
+      "status": "CLOUD_COORDINATION_ORIGINAL_48_OF_48_PASS_NATIVE_V3_GIT_GATES_PENDING",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "codex_task_url": "https://github.com/lu403369069lu-prog/WoolRadar/blob/main/CODEX_NEXT_TASKS_20261018.md",
+      "issue_comment": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6244526521",
+      "next_action": "Do not rerun same 48 fixed-SHA Linux tests; obtain Windows/native/real Git lease, independent frozen data approvals, integrate trustworthy formal mapping, draft-only changes."
+    },
+    {
+      "event_key": "interactive-20261018-codex-handoff-coord48-wr359-sam288/WoolRadar-PR-Windows",
+      "origin": "INTERACTIVE_CHAT_REAL_GITHUB_ACTIONS",
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "family_ids": [],
+      "source_sha": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+      "workflow_commit": "120f8aaaee7f04ee51cb74a990bfc961866f2eda",
+      "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39088415016",
+      "checks": [
+        {
+          "group": "WoolRadar-PR-Windows-full-source-suite",
+          "command": "python -m unittest discover -s tests -p 'test_*.py' -v",
+          "passed": 359,
+          "total": 359,
+          "exit_code": 0
+        }
+      ],
+      "status": "CLOUD_WINDOWS_PR_ACCEPTANCE_GREEN_NOT_BUSINESS_COMPLETE",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "next_action": "Same SHA already 359/359 on Windows; Codex gets live/frozen acceptance and new changes, not redundant test rerun."
+    },
+    {
+      "event_key": "interactive-20261018-codex-handoff-coord48-wr359-sam288/YinQieJi-SAM-PR",
+      "origin": "INTERACTIVE_CHAT_REAL_GITHUB_ACTIONS",
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "family_ids": [
+        "SAM-H22"
+      ],
+      "source_sha": "ba24b3db342fc5c648effd95d477eda154cff909",
+      "workflow_commit": "b3b36b869f714ceefda1b5255109a36511a18462",
+      "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39088430854",
+      "checks": [
+        {
+          "group": "SAM-unprivileged-PR-build",
+          "command": "npm run build",
+          "exit_code": 0
+        },
+        {
+          "group": "SAM-unprivileged-PR-full-source-suite",
+          "command": "npm test",
+          "passed": 288,
+          "total": 294,
+          "failed": 6,
+          "exit_code": 1
+        }
+      ],
+      "missing_sources": [
+        "SAM/snapshot/artifacts/knowledge-release/0.4.1/teacher-eval.v2.jsonl",
+        "SAM/snapshot/artifacts/knowledge-release/0.4.1/source-manifest.json",
+        "SAM/snapshot/artifacts/knowledge-release/0.4.1/claim-evidence-audit.v2.jsonl",
+        "SAM/snapshot/artifacts/knowledge-release/current.json",
+        "SAM/snapshot/release-manifest.json",
+        "SAM/snapshot/artifacts/knowledge-release/0.4.2/teacher-capability-map.json"
+      ],
+      "status": "CLOUD_SAM_PR_FAIL_CLOSED_SIX_LOCAL_FROZEN_ASSETS_MISSING",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "codex_task_url": "https://github.com/lu403369069lu-prog/YinQieJi/blob/main/CODEX_NEXT_TASKS_20261018.md",
+      "issue_comment": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6244529735",
+      "next_action": "Codex must inspect truly reviewed local-only frozen-release artifacts and SHA/approval, cannot fabricate gold, source manifest, release pointer or weakened assertions."
     }
   ],
   "run_history": [
@@ -1299,6 +1430,22 @@
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_ACCEPTANCES; WR_CLOUD_ALL_PASS_SAM_SIX_EXTERNAL_FILES_MISSING",
       "checkpoint_status": "CAS_PENDING_READBACK",
       "next_action": "Obtain real SAM frozen release assets and native production/frozen acceptance; maintain no-cost GitHub Actions tests plus scheduled ChatGPT separate coding actor."
+    },
+    {
+      "origin": "INTERACTIVE_CHAT_GITHUB_VERIFIED_AND_CODEX_HANDOFF",
+      "event_id": "interactive-20261018-codex-handoff-coord48-wr359-sam288",
+      "reviewed_keys": [
+        "COORD-H03",
+        "COORD-H04",
+        "COORD-H05",
+        "COORD-H06",
+        "WoolRadar#main-PR-CI",
+        "YinQieJi#main-PR-CI"
+      ],
+      "actual_cases": "Three new low-privilege main workflows deployed. Real read-only Actions tests: coordination 48/48 exit0 on codex/relay-return source; WoolRadar Windows full 359/359 exit0; SAM build exit0 and full 288/294 exit1 due solely to six missing frozen release artifacts. Exact task files added to both main branches and AGENTS.md; three issues get non-claim Codex handoff comments.",
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_ACCEPTANCES; GITHUB_FILES_AND_ISSUES_ARE_NOT_A_CODEX_CLAIM",
+      "checkpoint_status": "CAS_PENDING_READBACK",
+      "next_action": "Codex reads live worktree and issues, checks V3 ownership, verifies actual local SAM release provenance, native Windows/frozen business gates; cloud keeps failing gates red and never auto-merges."
     }
   ],
   "acceptance": {
@@ -1310,7 +1457,9 @@
     "scheduled_recent_write_status": "INTERMITTENT_OPENAI_SAFETY_BLOCK_POST_REV10",
     "last_recovery_origin": "INTERACTIVE_CHAT_NOT_SCHEDULED",
     "native_github_actions": "DUAL_MAIN_FORMAL_READ_RUN_CAS_PERSIST_VERIFIED_20261018",
-    "github_actions_arbitrary_ai_repairs": "NOT_CONFIGURED_NO_INVOKABLE_CODING_MODEL_ENTITLEMENT"
+    "github_actions_arbitrary_ai_repairs": "NOT_CONFIGURED_NO_INVOKABLE_CODING_MODEL_ENTITLEMENT",
+    "codex_handoff_task_router": "ISSUES_WR2_SAM1_COORD3_AND_MAIN_AGENT_FILES_WRITTEN_PENDING_LEDGER_READBACK",
+    "cloud_unprivileged_pr_ci": "WR_359_OF_359_AND_COORD_48_OF_48_PASS_SAM_288_OF_294_EXPECTED_FAIL_20261018"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

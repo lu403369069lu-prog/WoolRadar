@@ -41,7 +41,7 @@ class RelaySafetyTests(unittest.TestCase):
                          "business_accepted": False}]
         }
 
-    def run_persist(self, directory, q, receipt):
+    def run_persist(self, directory, q, receipt, integration_sha="a" * 40):
         state = directory / "engine.json"
         if not state.exists():
             worker.save(state, self.initial(q["repo"]))
@@ -55,6 +55,8 @@ class RelaySafetyTests(unittest.TestCase):
             "status": "PASS", "exit_code": 0, "total": 5, "passed": 5, "failed": 0,
             "failed_test_names": []
         }
+        if integration_sha is not None:
+            integration["source_commit"] = integration_sha
         worker.save(directory / "integration.json", integration)
         worker.save(rec, receipt)
         worker.persist(SimpleNamespace(state=str(directory), receipt=str(rec), repo=q["repo"]))
@@ -98,6 +100,44 @@ class RelaySafetyTests(unittest.TestCase):
     def test_python_summary_missing_ok_never_passes(self):
         self.assertEqual(
             worker.parse_test_summary("Ran 1 test in 0.001s\n", 0)["status"], "FAIL")
+
+    def test_real_integration_report_producer_binds_checked_out_git_sha(self):
+        # Execute the original producer using the real checkout Git identity,
+        # but substitute the external full test process with a synthetic TAP
+        # receipt. This never runs SAM production or fetches real sources.
+        from unittest.mock import patch
+        source_root = HERE.parent.parent
+        spec = importlib.util.spec_from_file_location(
+            "relay_integration_under_test", HERE / "integration_gate.py")
+        integration_gate = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(integration_gate)
+        expected = worker.source_sha(source_root)
+        q = self.queue()
+        sample_output = (
+            "Ran 1 test in 0.001s\n\nOK\n" if q["repo"] == "WoolRadar"
+            else "# tests 1\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n"
+        )
+        stub = SimpleNamespace(stdout=sample_output, stderr="", returncode=0)
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "synthetic-integration.json"
+            with patch.object(
+                integration_gate, "subprocess",
+                SimpleNamespace(run=lambda *args, **kwargs: stub)
+            ):
+                integration_gate.run(SimpleNamespace(
+                    source=str(source_root), repo=q["repo"], output=str(target)))
+            actual = json.loads(target.read_text(encoding="utf-8"))
+            self.assertEqual(actual["source_commit"], expected)
+            self.assertEqual(actual["status"], "PASS")
+            self.assertIs(actual["verified_business_complete"], False)
+
+    def test_integration_report_must_match_exact_tested_source_commit(self):
+        q = self.queue()
+        for source_sha in (None, "b" * 40, "invalid", True):
+            with self.subTest(reported_sha=source_sha), tempfile.TemporaryDirectory() as tmp:
+                receipt = self.receipt(q)
+                with self.assertRaises(ValueError):
+                    self.run_persist(Path(tmp), q, receipt, integration_sha=source_sha)
 
     def test_forged_pass_receipt_requires_explicit_zero_counters(self):
         q = self.queue()

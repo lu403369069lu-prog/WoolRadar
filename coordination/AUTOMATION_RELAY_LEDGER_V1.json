@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 14,
-    "last_persisted_worker_run_utc": "2026-10-17T23:30:25.571Z",
-    "last_completed_review_key": "WoolRadar#47:CI_75_OF_75_NATIVE_PENDING",
+    "revision": 15,
+    "last_persisted_worker_run_utc": "2026-10-18T01:33:11.640Z",
+    "last_completed_review_key": "GitHubActions-dual-main-full-suite-WR359-SAM288-frozen6",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -47,7 +47,9 @@
       "YinQieJi#13": "8719d75205e50209e9b11998a2af72c4d08ee975",
       "WoolRadar#47": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
       "WoolRadar#46": "b8e7ed073d467194743f6794da579e0dbe0e1b82",
-      "YinQieJi#19": "b7ff0bec08e5cbe2c8065ac98ef8f9175a5fbd0c"
+      "YinQieJi#19": "b7ff0bec08e5cbe2c8065ac98ef8f9175a5fbd0c",
+      "YinQieJi#20": "ac1a36e543851d1ec4708664cfaab918537450a6",
+      "YinQieJi#21": "ba24b3db342fc5c648effd95d477eda154cff909"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -64,9 +66,10 @@
       "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17",
       "interactive-20261018-backfill-wrh16-samh02-w44-dns-fix",
       "interactive-20261018-formal-ci-wrh07h08-samh14h17-h05h19",
-      "interactive-20261018-sam-ci-exact-294-test-diagnostic"
+      "interactive-20261018-sam-ci-exact-294-test-diagnostic",
+      "interactive-20261018-actions-windows359-sam288-frozen6"
     ],
-    "write_diagnostic": "SCHEDULED_BATCH_CAS_COMMIT_PENDING_READBACK",
+    "write_diagnostic": "ACTIONS_DUAL_MAIN_VERIFIED_CAS_PENDING_READBACK",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -1017,6 +1020,98 @@
       "business_accepted": false,
       "native_frozen_accepted": false,
       "next_action": "Identify exact causes of all 26 failures; distinguish missing signed frozen release assets from source bugs in nested exclusions/provenance/code_fallback; do not fabricate release assets or remove failing tests. Windows/native and frozen corpus acceptance still outstanding."
+    },
+    {
+      "event_key": "interactive-20261018-actions-windows359-sam288-frozen6/WoolRadar",
+      "origin": "INTERACTIVE_GITHUB_ACTIONS_VERIFIED",
+      "family_ids": [
+        "WR-H01",
+        "WR-H02",
+        "WR-H03",
+        "WR-H07",
+        "WR-H08"
+      ],
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "source_sha": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+      "source_pr": 47,
+      "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39086174999",
+      "supporting_evidence_urls": [
+        "https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39086003761",
+        "https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39086029501"
+      ],
+      "checks": [
+        {
+          "group": "WoolRadar-full-suite-Windows",
+          "command": "python -m unittest discover -s tests -p test_*.py",
+          "passed": 359,
+          "total": 359,
+          "exit_code": 0
+        },
+        {
+          "group": "WR-H03-priority-retry",
+          "passed": 6,
+          "total": 6,
+          "exit_code": 0
+        },
+        {
+          "group": "WR-H07-priority-retry",
+          "passed": 75,
+          "total": 75,
+          "exit_code": 0
+        }
+      ],
+      "status": "CLOUD_WINDOWS_359_OF_359_PASS_NATIVE_PRODUCTION_PENDING",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "next_action": "Full Windows cloud regression green; still obtain actual production Windows/frozen SQLite and owner-review receipts. No untrusted auto-merges."
+    },
+    {
+      "event_key": "interactive-20261018-actions-windows359-sam288-frozen6/YinQieJi",
+      "origin": "INTERACTIVE_GITHUB_ACTIONS_VERIFIED",
+      "family_ids": [
+        "SAM-H05",
+        "SAM-H14",
+        "SAM-H17",
+        "SAM-H18",
+        "SAM-H22"
+      ],
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "source_sha": "ba24b3db342fc5c648effd95d477eda154cff909",
+      "source_prs": [
+        15,
+        20,
+        21
+      ],
+      "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39086642142",
+      "checks": [
+        {
+          "group": "SAM-full-suite",
+          "command": "npm test",
+          "passed": 288,
+          "total": 294,
+          "failed": 6,
+          "exit_code": 1
+        },
+        {
+          "group": "SAM-builder",
+          "command": "npm run build",
+          "exit_code": 0
+        }
+      ],
+      "missing_sources": [
+        "SAM/snapshot/artifacts/knowledge-release/0.4.1/teacher-eval.v2.jsonl",
+        "SAM/snapshot/artifacts/knowledge-release/0.4.1/source-manifest.json",
+        "SAM/snapshot/artifacts/knowledge-release/0.4.1/claim-evidence-audit.v2.jsonl",
+        "SAM/snapshot/artifacts/knowledge-release/current.json",
+        "SAM/snapshot/release-manifest.json",
+        "SAM/snapshot/artifacts/knowledge-release/0.4.2/teacher-capability-map.json"
+      ],
+      "status": "CLOUD_288_OF_294_SIX_FROZEN_RELEASE_FILES_MISSING",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "next_action": "Retrieve actual reviewed release artifacts from authorized Windows or original signed archive; verify hashes/lineage; cannot synthesize them. Existing free Actions does not author arbitrary source fixes without separate coding-agent entitlement."
     }
   ],
   "run_history": [
@@ -1190,6 +1285,20 @@
       "strict_delivery": "FAIL_0_STRICT_NEW; REMAINING_WORK_26_FAILURES",
       "checkpoint_status": "CAS_PENDING_READBACK",
       "next_action": "Source isolate failures and release provenance before native gate."
+    },
+    {
+      "origin": "INTERACTIVE_CHAT_GITHUB_ACTIONS_REAL_CI",
+      "event_id": "interactive-20261018-actions-windows359-sam288-frozen6",
+      "reviewed_keys": [
+        "WoolRadar#main",
+        "YinQieJi#main",
+        "YinQieJi#20",
+        "YinQieJi#21"
+      ],
+      "actual_cases": "Verified default-branch Actions unprivileged tests, artifact transfer, CAS state writes, priority retries, Windows-native GitHub runner 359/359 exit0; SAM Linux 288/294 exit1 after installing rg and two stacked test-only PRs, precisely six missing frozen release inputs. Neither auto-merges nor invents source assets.",
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_ACCEPTANCES; WR_CLOUD_ALL_PASS_SAM_SIX_EXTERNAL_FILES_MISSING",
+      "checkpoint_status": "CAS_PENDING_READBACK",
+      "next_action": "Obtain real SAM frozen release assets and native production/frozen acceptance; maintain no-cost GitHub Actions tests plus scheduled ChatGPT separate coding actor."
     }
   ],
   "acceptance": {
@@ -1199,7 +1308,9 @@
     "stateful_cross_run_continuation": "VERIFIED_WITH_PRIOR_EVIDENCE_2026-10-17",
     "backlog_actual_review": "RECOVERED_TWO_UNPERSISTED_SCHEDULED_PARTIAL_REPORTS; NOT_BUSINESS_ACCEPTED",
     "scheduled_recent_write_status": "INTERMITTENT_OPENAI_SAFETY_BLOCK_POST_REV10",
-    "last_recovery_origin": "INTERACTIVE_CHAT_NOT_SCHEDULED"
+    "last_recovery_origin": "INTERACTIVE_CHAT_NOT_SCHEDULED",
+    "native_github_actions": "DUAL_MAIN_FORMAL_READ_RUN_CAS_PERSIST_VERIFIED_20261018",
+    "github_actions_arbitrary_ai_repairs": "NOT_CONFIGURED_NO_INVOKABLE_CODING_MODEL_ENTITLEMENT"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

@@ -142,12 +142,20 @@ class RelaySafetyTests(unittest.TestCase):
         state["revision"] = 2
         self.assertEqual(worker.choose_recheck(state, q["families"], set())["id"], family_id)
 
-    def test_coord_git_return_sync_not_mapped_to_reindex_preview(self):
-        """A DB reindex preview cannot prove coordination Git return-sync."""
+    def test_unrelated_source_tests_do_not_claim_family_formal_pass(self):
+        """An unrelated passing test must never masquerade as family evidence."""
         q = self.queue()
-        family = next(f for f in q["families"] if f["id"] == "COORD-H06")
-        self.assertEqual(family["checks"], [])
-        self.assertNotIn("test_reindex_preview.py", repr(family["checks"]))
+        excluded = {
+            "WR-H03": "test_config_backup.py",  # Not WAL/CLAIMED recovery.
+            "COORD-H01": "test_orchestrator.py",  # Not dispatcher replay.
+            "COORD-H02": "test_node_entry.py",  # Not GitHub event adaptation.
+            "COORD-H06": "test_reindex_preview.py",  # Not Git return-sync.
+        }
+        for family_id, unrelated_pattern in excluded.items():
+            with self.subTest(family_id=family_id):
+                family = next(f for f in q["families"] if f["id"] == family_id)
+                self.assertEqual(family["checks"], [])
+                self.assertNotIn(unrelated_pattern, repr(family["checks"]))
 
     def test_rotation_two_consecutive_receipts(self):
         q = self.queue()

@@ -75,7 +75,7 @@ class RelaySafetyTests(unittest.TestCase):
             self.assertEqual(first["strict_business_completed"], 0)
             again = self.run_persist(root, q, receipt)
             self.assertEqual(again["revision"], 1)
-            self.assertEqual(len((root / "history.jsonl").read_text().splitlines()), 1)
+            self.assertEqual(len((root / "history.jsonl").read_text(encoding="utf-8").splitlines()), 1)
 
     def test_reject_forged_completion_and_stale_cursor(self):
         q = self.queue()

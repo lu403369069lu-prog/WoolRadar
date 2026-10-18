@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 36,
+    "revision": 37,
     "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
-    "last_completed_review_key": "interactive-20261018-100-minimal-stage14-source-producer-execution-smoke",
+    "last_completed_review_key": "interactive-20261018-100-minimal-stage15-dual-full-suite-pass-counts",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -70,7 +70,9 @@
       "WoolRadar#57": "f5c0a23523a22d9e53e17ce0dd6ca03d47c1a3cd",
       "YinQieJi#29": "b9f2a5ce116b4515e6dde743608bdf7dd71cd67a",
       "WoolRadar#58": "38dc3f207c53bfe54f3adb20343cd58e7705a3f6",
-      "YinQieJi#30": "39b5dd97e6ef208de6692859e04f1ee532e57ed5"
+      "YinQieJi#30": "39b5dd97e6ef208de6692859e04f1ee532e57ed5",
+      "WoolRadar#59": "88e1c8f642d1a6c876e3a3e1e172b3f2e32fd9fe",
+      "YinQieJi#31": "4b5b439156950be7962a0e19362b9d7eff49fe1a"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -109,9 +111,10 @@
       "interactive-20261018-100-minimal-stage11-dual-relay-expectedfailure-native",
       "interactive-20261018-100-minimal-stage12-dual-relay-explicit-counter-authority",
       "interactive-20261018-100-minimal-stage13-dual-integration-exact-sha-binding",
-      "interactive-20261018-100-minimal-stage14-source-producer-execution-smoke"
+      "interactive-20261018-100-minimal-stage14-source-producer-execution-smoke",
+      "interactive-20261018-100-minimal-stage15-dual-full-suite-pass-counts"
     ],
-    "write_diagnostic": "DUAL_INTEGRATION_GATE_ACTUAL_MODULE_EXECUTION_GIT_SHA_SMOKE_WITH_STUB_TEST_PROCESS",
+    "write_diagnostic": "DUAL_FULL_INTEGRATION_PASS_TYPED_COMPLETE_COUNTERS_RED_GREEN_NATIVE",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -2079,6 +2082,32 @@
       "test_evidence": "6x19/19 native test worker including integration_gate.run git identity with disposable empty SAM directory and synthetic no-op subprocess; earlier six red due main missing SAM/snapshot; not original SAM suite",
       "business_accepted": false,
       "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage15-dual-full-suite-pass-counts/WR",
+      "repo": "WoolRadar",
+      "family": "COORD-HISTORY-GATE",
+      "status": "INTEGRATION_PASS_COMPLETE_COUNTERS_NATIVE_GREEN",
+      "pr": 59,
+      "red_run": 39104366829,
+      "green_run": 39112499029,
+      "head": "88e1c8f642d1a6c876e3a3e1e172b3f2e32fd9fe",
+      "test_evidence": "6x17 native relay tests; ten missing/boolean counter subcases were red",
+      "business_accepted": false,
+      "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage15-dual-full-suite-pass-counts/SAM",
+      "repo": "YinQieJi",
+      "family": "COORD-HISTORY-GATE",
+      "status": "INTEGRATION_PASS_COMPLETE_COUNTERS_NATIVE_GREEN",
+      "pr": 31,
+      "red_run": 39104369397,
+      "green_run": 39112501462,
+      "head": "4b5b439156950be7962a0e19362b9d7eff49fe1a",
+      "test_evidence": "6x20 native relay tests; ten missing/boolean counter subcases were red",
+      "business_accepted": false,
+      "strictly_complete": false
     }
   ],
   "run_history": [
@@ -2870,6 +2899,44 @@
       },
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
       "next_action": "Check independent full integration PASS counters also fail closed to omission/boolean. All draft PRs unmerged; no production/schedule revision."
+    },
+    {
+      "event_id": "interactive-20261018-100-minimal-stage15-dual-full-suite-pass-counts",
+      "origin": "INTERACTIVE_CHAT_DUAL_FULL_SUITE_INTEGRATION_PASS_AUTHORITY",
+      "minimal_task_units_new_this_request": 7,
+      "cumulative_actual_minimal_tasks_this_request": 88,
+      "task_unit_ids": [
+        "DUAL-FULL-INTEGRATION-COUNTER-OMISSION-FALSE-PASS",
+        "WR-SIX-NATIVE-17-RED-TEN-CANARIES",
+        "SAM-SIX-NATIVE-20-RED-TEN-CANARIES",
+        "WR-INTEGRATION-TYPED_ZERO_COUNTER-CHECK_AND_VALID_POSITIVE",
+        "SAM-INTEGRATION-TYPED_ZERO_COUNTER-CHECK_AND_VALID_POSITIVE",
+        "WR-SIX-NATIVE-17-GREEN-PR59",
+        "SAM-SIX-NATIVE-20-GREEN-PR31"
+      ],
+      "actual_cases": "Prior both real relay persist consumers accepted PASS full integration reports with missing failed/skipped/todo/cancelled, boolean False for zero, boolean True for total 1 and boolean False exit0. Native true persisted-state synthetic adversarial suite: Wool Actions39104366829 and SAM Actions39104369397 six Windows/Linux×Py3.11/3.12/3.13 jobs each fail all ten intended subcases. Require exact typed exit0, total integer positive, passed integer equals total, explicit failed None or int zero, exact int zero skipped/todo/cancelled. Positive integration fixture supplied all true zero keys. Wool final 39112499029 six jobs 17/17, zero skips; SAM 39112501462 six jobs 20/20. New unmerged stacked Draft PR59 WR and PR31 SAM; no formal business/source/frozen acceptance or production/scheduled workflow upgrade.",
+      "evidence": {
+        "wr": {
+          "pr": 59,
+          "red_run": 39104366829,
+          "green_run": 39112499029,
+          "head": "88e1c8f642d1a6c876e3a3e1e172b3f2e32fd9fe",
+          "jobs": 6,
+          "tests_per_job": 17,
+          "zero_skips": true
+        },
+        "sam": {
+          "pr": 31,
+          "red_run": 39104369397,
+          "green_run": 39112501462,
+          "head": "4b5b439156950be7962a0e19362b9d7eff49fe1a",
+          "jobs": 6,
+          "tests_per_job": 20,
+          "zero_skips": true
+        }
+      },
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "next_action": "Verify real reporting path and closure of cached/frozen acceptance; inspect historical 50 family mapping for next semantic gate. Merge still requires review, originals remain 0/50 strictly accepted."
     }
   ],
   "acceptance": {
@@ -2911,7 +2978,8 @@
     "wr_h07_nested_query_privacy": "REAL_SOURCE_SAMPLER_NESTED_QUERY_6X52_GREEN_STRICT_PENDING_20261018",
     "dual_relay_python_expectedfailure": "TWO_DRAFT_REAL_SOURCE_6X13_WR_AND_6X16_SAM_NATIVE_RED_GREEN_20261018_BUSINESS_PENDING",
     "dual_relay_complete_pass_counters": "TWO_NATIVE_DRAFTS_WR_6X14_SAM_6X17_TYPED_ZERO_REJECT_20261018_STRICT_PENDING",
-    "dual_integration_source_sha": "TWO_DRAFTS_CONSUMER_AND_REAL_GIT_PRODUCER_STUB_SMOKE_6X16_WR_6X19_SAM_STRICT_PENDING"
+    "dual_integration_source_sha": "TWO_DRAFTS_CONSUMER_AND_REAL_GIT_PRODUCER_STUB_SMOKE_6X16_WR_6X19_SAM_STRICT_PENDING",
+    "dual_full_integration_counter_authority": "TWO_DRAFTS_TRUE_STATE_MACHINE_NATIVE_WR_6x17_SAM_6x20_RED_GREEN_20261018_STRICT_PENDING"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

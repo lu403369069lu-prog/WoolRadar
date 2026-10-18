@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 25,
+    "revision": 26,
     "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
-    "last_completed_review_key": "interactive-20261018-50-family-fixed-sha-mapping-provenance-audit",
+    "last_completed_review_key": "interactive-20261018-100-minimal-stage4-crossplatform-source-native",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -55,7 +55,10 @@
       "WoolRadar#49": "9d0f78ae6bfa181f31101a3b6ce0a56f192534db",
       "WoolRadar/main-controller": "e44589104585c4b2a93081d00a145263666f9264",
       "YinQieJi/main-controller": "668e219569aff780621bf6a1e24aa8cbe5f4e806",
-      "WoolRadar#50": "c444233ae885cb793bd289a6d7b55aa019f47490"
+      "WoolRadar#50": "c444233ae885cb793bd289a6d7b55aa019f47490",
+      "WoolRadar#51": "d7baaa2229216814d041a56012dc9c07fed73e79",
+      "YinQieJi#24": "2eddea76131851ad4fa4235bd0ff3ddd19d6012f",
+      "YinQieJi#25": "9fff6434b0bf1eeda2c6afa3e8489193806695e0"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -83,7 +86,8 @@
       "interactive-20261018-100-minimal-stage2-sam-h06-wr-h18-source-native",
       "interactive-20261018-live-controller-five-family-protection-and-wr-h03-native",
       "interactive-20261018-stage3-sam-h22-h09-node-allowlist",
-      "interactive-20261018-50-family-fixed-sha-mapping-provenance-audit"
+      "interactive-20261018-50-family-fixed-sha-mapping-provenance-audit",
+      "interactive-20261018-100-minimal-stage4-crossplatform-source-native"
     ],
     "write_diagnostic": "INTERACTIVE_REAL_SOURCE_CI_STAGE2_PENDING_READBACK",
     "last_write_error": null,
@@ -1818,6 +1822,48 @@
           "checkpoint_rev": 25
         }
       ]
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage4-crossplatform-source-native",
+      "origin": "REAL_UNPRIVILEGED_ACTIONS_VERIFIED",
+      "status": "SOURCE_NATIVE_SUBSETS_PASS_STRICT_BUSINESS_PENDING",
+      "business_accepted": false,
+      "strictly_complete": false,
+      "sam": {
+        "pr": 25,
+        "base": 24,
+        "sha": "9fff6434b0bf1eeda2c6afa3e8489193806695e0",
+        "run": 39100050994,
+        "platforms": [
+          "Windows",
+          "Linux"
+        ],
+        "nodes": [
+          22,
+          24,
+          26
+        ],
+        "jobs": 6,
+        "tests_per_job": 18,
+        "failed_skipped_todo": 0
+      },
+      "wool_coord": {
+        "pr": 51,
+        "sha": "d7baaa2229216814d041a56012dc9c07fed73e79",
+        "source_sha": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+        "run": 39100210322,
+        "platforms": [
+          "Windows",
+          "Linux"
+        ],
+        "tests_per_job": 57,
+        "skipped": 0,
+        "original_ci_red_reasons": [
+          "unittest discover tests/ not importable top-level",
+          "Windows temporary DOS 8.3 path alias guard"
+        ],
+        "scope": "read-only local synthetic git tests; no real GitHub return write"
+      }
     }
   ],
   "run_history": [
@@ -2226,6 +2272,41 @@
       },
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
       "next_action": "Read this 50-family provenance index before scheduled fresh checks; don't rerun fixed-SHA mapped suites. Native original frozen evidence and V3 owner/lease gate still not approved."
+    },
+    {
+      "event_id": "interactive-20261018-100-minimal-stage4-crossplatform-source-native",
+      "origin": "INTERACTIVE_CHAT_ORIGINAL_SOURCE_CROSS_PLATFORM_GITHUB_ACTIONS",
+      "actual_cases": "Read actual SAM-H14 original CLI source and verified PR24 Node22 run 39096741696 18/18. Opened independent stacked Draft PR25 on source SHA 2eddea76131851ad4fa4235bd0ff3ddd19d6012f. Real Node22/24/26 Windows/Linux 6-job matrix at commit 9fff6434b0bf1eeda2c6afa3e8489193806695e0: run 39100050994 success, each job strict 18/18 zero skipped. First matrix 39099985396 had 4 CI false failures because Node24/26 default 'spec' reporter; explicit --test-reporter=tap red-green restored all cases, no tests weakened. Opened independent Draft PR51 on reviewed coord source SHA 27796df5f9847c1bb5d48d2a445e418dfb3d8e96. First native Actions 39099918719 failed due unittest discover importability; next 39100019632 Linux passed and Windows real 57 tests 8 fail because runner TEMP RUNNER~1 8.3 alias, tracked in 39100145028. Kept original GitStateStore alias denial and switched only CI disposable temp to canonical RUNNER_TEMP. Final native run 39100210322 Windows57/57 Linux57/57 zero skip exit0, final head d7baaa2229216814d041a56012dc9c07fed73e79. Both PRs Draft; not mapped into controller, no strict accepted, no schedule/prod changes.",
+      "minimal_task_units_new_this_request": 8,
+      "cumulative_actual_minimal_tasks_this_request": 31,
+      "task_unit_ids": [
+        "SAM-H14-EXACT-BASE-NODE22-18-REVIEW",
+        "SAM-H14-SIX-JOB-NATIVE-MATRIX-PR25",
+        "SAM-H14-NODE24-26-TAP-REPAIR",
+        "SAM-H14-WINDOWS-LINUX-22-24-26-108-CASE",
+        "COORD-PINNED-ORIGINAL-SOURCE-PR51-WORKFLOW",
+        "COORD-DISCOVER-IMPORT-REDGREEN",
+        "COORD-WINDOWS-DOS83-TEMP-ALIAS-REPRO-FIX",
+        "COORD-WINDOWS-LINUX-57X2-REAL-CI"
+      ],
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "source_refs": {
+        "SAM_H14": "2eddea76131851ad4fa4235bd0ff3ddd19d6012f",
+        "COORD": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96"
+      },
+      "evidence": {
+        "sam_pr": 25,
+        "sam_head": "9fff6434b0bf1eeda2c6afa3e8489193806695e0",
+        "sam_run": 39100050994,
+        "sam_jobs": 6,
+        "sam_tests_per_job": 18,
+        "coord_pr": 51,
+        "coord_head": "d7baaa2229216814d041a56012dc9c07fed73e79",
+        "coord_run": 39100210322,
+        "coord_jobs": 2,
+        "coord_tests_per_job": 57
+      },
+      "next_action": "Keep all PRs unmerged. Coordination 57 original synthetic tests are native subset only, source is separate from main queue checkout; do not mark H01/H02/H06 formally mapped without provenance and end-to-end verified events. SAM-H14 still requires frozen original teacher assets, native review and all business gates. Continue source-specific evidence / actual business class acceptance."
     }
   ],
   "acceptance": {
@@ -2256,7 +2337,9 @@
     "latest_sam_main_checkpoint_rev": 25,
     "latest_wool_main_checkpoint_rev": 18,
     "fixed_sha_family_mapping_audit": "coordination/HISTORICAL_50_FAMILY_MACHINE_MAPPING_AUDIT_20261018.json",
-    "python_discovery_roots": "WR_15_APPROVED_PAIRS_SAM_DENY_NO_PYTHON_RUNS_ACTIONS_11_14_PASS"
+    "python_discovery_roots": "WR_15_APPROVED_PAIRS_SAM_DENY_NO_PYTHON_RUNS_ACTIONS_11_14_PASS",
+    "coord_native_original_windows_linux": "SOURCE_SHA_27796_WINDOW_LINUX_57_OF_57_EACH_20261018_STRICT_NOT_ACCEPTED",
+    "sam_h14_native_matrix": "SOURCE_H14_N22_24_26_WINDOWS_LINUX_6X18_PASS_20261018_STRICT_NOT_ACCEPTED"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

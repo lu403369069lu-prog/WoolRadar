@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 27,
+    "revision": 28,
     "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
-    "last_completed_review_key": "interactive-20261018-100-minimal-stage5-sam-h17-native-atomic",
+    "last_completed_review_key": "interactive-20261018-100-minimal-stage6-sam-h14-runtime-fold-redgreen",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -59,7 +59,8 @@
       "WoolRadar#51": "d7baaa2229216814d041a56012dc9c07fed73e79",
       "YinQieJi#24": "2eddea76131851ad4fa4235bd0ff3ddd19d6012f",
       "YinQieJi#25": "9fff6434b0bf1eeda2c6afa3e8489193806695e0",
-      "YinQieJi#26": "9471fc3a5d5bff14aab82c535a792889b95b27a8"
+      "YinQieJi#26": "9471fc3a5d5bff14aab82c535a792889b95b27a8",
+      "YinQieJi#27": "2c5e6ea4450cfe3c6942370399ecfa6ad1e97cbd"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -89,7 +90,8 @@
       "interactive-20261018-stage3-sam-h22-h09-node-allowlist",
       "interactive-20261018-50-family-fixed-sha-mapping-provenance-audit",
       "interactive-20261018-100-minimal-stage4-crossplatform-source-native",
-      "interactive-20261018-100-minimal-stage5-sam-h17-native-atomic"
+      "interactive-20261018-100-minimal-stage5-sam-h17-native-atomic",
+      "interactive-20261018-100-minimal-stage6-sam-h14-runtime-fold-redgreen"
     ],
     "write_diagnostic": "INTERACTIVE_REAL_SOURCE_CI_STAGE2_PENDING_READBACK",
     "last_write_error": null,
@@ -1882,6 +1884,21 @@
       "business_accepted": false,
       "strictly_complete": false,
       "reason": "Safe synthetic regression only; release original artifacts and pointer install/rollback unverified."
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage6-sam-h14-runtime-fold-redgreen",
+      "repo": "YinQieJi",
+      "family": "SAM-H14",
+      "source_sha": "ba24b3db342fc5c648effd95d477eda154cff909",
+      "source_fix_pr": 27,
+      "red_run": 39100772918,
+      "red": "real runtime contract 4/5 x6; Unicode alias accepted",
+      "intermediate_error_run": 39100867398,
+      "green_run": 39100948296,
+      "green": "all six native Node22/24/26 × Win/Linux jobs build + 5/5 tests no skips",
+      "head": "2c5e6ea4450cfe3c6942370399ecfa6ad1e97cbd",
+      "business_accepted": false,
+      "strictly_complete": false
     }
   ],
   "run_history": [
@@ -2356,6 +2373,44 @@
         "strictly_complete": false
       },
       "next_action": "Do not run hardcoded original manifest builder against Windows real filesystem before path containment fix + negative tests; SAM-H17 genuine pointer promotion rollback, original private frozen release source and install require Codex/user authorization."
+    },
+    {
+      "event_id": "interactive-20261018-100-minimal-stage6-sam-h14-runtime-fold-redgreen",
+      "origin": "INTERACTIVE_CHAT_REAL_RUNTIME_SOURCE_RED_GREEN",
+      "minimal_task_units_new_this_request": 4,
+      "cumulative_actual_minimal_tasks_this_request": 38,
+      "task_unit_ids": [
+        "SAM-H14-RUNTIME-VS-HOLDOUT-CODEPATH-DIVERGENCE",
+        "SAM-H14-FORMAL-RUNTIME-WINDOWS-LINUX-6JOB-RED",
+        "SAM-H14-RUNTIME-CANONICAL-QID-CODE-FIX",
+        "SAM-H14-ORIGINAL-TS-BUILD-NATIVE-6JOB-GREEN"
+      ],
+      "actual_cases": "Identified source-level identity inconsistency: original SAM/snapshot/src/eval-contract.ts toLowerCase() alone accepts QS vs Qſ and QI vs Qı while independent H14 holdout lower+upper rejects. In separate Draft PR27 on exact original source ba24b3db342fc5c648effd95d477eda154cff909 added real runtime test; 6 native Windows/Linux Node22/24/26 build/test jobs at SHA e3305fa983b6c6eddee493c52354322b271f9e1d run 39100772918 all red, test 4 pass/1 fail because expected duplicate not raised. First attempted fix SHA 2bb46c9 had incorrect literal escaped newline in comment; CI 39100867398 caught TS2304 (identity not found). Corrected string literal + true code change final head 2c5e6ea4450cfe3c6942370399ecfa6ad1e97cbd: validateTeacherEvaluations now trim/lowercase/uppercase canonical aligned with H14 holdout; same six native jobs run 39100948296 all successful 5/5 each zero skips; npm build included each job. All previous failures preserved, no user teacher corpus, no production or schedule changes, no business strict completion.",
+      "evidence": {
+        "repo": "YinQieJi",
+        "pr": 27,
+        "base_source_sha": "ba24b3db342fc5c648effd95d477eda154cff909",
+        "red_sha": "e3305fa983b6c6eddee493c52354322b271f9e1d",
+        "red_run": 39100772918,
+        "format_fail_sha": "2bb46c9cd90b0d1601124495be35ce1e5e414f14",
+        "format_fail_run": 39100867398,
+        "green_sha": "2c5e6ea4450cfe3c6942370399ecfa6ad1e97cbd",
+        "green_run": 39100948296,
+        "platforms": [
+          "windows-latest",
+          "ubuntu-latest"
+        ],
+        "nodes": [
+          "22",
+          "24",
+          "26"
+        ],
+        "jobs": 6,
+        "tests_each": 5,
+        "zero_skips": true
+      },
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "next_action": "Review adjacent evaluator consumer paths against Unicode fold and source-canonical contracts. No claim of teacher answer correctness or frozen gold; PR27 remains Draft and unmerged."
     }
   ],
   "acceptance": {
@@ -2389,7 +2444,8 @@
     "python_discovery_roots": "WR_15_APPROVED_PAIRS_SAM_DENY_NO_PYTHON_RUNS_ACTIONS_11_14_PASS",
     "coord_native_original_windows_linux": "SOURCE_SHA_27796_WINDOW_LINUX_57_OF_57_EACH_20261018_STRICT_NOT_ACCEPTED",
     "sam_h14_native_matrix": "SOURCE_H14_N22_24_26_WINDOWS_LINUX_6X18_PASS_20261018_STRICT_NOT_ACCEPTED",
-    "sam_h17_native_synthetic_atomic": "WINDOWS_3X13_AND_LINUX_3X18_ALL_PASS_STRICT_RELEASE_PENDING_20261018"
+    "sam_h17_native_synthetic_atomic": "WINDOWS_3X13_AND_LINUX_3X18_ALL_PASS_STRICT_RELEASE_PENDING_20261018",
+    "sam_h14_runtime_identity_native": "REAL_SOURCE_RED_GREEN_WINDOWS_LINUX_NODE22_24_26_6x5_PASS_20261018_STRICT_PENDING"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

@@ -31,7 +31,19 @@ _PRIVATE_URL_PATH = re.compile(
 
 
 def _has_private_path(value: str) -> bool:
-    return bool(_PRIVATE_URL_PATH.search(unquote_plus(value)))
+    # The origin may interpret percent escapes more than once. Never rely
+    # on just one decoding pass to certify that a public URL is safe.
+    candidate = value
+    for _ in range(8):
+        if _PRIVATE_URL_PATH.search(candidate):
+            return True
+        decoded = unquote_plus(candidate)
+        if decoded == candidate:
+            return False
+        candidate = decoded
+    # Excessive nesting is ambiguous; fail closed rather than treating
+    # a non-normalized path as an independently verified public identity.
+    return '%' in candidate or bool(_PRIVATE_URL_PATH.search(candidate))
 
 
 def canonical_public_url(raw: object) -> str | None:

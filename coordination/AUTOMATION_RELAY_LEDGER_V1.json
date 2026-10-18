@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 40,
+    "revision": 41,
     "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
-    "last_completed_review_key": "interactive-20261018-post100-dual-relay-security-combined",
+    "last_completed_review_key": "interactive-20261018-post100-original-source-lineage-audit",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -121,9 +121,10 @@
       "interactive-20261018-100-minimal-stage15-dual-full-suite-pass-counts",
       "interactive-20261018-100-minimal-stage16-dual-integration-run-key",
       "interactive-20261018-100-minimal-stage17-dual-run-context-guard",
-      "interactive-20261018-post100-dual-relay-security-combined"
+      "interactive-20261018-post100-dual-relay-security-combined",
+      "interactive-20261018-post100-original-source-lineage-audit"
     ],
-    "write_diagnostic": "POST100_PARALLEL_DRAFT_SECURITY_INTEGRATION_NATIVE_GREEN",
+    "write_diagnostic": "POST100_OWNER_SOURCE_REF_MISSING_REVIEWED_H07_H11_SAM_H14_FIXES",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -2194,6 +2195,15 @@
       "test_evidence": "6x23/23 no skips",
       "business_accepted": false,
       "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-post100-original-source-lineage-audit",
+      "repo": "WoolRadar+YinQieJi",
+      "family": "COORD-SOURCE-PROVENANCE",
+      "status": "PINNED_SNAPSHOT_CANDIDATE_BEHIND_UNMERGED_BUSINESS_FIXES",
+      "business_accepted": false,
+      "strictly_complete": false,
+      "test_evidence": "GitHub compare: WR-H11 fix ahead4 vs relay source_ref, WR-H07 fix ahead14, SAM-H14 Unicode runtime fix ahead5; source refs not adopted."
     }
   ],
   "run_history": [
@@ -3124,6 +3134,30 @@
       },
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
       "next_action": "Audit pinned family source refs against actual original runtime and official/teacher holdout; retain no auto merge and never claim 100/100 minimal implies project done."
+    },
+    {
+      "event_id": "interactive-20261018-post100-original-source-lineage-audit",
+      "origin": "INTERACTIVE_CHAT_POST100_SOURCE_REF_PROVENANCE_REVIEW",
+      "minimal_task_units_new_this_request": 0,
+      "cumulative_actual_minimal_tasks_this_request": 100,
+      "task_unit_ids": [],
+      "actual_cases": "Read original machine queues on main and exact GitHub source files from queue source_ref. Wool queue source_ref chatgpt/wr-h07-public-corpus-url-limit-fixture-20261018 lacks candidate H11 PR52 (4 commits ahead, real grant producer and collector change), and H07 PR55 (14 commits ahead, public corpus producer and sampler sensitive-URL fixes). SAM queue source_ref chatgpt/sam-optional-index-audit-fixture-20261018 lacks H14 runtime Unicode fold fix PR27 (5 commits ahead); pinned actual eval-contract.ts still uses qid.trim().toLowerCase(), and eval-input.test.ts only simple case/space alias. Existing H14 holdout tests are not exact original runtime Unicode proof. These reviewed PRs are NOT automatically adopted; require source-owner integration and fresh business holdout. This checkpoint is factual scope audit, not 3 completed business families.",
+      "evidence": {
+        "wool_h11": {
+          "pr": 52,
+          "ahead_from_source_ref": 4
+        },
+        "wool_h07": {
+          "pr": 55,
+          "ahead_from_source_ref": 14
+        },
+        "sam_h14": {
+          "pr": 27,
+          "ahead_from_source_ref": 5
+        }
+      },
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "next_action": "Codex/local owner reconcile source branches and freeze exact integrated SHA; then Actions on full original source and unseen independent gold. Review Draft PR63/35 but do not auto merge. 100 minimal-work counter remains fixed."
     }
   ],
   "acceptance": {
@@ -3169,7 +3203,8 @@
     "dual_full_integration_counter_authority": "TWO_DRAFTS_TRUE_STATE_MACHINE_NATIVE_WR_6x17_SAM_6x20_RED_GREEN_20261018_STRICT_PENDING",
     "dual_integration_run_key": "TWO_DRAFTS_ORIGINAL_SOURCE_NATIVE_WR6X18_SAM6X21_EXACT_RUN_ATTEMPT_GREEN_STRICT_BUSINESS_PENDING",
     "dual_relay_runner_context": "SIX_JOB_NATIVE_WR19_SAM22_RUN_ID_ATTEMPT_RED_GREEN_DRAFT_STRICT0_20261018",
-    "parallel_draft_combined": "WR63_6X20_SAM35_6X23_POST100_UNMERGED_STRICT0"
+    "parallel_draft_combined": "WR63_6X20_SAM35_6X23_POST100_UNMERGED_STRICT0",
+    "source_lineage_review_post100": "WR_H11_AHEAD4_WR_H07_AHEAD14_SAM_H14_AHEAD5_SOURCE_REFS_UNUPDATED_STRICT0"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

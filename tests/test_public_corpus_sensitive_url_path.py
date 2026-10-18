@@ -23,6 +23,8 @@ PRIVATE = (
     'https://publisher.org/%74oken/SYNTHETIC_ONLY',
     'https://publisher.org/account/person%40example.org',
     'https://publisher.org/offer/1234567890123456',
+    'https://publisher.org/#/token/SYNTHETIC_ONLY',
+    'https://publisher.org/#!/token/SYNTHETIC_ONLY',
 )
 
 class PublicSensitivePathBoundary(unittest.TestCase):

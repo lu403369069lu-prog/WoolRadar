@@ -31,6 +31,22 @@ jobs:
           git merge-base --is-ancestor 27796df5f9847c1bb5d48d2a445e418dfb3d8e96 HEAD
           git rev-parse HEAD
           git --version
+      - name: Diagnose native temporary workspace path canonicality
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          import tempfile
+          from pathlib import Path
+          with tempfile.TemporaryDirectory() as tmp:
+              path = Path(tmp) / 'git-store'
+              absolute = str(path.absolute())
+              resolved = str(path.resolve())
+              print('TEMP_ALIAS_PLATFORM', os.name)
+              print('TEMP_ALIAS_EQUAL', os.path.normcase(absolute) == os.path.normcase(resolved))
+              print('TEMP_ABSOLUTE', repr(absolute))
+              print('TEMP_RESOLVED', repr(resolved))
+          PY
       - name: Native full original coordination suite, no skips
         shell: bash
         run: |

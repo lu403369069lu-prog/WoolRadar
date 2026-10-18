@@ -1,0 +1,30 @@
+name: Second100 W1 persisted retry backoff
+on:
+  push:
+    branches: [chatgpt/second100-w1-retry-restart-20261018]
+  pull_request:
+    branches: [chatgpt/second100-w1-enqueue-process-20261018]
+permissions:
+  contents: read
+jobs:
+  retry-persistence:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.12']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: R2-003 retry persistence and deadline
+        run: python -X utf8 -m unittest discover -s tests -p test_notice_retry_restart.py -v
+      - name: R2-004 two-process enqueue
+        run: python -X utf8 -m unittest discover -s tests -p test_notice_concurrent_enqueue.py -v
+      - name: Original notification tests
+        run: python -X utf8 -m unittest discover -s tests -p test_notifications.py -v

@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 19,
+    "revision": 20,
     "last_persisted_worker_run_utc": "2026-10-18T01:33:11.640Z",
-    "last_completed_review_key": "interactive-20261018-pr-acceptance-zero-skips-real-run",
+    "last_completed_review_key": "interactive-20261018-ten-minimal-actions-five-false-mappings-two-drafts",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -71,9 +71,10 @@
       "interactive-20261018-codex-handoff-coord48-wr359-sam288",
       "interactive-20261018-sam-h18-native-win32-real-rg-pr22",
       "interactive-20261018-minimal-skip-failclosed-wool-sam-codex",
-      "interactive-20261018-pr-acceptance-zero-skips-real-run"
+      "interactive-20261018-pr-acceptance-zero-skips-real-run",
+      "interactive-20261018-ten-minimal-actions-five-false-mappings-two-drafts"
     ],
-    "write_diagnostic": "PR_STRICT_SKIP_GATE_CAS_PENDING_READBACK",
+    "write_diagnostic": "INTERACTIVE_TEN_ROUND_STAGE_CAS_PENDING_READBACK",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -1464,6 +1465,45 @@
       "codex_status": "CODEX_REQUIRED_ORIGINAL_RELEASE_PROVENANCE_UNCLAIMED",
       "codex_task_url": "https://github.com/lu403369069lu-prog/YinQieJi/blob/main/CODEX_NEXT_TASKS_20261018.md",
       "next_action": "Inspect authorized true local-only six frozen 0.4.1/0.4.2 artifacts and verify SHA/signature/version; no fake CI, no private source upload."
+    },
+    {
+      "event_key": "interactive-20261018-ten-minimal-actions-five-false-mappings-two-drafts/WR",
+      "origin": "INTERACTIVE_CHAT_DRAFT_CODE_READBACK_NO_NEW_CI",
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "family_ids": [
+        "WR-H03",
+        "COORD-H01",
+        "COORD-H02",
+        "COORD-H06"
+      ],
+      "source_sha": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+      "controller_commit": "9e65ff6519d6649156328ad1fa6622b5900a8005",
+      "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/48",
+      "checks": [],
+      "status": "WRONG_TEST_MAPPING_FAIL_CLOSED_DRAFT_CI_UNRUN",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "issue_comment_url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6244874018",
+      "next_action": "Run exact PR HEAD formal CI; attach properly pinned separate coordination source acceptance checks and genuine WAL+CLAIMED recovery; do not merge based on wrong historical tests."
+    },
+    {
+      "event_key": "interactive-20261018-ten-minimal-actions-five-false-mappings-two-drafts/SAM",
+      "origin": "INTERACTIVE_CHAT_DRAFT_CODE_READBACK_NO_NEW_CI",
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "family_ids": [
+        "SAM-H06"
+      ],
+      "source_sha": "ba24b3db342fc5c648effd95d477eda154cff909",
+      "controller_commit": "4447627cb6e1a4e1c0d7984d5d98659e1227169b",
+      "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/pull/23",
+      "checks": [],
+      "status": "WRONG_TEST_MAPPING_FAIL_CLOSED_DRAFT_CI_UNRUN",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "issue_comment_url": "https://github.com/lu403369069lu-prog/YinQieJi/issues/1#issuecomment-6244877153",
+      "next_action": "Run exact PR HEAD formal CI; replace rawroot-only mapping with correctly source-pinned 572-case rg/glob matrix checks using safe runner path logic; Windows original semantics still need real native comparison."
     }
   ],
   "run_history": [
@@ -1706,6 +1746,36 @@
       "strict_delivery": "ZERO_NEW_STRICT_FAMILY_ACCEPTANCES; NO_FALSE_GREEN_PR_GATES",
       "checkpoint_status": "CAS_PENDING_READBACK",
       "next_action": "Continue smallest cloud formal COORD-H03/04/05 mapping or independent original source fix; Codex authentic upstream and frozen assets on local only."
+    },
+    {
+      "event_id": "interactive-20261018-ten-minimal-actions-five-false-mappings-two-drafts",
+      "origin": "INTERACTIVE_CHAT_TEN_MINIMAL_ACTIONS_WITH_2_DRAFT_FIXES",
+      "reviewed_keys": [
+        "CI/WR/39089777897",
+        "CI/SAM/39089836129",
+        "WR-H03",
+        "COORD-H01",
+        "COORD-H02",
+        "COORD-H06",
+        "SAM-H06",
+        "WoolRadar/PR48",
+        "YinQieJi/PR23",
+        "SCHEDULED_PROMPT_UPDATE"
+      ],
+      "actual_cases": "Verified both existing Actions evaluate/persist logs and state, identified five unrelated historical family-to-test mappings, committed conservative fail-closed queue changes and forward-compatible regression tests in separate Draft PR #48/#23, read back GitHub blobs, synchronized technical Issues #2/#1 and coordination #3, and modified existing hourly automation to support ten-round phased continuity without adding a task. No new PR CI verified and zero new strict acceptance.",
+      "rounds_attempted": 10,
+      "actual_formal_test_runs_this_round": 0,
+      "new_draft_prs": 2,
+      "false_mapping_family_ids": [
+        "WR-H03",
+        "COORD-H01",
+        "COORD-H02",
+        "COORD-H06",
+        "SAM-H06"
+      ],
+      "strict_delivery": "ZERO_NEW_STRICT_FAMILY_ACCEPTANCES_CI_UNRUN",
+      "checkpoint_status": "CAS_PENDING_READBACK",
+      "next_action": "Cold-read HEAD/current CI of Draft PR48 and PR23; proper original-source checkout/mapping + tests and Codex native release sources; continue next 10-stage in scheduled worker without resetting existing ledger."
     }
   ],
   "acceptance": {
@@ -1725,7 +1795,8 @@
     "wr_full_windows": "RAN_359_PASS_358_SKIPPED_1_EXIT_0_STRICT_INTEGRATION_FAIL_CODEX_REQUIRED",
     "sam_full_native": "TOTAL_294_PASS_288_FAIL_6_SKIPPED_0_TRUE_FROZEN_FILES_MISSING",
     "pr_acceptance_no_false_green": "DUAL_REAL_PR_CI_VERIFIED_20261018_WR_ONE_SKIP_AND_SAM_SIX_FAILED",
-    "strict_completed_family_count": 0
+    "strict_completed_family_count": 0,
+    "ten_round_minimal_phase": "FIVE_FALSE_MAPPINGS_FIXED_IN_TWO_UNMERGED_DRAFTS_NEW_PR_CI_UNRUN_STRICT_0_OF_50"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

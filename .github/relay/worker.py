@@ -286,7 +286,10 @@ def persist(a):
                   or (a.repo == "YinQieJi" and integration_command == expected_integration)))
     if (integration.get("schema_version") != 1 or integration.get("repo") != a.repo
             or not valid_cmd or integration.get("verified_business_complete") is not False
-            or integration.get("status") not in ("PASS", "FAIL", "BLOCKED")):
+            or integration.get("status") not in ("PASS", "FAIL", "BLOCKED")
+            or type(integration.get("source_commit")) is not str
+            or not re.fullmatch(r"[a-f0-9]{40}", integration["source_commit"])
+            or integration["source_commit"] != receipt["source_commit"]):
         raise ValueError("invalid independent integration report")
     if integration["status"] == "PASS" and (
             integration.get("exit_code") != 0 or

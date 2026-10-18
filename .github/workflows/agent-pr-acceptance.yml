@@ -48,6 +48,18 @@ jobs:
       - name: Prepare disposable original-source test fixture root
         shell: pwsh
         run: New-Item -ItemType Directory -Force .test-tmp | Out-Null
-      - name: Run full original-source regression without skipping failures
+      - name: Run full original-source regression; require zero skipped tests
         shell: pwsh
-        run: python -m unittest discover -s tests -p 'test_*.py' -v
+        run: |
+          @'
+          import sys
+          import unittest
+          suite = unittest.defaultTestLoader.discover('tests', pattern='test_*.py')
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          print('STRICT_RESULTS run=%d skipped=%d expected_failures=%d errors=%d failures=%d' %
+                (result.testsRun, len(result.skipped), len(result.expectedFailures),
+                 len(result.errors), len(result.failures)))
+          sys.exit(0 if result.wasSuccessful() and result.testsRun > 0
+                   and not result.skipped and not result.expectedFailures
+                   and not result.unexpectedSuccesses else 1)
+          '@ | python -

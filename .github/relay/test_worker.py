@@ -162,6 +162,30 @@ class RelaySafetyTests(unittest.TestCase):
                 family = next(f for f in q["families"] if f["id"] == family_id)
                 self.assertNotIn(unrelated_pattern, repr(family["checks"]))
 
+    def test_unmapped_families_persist_as_unexecuted_not_accepted(self):
+        """Changing a false formal mapping must never be mistaken for a pass."""
+        q = self.queue()
+        for index, family in enumerate(q["families"]):
+            if family["checks"] or family["disposition"] == "EXTERNAL_OR_POLICY_GATED":
+                continue
+            with self.subTest(family=family["id"]):
+                with tempfile.TemporaryDirectory() as tmp:
+                    root = Path(tmp)
+                    state = self.initial(q["repo"])
+                    state["cursor"] = index
+                    worker.save(root / "engine.json", state)
+                    rec = self.receipt(q, cursor=index)
+                    self.assertEqual(rec["results"][0]["status"],
+                                     "NO_FORMAL_MAPPING_NOT_EXECUTED")
+                    result = self.run_persist(root, q, rec)
+                    self.assertEqual(result["families"][family["id"]]["status"],
+                                     "NO_FORMAL_MAPPING_NOT_EXECUTED")
+                    self.assertEqual(result["strict_business_completed"], 0)
+                    self.assertIsNone(worker.choose_recheck(
+                        {"revision": result["revision"], "families": {
+                            family["id"]: {"status": "FORMAL_CHECK_FAILED_OR_BLOCKED"}}},
+                        [family], set()))
+
     def test_rotation_two_consecutive_receipts(self):
         q = self.queue()
         with tempfile.TemporaryDirectory() as tmp:

@@ -32,7 +32,7 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 13,
+    "revision": 14,
     "last_persisted_worker_run_utc": "2026-10-17T23:30:25.571Z",
     "last_completed_review_key": "WoolRadar#47:CI_75_OF_75_NATIVE_PENDING",
     "incremental_last_seen": {},
@@ -63,7 +63,8 @@
       "WoolRadar#44/1482f97e61b1163ccdc761906eda087fcba48628/invalid-dns-labels-extracted-redgreen-20261017T2324",
       "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17",
       "interactive-20261018-backfill-wrh16-samh02-w44-dns-fix",
-      "interactive-20261018-formal-ci-wrh07h08-samh14h17-h05h19"
+      "interactive-20261018-formal-ci-wrh07h08-samh14h17-h05h19",
+      "interactive-20261018-sam-ci-exact-294-test-diagnostic"
     ],
     "write_diagnostic": "SCHEDULED_BATCH_CAS_COMMIT_PENDING_READBACK",
     "last_write_error": null,
@@ -937,6 +938,85 @@
       "native_frozen_accepted": false,
       "business_accepted": false,
       "next_action": "Separate missing frozen published release artifacts from source regressions by matching authoritative manifest and exact failing tests; obtain proper release provenance, rerun npm test. No source changes if prerequisite unavailable."
+    },
+    {
+      "event_key": "interactive-20261018-sam-ci-exact-294-test-diagnostic",
+      "origin": "INTERACTIVE_CHAT_ACTIONS_RECHECK_WITH_ENHANCED_PER_CASE_DIAGNOSTICS",
+      "family_ids": [
+        "SAM-H14",
+        "SAM-H17",
+        "SAM-H05",
+        "SAM-H19"
+      ],
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "ci_pr": 19,
+      "source_pr": 15,
+      "source_sha": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
+      "ci_commit": "ff0ad11e8cf65272b1a2a195ad8ea0a013c02e3b",
+      "ci_run_id": 39082680260,
+      "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39082680260",
+      "checks": [
+        {
+          "group": "SAM-H17",
+          "command": "node --test tools/atomic-write.test.mjs tools/build-release-manifest.synthetic.test.mjs tools/migrate-release-041.synthetic.test.mjs",
+          "passed": 18,
+          "total": 18,
+          "exit_code": 0
+        },
+        {
+          "group": "SAM-H14",
+          "command": "node --test ../independent-review/20261016-0904-audit-coverage/holdout_identity_check.test.mjs ../independent-review/20261016-0904-audit-coverage/holdout_identity_cli.test.mjs",
+          "passed": 15,
+          "total": 15,
+          "exit_code": 0
+        },
+        {
+          "group": "SAM-H05-H19",
+          "command": "npm run build",
+          "exit_code": 0
+        },
+        {
+          "group": "SAM-H05-H19",
+          "command": "npm test",
+          "passed": 268,
+          "total": 294,
+          "failed": 26,
+          "exit_code": 1
+        }
+      ],
+      "selected_failed_case_titles": [
+        "all rg entrypoints honor nested source denials even when only the parent is selected",
+        "searchEvidence returns bounded traceable hits",
+        "source, symbol and conflict workflows retain provenance",
+        "readEvidence attributes by directory boundary, not string prefix",
+        "manifest refresh honors nested source denials before hashing content",
+        "manifest refresh is deterministic and excludes secrets",
+        "manifest refresh fails explicitly instead of silently truncating files",
+        "real MCP search and manifest tools preserve nested global denials and permitted hits",
+        "an unavailable optional index does not poison independent card or documentary results",
+        "memory search cannot bypass a nested registered exclusion through its parent",
+        "approved memory search returns exact provenance",
+        "version_or_date is null without a material version even when verification time exists",
+        "teacher corrections enforce T001 T062 T064 and T070 evidence boundaries",
+        "WorkBuddy process failure and repository fallback timeout are explicit errors",
+        "formal source manifest freezes every release source",
+        "formal claim audit has real multi-claim cards",
+        "knowledge release pointer names current and rollback",
+        "release manifest pins source manifest and pointer byte hashes",
+        "stdio server exposes twenty-one bounded tools",
+        "0.4.2 capability map covers ten domains"
+      ],
+      "selected_failed_case_count": 20,
+      "missing_sources": [
+        "SAM/snapshot/artifacts/knowledge-release/0.4.2/teacher-capability-map.json",
+        "SAM/snapshot/release-manifest.json"
+      ],
+      "additional_failure_signal": "Cannot read properties of undefined (reading 'code_fallback')",
+      "status": "CLOUD_FORMAL_PARTIAL_268_OF_294_NOT_ACCEPTED",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "next_action": "Identify exact causes of all 26 failures; distinguish missing signed frozen release assets from source bugs in nested exclusions/provenance/code_fallback; do not fabricate release assets or remove failing tests. Windows/native and frozen corpus acceptance still outstanding."
     }
   ],
   "run_history": [
@@ -1096,6 +1176,20 @@
       "strict_delivery": "ZERO_STRICT_BUSINESS_ACCEPTANCE; PARTIAL_ONLY",
       "checkpoint_status": "CAS_PENDING_READBACK",
       "next_action": "Native/frozen review for WR-H07-H08; diagnose SAM 26 integration failures and missing release artifact; keep CI read-only and PRs draft, never auto merge."
+    },
+    {
+      "origin": "INTERACTIVE_CHAT_NOT_SCHEDULED",
+      "event_id": "interactive-20261018-sam-ci-exact-294-test-diagnostic",
+      "reviewed_keys": [
+        "YinQieJi#19",
+        "YinQieJi#15"
+      ],
+      "source_sha": "73a3ff3c6f8fd33fdeec05ea8b9511c73c91fa58",
+      "run_id": 39082680260,
+      "actual_cases": "SAM H17 18/18 exit0, H14 15/15 exit0, npm build exit0, npm test 268/294 exit1; 20 top-level failed test titles captured and 26 total failures; missing release artifacts and unresolved code_fallback/nested denials.",
+      "strict_delivery": "FAIL_0_STRICT_NEW; REMAINING_WORK_26_FAILURES",
+      "checkpoint_status": "CAS_PENDING_READBACK",
+      "next_action": "Source isolate failures and release provenance before native gate."
     }
   ],
   "acceptance": {

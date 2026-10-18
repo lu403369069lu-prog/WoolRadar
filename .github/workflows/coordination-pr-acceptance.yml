@@ -1,0 +1,61 @@
+name: Coordination V3 V5 isolated PR acceptance
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_ref:
+        description: Reviewed coordination branch or exact commit
+        type: string
+        required: true
+        default: codex/relay-return-20261015
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'coordination/**'
+      - 'tests/test_github_webhook.py'
+      - 'tests/test_dispatcher.py'
+      - 'tests/test_relay*.py'
+      - 'tests/test_return_sync.py'
+      - '.github/workflows/coordination-pr-acceptance.yml'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/coordination-pr-acceptance.yml'
+permissions:
+  contents: read
+concurrency:
+  group: coord-formal-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  formal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact candidate without persisted Git credentials
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || inputs.candidate_ref || 'codex/relay-return-20261015' }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fail closed if expected original tests are absent
+        run: |
+          set -euo pipefail
+          for file in tests/test_github_webhook.py tests/test_dispatcher.py tests/test_relay.py tests/test_relay_faults.py tests/test_relay_git.py tests/test_return_sync.py; do
+            test -f "$file"
+          done
+          git rev-parse HEAD
+      - name: COORD-H03 original signed webhook/HMAC tests
+        run: python -m unittest discover -s tests -p test_github_webhook.py -v
+      - name: COORD-H04 original dry-run and dispatcher tests
+        run: python -m unittest discover -s tests -p test_dispatcher.py -v
+      - name: COORD-H05 V3 V5 replay and fencing tests
+        run: python -m unittest discover -s tests -p test_relay.py -v
+      - name: COORD-H05 forced crash and cold recovery tests
+        run: python -m unittest discover -s tests -p test_relay_faults.py -v
+      - name: COORD-H06 isolated Git concurrency and return sync tests
+        run: |
+          python -m unittest discover -s tests -p test_relay_git.py -v
+          python -m unittest discover -s tests -p test_return_sync.py -v

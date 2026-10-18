@@ -24,12 +24,14 @@ jobs:
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
-      - name: Checkout frozen engineering candidate
+      - name: Checkout current engineering candidate
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.target_ref || 'e81ef59bc2b0b05fad5acfbb231ead92c0d2925e' }}
+          ref: ${{ inputs.target_ref || github.event.pull_request.head.sha || github.sha }}
           path: candidate
           persist-credentials: false
+      - name: Print exact tested candidate commit
+        run: git -C candidate rev-parse HEAD
       - name: Checkout historical ledger for queue checkpoint
         uses: actions/checkout@v4
         with:

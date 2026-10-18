@@ -93,7 +93,7 @@ class RelaySafetyTests(unittest.TestCase):
         self.assertFalse(worker.safe(["node", "-e", "process.exit(0)"]))
         self.assertFalse(worker.safe(["python", "-c", "print(1)"]))
         self.assertFalse(worker.safe(["node", "--test", "/tmp/x.test.mjs"]))
-        self.assertTrue(worker.safe(["python", "-m", "unittest", "discover", "-s", "tests", "-p", "test_core.py"]))
+        self.assertTrue(worker.safe(["python", "-m", "unittest", "discover", "-s", "tests", "-p", "test_notifications.py"]))
 
     def test_wool_runner_rejects_unreviewed_node_test_paths(self):
         q = self.queue()
@@ -104,6 +104,25 @@ class RelaySafetyTests(unittest.TestCase):
                      "C:\\private\\evil.test.mjs"):
             with self.subTest(path=name):
                 self.assertFalse(worker.safe(["node", "--test", name]))
+
+    def test_python_discovery_source_allowlist_blocks_unreviewed_roots(self):
+        q = self.queue()
+        valid = [c for f in q["families"] for c in f["checks"]
+                 if c[:5] == ["python", "-m", "unittest", "discover", "-s"]]
+        self.assertTrue(valid)
+        self.assertTrue(all(worker.safe(c) for c in valid))
+        for path, pattern in [
+            ("../../unreviewed", "test_*.py"),
+            ("../tests", "test_notifications.py"),
+            ("tests/../secrets", "test_notifications.py"),
+            ("tests", "test_unreviewed.py"),
+            ("independent-quality/../tests", "test_*.py"),
+            ("C:\\private", "test_*.py"),
+        ]:
+            with self.subTest(path=path, pattern=pattern):
+                self.assertFalse(worker.safe([
+                    "python", "-m", "unittest", "discover", "-s", path,
+                    "-p", pattern]))
 
     def test_durable_persist_and_duplicate_replay(self):
         q = self.queue()

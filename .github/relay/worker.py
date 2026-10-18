@@ -36,7 +36,25 @@ def safe(argv):
     if any(len(a) > 230 or re.search(r"[\x00-\x1f;$|&<>\x60]", a) for a in argv):
         return False
     if argv[:5] == ["python", "-m", "unittest", "discover", "-s"]:
-        return len(argv) == 8 and argv[6] == "-p" and argv[7].startswith("test_")
+        # Pin reviewed (discovery root, filename pattern) pairs; no arbitrary -s.
+        allowed = {
+            ("independent-quality/public-corpus-blind-dedup-20261016", "test_*.py"),
+            ("tests", "test_apply_evidence_transaction.py"),
+            ("tests", "test_developer_grant_negations.py"),
+            ("tests", "test_developer_grant_project_scope.py"),
+            ("tests", "test_notifications.py"),
+            ("tests", "test_official_trace_stale_event.py"),
+            ("tests", "test_official_trace.py"),
+            ("tests", "test_public_corpus_dns_label_boundary_20261018.py"),
+            ("tests", "test_public_corpus_identity.py"),
+            ("tests", "test_public_corpus_timestamp.py"),
+            ("tests", "test_public_corpus*.py"),
+            ("tests", "test_public_sample*.py"),
+            ("tests", "test_reindex_notification_collision.py"),
+            ("tests", "test_reindex_snapshot.py"),
+            ("tests", "test_reindex_upsert_serialization.py"),
+        }
+        return len(argv) == 8 and argv[6] == "-p" and (argv[5], argv[7]) in allowed
     if argv[:4] == ["node", "--import", "tsx", "--test"]:
         return len(argv) >= 5 and all(a.startswith("test/") and a.endswith(".test.ts") and ".." not in a for a in argv[4:])
     if argv[:2] == ["node", "--test"]:

@@ -9,7 +9,7 @@ import re
 import subprocess
 import sys
 
-from worker import parse_test_summary
+from worker import parse_test_summary, source_sha
 
 def run(args):
     root = Path(args.source).resolve()
@@ -30,7 +30,8 @@ def run(args):
         "schema_version": 1, "repo": args.repo,
         "command": cmd, "source_subdir": "." if args.repo == "WoolRadar" else "SAM/snapshot",
         "verified_business_complete": False,
-        "checked_utc": dt.datetime.now(dt.timezone.utc).isoformat()
+        "checked_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+        "source_commit": source_sha(root)
     }
     try:
         proc = subprocess.run(cmd, cwd=cwd, env=env, capture_output=True,

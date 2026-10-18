@@ -1,0 +1,409 @@
+{
+  "schema_version": 1,
+  "repo": "WoolRadar",
+  "source_ref": "chatgpt/wr-h07-public-corpus-url-limit-fixture-20261018",
+  "source_subdir": ".",
+  "source_note": "Tests cover only selected checks. PASS never means family/business accepted.",
+  "families": [
+    {
+      "id": "WR-H01",
+      "goal": "通知 SENT 不回退",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_notifications.py"
+        ]
+      ]
+    },
+    {
+      "id": "WR-H02",
+      "goal": "reindex/upsert BEGIN IMMEDIATE",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_reindex_upsert_serialization.py"
+        ]
+      ]
+    },
+    {
+      "id": "WR-H03",
+      "goal": "WAL备份和 CLAIMED 恢复",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_config_backup.py"
+        ]
+      ]
+    },
+    {
+      "id": "WR-H04",
+      "goal": "通知状态复用及碰撞",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_reindex_notification_collision.py"
+        ]
+      ]
+    },
+    {
+      "id": "WR-H05",
+      "goal": "证据事务原子性",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_apply_evidence_transaction.py"
+        ]
+      ]
+    },
+    {
+      "id": "WR-H06",
+      "goal": "快照先后/同秒排序",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_reindex_snapshot.py"
+        ]
+      ]
+    },
+    {
+      "id": "WR-H07",
+      "goal": "公开生产者URL身份",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "independent-quality/public-corpus-blind-dedup-20261016",
+          "-p",
+          "test_*.py"
+        ],
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_public_corpus*.py"
+        ],
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_public_sample*.py"
+        ]
+      ]
+    },
+    {
+      "id": "WR-H08",
+      "goal": "采样器公开域名校验",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_public_corpus_dns_label_boundary_20261018.py"
+        ]
+      ]
+    },
+    {
+      "id": "WR-H09",
+      "goal": "严格 URL identity true 布尔值",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_public_corpus_identity.py"
+        ]
+      ]
+    },
+    {
+      "id": "WR-H10",
+      "goal": "发布时间明确时区UTC",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_public_corpus_timestamp.py"
+        ]
+      ]
+    },
+    {
+      "id": "WR-H11",
+      "goal": "资助收费否定语义",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_developer_grant_negations.py"
+        ]
+      ]
+    },
+    {
+      "id": "WR-H12",
+      "goal": "真实日报桥接必须获批",
+      "disposition": "EXTERNAL_OR_POLICY_GATED",
+      "external_gate": "USER_APPROVAL",
+      "checks": []
+    },
+    {
+      "id": "WR-H13",
+      "goal": "新独立盲测召回25%及漏合并",
+      "disposition": "EXTERNAL_OR_POLICY_GATED",
+      "external_gate": "FRESH_GOLD",
+      "checks": []
+    },
+    {
+      "id": "WR-H14",
+      "goal": "定时任务不能GitHub写入",
+      "disposition": "EXTERNAL_OR_POLICY_GATED",
+      "external_gate": "SCHEDULED_BLOCKED",
+      "checks": []
+    },
+    {
+      "id": "WR-H15",
+      "goal": "日报白名单/官方开放门禁",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_official_trace.py"
+        ]
+      ]
+    },
+    {
+      "id": "WR-H16",
+      "goal": "资助跨项目拼接误判",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_developer_grant_project_scope.py"
+        ]
+      ]
+    },
+    {
+      "id": "WR-H17",
+      "goal": "敏感历史测试数据审查",
+      "disposition": "EXTERNAL_OR_POLICY_GATED",
+      "external_gate": "MAINTAINER_APPROVAL",
+      "checks": []
+    },
+    {
+      "id": "WR-H18",
+      "goal": "已发通知CAS不一致uncertain",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_notifications.py"
+        ]
+      ]
+    },
+    {
+      "id": "WR-H19",
+      "goal": "官网资格与溯源",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_official_trace_stale_event.py"
+        ]
+      ]
+    },
+    {
+      "id": "COORD-H01",
+      "goal": "离线调度幂等",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_orchestrator.py"
+        ]
+      ]
+    },
+    {
+      "id": "COORD-H02",
+      "goal": "GitHub事件来源适配",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_node_entry.py"
+        ]
+      ]
+    },
+    {
+      "id": "COORD-H03",
+      "goal": "Webhook HMAC有效性",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": []
+    },
+    {
+      "id": "COORD-H04",
+      "goal": "dry-run绝不写盘",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": []
+    },
+    {
+      "id": "COORD-H05",
+      "goal": "V3/V5 relay重放与取消",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": []
+    },
+    {
+      "id": "COORD-H06",
+      "goal": "return-sync 真Git接力",
+      "disposition": "READY_FOR_LOCAL_CODEX",
+      "external_gate": null,
+      "checks": [
+        [
+          "python",
+          "-m",
+          "unittest",
+          "discover",
+          "-s",
+          "tests",
+          "-p",
+          "test_reindex_preview.py"
+        ]
+      ]
+    },
+    {
+      "id": "COORD-H07",
+      "goal": "架构文档/生产代理协同",
+      "disposition": "EXTERNAL_OR_POLICY_GATED",
+      "external_gate": "REVIEW_ONLY",
+      "checks": []
+    }
+  ]
+}

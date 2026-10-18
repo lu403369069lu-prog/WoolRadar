@@ -104,7 +104,7 @@
 | R2-071 | S5 Claim证据审核 | H04审查结论源件SHA绑定 | 错SHA撤销审查且保留所有旧测试 | DRAFT_SAM_4X37_GREEN_FULL_6_MISSING_FROZEN |
 | R2-072 | S5 Claim证据审核 | Claim仓库与提交作用域 | 相同ID跨库不能共享结论 | PLANNED_NOT_VERIFIED |
 | R2-073 | S5 Claim证据审核 | Entailed证据ID真实性 | 空/假证据必须拒绝通过 | PLANNED_NOT_VERIFIED |
-| R2-074 | S5 Claim证据审核 | 审查字段类型抗伪造 | 非预期类型及枚举失败关闭 | PLANNED_NOT_VERIFIED |
+| R2-074 | S5 Claim证据审核 | 审查字段类型抗伪造 | 非预期类型及枚举失败关闭 | DRAFT_NATIVE_GREEN_NOT_STRICTLY_ACCEPTED |
 | R2-075 | S5 Claim证据审核 | 资料变动使审核失效 | 保留历史并要求重新验证 | PLANNED_NOT_VERIFIED |
 | R2-076 | S6 严格输入编码 | H14真实运行时Unicode折叠 | 真实评测入口接入修复 | DRAFT_SAM_H14_NATIVE_RED_GREEN_FULL_6_FAIL |
 | R2-077 | S6 严格输入编码 | JSON/JSONL重复键拒绝 | 全部入口不容键覆盖 | PLANNED_NOT_VERIFIED |
@@ -170,3 +170,10 @@
 - [Draft PR75](https://github.com/lu403369069lu-prog/WoolRadar/pull/75) 源码上真实执行两个区分明确的测试：R2-011 在现存读事务固定旧快照时，新增提交进入WAL且未checkpoint，调用真实reindex在线备份，证明备份包含刚提交的事件、官方模拟证据及入队通知；R2-012 将备份文件复制到独立数据库，逐表比对8表全部记录、SQLite integrity_check=ok、foreign_key_check空。
 - [Actions39132865286](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39132865286) Windows/Linux × Python3.11/3.12 四平台均执行成功，每平台2项新增备份恢复测试与2项前序Schema版本测试通过，零跳过。没有刻意制造RED故障，也没有宣称修正了原本不存在的备份错误。
 - 仅合成数据与隔离草稿；未触碰生产数据库或改动主线。R2-011、012正式业务恢复演练和全部回归仍未进行，**不能核销为严格完成**。目前R2有先前5项候选、本次W1/W2先登记6项、此次新增2项，即共13项曾进入不同程度候选验证；R2严格验收仍0/100。
+
+
+### SAM R2-074 真实审查字段类型防伪红绿收据
+
+- [YinQieJi Draft PR38](https://github.com/lu403369069lu-prog/YinQieJi/pull/38) 在真实SAM snapshot的source-qualified资格函数入口验证：有效官方合成来源的review body/SHA/原文件行锚点先正常通过；将来源ID与对应subclaim引用一起篡改为数字、布尔、null或空白，或将subclaim文本改数字并重新计算review hash，必须拒绝。源TS接口声明string不能替代JSON运行时类型检查。
+- [RED39133161071](https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39133161071) Windows/Linux × Node24/26四平台均真实失败，旧代码确实错误接受非字符串来源ID。修复运行时类型校验后[GREEN39133234955](https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39133234955)四平台成功，保留原评测输入回归测试。
+- 此为孤立源资格安全修复，未包含522个真实源件或正式教师gold的认可，R2-074严格验收仍未完成。此前13项不同程度候选加上本次1项，第二批共14项有部分工程验证；严格核销0/100。

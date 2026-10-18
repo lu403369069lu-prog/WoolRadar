@@ -145,6 +145,14 @@ class Database:
                                       ('next_attempt', 'REAL NOT NULL DEFAULT 0')):
                 if name not in columns:
                     conn.execute(f'ALTER TABLE notifications ADD COLUMN {name} {declaration}')
+            # A confirmed external/local delivery is terminal across every SQLite
+            # connection and process, not merely within NotificationQueue.flush.
+            # Existing older databases receive this idempotent trigger on open.
+            conn.execute('''CREATE TRIGGER IF NOT EXISTS notifications_sent_final
+                BEFORE UPDATE OF result ON notifications
+                FOR EACH ROW
+                WHEN OLD.result='SENT' AND NEW.result!='SENT'
+                BEGIN SELECT RAISE(ABORT, 'SENT_FINAL'); END''')
 
     def upsert_candidate(self, candidate: Candidate) -> UpsertResult:
         with self.connect() as conn:

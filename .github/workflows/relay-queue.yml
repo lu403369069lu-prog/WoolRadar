@@ -1,0 +1,39 @@
+name: Historical backlog relay checkpoint
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 */3 * * *'
+  push:
+    branches: [chatgpt/actions-acceptance-checkpoint-20261018]
+    paths:
+      - '.github/scripts/relay_queue.py'
+      - '.github/workflows/relay-queue.yml'
+permissions:
+  contents: read
+concurrency:
+  group: backlog-relay-${{ github.repository }}
+  cancel-in-progress: false
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: chatgpt/scheduled-review-ledger-20261017
+          path: ledger
+          persist-credentials: false
+      - name: Create queue checkpoint from real historical manifest
+        run: python .github/scripts/relay_queue.py
+      - name: Persist checkpoint artifact even if inventory fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relay-checkpoint-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .relay-checkpoint/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30

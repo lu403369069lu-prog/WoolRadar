@@ -80,7 +80,8 @@ class PublicCorpusTests(unittest.TestCase):
     def test_url_and_final_utf8_bytes_have_hard_limits(self):
         from core.public_corpus import record_public_sample
         with tempfile.TemporaryDirectory(dir=TMP) as td:
-            rows=[{'title':'Free API','url':'https://public.example/'+'x'*10000,
+            # .example is intentionally non-public; exercise the URL length cap with a public-shaped reserved documentation host.
+            rows=[{'title':'Free API','url':'https://public.example.org/'+'x'*10000,
                    'summary':'汉'*20000}]*500
             path=record_public_sample(Path(td),'openmagpie',PUBLIC,rows,[True]*500)
             self.assertLessEqual(path.stat().st_size,8000000)

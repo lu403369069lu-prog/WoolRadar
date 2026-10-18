@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "repo": "WoolRadar",
+  "revision": 0,
+  "cursor": 0,
+  "processed_run_keys": [],
+  "families": {},
+  "strict_business_completed": 0,
+  "note": "GitHub Actions formal subsets only, not AI repairs nor native/business acceptance."
+}

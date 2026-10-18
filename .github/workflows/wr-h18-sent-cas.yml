@@ -1,0 +1,49 @@
+name: WR-H18 original-source SENT CAS uncertainty regression
+on:
+  push:
+    branches: [chatgpt/wr-h18-cas-uncertain-tests-20261018]
+    paths:
+      - 'tests/test_notification_cas_uncertain.py'
+      - '.github/workflows/wr-h18-sent-cas.yml'
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'tests/test_notification_cas_uncertain.py'
+      - '.github/workflows/wr-h18-sent-cas.yml'
+permissions:
+  contents: read
+concurrency:
+  group: wr-h18-sent-cas-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  windows-native-synthetic:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify exact original source and safe fixture
+        shell: pwsh
+        run: |
+          git rev-parse HEAD
+          python -c "from pathlib import Path; assert Path('core/notify.py').is_file() and Path('tests/test_notification_cas_uncertain.py').is_file()"
+      - name: Run actual Windows sender-CAS conflict cases; zero skips required
+        shell: pwsh
+        run: |
+          @'
+          import sys
+          import unittest
+          suite=unittest.defaultTestLoader.discover("tests",pattern="test_notification_cas_uncertain.py")
+          outcome=unittest.TextTestRunner(verbosity=2).run(suite)
+          print("STRICT_WR_H18 total=%d failures=%d errors=%d skipped=%d" %
+                (outcome.testsRun,len(outcome.failures),len(outcome.errors),len(outcome.skipped)))
+          sys.exit(0 if outcome.wasSuccessful() and outcome.testsRun == 2
+                   and not outcome.skipped and not outcome.expectedFailures
+                   and not outcome.unexpectedSuccesses else 1)
+          '@ | python -

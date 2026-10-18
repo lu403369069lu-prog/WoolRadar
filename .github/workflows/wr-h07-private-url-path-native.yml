@@ -1,0 +1,47 @@
+name: WR H07 sensitive URL path producer/sampler native guard (advisory)
+on:
+  push:
+    branches: [chatgpt/wr-h07-sensitive-url-path-20261018]
+permissions:
+  contents: read
+concurrency:
+  group: wr-h07-path-native-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  private-path-rejection:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        python: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Verify exact reviewed original source ancestor
+        shell: bash
+        run: git merge-base --is-ancestor a0fc93c4b54d16f399c28ffb401d682fa823b107 HEAD
+      - name: Execute complete public producer/sampler identity tests, zero skips
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import unittest
+          required = ('test_public_corpus.py','test_public_corpus_identity.py',
+                      'test_public_corpus_dns_label_boundary_20261018.py',
+                      'test_public_corpus_sensitive_url_path.py')
+          if any(not (Path('tests') / name).is_file() for name in required):
+              raise SystemExit('REQUIRED_PUBLIC_URL_SUITE_MISSING')
+          suite=unittest.defaultTestLoader.discover('tests',pattern='test_public_corpus*.py')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if result.testsRun < 25 or not result.wasSuccessful() or result.skipped or result.expectedFailures or result.unexpectedSuccesses:
+              raise SystemExit('PUBLIC_SOURCE_SAMPLER_NATIVE_INCOMPLETE')
+          print(f"PUBLIC_CORPUS_SOURCE_NATIVE {result.testsRun}/{result.testsRun} zero skips")
+          print("ADVISORY_ONLY: no real external RSS/private URLs/DNS checked, no business acceptance")
+          PY

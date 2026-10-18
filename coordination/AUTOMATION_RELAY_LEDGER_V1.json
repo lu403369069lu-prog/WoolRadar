@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 29,
+    "revision": 30,
     "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
-    "last_completed_review_key": "interactive-20261018-100-minimal-stage7-wr-h11-card-required",
+    "last_completed_review_key": "interactive-20261018-100-minimal-stage8-wr-h07-private-url-path",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -61,7 +61,8 @@
       "YinQieJi#25": "9fff6434b0bf1eeda2c6afa3e8489193806695e0",
       "YinQieJi#26": "9471fc3a5d5bff14aab82c535a792889b95b27a8",
       "YinQieJi#27": "2c5e6ea4450cfe3c6942370399ecfa6ad1e97cbd",
-      "WoolRadar#52": "cd415231b54ca9d439dd3988d9b558af67ddf81d"
+      "WoolRadar#52": "cd415231b54ca9d439dd3988d9b558af67ddf81d",
+      "WoolRadar#53": "b3b80aa83ff61280d37df45016c1521119dd5d8d"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -93,7 +94,8 @@
       "interactive-20261018-100-minimal-stage4-crossplatform-source-native",
       "interactive-20261018-100-minimal-stage5-sam-h17-native-atomic",
       "interactive-20261018-100-minimal-stage6-sam-h14-runtime-fold-redgreen",
-      "interactive-20261018-100-minimal-stage7-wr-h11-card-required"
+      "interactive-20261018-100-minimal-stage7-wr-h11-card-required",
+      "interactive-20261018-100-minimal-stage8-wr-h07-private-url-path"
     ],
     "write_diagnostic": "INTERACTIVE_REAL_SOURCE_CI_STAGE2_PENDING_READBACK",
     "last_write_error": null,
@@ -1915,6 +1917,20 @@
       "green": "Windows/Linux Python3.11/3.12/3.13 each 31/31 no skips",
       "business_accepted": false,
       "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage8-wr-h07-private-url-path",
+      "repo": "WoolRadar",
+      "family": "WR-H07",
+      "status": "PRIVACY_SOURCE_FIX_NATIVELY_VERIFIED_SIX_JOBS",
+      "source_sha": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+      "pr": 53,
+      "red_run": 39101670462,
+      "green_run": 39101822744,
+      "head": "b3b80aa83ff61280d37df45016c1521119dd5d8d",
+      "test_evidence": "Windows/Linux 3.11/3.12/3.13 each 49/49 0 skips",
+      "business_accepted": false,
+      "strictly_complete": false
     }
   ],
   "run_history": [
@@ -2454,6 +2470,43 @@
       },
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
       "next_action": "Public genuine producer + official application policy proof still needed for WR-H11 strict acceptance; do not count synthetic cases as real opportunities. Continue remaining 50 family semantic source checks without repeating this fixed SHAs."
+    },
+    {
+      "event_id": "interactive-20261018-100-minimal-stage8-wr-h07-private-url-path",
+      "origin": "INTERACTIVE_CHAT_WOOL_H07_ORIGINAL_PRODUCER_SAMPLER_PRIVACY_SOURCE",
+      "minimal_task_units_new_this_request": 5,
+      "cumulative_actual_minimal_tasks_this_request": 47,
+      "task_unit_ids": [
+        "WR-H07-PRODUCER-PUBLIC-URL-SENSITIVE-PATH-EXPOSURE-REPRO",
+        "WR-H07-SAMPLER-FORGED-IDENTITY-PRIVATE-PATH-REPRO-8FAIL",
+        "WR-H07-PRODUCER-PATH-FRAGMENT-CREDENTIAL-REDACTION-FIX",
+        "WR-H07-INDEPENDENT-SAMPLER-PRIVATE-PATH-CANONICAL-REJECTION",
+        "WR-H07-SYNTHETIC-SPA-FRAGMENT-WIN-LINUX-6X49-CI"
+      ],
+      "actual_cases": "Reviewed exact original producer core/public_corpus.py and independent blind sampler freeze_public_sample_dedup.py at a0fc93c4b54d16f399c28ffb401d682fa823b107: URL path/fragment carrying synthetic 'token', encoded %74oken, email or long identifier retained unredacted and sampler permits forged URL identity true. Independent Draft PR53 tests source + sampler in six Windows/Linux Python3.11/3.12/3.13 jobs. Original red run 39101608928 included 7 environment errors from test_public_corpus.py requiring original disposable .test-tmp fixture; isolated CI created that exact directory with no skip/suite suppression, and clean red run 39101670462 all six jobs 49 tests, exactly 8 private path subtest failures, no environment errors. Patched producer to redact sensitive ordinary path and SPA fragment before persisting public rows, forced url_identity_preserved=false. Patched independent sampler to reject sensitive path even if input claims true; safe ordinary public offer path remains. Added SPA hash and hashbang route regression, final source head b3b80aa83ff61280d37df45016c1521119dd5d8d; real Actions 39101822744 all six 49/49, no skipped/cancelled/errors, completed success. Synthetic only, no network, real secrets, DNS, upstream producer origin, private data, release, or business acceptance.",
+      "evidence": {
+        "repo": "WoolRadar",
+        "pr": 53,
+        "source_sha": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+        "red_sha": "a6bbdf58ac65e396285937eee1eb5fa694d96793",
+        "red_run": 39101670462,
+        "fixture_red_run": 39101608928,
+        "green_head": "b3b80aa83ff61280d37df45016c1521119dd5d8d",
+        "green_run": 39101822744,
+        "platforms": [
+          "windows-latest",
+          "ubuntu-latest"
+        ],
+        "python": [
+          "3.11",
+          "3.12",
+          "3.13"
+        ],
+        "jobs": 6,
+        "tests_per_job": 49
+      },
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "next_action": "WR-H07 requires genuine unseen public feed and official original source evidence to accept. Keep Draft PR53 unmerged; provenance and credential-free real producer source unresolved."
     }
   ],
   "acceptance": {
@@ -2489,7 +2542,8 @@
     "sam_h14_native_matrix": "SOURCE_H14_N22_24_26_WINDOWS_LINUX_6X18_PASS_20261018_STRICT_NOT_ACCEPTED",
     "sam_h17_native_synthetic_atomic": "WINDOWS_3X13_AND_LINUX_3X18_ALL_PASS_STRICT_RELEASE_PENDING_20261018",
     "sam_h14_runtime_identity_native": "REAL_SOURCE_RED_GREEN_WINDOWS_LINUX_NODE22_24_26_6x5_PASS_20261018_STRICT_PENDING",
-    "wr_h11_card_required_gate": "REAL_SOURCE_RED_GREEN_6X31_NATIVE_PASS_20261018_STRICT_OFFICIAL_REVIEW_PENDING"
+    "wr_h11_card_required_gate": "REAL_SOURCE_RED_GREEN_6X31_NATIVE_PASS_20261018_STRICT_OFFICIAL_REVIEW_PENDING",
+    "wr_h07_sensitive_private_url_path": "ORIGINAL_PRODUCER_SAMPLER_6X49_PASS_ZERO_SKIP_20261018_STRICT_SOURCE_PENDING"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

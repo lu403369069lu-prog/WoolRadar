@@ -1,0 +1,30 @@
+name: Second100 W1 durable concurrent enqueue
+on:
+  push:
+    branches: [chatgpt/second100-w1-enqueue-process-20261018]
+  pull_request:
+    branches: [chatgpt/second100-w1-sent-monotonic-20261018]
+permissions:
+  contents: read
+jobs:
+  unique-enqueue:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        python: ['3.11', '3.12']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: R2-004 true two-process duplicate enqueue
+        run: python -X utf8 -m unittest discover -s tests -p test_notice_concurrent_enqueue.py -v
+      - name: R2-001 true subprocess SENT immutability
+        run: python -X utf8 -m unittest discover -s tests -p test_notice_sent_monotonic.py -v
+      - name: Existing notification contract
+        run: python -X utf8 -m unittest discover -s tests -p test_notifications.py -v

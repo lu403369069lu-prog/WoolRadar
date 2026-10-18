@@ -1,0 +1,165 @@
+#!/usr/bin/env python3
+"""Bounded read-only tests + replay-safe durable checkpoints. Never auto-accept."""
+import argparse
+import datetime as dt
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+def load(path):
+    return json.loads(Path(path).read_text(encoding="utf-8"))
+
+def save(path, obj):
+    p = Path(path)
+    p.parent.mkdir(parents=True, exist_ok=True)
+    p.write_text(json.dumps(obj, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
+
+def source_sha(path):
+    s = subprocess.check_output(["git", "-C", str(path), "rev-parse", "HEAD"], text=True, timeout=10).strip()
+    if not re.fullmatch(r"[a-f0-9]{40}", s):
+        raise ValueError("invalid commit SHA")
+    return s
+
+def safe(argv):
+    if not isinstance(argv, list) or len(argv) < 3 or not all(isinstance(a, str) for a in argv):
+        return False
+    if any(len(a) > 230 or re.search(r"[\x00-\x1f;$|&<>\x60]", a) for a in argv):
+        return False
+    if argv[:5] == ["python", "-m", "unittest", "discover", "-s"]:
+        return len(argv) == 8 and argv[6] == "-p" and argv[7].startswith("test_")
+    if argv[:4] == ["node", "--import", "tsx", "--test"]:
+        return len(argv) >= 5 and all(a.startswith("test/") and a.endswith(".test.ts") and ".." not in a for a in argv[4:])
+    if argv[:2] == ["node", "--test"]:
+        return len(argv) >= 3 and all(a.endswith(".test.mjs") and not a.startswith("/") and "/../" not in a for a in argv[2:])
+    return False
+
+def test(argv, cwd, src):
+    paths = [argv[5]] if argv[:5] == ["python", "-m", "unittest", "discover", "-s"] else [a for a in argv if a.endswith((".test.ts", ".test.mjs"))]
+    if any(not (cwd / a).resolve().is_relative_to(src) for a in paths):
+        raise ValueError("test path escapes candidate")
+    cmd = [sys.executable] + argv[1:] if argv[0] == "python" else argv
+    env = dict(os.environ)
+    for k in ("GITHUB_TOKEN", "GH_TOKEN", "COPILOT_GITHUB_TOKEN", "OPENAI_API_KEY"):
+        env.pop(k, None)
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
+    try:
+        proc = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, errors="replace", timeout=180, env=env)
+        output = (proc.stdout + "\n" + proc.stderr)[-240000:]
+        py = re.search(r"Ran (\d+) tests?", output)
+        node = re.search(r"(?m)^# tests (\d+)\s*$", output)
+        fail = re.search(r"(?m)^# fail (\d+)\s*$", output)
+        passed = re.search(r"(?m)^# pass (\d+)\s*$", output)
+        total = int(py.group(1)) if py else int(node.group(1)) if node else None
+        fails = int(fail.group(1)) if fail else None
+        ok = proc.returncode == 0 and total is not None and total > 0 and fails in (None, 0)
+        names = []
+        if not ok:
+            for line in output.splitlines():
+                if line.startswith(("not ok ", "FAIL: ", "ERROR: ")):
+                    names.append(re.sub(r"[^a-zA-Z0-9 _.:#()\-]", "?", line)[:150])
+        return {"status": "PASS" if ok else "FAIL", "exit_code": proc.returncode, "total": total,
+                "passed": int(passed.group(1)) if passed else total if ok else None,
+                "failed": fails, "failed_test_names": names[:12]}
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return {"status": "BLOCKED", "error_kind": type(exc).__name__}
+
+def evaluate(a):
+    raw = Path(a.queue).read_bytes()
+    q = json.loads(raw)
+    s = load(Path(a.state) / "engine.json")
+    if q.get("repo") != a.repo or s.get("repo") != a.repo or q.get("schema_version") != 1 or s.get("schema_version") != 1:
+        raise ValueError("repository/schema mismatch")
+    families = q["families"]
+    if not 1 <= len(families) <= 60 or not 0 <= s["cursor"] < len(families):
+        raise ValueError("invalid family queue/cursor")
+    ids = [f["id"] for f in families]
+    if len(ids) != len(set(ids)) or any(not re.fullmatch(r"(WR|SAM|COORD)-H\d\d", i) for i in ids):
+        raise ValueError("invalid family IDs")
+    for family in families:
+        if len(family["checks"]) > 4 or not all(safe(cmd) for cmd in family["checks"]):
+            raise ValueError("invalid formal test mapping: " + family["id"])
+    src = Path(a.source).resolve()
+    cwd = (src / q["source_subdir"]).resolve()
+    if not cwd.is_dir() or not cwd.is_relative_to(src):
+        raise ValueError("missing/unsafe source directory")
+    sha = source_sha(src)
+    n = min(a.limit, len(families))
+    selected = [families[(s["cursor"] + i) % len(families)] for i in range(n)]
+    results = []
+    for item in selected:
+        checks = []
+        if item["disposition"] == "EXTERNAL_OR_POLICY_GATED":
+            status = "EXTERNAL_GATE_NOT_EXECUTED"
+        elif not item["checks"]:
+            status = "NO_FORMAL_MAPPING_NOT_EXECUTED"
+        else:
+            for cmd in item["checks"]:
+                checks.append({"argv": cmd, **test(cmd, cwd, src)})
+            status = "FORMAL_SUBSET_PASS_NATIVE_PENDING" if all(c["status"] == "PASS" for c in checks) else "FORMAL_CHECK_FAILED_OR_BLOCKED"
+        results.append({"id": item["id"], "goal": item["goal"], "status": status,
+                        "external_gate": item.get("external_gate"), "checks": checks,
+                        "strictly_complete": False, "business_accepted": False})
+        print(json.dumps({"family": item["id"], "status": status,
+                          "tests": [{"status": c["status"], "total": c.get("total"), "exit_code": c.get("exit_code")} for c in checks]}), flush=True)
+    receipt = {"schema_version": 1, "repo": a.repo,
+               "run_key": os.environ.get("GITHUB_RUN_ID", "0") + "/" + os.environ.get("GITHUB_RUN_ATTEMPT", "1"),
+               "generated_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+               "source_commit": sha, "source_ref": q["source_ref"], "queue_sha256": hashlib.sha256(raw).hexdigest(),
+               "previous_cursor": s["cursor"], "next_cursor": (s["cursor"] + n) % len(families),
+               "results": results, "strict_new_acceptances": 0}
+    save(a.output, receipt)
+    print(json.dumps({"evaluation": "COMPLETE", "source_commit": sha, "count": n, "next_cursor": receipt["next_cursor"]}))
+
+def persist(a):
+    receipt = load(a.receipt)
+    root = Path(a.state)
+    state_path = root / "engine.json"
+    s = load(state_path)
+    if receipt.get("schema_version") != 1 or s.get("schema_version") != 1 or receipt.get("repo") != a.repo or s.get("repo") != a.repo:
+        raise ValueError("invalid receipt/state")
+    key = receipt.get("run_key", "")
+    if not re.fullmatch(r"\d+/\d+", key) or not re.fullmatch(r"[a-f0-9]{40}", receipt.get("source_commit", "")):
+        raise ValueError("invalid run identity/source")
+    if key in s.get("processed_run_keys", []):
+        print("IDEMPOTENT_REPLAY " + key)
+        return
+    if s["cursor"] != receipt["previous_cursor"]:
+        raise ValueError("STALE_RECEIPT_REJECTED")
+    if not 1 <= len(receipt["results"]) <= 3:
+        raise ValueError("invalid receipt size")
+    if any(x.get("strictly_complete") is not False or x.get("business_accepted") is not False for x in receipt["results"]):
+        raise ValueError("never auto-accept a family")
+    s["cursor"] = receipt["next_cursor"]
+    s["revision"] = s.get("revision", 0) + 1
+    s["last_source_commit"] = receipt["source_commit"]
+    s["last_run_key"] = key
+    s["last_utc"] = receipt["generated_utc"]
+    s.setdefault("processed_run_keys", []).append(key)
+    s["processed_run_keys"] = s["processed_run_keys"][-250:]
+    s.setdefault("families", {})
+    for x in receipt["results"]:
+        s["families"][x["id"]] = {"status": x["status"], "source_commit": receipt["source_commit"],
+                                "run_key": key, "strictly_complete": False}
+    save(state_path, s)
+    with (root / "history.jsonl").open("a", encoding="utf-8") as stream:
+        stream.write(json.dumps(receipt, sort_keys=True, ensure_ascii=False) + "\n")
+    print(json.dumps({"persisted_locally": True, "revision": s["revision"], "cursor": s["cursor"], "run_key": key}))
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("mode", choices=["evaluate", "persist"])
+    ap.add_argument("--repo", required=True, choices=["WoolRadar", "YinQieJi"])
+    ap.add_argument("--queue", default=".github/relay/queue.json")
+    ap.add_argument("--source", default="candidate")
+    ap.add_argument("--state", required=True)
+    ap.add_argument("--output", default=".relay-report/receipt.json")
+    ap.add_argument("--receipt", default=".relay-report/receipt.json")
+    ap.add_argument("--limit", type=int, default=2)
+    opt = ap.parse_args()
+    if not 1 <= opt.limit <= 3:
+        ap.error("limit must be 1-3")
+    (evaluate if opt.mode == "evaluate" else persist)(opt)

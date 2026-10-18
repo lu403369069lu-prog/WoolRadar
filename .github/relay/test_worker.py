@@ -26,7 +26,8 @@ class RelaySafetyTests(unittest.TestCase):
     def receipt(self, q, *, run_key="123456/1", cursor=0):
         fam = q["families"][cursor]
         checks = [{"argv": c, "status": "PASS", "exit_code": 0, "total": 3,
-                   "passed": 3, "failed": 0, "failed_test_names": []} for c in fam["checks"]]
+                   "passed": 3, "failed": 0, "skipped": 0, "todo": 0,
+                   "cancelled": 0, "failed_test_names": []} for c in fam["checks"]]
         status = ("EXTERNAL_GATE_NOT_EXECUTED" if fam["disposition"] == "EXTERNAL_OR_POLICY_GATED"
                   else "FORMAL_SUBSET_PASS_NATIVE_PENDING" if checks else "NO_FORMAL_MAPPING_NOT_EXECUTED")
         return {
@@ -97,6 +98,23 @@ class RelaySafetyTests(unittest.TestCase):
     def test_python_summary_missing_ok_never_passes(self):
         self.assertEqual(
             worker.parse_test_summary("Ran 1 test in 0.001s\n", 0)["status"], "FAIL")
+
+    def test_forged_pass_receipt_requires_explicit_zero_counters(self):
+        q = self.queue()
+        for field in ("failed", "skipped", "todo", "cancelled"):
+            with self.subTest(missing=field), tempfile.TemporaryDirectory() as tmp:
+                receipt = self.receipt(q)
+                checks = receipt["results"][0]["checks"]
+                self.assertTrue(checks, "requires a real mapped family")
+                checks[0].pop(field, None)
+                with self.assertRaises(ValueError):
+                    self.run_persist(Path(tmp), q, receipt)
+        for field in ("failed", "skipped", "todo", "cancelled"):
+            with self.subTest(boolean=field), tempfile.TemporaryDirectory() as tmp:
+                receipt = self.receipt(q)
+                receipt["results"][0]["checks"][0][field] = False
+                with self.assertRaises(ValueError):
+                    self.run_persist(Path(tmp), q, receipt)
 
     def test_forged_skipped_receipt_rejected(self):
         q = self.queue()

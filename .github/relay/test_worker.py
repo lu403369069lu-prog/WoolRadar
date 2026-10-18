@@ -57,6 +57,7 @@ class RelaySafetyTests(unittest.TestCase):
         }
         if integration_sha is not None:
             integration["source_commit"] = integration_sha
+        integration["run_key"] = receipt["run_key"]
         if integration_mutator is not None:
             integration_mutator(integration)
         worker.save(directory / "integration.json", integration)
@@ -130,8 +131,23 @@ class RelaySafetyTests(unittest.TestCase):
                     source=str(source_root), repo=q["repo"], output=str(target)))
             actual = json.loads(target.read_text(encoding="utf-8"))
             self.assertEqual(actual["source_commit"], expected)
+            self.assertEqual(actual["run_key"], __import__("os").environ.get("GITHUB_RUN_ID", "0") + "/" + __import__("os").environ.get("GITHUB_RUN_ATTEMPT", "1"))
             self.assertEqual(actual["status"], "PASS")
             self.assertIs(actual["verified_business_complete"], False)
+
+    def test_full_integration_receipt_must_bind_exact_actions_run_attempt(self):
+        q = self.queue()
+        for fake in (None, "999999/1", "incorrect-run-id", True):
+            with self.subTest(integration_run_key=fake), tempfile.TemporaryDirectory() as tmp:
+                receipt = self.receipt(q)
+                def corrupt(row):
+                    if fake is None:
+                        row.pop("run_key", None)
+                    else:
+                        row["run_key"] = fake
+                with self.assertRaises(ValueError):
+                    self.run_persist(
+                        Path(tmp), q, receipt, integration_mutator=corrupt)
 
     def test_full_suite_pass_requires_exact_explicit_typed_counters(self):
         q = self.queue()

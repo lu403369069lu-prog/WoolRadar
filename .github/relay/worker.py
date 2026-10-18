@@ -289,7 +289,10 @@ def persist(a):
             or integration.get("status") not in ("PASS", "FAIL", "BLOCKED")
             or type(integration.get("source_commit")) is not str
             or not re.fullmatch(r"[a-f0-9]{40}", integration["source_commit"])
-            or integration["source_commit"] != receipt["source_commit"]):
+            or integration["source_commit"] != receipt["source_commit"]
+            or type(integration.get("run_key")) is not str
+            or not re.fullmatch(r"\d+/\d+", integration["run_key"])
+            or integration["run_key"] != key):
         raise ValueError("invalid independent integration report")
     if integration["status"] == "PASS" and (
             type(integration.get("exit_code")) is not int or integration["exit_code"] != 0 or

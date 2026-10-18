@@ -31,7 +31,8 @@ def run(args):
         "command": cmd, "source_subdir": "." if args.repo == "WoolRadar" else "SAM/snapshot",
         "verified_business_complete": False,
         "checked_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
-        "source_commit": source_sha(root)
+        "source_commit": source_sha(root),
+        "run_key": os.environ.get("GITHUB_RUN_ID", "0") + "/" + os.environ.get("GITHUB_RUN_ATTEMPT", "1")
     }
     try:
         proc = subprocess.run(cmd, cwd=cwd, env=env, capture_output=True,

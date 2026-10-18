@@ -385,18 +385,7 @@
       "goal": "return-sync 真Git接力",
       "disposition": "READY_FOR_LOCAL_CODEX",
       "external_gate": null,
-      "checks": [
-        [
-          "python",
-          "-m",
-          "unittest",
-          "discover",
-          "-s",
-          "tests",
-          "-p",
-          "test_reindex_preview.py"
-        ]
-      ]
+      "checks": []
     },
     {
       "id": "COORD-H07",

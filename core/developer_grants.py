@@ -51,12 +51,37 @@ _APPLICANT_QUESTION = re.compile(
     r'\b(?:apply|application)\b', re.I)
 
 
+# A grant advertised as free must not require a payment instrument to apply.
+# Strip explicit no-card waivers before testing requirements, just as no-fee
+# waivers are removed before the paid-application guard.
+_NO_CARD = re.compile(
+    r'\b(?:no|without)\s+(?:a\s+)?(?:credit|debit)\s+card(?:\s+(?:is\s+)?(?:required|needed))?\b|'
+    r'\b(?:credit|debit)\s+card\s+(?:is\s+)?(?:not\s+required|not\s+needed|optional)\b|'
+    r"\b(?:do\s+not|does\s+not|don['\u2019]t|doesn['\u2019]t)\s+"
+    r"(?:need|require)\s+(?:a\s+)?(?:credit|debit)\s+card\b", re.I)
+_CARD_REQUIRED = re.compile(
+    r'\b(?:credit|debit)\s+card\s+(?:is\s+)?(?:required|mandatory|needed)\b|'
+    r'\b(?:must|need\s+to|needs\s+to|required\s+to)\s+'
+    r'(?:provide|enter|add|submit)\s+(?:a\s+|an\s+)?(?:credit|debit)\s+card\b|'
+    r'\bpayment\s+method\s+(?:is\s+)?(?:required|mandatory|needed)\b', re.I)
+
+
+def has_grant_card_requirement(text: object) -> bool:
+    """Fail closed on explicit card/payment-method signup for a grant lead."""
+    if not isinstance(text, str) or not text or len(text) > 6000:
+        return False
+    normalized = ' '.join(text.split())
+    return bool(_SCOPE.search(normalized) and _PROGRAM.search(normalized)
+                and _CARD_REQUIRED.search(_NO_CARD.sub(' ', normalized)))
+
+
+
 def is_developer_grant_lead(text: object) -> bool:
     """True only for an explicit current-sounding developer grant application lead."""
     if not isinstance(text, str) or not text or len(text) > 6000:
         return False
     normalized = ' '.join(text.split())
-    if _NEGATED_APPLICATION.search(normalized) or _APPLICANT_QUESTION.search(normalized):
+    if _NEGATED_APPLICATION.search(normalized) or _APPLICANT_QUESTION.search(normalized) or has_grant_card_requirement(text):
         return False
     # Explicit fee-waiver terms are not paid-application requirements.
     fee_scoped = _NO_FEE.sub(' ', normalized)

@@ -41,7 +41,7 @@ class RelaySafetyTests(unittest.TestCase):
                          "business_accepted": False}]
         }
 
-    def run_persist(self, directory, q, receipt, integration_sha="a" * 40):
+    def run_persist(self, directory, q, receipt, integration_sha="a" * 40, integration_mutator=None):
         state = directory / "engine.json"
         if not state.exists():
             worker.save(state, self.initial(q["repo"]))
@@ -53,10 +53,12 @@ class RelaySafetyTests(unittest.TestCase):
             "source_subdir": "." if q["repo"] == "WoolRadar" else "SAM/snapshot",
             "verified_business_complete": False, "checked_utc": "2026-10-18T00:00:00Z",
             "status": "PASS", "exit_code": 0, "total": 5, "passed": 5, "failed": 0,
-            "failed_test_names": []
+            "skipped": 0, "todo": 0, "cancelled": 0, "failed_test_names": []
         }
         if integration_sha is not None:
             integration["source_commit"] = integration_sha
+        if integration_mutator is not None:
+            integration_mutator(integration)
         worker.save(directory / "integration.json", integration)
         worker.save(rec, receipt)
         worker.persist(SimpleNamespace(state=str(directory), receipt=str(rec), repo=q["repo"]))
@@ -130,6 +132,35 @@ class RelaySafetyTests(unittest.TestCase):
             self.assertEqual(actual["source_commit"], expected)
             self.assertEqual(actual["status"], "PASS")
             self.assertIs(actual["verified_business_complete"], False)
+
+    def test_full_suite_pass_requires_exact_explicit_typed_counters(self):
+        q = self.queue()
+        for field in ("failed", "skipped", "todo", "cancelled"):
+            with self.subTest(omitted=field), tempfile.TemporaryDirectory() as tmp:
+                receipt = self.receipt(q)
+                with self.assertRaises(ValueError):
+                    self.run_persist(
+                        Path(tmp), q, receipt,
+                        integration_mutator=lambda row, key=field: row.pop(key, None))
+            with self.subTest(boolean=field), tempfile.TemporaryDirectory() as tmp:
+                receipt = self.receipt(q)
+                with self.assertRaises(ValueError):
+                    self.run_persist(
+                        Path(tmp), q, receipt,
+                        integration_mutator=lambda row, key=field: row.__setitem__(key, False))
+        with self.subTest(boolean_total=True), tempfile.TemporaryDirectory() as tmp:
+            receipt = self.receipt(q)
+            def boolean_total(row):
+                row["total"] = True
+                row["passed"] = 1
+            with self.assertRaises(ValueError):
+                self.run_persist(Path(tmp), q, receipt, integration_mutator=boolean_total)
+        with self.subTest(boolean_exit=True), tempfile.TemporaryDirectory() as tmp:
+            receipt = self.receipt(q)
+            with self.assertRaises(ValueError):
+                self.run_persist(
+                    Path(tmp), q, receipt,
+                    integration_mutator=lambda row: row.__setitem__("exit_code", False))
 
     def test_integration_report_must_match_exact_tested_source_commit(self):
         q = self.queue()

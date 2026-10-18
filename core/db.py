@@ -67,9 +67,13 @@ class Database:
 
     def _init_schema(self) -> None:
         with self.connect() as conn:
-            conn.execute('CREATE TABLE IF NOT EXISTS campaign_links (url TEXT PRIMARY KEY, review_json TEXT NOT NULL)')
-            conn.execute('CREATE TABLE IF NOT EXISTS migration_evidence_archive (id INTEGER PRIMARY KEY, original_event_id INTEGER, merged_into INTEGER, migrated_at TEXT, payload_json TEXT NOT NULL)')
             conn.executescript('''
+                -- executescript commits any pending transaction before running;
+                -- start the migration inside the script, keeping all subsequent
+                -- ALTER TABLE operations in the same rollback-capable transaction.
+                BEGIN IMMEDIATE;
+                CREATE TABLE IF NOT EXISTS campaign_links (url TEXT PRIMARY KEY, review_json TEXT NOT NULL);
+                CREATE TABLE IF NOT EXISTS migration_evidence_archive (id INTEGER PRIMARY KEY, original_event_id INTEGER, merged_into INTEGER, migrated_at TEXT, payload_json TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS events (
                     id INTEGER PRIMARY KEY,
                     canonical_key TEXT NOT NULL,

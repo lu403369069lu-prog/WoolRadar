@@ -11,6 +11,12 @@
 - 进度唯一原始机器账本：[engine.json](https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/actions-live-state-v1-20261018/engine.json) / [history.jsonl](https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/actions-live-state-v1-20261018/history.jsonl)；50家族主目录见 `chatgpt/scheduled-review-ledger-20261017:coordination/HISTORICAL_ALL_50_FAMILY_STATUS_20261017.json`。2026-10-18 查到 WoolRadar Rev14/cursor2；**执行时重读**。
 - 云端 PASS 不等于真实生产冻结数据库、来源真伪、提醒送达、账户审批或 50 family 业务 COMPLETE（仍无严格验收通过）。
 
+## 新增云端实证（2026-10-18 01:58 UTC，Codex 避免重复）
+
+- 已部署 **[独立协调 PR 验收工作流](https://github.com/lu403369069lu-prog/WoolRadar/actions/workflows/coordination-pr-acceptance.yml)**；读取真正的 `codex/relay-return-20261015` 源 SHA `27796df5f9847c1bb5d48d2a445e418dfb3d8e96`。正式 GitHub Linux [Actions #39088393940](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39088393940) **exit0**，六组原模块 **6+11+15+5+4+7 = 48/48**；H03/H04/H05/H06 原源码专项已完成**云端子集验收**，但绝非 4 个业务 family 严格完成。
+- 已部署 **[WoolRadar 新源码 PR Windows 验收工作流](https://github.com/lu403369069lu-prog/WoolRadar/actions/workflows/agent-pr-acceptance.yml)**；从实际 `a0fc93c4b54d16f399c28ffb401d682fa823b107` 源检出，正式 [Actions #39088415016](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39088415016) **359/359 exit0**。
+- **Codex 不要再无条件重跑 H03~H06 的同一固定源码、同一测试、同一 Linux 环境**。以下命令保留作版本升级/Windows 原生或修复后重新验证的复现规范。Codex 的增量任务是本机/真实 Git 断点、跨 PR 叠加差异、审批和冻结外部证据，以及把正式测试逐家族联到既有 Actions 自动队列；云端全绿不能取代本地现场验收。
+
 ## 1. 优先给 Codex 的可执行工作包
 
 ### WR-CODEX-01 / COORD-H03：Webhook HMAC 验收（本地已有源码，不许重建）

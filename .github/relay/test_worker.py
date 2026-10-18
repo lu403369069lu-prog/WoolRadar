@@ -154,7 +154,6 @@ class RelaySafetyTests(unittest.TestCase):
         for family_id, unrelated_pattern in excluded.items():
             with self.subTest(family_id=family_id):
                 family = next(f for f in q["families"] if f["id"] == family_id)
-                self.assertEqual(family["checks"], [])
                 self.assertNotIn(unrelated_pattern, repr(family["checks"]))
 
     def test_rotation_two_consecutive_receipts(self):

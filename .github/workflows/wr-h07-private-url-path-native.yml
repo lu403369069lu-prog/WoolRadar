@@ -38,6 +38,8 @@ jobs:
                       'test_public_corpus_sensitive_url_path.py')
           if any(not (Path('tests') / name).is_file() for name in required):
               raise SystemExit('REQUIRED_PUBLIC_URL_SUITE_MISSING')
+          # Existing original public corpus tests require their disposable fixture directory.
+          Path('.test-tmp').mkdir(exist_ok=True)
           suite=unittest.defaultTestLoader.discover('tests',pattern='test_public_corpus*.py')
           result=unittest.TextTestRunner(verbosity=2).run(suite)
           if result.testsRun < 25 or not result.wasSuccessful() or result.skipped or result.expectedFailures or result.unexpectedSuccesses:

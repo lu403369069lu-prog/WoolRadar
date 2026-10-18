@@ -1,0 +1,24 @@
+name: Second100 Wool W3 status-audit writer reservation
+on:
+  push:
+    branches: [chatgpt/second100-w3-status-audit-20261018]
+  pull_request:
+    branches: [chatgpt/wool-system-integration-20261015]
+permissions:
+  contents: read
+jobs:
+  w3-native:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        python: ['3.11', '3.12']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Verify exact W3 source and failure-injection tests
+        run: python -X utf8 -m unittest discover -s tests -p test_status_audit_locking.py -v

@@ -1,0 +1,91 @@
+name: Coordination source-native Windows/Linux regression (advisory)
+on:
+  push:
+    branches: [chatgpt/coord-seven-windows-native-20261018]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: coord-source-native-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  original-coordination-source:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Require pinned reviewed source ancestor
+        shell: bash
+        run: |
+          set -euo pipefail
+          git merge-base --is-ancestor 27796df5f9847c1bb5d48d2a445e418dfb3d8e96 HEAD
+          git rev-parse HEAD
+          git --version
+      - name: Diagnose native temporary workspace path canonicality
+        shell: bash
+        run: |
+          python - <<'PY'
+          import os
+          import tempfile
+          from pathlib import Path
+          with tempfile.TemporaryDirectory() as tmp:
+              path = Path(tmp) / 'git-store'
+              absolute = str(path.absolute())
+              resolved = str(path.resolve())
+              print('TEMP_ALIAS_PLATFORM', os.name)
+              print('TEMP_ALIAS_EQUAL', os.path.normcase(absolute) == os.path.normcase(resolved))
+              print('TEMP_ABSOLUTE', repr(absolute))
+              print('TEMP_RESOLVED', repr(resolved))
+          PY
+      - name: Native full original coordination suite, no skips
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import sys
+          import unittest
+          from pathlib import Path
+          # Windows runner's default TEMP can be a DOS 8.3 alias (RUNNER~1).
+          # Use the runner's canonical disposable directory; do NOT weaken
+          # GitStateStore's alias rejection or patch the tested source.
+          if sys.platform == "win32":
+              import os
+              import tempfile
+              temp_root = Path(os.environ["RUNNER_TEMP"]).resolve(strict=True)
+              for key in ("TEMP", "TMP", "TMPDIR"):
+                  os.environ[key] = str(temp_root)
+              tempfile.tempdir = str(temp_root)
+              with tempfile.TemporaryDirectory() as probe:
+                  workspace = Path(probe) / "store"
+                  if os.path.normcase(str(workspace.absolute())) != os.path.normcase(str(workspace.resolve())):
+                      raise SystemExit("NO_CANONICAL_DISPOSABLE_WINDOWS_TEMP")
+          assert (sys.platform == "win32") == (sys.platform.startswith("win")), "invalid platform"
+          required = (
+              "test_dispatcher.py",
+              "test_github_event_adapter.py",
+              "test_github_webhook.py",
+              "test_relay_git.py",
+              "test_return_sync.py",
+              "test_relay.py",
+              "test_relay_faults.py",
+          )
+          for name in required:
+              if not (Path("tests") / name).is_file():
+                  raise SystemExit("MISSING_REQUIRED_ORIGINAL_TEST")
+          suite = unittest.defaultTestLoader.discover("tests", pattern="test_*.py")
+          result = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not result.wasSuccessful() or result.skipped or result.expectedFailures or result.unexpectedSuccesses or result.testsRun < 40:
+              raise SystemExit("NATIVE_COORDINATION_SUITE_INCOMPLETE")
+          print(f"COORD_SOURCE_NATIVE_PARTIAL_PASS platform={sys.platform} executed={result.testsRun} skipped=0")
+          print("ADVISORY_ONLY; no Git remote return-sync, webhook delivery or business acceptance")
+          PY

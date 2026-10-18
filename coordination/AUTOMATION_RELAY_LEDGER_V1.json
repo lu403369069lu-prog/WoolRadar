@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 37,
+    "revision": 38,
     "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
-    "last_completed_review_key": "interactive-20261018-100-minimal-stage15-dual-full-suite-pass-counts",
+    "last_completed_review_key": "interactive-20261018-100-minimal-stage16-dual-integration-run-key",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -72,7 +72,9 @@
       "WoolRadar#58": "38dc3f207c53bfe54f3adb20343cd58e7705a3f6",
       "YinQieJi#30": "39b5dd97e6ef208de6692859e04f1ee532e57ed5",
       "WoolRadar#59": "88e1c8f642d1a6c876e3a3e1e172b3f2e32fd9fe",
-      "YinQieJi#31": "4b5b439156950be7962a0e19362b9d7eff49fe1a"
+      "YinQieJi#31": "4b5b439156950be7962a0e19362b9d7eff49fe1a",
+      "WoolRadar#60": "44d38d20a50ae2410f771d4f80407774b3b78c7e",
+      "YinQieJi#32": "1b8205adf6ba6385f32a2036bf7dd86d515aa95c"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -112,9 +114,10 @@
       "interactive-20261018-100-minimal-stage12-dual-relay-explicit-counter-authority",
       "interactive-20261018-100-minimal-stage13-dual-integration-exact-sha-binding",
       "interactive-20261018-100-minimal-stage14-source-producer-execution-smoke",
-      "interactive-20261018-100-minimal-stage15-dual-full-suite-pass-counts"
+      "interactive-20261018-100-minimal-stage15-dual-full-suite-pass-counts",
+      "interactive-20261018-100-minimal-stage16-dual-integration-run-key"
     ],
-    "write_diagnostic": "DUAL_FULL_INTEGRATION_PASS_TYPED_COMPLETE_COUNTERS_RED_GREEN_NATIVE",
+    "write_diagnostic": "DUAL_INTEGRATION_RUN_ATTEMPT_IDENTITY_RED_GREEN_NATIVE",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -2108,6 +2111,33 @@
       "test_evidence": "6x20 native relay tests; ten missing/boolean counter subcases were red",
       "business_accepted": false,
       "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage16-dual-integration-run-key/WR",
+      "repo": "WoolRadar",
+      "family": "COORD-HISTORY-GATE",
+      "status": "SOURCE_SHA_PLUS_ACTIONS_RUN_KEY_BOUND_INTEGRATION_NATIVE",
+      "pr": 60,
+      "red_run": 39112736673,
+      "green_run": 39112840805,
+      "head": "44d38d20a50ae2410f771d4f80407774b3b78c7e",
+      "test_evidence": "6x18 pass, zero skips; red 4 forged run attempt variants",
+      "business_accepted": false,
+      "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage16-dual-integration-run-key/SAM",
+      "repo": "YinQieJi",
+      "family": "COORD-HISTORY-GATE",
+      "status": "SOURCE_SHA_PLUS_ACTIONS_RUN_KEY_BOUND_INTEGRATION_NATIVE",
+      "pr": 32,
+      "red_run": 39112739539,
+      "intermediate_run": 39112844245,
+      "green_run": 39112903458,
+      "head": "1b8205adf6ba6385f32a2036bf7dd86d515aa95c",
+      "test_evidence": "6x21 pass, zero skips; red 4 forged run attempt variants and intermediate fixture indentation error fixed",
+      "business_accepted": false,
+      "strictly_complete": false
     }
   ],
   "run_history": [
@@ -2937,6 +2967,45 @@
       },
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
       "next_action": "Verify real reporting path and closure of cached/frozen acceptance; inspect historical 50 family mapping for next semantic gate. Merge still requires review, originals remain 0/50 strictly accepted."
+    },
+    {
+      "event_id": "interactive-20261018-100-minimal-stage16-dual-integration-run-key",
+      "origin": "INTERACTIVE_CHAT_DUAL_SOURCE_INTEGRATION_ACTIONS_ATTEMPT_ANTI_REPLAY",
+      "minimal_task_units_new_this_request": 7,
+      "cumulative_actual_minimal_tasks_this_request": 95,
+      "task_unit_ids": [
+        "DUAL-INTEGRATION-SAME-SOURCE-DIFFERENT-RUN-ANTI-REPLAY-DEFECT",
+        "WR-INTEGRATION-RUN_ID-6X18_RED",
+        "SAM-INTEGRATION-RUN_ID-6X21_RED",
+        "WR-PRODUCER_AND_PERSIST_EXACT_ACTIONS_RUN_KEY_BIND",
+        "SAM-PRODUCER_AND_PERSIST_EXACT_ACTIONS_RUN_KEY_BIND",
+        "WR-INTEGRATION-6X18_NATIVE_GREEN_PR60",
+        "SAM-INTEGRATION-6X21_NATIVE_GREEN_PR32"
+      ],
+      "actual_cases": "Even with correct source SHA, either full integration producer or persistent consumer accepted stale report from different GitHub run ID/attempt. Built original full-suite module regression: missing/wrong/malformed/boolean independent run_key returns incorrect no-error under old code. Real Actions red Wool 39112736673 six jobs each 18 tests/4 intended failures; SAM 39112739539 six jobs each 21 tests/4 intended failures. Producer stamps GitHub-run-ID/attempt with 0/1 local fallback equal worker; persist requires exact type/format and equal receipt run_key. Producer smoke also checks run identity. Wool final Actions 39112840805 six 18/18 zero skipped. SAM intermediate 39112844245 failed due nested synthetic-only smoke assertion indentation; corrected and final 39112903458 six 21/21 zero skipped. New stacked Draft PR60 WR and PR32 SAM, no main/production or scheduled workflow changes, historical business strict 0/50.",
+      "evidence": {
+        "wr": {
+          "pr": 60,
+          "red_run": 39112736673,
+          "final_head": "44d38d20a50ae2410f771d4f80407774b3b78c7e",
+          "green_run": 39112840805,
+          "jobs": 6,
+          "tests_per_job": 18,
+          "zero_skips": true
+        },
+        "sam": {
+          "pr": 32,
+          "red_run": 39112739539,
+          "intermediate_red_run": 39112844245,
+          "final_head": "1b8205adf6ba6385f32a2036bf7dd86d515aa95c",
+          "green_run": 39112903458,
+          "jobs": 6,
+          "tests_per_job": 21,
+          "zero_skips": true
+        }
+      },
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "next_action": "Bind formal receipt to trusted CI env GITHUB_RUN_ID/ATTEMPT in persist, then end-to-end smoke; main/scheduled relay unmerged and original frozen/public source business data not accepted."
     }
   ],
   "acceptance": {
@@ -2979,7 +3048,8 @@
     "dual_relay_python_expectedfailure": "TWO_DRAFT_REAL_SOURCE_6X13_WR_AND_6X16_SAM_NATIVE_RED_GREEN_20261018_BUSINESS_PENDING",
     "dual_relay_complete_pass_counters": "TWO_NATIVE_DRAFTS_WR_6X14_SAM_6X17_TYPED_ZERO_REJECT_20261018_STRICT_PENDING",
     "dual_integration_source_sha": "TWO_DRAFTS_CONSUMER_AND_REAL_GIT_PRODUCER_STUB_SMOKE_6X16_WR_6X19_SAM_STRICT_PENDING",
-    "dual_full_integration_counter_authority": "TWO_DRAFTS_TRUE_STATE_MACHINE_NATIVE_WR_6x17_SAM_6x20_RED_GREEN_20261018_STRICT_PENDING"
+    "dual_full_integration_counter_authority": "TWO_DRAFTS_TRUE_STATE_MACHINE_NATIVE_WR_6x17_SAM_6x20_RED_GREEN_20261018_STRICT_PENDING",
+    "dual_integration_run_key": "TWO_DRAFTS_ORIGINAL_SOURCE_NATIVE_WR6X18_SAM6X21_EXACT_RUN_ATTEMPT_GREEN_STRICT_BUSINESS_PENDING"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

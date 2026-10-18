@@ -1,0 +1,30 @@
+name: Second100 W1 ambiguous Telegram timeout
+on:
+  push:
+    branches: [chatgpt/second100-w1-telegram-unknown-20261018]
+  pull_request:
+    branches: [chatgpt/second100-w1-retry-restart-20261018]
+permissions:
+  contents: read
+jobs:
+  timeout-uncertainty:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.12']
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: R2-002 timeout becomes durable UNKNOWN with bounded retry
+        run: python -X utf8 -m unittest discover -s tests -p test_telegram_timeout_uncertainty.py -v
+      - name: R2-003 persistent retry
+        run: python -X utf8 -m unittest discover -s tests -p test_notice_retry_restart.py -v
+      - name: Original notifier contracts
+        run: python -X utf8 -m unittest discover -s tests -p test_notifications.py -v

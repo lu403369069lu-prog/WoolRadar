@@ -23,6 +23,8 @@
 
 **静态溯源**：`tests/test_digest_runtime.py` 真实 Git Blob `6fad926bbccecc6bab957486099647e18f8ef98b`，用 `@unittest.skipUnless(PYTHON.exists(), 'installed upstream runtime required')` 跳过 `test_upstream_provider_http_is_budgeted_across_process_invocations`，`PYTHON = Path('C:/WoolRadar/nodes/digest-ai-agent/upstream/.venv/Scripts/python.exe')`。它需要本地已安装真实上游、真实依赖 `httpx` 与其消费逻辑。云端没有该 Windows 路径，不能为了绿灯伪造目录、创建假exe、删除skip或模拟已经验收的原生服务；对应 WR-H12 日报/真实上游桥接仍要求用户授权。
 
+**新增独立 PR 正式验证**：[Actions #39090361701](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39090361701)，更新后的 `main:.github/workflows/agent-pr-acceptance.yml` 已在真实 Windows 候选SHA上用 `unittest.TestResult` 复算：**run359/skipped1/expectedFailures0/errors0/failures0，严格退出码1**；以前的 PR 工作流绿灯仅代表原进程成功而非全部执行。最终工作流修复提交 `dd9a4c6582253410ab90b47237960bdad45355cc`。无需重测相同云端环境，缺的确实是本地真实上游。
+
 **Codex 下一最小动作**：先 `git status --porcelain=v1`、读既有 owner/lease 与本地源 HEAD，在真正授权的隔离 worktree/测试复制件中确认该原始 `.venv/Scripts/python.exe` 是否存在及其依赖，确认上游文件确实是正确的被测版本；不要修改生产环境、运行真实网络任务或创建假依赖。若存在且授权，只在离线 `httpx.MockTransport` 条件下执行：
 `python -m unittest discover -s tests -p 'test_digest_runtime.py' -v`
 预期 **1项实际执行且pass，skip=0，exit0**；保留原工作目录和固定SHA、Python/httpx版本、最小脱敏回执。若缺失或未经允许，标 `BLOCKED_UPSTREAM_RUNTIME_OR_APPROVAL`，附缺失前置条件后转去下一家族，不得冒充已完成或重复跑同一个 skip。

@@ -66,6 +66,15 @@ class Database:
                 del self._transaction_state.connection
 
     def _init_schema(self) -> None:
+        # Reject a future version before calling connect(), which otherwise
+        # switches SQLite into WAL and may execute DDL against an unknown file.
+        # The inspection URI is read-only and leaves the DB untouched.
+        if self.path.is_file():
+            uri = self.path.resolve().as_uri() + '?mode=ro'
+            with closing(sqlite3.connect(uri, uri=True)) as inspection:
+                version = inspection.execute('PRAGMA user_version').fetchone()[0]
+            if version > 1:
+                raise RuntimeError('UNSUPPORTED_DATABASE_SCHEMA_VERSION')
         with self.connect() as conn:
             conn.execute('CREATE TABLE IF NOT EXISTS campaign_links (url TEXT PRIMARY KEY, review_json TEXT NOT NULL)')
             conn.execute('CREATE TABLE IF NOT EXISTS migration_evidence_archive (id INTEGER PRIMARY KEY, original_event_id INTEGER, merged_into INTEGER, migrated_at TEXT, payload_json TEXT NOT NULL)')
@@ -145,6 +154,9 @@ class Database:
                                       ('next_attempt', 'REAL NOT NULL DEFAULT 0')):
                 if name not in columns:
                     conn.execute(f'ALTER TABLE notifications ADD COLUMN {name} {declaration}')
+            # Mark this compatible historical 0 -> 1 upgrade only after
+            # all of the established schema columns are present.
+            conn.execute('PRAGMA user_version=1')
 
     def upsert_candidate(self, candidate: Candidate) -> UpsertResult:
         with self.connect() as conn:

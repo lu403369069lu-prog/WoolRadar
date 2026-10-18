@@ -1,0 +1,96 @@
+name: Historical family relay (durable)
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 */3 * * *'
+  push:
+    branches:
+      - main
+      - chatgpt/actions-native-relay-v1-20261018
+    paths:
+      - '.github/relay/**'
+      - '.github/workflows/historical-family-relay.yml'
+concurrency:
+  group: historical-relay-${{ github.repository }}
+  cancel-in-progress: false
+permissions:
+  contents: read
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Checkout independent source candidate (unprivileged)
+        uses: actions/checkout@v4
+        with:
+          ref: chatgpt/wr-h07-public-corpus-url-limit-fixture-20261018
+          path: candidate
+          persist-credentials: false
+      - name: Checkout last durable checkpoint (unprivileged)
+        uses: actions/checkout@v4
+        with:
+          ref: chatgpt/actions-live-state-v1-20261018
+          path: checkpoint
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Evaluate next two historical families without write credentials
+        run: python .github/relay/worker.py evaluate --repo WoolRadar --source candidate --state checkpoint --limit 2
+      - name: Retain read-only evaluation receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relay-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .relay-report/
+          if-no-files-found: warn
+          retention-days: 30
+  persist:
+    needs: evaluate
+    if: ${{ needs.evaluate.result == 'success' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Checkout isolated state branch with write capability
+        uses: actions/checkout@v4
+        with:
+          ref: chatgpt/actions-live-state-v1-20261018
+          path: checkpoint
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          name: relay-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .relay-report
+      - name: Validate and record checkpoint (fail closed on stale cursor)
+        run: python .github/relay/worker.py persist --repo WoolRadar --state checkpoint --receipt .relay-report/receipt.json
+      - name: Commit strictly to state branch, never main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git -C checkpoint config user.name 'github-actions[bot]'
+          git -C checkpoint config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C checkpoint add engine.json history.jsonl
+          if ! git -C checkpoint diff --cached --quiet; then
+            git -C checkpoint commit -m 'relay: persist verified formal subset receipts'
+            git -C checkpoint push origin HEAD:refs/heads/chatgpt/actions-live-state-v1-20261018
+          fi
+      - name: Print final committed revision
+        run: |
+          git -C checkpoint rev-parse HEAD
+          python -c 'import json; d=json.load(open("checkpoint/engine.json")); print("committed revision", d["revision"], "cursor", d["cursor"])'

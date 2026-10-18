@@ -57,6 +57,32 @@ class PublicSensitivePathBoundary(unittest.TestCase):
                 self.assertEqual(report['rows'], [])
                 self.assertEqual(report['sources'][0]['invalid_rows'], 1)
 
+    def test_multi_encoded_sensitive_paths_are_never_claimed_safe(self):
+        # A public-facing origin may decode a percent-encoded path more than
+        # once. The producer and independent sampler must fail closed even
+        # when the source falsely asserts exact identity.
+        cases = (
+            'https://publisher.org/%2574oken/SYNTHETIC_ONLY',
+            'https://publisher.org/offer/person%2540example.org',
+            'https://publisher.org/%25252Faccount/SYNTHETIC_ONLY',
+            'https://publisher.org/#/offer/person%2540example.org',
+        )
+        for raw in cases:
+            with self.subTest(raw=raw), tempfile.TemporaryDirectory() as root:
+                self.assertIsNone(sampler.canonical_public_url(raw))
+                cleaned, trusted = _clean_url_identity(raw)
+                self.assertFalse(trusted)
+                self.assertNotIn('SYNTHETIC_ONLY', cleaned)
+                result = record_public_sample(
+                    Path(root), 'synthetic', SRC,
+                    [{'url': raw, 'title': raw, 'summary': raw}], [False])
+                doc = json.loads(result.read_text(encoding='utf-8'))
+                row = doc['rows'][0]
+                self.assertFalse(row['url_identity_preserved'])
+                self.assertTrue(row['url_sanitized'])
+                self.assertNotIn('SYNTHETIC_ONLY', result.read_text(encoding='utf-8'))
+                self.assertEqual(sampler.freeze_public_sources([(doc, 'c' * 64)])['rows'], [])
+
     def test_non_sensitive_public_path_keeps_exact_identity(self):
         public = 'https://publisher.org/offer/batch-fall?id=17'
         self.assertEqual(_clean_url_identity(public), (public, True))

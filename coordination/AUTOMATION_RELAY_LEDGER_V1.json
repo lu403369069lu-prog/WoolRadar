@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 39,
+    "revision": 40,
     "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
-    "last_completed_review_key": "interactive-20261018-100-minimal-stage17-dual-run-context-guard",
+    "last_completed_review_key": "interactive-20261018-post100-dual-relay-security-combined",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -76,7 +76,9 @@
       "WoolRadar#60": "44d38d20a50ae2410f771d4f80407774b3b78c7e",
       "YinQieJi#32": "1b8205adf6ba6385f32a2036bf7dd86d515aa95c",
       "WoolRadar#62": "6459ec4f84eb829331e6969f8afc805e89559742",
-      "YinQieJi#34": "4e35f1055687cc7a99078c598fc76cbf5cea1cf8"
+      "YinQieJi#34": "4e35f1055687cc7a99078c598fc76cbf5cea1cf8",
+      "WoolRadar#63": "c70525f7624b81cf51e6e12a25be8192d9b09b69",
+      "YinQieJi#35": "c6a537441113b57195bd31a594e7ca723117bcdf"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -118,9 +120,10 @@
       "interactive-20261018-100-minimal-stage14-source-producer-execution-smoke",
       "interactive-20261018-100-minimal-stage15-dual-full-suite-pass-counts",
       "interactive-20261018-100-minimal-stage16-dual-integration-run-key",
-      "interactive-20261018-100-minimal-stage17-dual-run-context-guard"
+      "interactive-20261018-100-minimal-stage17-dual-run-context-guard",
+      "interactive-20261018-post100-dual-relay-security-combined"
     ],
-    "write_diagnostic": "DUAL_NATIVE_TRUSTED_ACTIONS_RUN_CONTEXT_GUARD",
+    "write_diagnostic": "POST100_PARALLEL_DRAFT_SECURITY_INTEGRATION_NATIVE_GREEN",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -2167,6 +2170,30 @@
       "test_evidence": "Windows/Linux Python3.11/3.12/3.13 6x22/22 zero skips; red 3 mismatched trusted runner cases",
       "business_accepted": false,
       "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-post100-dual-relay-security-combined/WR",
+      "repo": "WoolRadar",
+      "family": "COORD-HISTORY-GATE",
+      "status": "COMBINED_DRAFT_NATIVELY_VERIFIED",
+      "pr": 63,
+      "green_run": 39113759026,
+      "head": "c70525f7624b81cf51e6e12a25be8192d9b09b69",
+      "test_evidence": "6x20/20 no skips",
+      "business_accepted": false,
+      "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-post100-dual-relay-security-combined/SAM",
+      "repo": "YinQieJi",
+      "family": "COORD-HISTORY-GATE",
+      "status": "COMBINED_DRAFT_NATIVELY_VERIFIED",
+      "pr": 35,
+      "green_run": 39113755509,
+      "head": "c6a537441113b57195bd31a594e7ca723117bcdf",
+      "test_evidence": "6x23/23 no skips",
+      "business_accepted": false,
+      "strictly_complete": false
     }
   ],
   "run_history": [
@@ -3071,6 +3098,32 @@
       },
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
       "next_action": "100 minimal work units reached but overall project not complete: original 50 business strict 0. Review stacked PR ancestry/integration into candidate while preserving frozen teacher/Windows production and implement real source/holdout, trusted delivery, native owner takeover before acceptance. No claim that scheduled main is self-repairing."
+    },
+    {
+      "event_id": "interactive-20261018-post100-dual-relay-security-combined",
+      "origin": "INTERACTIVE_POST100_PARALLEL_PR_RECONCILIATION",
+      "minimal_task_units_new_this_request": 0,
+      "cumulative_actual_minimal_tasks_this_request": 100,
+      "task_unit_ids": [],
+      "actual_cases": "Reconciled parallel typed-exit-code PR61/PR33 with executing-run-identity PR62/PR34 as combined isolated alternative Draft PR63 WR and PR35 SAM. Both based on stable common source-ref ancestry, both mergeable, unmerged. Tested exact candidate Windows/Linux Python3.11/3.12/3.13; WR Actions39113759026 six jobs 20/20 each, SAM Actions39113755509 six jobs 23/23 each, no skip/fail. Upstream separate PR heads changed concurrently (workflow-only changes); no overwrite, no auto-merge. This work is post100 and not counted as more minimal units. Original 50 business families remain strict 0/50. Scheduled main still runs old source; source qualification and true holdout pending.",
+      "evidence": {
+        "wr": {
+          "pr": 63,
+          "head": "c70525f7624b81cf51e6e12a25be8192d9b09b69",
+          "run": 39113759026,
+          "jobs": 6,
+          "tests_per_job": 20
+        },
+        "sam": {
+          "pr": 35,
+          "head": "c6a537441113b57195bd31a594e7ca723117bcdf",
+          "run": 39113755509,
+          "jobs": 6,
+          "tests_per_job": 23
+        }
+      },
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "next_action": "Audit pinned family source refs against actual original runtime and official/teacher holdout; retain no auto merge and never claim 100/100 minimal implies project done."
     }
   ],
   "acceptance": {
@@ -3115,7 +3168,8 @@
     "dual_integration_source_sha": "TWO_DRAFTS_CONSUMER_AND_REAL_GIT_PRODUCER_STUB_SMOKE_6X16_WR_6X19_SAM_STRICT_PENDING",
     "dual_full_integration_counter_authority": "TWO_DRAFTS_TRUE_STATE_MACHINE_NATIVE_WR_6x17_SAM_6x20_RED_GREEN_20261018_STRICT_PENDING",
     "dual_integration_run_key": "TWO_DRAFTS_ORIGINAL_SOURCE_NATIVE_WR6X18_SAM6X21_EXACT_RUN_ATTEMPT_GREEN_STRICT_BUSINESS_PENDING",
-    "dual_relay_runner_context": "SIX_JOB_NATIVE_WR19_SAM22_RUN_ID_ATTEMPT_RED_GREEN_DRAFT_STRICT0_20261018"
+    "dual_relay_runner_context": "SIX_JOB_NATIVE_WR19_SAM22_RUN_ID_ATTEMPT_RED_GREEN_DRAFT_STRICT0_20261018",
+    "parallel_draft_combined": "WR63_6X20_SAM35_6X23_POST100_UNMERGED_STRICT0"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

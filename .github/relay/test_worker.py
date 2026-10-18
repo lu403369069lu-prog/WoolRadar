@@ -43,6 +43,16 @@ class RelaySafetyTests(unittest.TestCase):
         if not state.exists():
             worker.save(state, self.initial(q["repo"]))
         rec = directory / "receipt.json"
+        integration = {
+            "schema_version": 1, "repo": q["repo"],
+            "command": (["/usr/bin/python3", "-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py"]
+                        if q["repo"] == "WoolRadar" else ["npm", "test"]),
+            "source_subdir": "." if q["repo"] == "WoolRadar" else "SAM/snapshot",
+            "verified_business_complete": False, "checked_utc": "2026-10-18T00:00:00Z",
+            "status": "PASS", "exit_code": 0, "total": 5, "passed": 5, "failed": 0,
+            "failed_test_names": []
+        }
+        worker.save(directory / "integration.json", integration)
         worker.save(rec, receipt)
         worker.persist(SimpleNamespace(state=str(directory), receipt=str(rec), repo=q["repo"]))
         return worker.load(state)

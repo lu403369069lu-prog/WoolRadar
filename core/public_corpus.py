@@ -36,7 +36,19 @@ _PRIVATE_PATH = re.compile(
 
 
 def _sensitive_url_path(value: str) -> bool:
-    return bool(_PRIVATE_PATH.search(unquote_plus(value)))
+    # The origin may interpret percent escapes more than once. Never rely
+    # on just one decoding pass to certify that a public URL is safe.
+    candidate = value
+    for _ in range(8):
+        if _PRIVATE_PATH.search(candidate):
+            return True
+        decoded = unquote_plus(candidate)
+        if decoded == candidate:
+            return False
+        candidate = decoded
+    # Excessive nesting is ambiguous; fail closed rather than treating
+    # a non-normalized path as an independently verified public identity.
+    return '%' in candidate or bool(_PRIVATE_PATH.search(candidate))
 
 
 def _semantic_query(query: str) -> tuple[str, bool]:

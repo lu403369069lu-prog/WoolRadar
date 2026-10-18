@@ -86,6 +86,10 @@ def evaluate(a):
     cwd = (src / q["source_subdir"]).resolve()
     if not cwd.is_dir() or not cwd.is_relative_to(src):
         raise ValueError("missing/unsafe source directory")
+    # Repository tests require this ephemeral folder for TemporaryDirectory(dir=...).
+    # This is the disposable Actions checkout, never the Windows production tree.
+    if a.repo == "WoolRadar":
+        (cwd / ".test-tmp").mkdir(exist_ok=True)
     sha = source_sha(src)
     n = min(a.limit, len(families))
     selected = [families[(s["cursor"] + i) % len(families)] for i in range(n)]

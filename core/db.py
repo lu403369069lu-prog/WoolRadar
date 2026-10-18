@@ -335,9 +335,19 @@ class Database:
                         'SELECT review_json FROM campaign_links WHERE url=?', (url,)).fetchone()
                     if previous and json.loads(previous[0]).get('campaign_url') != campaign_review.get('campaign_url'):
                         raise ValueError('CAMPAIGN_REVIEW_CONFLICT')
-            # Backup through a separate read connection so WAL contents are included.
-            with closing(sqlite3.connect(self.path)) as reader, closing(sqlite3.connect(backup)) as target:
-                reader.backup(target)
+            # Stage and validate the snapshot before exposing a final .db file.
+            # sqlite backup failures can otherwise leave a partially written .db
+            # that looks like a usable recovery point. Same-directory rename is
+            # atomic, including on Windows after all SQLite handles are closed.
+            staging = backup.with_suffix('.tmp')
+            try:
+                with closing(sqlite3.connect(self.path)) as reader, closing(sqlite3.connect(staging)) as target:
+                    reader.backup(target)  # Include committed WAL contents.
+                    if target.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
+                        raise sqlite3.DatabaseError('REINDEX_BACKUP_INTEGRITY_FAILED')
+                staging.replace(backup)
+            finally:
+                staging.unlink(missing_ok=True)
             if campaign_review is not None:
                 for url in campaign_review['member_urls']:
                     conn.execute('INSERT OR REPLACE INTO campaign_links VALUES(?,?)', (normalize_url(url), json.dumps(campaign_review, ensure_ascii=False)))

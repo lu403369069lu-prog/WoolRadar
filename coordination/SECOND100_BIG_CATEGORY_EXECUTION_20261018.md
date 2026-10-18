@@ -35,7 +35,7 @@
 | R2-002 | W1 通知交付 | 外部 Telegram 超时处理 | 未知送达状态不可冒充 exactly-once | PLANNED_NOT_VERIFIED |
 | R2-003 | W1 通知交付 | 重试退避跨重启 | 期限、次数和幂等键不丢 | PLANNED_NOT_VERIFIED |
 | R2-004 | W1 通知交付 | 同事件入队唯一性 | 两进程竞争仅一个正式通知 | PLANNED_NOT_VERIFIED |
-| R2-005 | W1 通知交付 | 多 Worker 租约 fencing | 旧持有者不能覆盖新持有者 | PLANNED_NOT_VERIFIED |
+| R2-005 | W1 通知交付 | 多 Worker 租约 fencing | 旧持有者不能覆盖新持有者 | DRAFT_W1_NATIVE_RED_GREEN_NOT_INTEGRATED |
 | R2-006 | W1 通知交付 | 审核撤销与待发消息一致 | 送出之前校验最新资格 | PLANNED_NOT_VERIFIED |
 | R2-007 | W1 通知交付 | 本地通知原子持久化 | 文件 rename 后提交失败可恢复 | PLANNED_NOT_VERIFIED |
 | R2-008 | W1 通知交付 | 429及断网故障注入 | 每一故障有确定恢复状态 | PLANNED_NOT_VERIFIED |
@@ -46,7 +46,7 @@
 | R2-013 | W2 SQLite数据安全 | 新旧版本兼容拒绝 | 不支持降级明确失败不写坏数据 | PLANNED_NOT_VERIFIED |
 | R2-014 | W2 SQLite数据安全 | 并发 reindex/upsert | 同键不重影且无丢更新 | PLANNED_NOT_VERIFIED |
 | R2-015 | W2 SQLite数据安全 | 数据库损坏与磁盘已满 | 保守停机及可追溯恢复 | PLANNED_NOT_VERIFIED |
-| R2-016 | W3 审计可靠性 | 业务状态与审计同事务 | 任一失败则均不提交 | DRAFT_W3_TARGETED_4X3_GREEN_FULL_NATIVE_PENDING |
+| R2-016 | W3 审计可靠性 | 业务状态与审计同事务 | 任一失败则均不提交 | DRAFT_W3_4X4_GREEN_FULL_WIN_1_SKIP_NOT_INTEGRATED |
 | R2-017 | W3 审计可靠性 | 证据写入与审计引用一致 | 不能存在成功状态与失联证据 | PLANNED_NOT_VERIFIED |
 | R2-018 | W3 审计可靠性 | 跨进程审计去重 | 业务键并发只生成一次权威审计 | PLANNED_NOT_VERIFIED |
 | R2-019 | W3 审计可靠性 | 审计链缺口检测 | 伪造与删除可离线发现 | PLANNED_NOT_VERIFIED |
@@ -101,12 +101,12 @@
 | R2-068 | S4 522源件Gold | 冲突及歧义记录 | 原始证据冲突时保守回答 | PLANNED_NOT_VERIFIED |
 | R2-069 | S4 522源件Gold | 人工语义Gold审查 | 机器检查和人工评价分开 | PLANNED_NOT_VERIFIED |
 | R2-070 | S4 522源件Gold | 独立三轮Gold对照 | 三套实际凭据可追溯 | PLANNED_NOT_VERIFIED |
-| R2-071 | S5 Claim证据审核 | H04审查结论源件SHA绑定 | 错SHA撤销审查且保留所有旧测试 | DRAFT_SAM_TARGETED_4X32_GREEN_FULL_6_FAIL |
+| R2-071 | S5 Claim证据审核 | H04审查结论源件SHA绑定 | 错SHA撤销审查且保留所有旧测试 | DRAFT_SAM_4X37_GREEN_FULL_6_MISSING_FROZEN |
 | R2-072 | S5 Claim证据审核 | Claim仓库与提交作用域 | 相同ID跨库不能共享结论 | PLANNED_NOT_VERIFIED |
 | R2-073 | S5 Claim证据审核 | Entailed证据ID真实性 | 空/假证据必须拒绝通过 | PLANNED_NOT_VERIFIED |
 | R2-074 | S5 Claim证据审核 | 审查字段类型抗伪造 | 非预期类型及枚举失败关闭 | PLANNED_NOT_VERIFIED |
 | R2-075 | S5 Claim证据审核 | 资料变动使审核失效 | 保留历史并要求重新验证 | PLANNED_NOT_VERIFIED |
-| R2-076 | S6 严格输入编码 | H14真实运行时Unicode折叠 | 真实评测入口接入修复 | PLANNED_NOT_VERIFIED |
+| R2-076 | S6 严格输入编码 | H14真实运行时Unicode折叠 | 真实评测入口接入修复 | DRAFT_SAM_H14_NATIVE_RED_GREEN_FULL_6_FAIL |
 | R2-077 | S6 严格输入编码 | JSON/JSONL重复键拒绝 | 全部入口不容键覆盖 | PLANNED_NOT_VERIFIED |
 | R2-078 | S6 严格输入编码 | 非法UTF-8换行拒绝 | 不被替换字符掩盖 | PLANNED_NOT_VERIFIED |
 | R2-079 | S6 严格输入编码 | Windows路径别名安全 | DOS8.3符号链接越界有负例 | PLANNED_NOT_VERIFIED |
@@ -115,7 +115,7 @@
 | R2-082 | S7 发布产物身份 | R5正式发布验收 | 隔离发布完整退出码 | PLANNED_NOT_VERIFIED |
 | R2-083 | S7 发布产物身份 | Windows正式安装运行 | 从安装目录启动MCP | PLANNED_NOT_VERIFIED |
 | R2-084 | S7 发布产物身份 | 消费方发行清单验证 | 错版本明确拒绝 | PLANNED_NOT_VERIFIED |
-| R2-085 | S8 升级回滚事务 | H17真实发布路径接入事务 | 不只是存在工具文件 | DRAFT_SAM_TARGETED_4X32_GREEN_FULL_6_FAIL |
+| R2-085 | S8 升级回滚事务 | H17真实发布路径接入事务 | 不只是存在工具文件 | DRAFT_SAM_4X37_GREEN_FULL_6_MISSING_FROZEN |
 | R2-086 | S8 升级回滚事务 | 进程崩溃后指针恢复 | 中断点全覆盖并守恒 | PLANNED_NOT_VERIFIED |
 | R2-087 | S8 升级回滚事务 | 0.4.1到0.4.2真实升级 | 保留数据及审核证据 | PLANNED_NOT_VERIFIED |
 | R2-088 | S8 升级回滚事务 | 0.4.2到0.4.1真实回滚 | 还原旧版与指针 | PLANNED_NOT_VERIFIED |
@@ -142,3 +142,10 @@
 - R2-016（W3）：https://github.com/lu403369069lu-prog/WoolRadar/pull/66 ，当前原始基线真实状态审计事务修复，在同一 SQLite 写锁下取得旧状态；新增提交包括原生独立进程竞态测试。初始真正RED https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39118350630 ；初次4×3 GREEN https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39118394861。Windows主套上个已完成run314测试成功313/314（其中跳过1项上游官方运行时），Linux因为原仓库Windows-only PowerShell诊断包装而完整套失败，未核销。
 - R2-071、R2-085（SAM H04/H17）：https://github.com/lu403369069lu-prog/YinQieJi/pull/37 ，真实源码八文件移植和Windows/Linux Node24/26目标32/32每作业通过；完整原始回归 273/279，6件冻结教师/发行资料缺失，不能伪造或跳过核销。证据 https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39118217153 。
 - 所有其他 R2 目标仍未执行/未验收。以上尚不能减少历史0/50严格业务缺口。
+
+## 接力追加：W1 与 H14 新代码 RED→GREEN
+
+- R2-005 W1 局部投递所有权防回退：Draft PR67 https://github.com/lu403369069lu-prog/WoolRadar/pull/67 是前述W3候选上的独立叠加PR。原始源码中旧Worker在SQLite最终CAS失败之前即可覆盖继任者已持久化的本地JSON。真实Windows/Linux Python3.11/3.12四平台 RED https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39119101634 每个Job1目标失败，错误内容确认为 STALE_WRITER_MUST_NOT_REPLACE_VALID_RECEIPT。代码将各次租约尝试写到独立随机临时文件，最终重检和rename/SENT事务都在 SQLite BEGIN IMMEDIATE 中；GREEN https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39119246179 四Job均成功，单例新对抗测试及原通知10用例通过。只是已测安全候选，不等于Telegram外部exactly-once/所有W1工作已完成。
+- R2-016 W3 同一真实事件状态写锁及审计连接历史：PR66 https://github.com/lu403369069lu-prog/WoolRadar/pull/66 新增双Windows/Linux原生进程竞争用例，目标4测试均通过；https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39118649900 Windows全套315=314成功+1跳过，Linux因真实Windows诊断PowerShell脚本有2失败及5系统相关跳过；不宣称完整工程验收。
+- R2-076 SAM H14 真实评测入口Unicode去重：PR37 https://github.com/lu403369069lu-prog/YinQieJi/pull/37，原始事件 RED https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39118823745 全4 native jobs目标测试失败（QS与Qſ重复未阻止），原码改为小写后大写归一，最终专项 37/37 全4作业成功零跳过，https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39118908996；同一源码完整回归 274/280，仍有6项原始教师/正式发布冻结资料缺失，0项正式业务验收新增。
+- 所有工作以各 Draft 的实际 SHA 审核，不自动合并、不推送本机、不读取私人教师材料。不把不同目标的单次GREEN重复计为R2已验收。

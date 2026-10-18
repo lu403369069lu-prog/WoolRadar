@@ -51,7 +51,8 @@ jobs:
         with:
           name: relay-evidence-${{ github.run_id }}-${{ github.run_attempt }}
           path: .relay-report/
-          if-no-files-found: warn
+          if-no-files-found: error
+          include-hidden-files: true
           retention-days: 30
   persist:
     needs: evaluate

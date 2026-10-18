@@ -47,9 +47,26 @@ def run(args):
                 if line.startswith(("not ok ", "FAIL: ", "ERROR: ")):
                     failure_names.append(re.sub(r"[^a-zA-Z0-9 _.:#()\-]", "?", line)[:150])
         ok = proc.returncode == 0 and total is not None and total > 0 and failures in (None, 0)
+        details = []
+        active = None
+        for line in output.splitlines():
+            if line.startswith("not ok "):
+                if active is not None:
+                    details.append(active)
+                active = {"test": re.sub(r"[^a-zA-Z0-9 _.:#()\-]", "?", line)[:160],
+                          "signals": []}
+            elif active is not None and len(active["signals"]) < 7:
+                trimmed = line.strip()
+                if trimmed.startswith(("error:", "code:", "name:", "expected:",
+                                        "actual:", "failureType:", "location:")):
+                    safe = re.sub(r"[^a-zA-Z0-9 _.:#()\-]", "?", trimmed)[:200]
+                    active["signals"].append(safe)
+        if active is not None:
+            details.append(active)
         base.update({"status": "PASS" if ok else "FAIL", "exit_code": proc.returncode,
                      "total": total, "passed": passed, "failed": failures,
-                     "failed_test_names": failure_names[:30]})
+                     "failed_test_names": failure_names[:30],
+                     "failure_details": details[:30]})
     except (OSError, subprocess.TimeoutExpired) as exc:
         base.update({"status": "BLOCKED", "error_kind": type(exc).__name__})
     dest = Path(args.output)

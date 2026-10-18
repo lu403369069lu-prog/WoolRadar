@@ -213,6 +213,12 @@ def persist(a):
     key = receipt.get("run_key", "")
     if not re.fullmatch(r"\d+/\d+", key) or not re.fullmatch(r"[a-f0-9]{40}", receipt.get("source_commit", "")):
         raise ValueError("invalid run identity/source")
+    # Ensure the receipt actually belongs to the executing Actions run and
+    # attempt, not merely another report claiming the same run_key. This is
+    # a provenance check, not cryptographic runner attestation.
+    executing_key = os.environ.get("GITHUB_RUN_ID", "") + "/" + os.environ.get("GITHUB_RUN_ATTEMPT", "")
+    if not re.fullmatch(r"\d+/\d+", executing_key) or executing_key != key:
+        raise ValueError("receipt run key differs from executing runner context")
     if key in s.get("processed_run_keys", []):
         print("IDEMPOTENT_REPLAY " + key)
         return

@@ -132,7 +132,12 @@ class RelaySafetyTests(unittest.TestCase):
     def test_failed_subset_is_prioritized_with_revision_cooldown(self):
         q = self.queue()
         state = self.initial(q["repo"])
-        family_id = q["families"][2]["id"]
+        # A queue mapping may deliberately become empty (fail closed).
+        # Pick an actually runnable family; do not rely on fixed slot 2.
+        eligible = [f for f in q["families"][1:]
+                    if f["checks"] and f["disposition"] != "EXTERNAL_OR_POLICY_GATED"]
+        self.assertTrue(eligible, "queue has no eligible priority recheck")
+        family_id = eligible[0]["id"]
         state["families"][family_id] = {"status": "FORMAL_CHECK_FAILED_OR_BLOCKED"}
         picked = worker.choose_recheck(state, q["families"], {q["families"][0]["id"]})
         self.assertEqual(picked["id"], family_id)

@@ -131,6 +131,7 @@ class RelaySafetyTests(unittest.TestCase):
                     source=str(source_root), repo=q["repo"], output=str(target)))
             actual = json.loads(target.read_text(encoding="utf-8"))
             self.assertEqual(actual["source_commit"], expected)
+            self.assertEqual(actual["run_key"], __import__("os").environ.get("GITHUB_RUN_ID", "0") + "/" + __import__("os").environ.get("GITHUB_RUN_ATTEMPT", "1"))
             self.assertEqual(actual["status"], "PASS")
             self.assertIs(actual["verified_business_complete"], False)
 

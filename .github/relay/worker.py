@@ -37,6 +37,23 @@ def safe(argv):
         return len(argv) >= 3 and all(a.endswith(".test.mjs") and not a.startswith("/") and "/../" not in a for a in argv[2:])
     return False
 
+def choose_recheck(state, families, regular_ids):
+    """Prefer oldest independently failed subset, at most once per two revisions."""
+    candidates = []
+    for item in families:
+        family_id = item["id"]
+        prev = state.get("families", {}).get(family_id, {})
+        if (family_id in regular_ids or not item["checks"]
+                or item["disposition"] == "EXTERNAL_OR_POLICY_GATED"
+                or prev.get("status") != "FORMAL_CHECK_FAILED_OR_BLOCKED"):
+            continue
+        last = prev.get("last_recheck_revision", -1000)
+        if not isinstance(last, int) or state["revision"] - last < 2:
+            continue
+        candidates.append((last, family_id, item))
+    return min(candidates)[2] if candidates else None
+
+
 def test(argv, cwd, src):
     paths = [argv[5]] if argv[:5] == ["python", "-m", "unittest", "discover", "-s"] else [a for a in argv if a.endswith((".test.ts", ".test.mjs"))]
     if any(not (cwd / a).resolve().is_relative_to(src) for a in paths):

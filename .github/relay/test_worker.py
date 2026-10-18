@@ -98,6 +98,19 @@ class RelaySafetyTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 self.run_persist(root, q, r)
 
+    def test_failed_subset_is_prioritized_with_revision_cooldown(self):
+        q = self.queue()
+        state = self.initial(q["repo"])
+        family_id = q["families"][2]["id"]
+        state["families"][family_id] = {"status": "FORMAL_CHECK_FAILED_OR_BLOCKED"}
+        picked = worker.choose_recheck(state, q["families"], {q["families"][0]["id"]})
+        self.assertEqual(picked["id"], family_id)
+        state["families"][family_id]["last_recheck_revision"] = 0
+        state["revision"] = 1
+        self.assertIsNone(worker.choose_recheck(state, q["families"], {q["families"][0]["id"]}))
+        state["revision"] = 2
+        self.assertEqual(worker.choose_recheck(state, q["families"], set())["id"], family_id)
+
     def test_rotation_two_consecutive_receipts(self):
         q = self.queue()
         with tempfile.TemporaryDirectory() as tmp:

@@ -1,0 +1,28 @@
+name: Second100 W2 incompatible SQLite future schema fail-closed
+on:
+  push:
+    branches: [chatgpt/second100-w2-schema-downgrade-20261018]
+  pull_request:
+    branches: [chatgpt/second100-w3-status-audit-20261018]
+permissions:
+  contents: read
+jobs:
+  schema-version:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        python: ['3.11', '3.12']
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Actual synthetic SQLite future-version read-only rejection
+        run: python -X utf8 -m unittest discover -s tests -p test_schema_version_guard.py -v
+      - name: Original database migration contracts
+        run: python -X utf8 -m unittest discover -s tests -p test_schema_migration.py -v

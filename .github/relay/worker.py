@@ -18,6 +18,12 @@ def save(path, obj):
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(obj, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
 
+def queue_digest(queue):
+    """Cross-platform canonical hash; Git checkout CRLF/LF must not change identity."""
+    canonical = json.dumps(queue, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+
+
 def source_sha(path):
     s = subprocess.check_output(["git", "-C", str(path), "rev-parse", "HEAD"], text=True, timeout=10).strip()
     if not re.fullmatch(r"[a-f0-9]{40}", s):
@@ -131,7 +137,7 @@ def evaluate(a):
     receipt = {"schema_version": 1, "repo": a.repo,
                "run_key": os.environ.get("GITHUB_RUN_ID", "0") + "/" + os.environ.get("GITHUB_RUN_ATTEMPT", "1"),
                "generated_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
-               "source_commit": sha, "source_ref": q["source_ref"], "queue_sha256": hashlib.sha256(raw).hexdigest(),
+               "source_commit": sha, "source_ref": q["source_ref"], "queue_sha256": queue_digest(q),
                "previous_cursor": s["cursor"], "regular_count": n,
                "priority_recheck": priority["id"] if priority else None,
                "next_cursor": (s["cursor"] + n) % len(families),
@@ -160,7 +166,7 @@ def persist(a):
     queue = load(queue_path)
     if (queue.get("repo") != a.repo or queue.get("schema_version") != 1
             or receipt.get("source_ref") != queue.get("source_ref")
-            or receipt.get("queue_sha256") != hashlib.sha256(queue_path.read_bytes()).hexdigest()
+            or receipt.get("queue_sha256") != queue_digest(queue)
             or receipt.get("strict_new_acceptances") != 0):
         raise ValueError("receipt does not match trusted queue")
     families = queue["families"]

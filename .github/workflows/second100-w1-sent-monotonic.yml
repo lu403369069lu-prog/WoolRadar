@@ -1,5 +1,7 @@
 name: Second100 W1 SENT monotonic SQLite invariant
 on:
+  pull_request:
+    branches: [chatgpt/second100-w1-notice-stale-file-20261018]
   push:
     branches: [chatgpt/second100-w1-sent-monotonic-20261018]
 permissions:

@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 24,
-    "last_persisted_worker_run_utc": "2026-10-18T04:06:00Z",
-    "last_completed_review_key": "interactive-20261018-stage3-sam-h22-h09-node-allowlist",
+    "revision": 25,
+    "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
+    "last_completed_review_key": "interactive-20261018-50-family-fixed-sha-mapping-provenance-audit",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -53,8 +53,8 @@
       "WoolRadar#48": "24781d17ee1ce68668932e883c76cc6f56d007e9",
       "YinQieJi#23": "5f49318555b187cd8d67692f2072cdcb64b229b2",
       "WoolRadar#49": "9d0f78ae6bfa181f31101a3b6ce0a56f192534db",
-      "WoolRadar/main-controller": "5e9ab53f38ef6edecc134d7e3c461d2fca54f945",
-      "YinQieJi/main-controller": "5a4e592c0796a34ee0bdf6339ab690963547e645",
+      "WoolRadar/main-controller": "e44589104585c4b2a93081d00a145263666f9264",
+      "YinQieJi/main-controller": "668e219569aff780621bf6a1e24aa8cbe5f4e806",
       "WoolRadar#50": "c444233ae885cb793bd289a6d7b55aa019f47490"
     },
     "processed_event_keys": [
@@ -82,7 +82,8 @@
       "interactive-20261018-100-minimal-stage1-relay-ci-mappings",
       "interactive-20261018-100-minimal-stage2-sam-h06-wr-h18-source-native",
       "interactive-20261018-live-controller-five-family-protection-and-wr-h03-native",
-      "interactive-20261018-stage3-sam-h22-h09-node-allowlist"
+      "interactive-20261018-stage3-sam-h22-h09-node-allowlist",
+      "interactive-20261018-50-family-fixed-sha-mapping-provenance-audit"
     ],
     "write_diagnostic": "INTERACTIVE_REAL_SOURCE_CI_STAGE2_PENDING_READBACK",
     "last_write_error": null,
@@ -1780,6 +1781,43 @@
       "ci_run": 39095800418,
       "strictly_complete": false,
       "business_accepted": false
+    },
+    {
+      "event_key": "interactive-20261018-50-family-fixed-sha-mapping-provenance-audit",
+      "origin": "IMMUTABLE_GITHUB_CONTENTS_DIRECTORY_BLOBS",
+      "path": "coordination/HISTORICAL_50_FAMILY_MACHINE_MAPPING_AUDIT_20261018.json",
+      "source_commits": {
+        "WoolRadar": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+        "YinQieJi": "ba24b3db342fc5c648effd95d477eda154cff909"
+      },
+      "controller_commits": {
+        "WoolRadar": "e44589104585c4b2a93081d00a145263666f9264",
+        "YinQieJi": "668e219569aff780621bf6a1e24aa8cbe5f4e806"
+      },
+      "summary": {
+        "families": 50,
+        "mapped_partial": 30,
+        "unmapped": 12,
+        "external": 8,
+        "strict_business_completed": 0
+      },
+      "coverage": "SOURCE_FILE_PATHS_PRESENT_BLOB_SHA_NOT_SEMANTIC_BUSINESS_COMPLETION",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "known_checks": [
+        {
+          "repo": "WoolRadar",
+          "run": 39096089020,
+          "unit_tests": 11,
+          "checkpoint_rev": 18
+        },
+        {
+          "repo": "YinQieJi",
+          "run": 39096116642,
+          "unit_tests": 14,
+          "checkpoint_rev": 25
+        }
+      ]
     }
   ],
   "run_history": [
@@ -2166,6 +2204,28 @@
       ],
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
       "next_action": "Inspect no other family-to-test category mismatch; prioritize actual business and frozen evidence. Do not rerun controller tests against identical HEADs. Six authentic SAM frozen files remain offline local Codex/user-approval and Wool upstream Windows .venv skip remains; 50 strict still zero."
+    },
+    {
+      "event_id": "interactive-20261018-50-family-fixed-sha-mapping-provenance-audit",
+      "origin": "INTERACTIVE_CHAT_50_FAMILY_SHA_PINNED_CONTENTS_AUDIT",
+      "actual_cases": "Read live queues for both controllers and six source file directory manifests at immutable actual tested commits. Materialized exact mapped check file paths and source blob SHA for all 50 historical families, checked every mapped file exists, classified unmapped and 8 external-gated tasks; all business acceptances remain zero. Also main Python discovery guard patch verified in real Actions WR 11/11 and SAM 14/14 no skips; checkpoints WR rev18 and SAM rev25. No real frozen teacher gold/Windows upstream read, no new family accepted.",
+      "minimal_task_units_new_this_request": 3,
+      "cumulative_actual_minimal_tasks_this_request": 23,
+      "task_unit_ids": [
+        "WOOL-PYTHON-DISCOVERY-FIX-11-PASS",
+        "SAM-PYTHON-DISCOVERY-FIX-14-PASS",
+        "HISTORICAL-50-FAMILY-IMMUTABLE-SOURCE-PROVENANCE-AUDIT"
+      ],
+      "audit_path": "coordination/HISTORICAL_50_FAMILY_MACHINE_MAPPING_AUDIT_20261018.json",
+      "source_checks_count": 30,
+      "source_files_checked": 151,
+      "counts": {
+        "mapped_partial": 30,
+        "unmapped": 12,
+        "external": 8
+      },
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "next_action": "Read this 50-family provenance index before scheduled fresh checks; don't rerun fixed-SHA mapped suites. Native original frozen evidence and V3 owner/lease gate still not approved."
     }
   ],
   "acceptance": {
@@ -2193,8 +2253,10 @@
     "sam_h22_answer_accuracy_mapping": "BLOCKED_TEMPLATE_ONLY_ORIGINAL_UNVERIFIED",
     "sam_h09_frozen_teacher_mapping": "BLOCKED_DUPLICATE_PARSER_NOT_FROZEN_CORPUS",
     "relay_node_test_paths": "EXACT_SAM_SIX_WOOL_DENY_ALL_REAL_CI_13_AND_10_PASS_20261018",
-    "latest_sam_main_checkpoint_rev": 24,
-    "latest_wool_main_checkpoint_rev": 17
+    "latest_sam_main_checkpoint_rev": 25,
+    "latest_wool_main_checkpoint_rev": 18,
+    "fixed_sha_family_mapping_audit": "coordination/HISTORICAL_50_FAMILY_MACHINE_MAPPING_AUDIT_20261018.json",
+    "python_discovery_roots": "WR_15_APPROVED_PAIRS_SAM_DENY_NO_PYTHON_RUNS_ACTIONS_11_14_PASS"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

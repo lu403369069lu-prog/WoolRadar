@@ -31,19 +31,19 @@
 
 | 编号 | 大类 | 可独立交付的缺陷/功能目标 | 明确验收依据 | 当前状态 |
 |---|---|---|---|---|
-| R2-001 | W1 通知交付 | SENT 状态不可回退 | 跨进程抢占后过期 Worker 写入拒绝 | PLANNED_NOT_VERIFIED |
-| R2-002 | W1 通知交付 | 外部 Telegram 超时处理 | 未知送达状态不可冒充 exactly-once | PLANNED_NOT_VERIFIED |
-| R2-003 | W1 通知交付 | 重试退避跨重启 | 期限、次数和幂等键不丢 | PLANNED_NOT_VERIFIED |
-| R2-004 | W1 通知交付 | 同事件入队唯一性 | 两进程竞争仅一个正式通知 | PLANNED_NOT_VERIFIED |
+| R2-001 | W1 通知交付 | SENT 状态不可回退 | 跨进程抢占后过期 Worker 写入拒绝 | DRAFT_NATIVE_GREEN_NOT_STRICTLY_ACCEPTED |
+| R2-002 | W1 通知交付 | 外部 Telegram 超时处理 | 未知送达状态不可冒充 exactly-once | DRAFT_NATIVE_GREEN_NOT_STRICTLY_ACCEPTED |
+| R2-003 | W1 通知交付 | 重试退避跨重启 | 期限、次数和幂等键不丢 | DRAFT_NATIVE_GREEN_NOT_STRICTLY_ACCEPTED |
+| R2-004 | W1 通知交付 | 同事件入队唯一性 | 两进程竞争仅一个正式通知 | DRAFT_NATIVE_GREEN_NOT_STRICTLY_ACCEPTED |
 | R2-005 | W1 通知交付 | 多 Worker 租约 fencing | 旧持有者不能覆盖新持有者 | DRAFT_W1_NATIVE_RED_GREEN_NOT_INTEGRATED |
 | R2-006 | W1 通知交付 | 审核撤销与待发消息一致 | 送出之前校验最新资格 | PLANNED_NOT_VERIFIED |
 | R2-007 | W1 通知交付 | 本地通知原子持久化 | 文件 rename 后提交失败可恢复 | PLANNED_NOT_VERIFIED |
-| R2-008 | W1 通知交付 | 429及断网故障注入 | 每一故障有确定恢复状态 | PLANNED_NOT_VERIFIED |
+| R2-008 | W1 通知交付 | 429及断网故障注入 | 每一故障有确定恢复状态 | DRAFT_NATIVE_GREEN_NOT_STRICTLY_ACCEPTED |
 | R2-009 | W2 SQLite数据安全 | Schema 真实数据迁移 | 旧版拷贝升级且索引和行数一致 | PLANNED_NOT_VERIFIED |
 | R2-010 | W2 SQLite数据安全 | 迁移中断事务回滚 | 故障注入后旧库不损坏 | PLANNED_NOT_VERIFIED |
-| R2-011 | W2 SQLite数据安全 | WAL 在线备份 | 未 checkpoint 时可独立恢复 | PLANNED_NOT_VERIFIED |
-| R2-012 | W2 SQLite数据安全 | 备份恢复完整性 | 逐表记录和关键约束可核对 | PLANNED_NOT_VERIFIED |
-| R2-013 | W2 SQLite数据安全 | 新旧版本兼容拒绝 | 不支持降级明确失败不写坏数据 | PLANNED_NOT_VERIFIED |
+| R2-011 | W2 SQLite数据安全 | WAL 在线备份 | 未 checkpoint 时可独立恢复 | DRAFT_NATIVE_GREEN_NOT_STRICTLY_ACCEPTED |
+| R2-012 | W2 SQLite数据安全 | 备份恢复完整性 | 逐表记录和关键约束可核对 | DRAFT_NATIVE_GREEN_NOT_STRICTLY_ACCEPTED |
+| R2-013 | W2 SQLite数据安全 | 新旧版本兼容拒绝 | 不支持降级明确失败不写坏数据 | DRAFT_NATIVE_GREEN_NOT_STRICTLY_ACCEPTED |
 | R2-014 | W2 SQLite数据安全 | 并发 reindex/upsert | 同键不重影且无丢更新 | PLANNED_NOT_VERIFIED |
 | R2-015 | W2 SQLite数据安全 | 数据库损坏与磁盘已满 | 保守停机及可追溯恢复 | PLANNED_NOT_VERIFIED |
 | R2-016 | W3 审计可靠性 | 业务状态与审计同事务 | 任一失败则均不提交 | DRAFT_W3_4X4_GREEN_FULL_WIN_1_SKIP_NOT_INTEGRATED |
@@ -104,7 +104,7 @@
 | R2-071 | S5 Claim证据审核 | H04审查结论源件SHA绑定 | 错SHA撤销审查且保留所有旧测试 | DRAFT_SAM_4X37_GREEN_FULL_6_MISSING_FROZEN |
 | R2-072 | S5 Claim证据审核 | Claim仓库与提交作用域 | 相同ID跨库不能共享结论 | PLANNED_NOT_VERIFIED |
 | R2-073 | S5 Claim证据审核 | Entailed证据ID真实性 | 空/假证据必须拒绝通过 | PLANNED_NOT_VERIFIED |
-| R2-074 | S5 Claim证据审核 | 审查字段类型抗伪造 | 非预期类型及枚举失败关闭 | PLANNED_NOT_VERIFIED |
+| R2-074 | S5 Claim证据审核 | 审查字段类型抗伪造 | 非预期类型及枚举失败关闭 | DRAFT_NATIVE_GREEN_NOT_STRICTLY_ACCEPTED |
 | R2-075 | S5 Claim证据审核 | 资料变动使审核失效 | 保留历史并要求重新验证 | PLANNED_NOT_VERIFIED |
 | R2-076 | S6 严格输入编码 | H14真实运行时Unicode折叠 | 真实评测入口接入修复 | DRAFT_SAM_H14_NATIVE_RED_GREEN_FULL_6_FAIL |
 | R2-077 | S6 严格输入编码 | JSON/JSONL重复键拒绝 | 全部入口不容键覆盖 | PLANNED_NOT_VERIFIED |
@@ -149,3 +149,31 @@
 - R2-016 W3 同一真实事件状态写锁及审计连接历史：PR66 https://github.com/lu403369069lu-prog/WoolRadar/pull/66 新增双Windows/Linux原生进程竞争用例，目标4测试均通过；https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39118649900 Windows全套315=314成功+1跳过，Linux因真实Windows诊断PowerShell脚本有2失败及5系统相关跳过；不宣称完整工程验收。
 - R2-076 SAM H14 真实评测入口Unicode去重：PR37 https://github.com/lu403369069lu-prog/YinQieJi/pull/37，原始事件 RED https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39118823745 全4 native jobs目标测试失败（QS与Qſ重复未阻止），原码改为小写后大写归一，最终专项 37/37 全4作业成功零跳过，https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39118908996；同一源码完整回归 274/280，仍有6项原始教师/正式发布冻结资料缺失，0项正式业务验收新增。
 - 所有工作以各 Draft 的实际 SHA 审核，不自动合并、不推送本机、不读取私人教师材料。不把不同目标的单次GREEN重复计为R2已验收。
+
+
+## 2026-10-18 R2 W1/W2 六项原生候选证据（严格核销仍为0）
+
+均是隔离、未合并的草稿PR，Windows/Linux × Python3.11/3.12四平台真实作业成功。R2-001/002/008/013有实际RED→GREEN；R2-003/004是既有源码的跨重启/真实双进程正向验证，不伪称修复不存在的故障。
+
+- **R2-001** SENT终态跨进程约束：[PR68](https://github.com/lu403369069lu-prog/WoolRadar/pull/68)。[RED39131300302](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39131300302) → [GREEN39131365517](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39131365517)。SQLite触发器拒绝已发送→待发，既有10条通知及旧Worker防覆盖回归亦通过。
+- **R2-004** 双真实进程同事件唯一入队：[PR69](https://github.com/lu403369069lu-prog/WoolRadar/pull/69)、[GREEN39131550086](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39131550086)。同键仅一个ONE一个ZERO，正式表和本地文件仅一条。
+- **R2-003** 故障退避重启：[PR70](https://github.com/lu403369069lu-prog/WoolRadar/pull/70)、[GREEN39131633974](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39131633974)。数据库新实例保留重试截止和计数，过早不发送，到期才发送。
+- **R2-002** Telegram未知送达：[PR71](https://github.com/lu403369069lu-prog/WoolRadar/pull/71)、[RED39131763811](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39131763811) → [GREEN39131821912](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39131821912)。异常后持久UNCERTAIN+有限重试，仍仅at-least-once，绝非exactly-once。
+- **R2-008** 429/断网故障注入：[PR72](https://github.com/lu403369069lu-prog/WoolRadar/pull/72)、[RED39131994551](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39131994551) → [GREEN39132054614](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39132054614)。模拟429带Retry-After:120覆盖较短本地间隔；断网持久UNCERTAIN。其他HTTP-date退避形式未验。
+- **R2-013** SQLite未来版本先读拒绝：[PR73](https://github.com/lu403369069lu-prog/WoolRadar/pull/73)、[RED39132251927](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39132251927)、首个候选[39132322563](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39132322563) Linux绿Windows因测试夹具未close而失败、修复测试后[GREEN39132418582](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39132418582)。只用合成库验证新版本被只读拒绝，旧版0→1保留数据；未接触生产DB。
+
+目前此前5项局部候选 + 本次6项局部候选 = 11项进入不同程度工程验证（不是11项严格完成）。R2业务验收仍**0/100**、历史50大类严格完成仍**0/50**。所有上述PR仍需源码整合、完整无skip回归、业务证据及独立验收；不合并、不改Windows生产、不发送真实消息。
+
+
+### 后续R2-011 / R2-012 独立WAL备份恢复原生收据
+
+- [Draft PR75](https://github.com/lu403369069lu-prog/WoolRadar/pull/75) 源码上真实执行两个区分明确的测试：R2-011 在现存读事务固定旧快照时，新增提交进入WAL且未checkpoint，调用真实reindex在线备份，证明备份包含刚提交的事件、官方模拟证据及入队通知；R2-012 将备份文件复制到独立数据库，逐表比对8表全部记录、SQLite integrity_check=ok、foreign_key_check空。
+- [Actions39132865286](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39132865286) Windows/Linux × Python3.11/3.12 四平台均执行成功，每平台2项新增备份恢复测试与2项前序Schema版本测试通过，零跳过。没有刻意制造RED故障，也没有宣称修正了原本不存在的备份错误。
+- 仅合成数据与隔离草稿；未触碰生产数据库或改动主线。R2-011、012正式业务恢复演练和全部回归仍未进行，**不能核销为严格完成**。目前R2有先前5项候选、本次W1/W2先登记6项、此次新增2项，即共13项曾进入不同程度候选验证；R2严格验收仍0/100。
+
+
+### SAM R2-074 真实审查字段类型防伪红绿收据
+
+- [YinQieJi Draft PR38](https://github.com/lu403369069lu-prog/YinQieJi/pull/38) 在真实SAM snapshot的source-qualified资格函数入口验证：有效官方合成来源的review body/SHA/原文件行锚点先正常通过；将来源ID与对应subclaim引用一起篡改为数字、布尔、null或空白，或将subclaim文本改数字并重新计算review hash，必须拒绝。源TS接口声明string不能替代JSON运行时类型检查。
+- [RED39133161071](https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39133161071) Windows/Linux × Node24/26四平台均真实失败，旧代码确实错误接受非字符串来源ID。修复运行时类型校验后[GREEN39133234955](https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39133234955)四平台成功，保留原评测输入回归测试。
+- 此为孤立源资格安全修复，未包含522个真实源件或正式教师gold的认可，R2-074严格验收仍未完成。此前13项不同程度候选加上本次1项，第二批共14项有部分工程验证；严格核销0/100。

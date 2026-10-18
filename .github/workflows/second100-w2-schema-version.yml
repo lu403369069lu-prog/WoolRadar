@@ -25,4 +25,4 @@ jobs:
       - name: Actual synthetic SQLite future-version read-only rejection
         run: python -X utf8 -m unittest discover -s tests -p test_schema_version_guard.py -v
       - name: Original database migration contracts
-        run: python -X utf8 -m unittest discover -s tests -p test_schema_migration.py -v
+        run: python -X utf8 -m unittest discover -s tests -p test_status_audit_locking.py -v

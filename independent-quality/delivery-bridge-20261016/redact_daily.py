@@ -147,7 +147,8 @@ def build_preview(report: dict, report_hash: str, now: datetime | None = None) -
                 continue
             evidence_url = public_url(ev.get('url'))
             checked = timestamp(ev.get('checked_at'))
-            if evidence_url and checked:
+            # A future-dated recheck cannot be evidence for this snapshot.
+            if evidence_url and checked and datetime.fromisoformat(checked.replace('Z', '+00:00')) <= now:
                 official.append({'url': evidence_url, 'checked_at': checked, 'claims': public_claims(ev.get('claims'))})
         # This is a local report snapshot. Even a recent public claim never
         # establishes the user's own account eligibility or current live stock.

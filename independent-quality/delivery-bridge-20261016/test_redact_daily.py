@@ -8,7 +8,8 @@ from pathlib import Path
 
 from redact_daily import build_preview, main, public_claims, public_title, public_url
 
-NOW = datetime(2026, 10, 16, tzinfo=timezone.utc)
+# The synthetic official check at 01:00 must precede snapshot generation.
+NOW = datetime(2026, 10, 16, 2, tzinfo=timezone.utc)
 
 def row(**kwargs):
     obj = {'id': 55, 'title': 'Public free VPS offer', 'primary_url': 'https://example.org/promo',

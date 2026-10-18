@@ -254,6 +254,28 @@ class RelaySafetyTests(unittest.TestCase):
                     "python", "-m", "unittest", "discover", "-s", path,
                     "-p", pattern]))
 
+    def test_integration_producer_source_subdir_must_match_repo(self):
+        q = self.queue()
+        expected = "." if q["repo"] == "WoolRadar" else "SAM/snapshot"
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            receipt = self.receipt(q)
+            for bad in ("../unrelated", None, ""):
+                with self.subTest(source_subdir=bad):
+                    def mutate(integration):
+                        if bad is None:
+                            integration.pop("source_subdir", None)
+                        else:
+                            integration["source_subdir"] = bad
+                    with self.assertRaises(ValueError):
+                        self.run_persist(root, q, receipt, integration_mutator=mutate)
+                    self.assertEqual(worker.load(root / "engine.json")["revision"], 0)
+                    self.assertFalse((root / "history.jsonl").exists())
+            accepted = self.run_persist(root, q, receipt)
+            self.assertEqual(accepted["revision"], 1)
+            self.assertEqual(accepted["integration"]["status"], "PASS")
+            self.assertEqual(expected, "." if q["repo"] == "WoolRadar" else "SAM/snapshot")
+
     def test_boolean_exit_code_cannot_pass_formal_subset(self):
         q = self.queue()
         eligible = next((i for i, fam in enumerate(q["families"])

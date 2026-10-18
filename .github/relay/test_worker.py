@@ -30,7 +30,7 @@ class RelaySafetyTests(unittest.TestCase):
         return {
             "schema_version": 1, "repo": q["repo"], "run_key": run_key,
             "source_commit": "a" * 40, "source_ref": q["source_ref"],
-            "queue_sha256": hashlib.sha256((HERE / "queue.json").read_bytes()).hexdigest(),
+            "queue_sha256": worker.queue_digest(q),
             "previous_cursor": cursor, "next_cursor": (cursor + 1) % len(q["families"]),
             "strict_new_acceptances": 0, "generated_utc": "2026-10-18T00:00:00Z",
             "results": [{"id": fam["id"], "goal": fam["goal"], "status": status,
@@ -56,6 +56,12 @@ class RelaySafetyTests(unittest.TestCase):
         worker.save(rec, receipt)
         worker.persist(SimpleNamespace(state=str(directory), receipt=str(rec), repo=q["repo"]))
         return worker.load(state)
+
+    def test_queue_digest_is_lf_crlf_platform_stable(self):
+        q = self.queue()
+        lf = json.dumps(q, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+        crlf = lf.replace("\\n", "\\r\\n")
+        self.assertEqual(worker.queue_digest(json.loads(lf)), worker.queue_digest(json.loads(crlf)))
 
     def test_command_allowlist_denies_shell_and_arbitrary_code(self):
         self.assertFalse(worker.safe(["bash", "-c", "rm -rf /"]))

@@ -46,7 +46,7 @@ def _has_private_path(value: str) -> bool:
     return '%' in candidate or bool(_PRIVATE_URL_PATH.search(candidate))
 
 
-_PRIVATE_QUERY_VALUE = re.compile(r'(?i)(?:@|\\d{13,}|token|secret|password|session|bearer)')
+_PRIVATE_QUERY_VALUE = re.compile(r'(?i)(?:@|\d{13,}|token|secret|password|session|bearer)')
 
 def _unsafe_encoded_query(query: str) -> bool:
     # Never let untrusted producer identity metadata certify nested URL escapes.

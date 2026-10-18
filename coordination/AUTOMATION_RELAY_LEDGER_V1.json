@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 28,
+    "revision": 29,
     "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
-    "last_completed_review_key": "interactive-20261018-100-minimal-stage6-sam-h14-runtime-fold-redgreen",
+    "last_completed_review_key": "interactive-20261018-100-minimal-stage7-wr-h11-card-required",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -60,7 +60,8 @@
       "YinQieJi#24": "2eddea76131851ad4fa4235bd0ff3ddd19d6012f",
       "YinQieJi#25": "9fff6434b0bf1eeda2c6afa3e8489193806695e0",
       "YinQieJi#26": "9471fc3a5d5bff14aab82c535a792889b95b27a8",
-      "YinQieJi#27": "2c5e6ea4450cfe3c6942370399ecfa6ad1e97cbd"
+      "YinQieJi#27": "2c5e6ea4450cfe3c6942370399ecfa6ad1e97cbd",
+      "WoolRadar#52": "cd415231b54ca9d439dd3988d9b558af67ddf81d"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -91,7 +92,8 @@
       "interactive-20261018-50-family-fixed-sha-mapping-provenance-audit",
       "interactive-20261018-100-minimal-stage4-crossplatform-source-native",
       "interactive-20261018-100-minimal-stage5-sam-h17-native-atomic",
-      "interactive-20261018-100-minimal-stage6-sam-h14-runtime-fold-redgreen"
+      "interactive-20261018-100-minimal-stage6-sam-h14-runtime-fold-redgreen",
+      "interactive-20261018-100-minimal-stage7-wr-h11-card-required"
     ],
     "write_diagnostic": "INTERACTIVE_REAL_SOURCE_CI_STAGE2_PENDING_READBACK",
     "last_write_error": null,
@@ -1899,6 +1901,20 @@
       "head": "2c5e6ea4450cfe3c6942370399ecfa6ad1e97cbd",
       "business_accepted": false,
       "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage7-wr-h11-card-required",
+      "repo": "WoolRadar",
+      "family": "WR-H11",
+      "status": "SYNTHETIC_CLASSIFICATION_SOURCE_BUG_FIXED_NATIVE_CI",
+      "pr": 52,
+      "source_sha": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+      "head": "cd415231b54ca9d439dd3988d9b558af67ddf81d",
+      "red_run": 39101211909,
+      "green_run": 39101295493,
+      "green": "Windows/Linux Python3.11/3.12/3.13 each 31/31 no skips",
+      "business_accepted": false,
+      "strictly_complete": false
     }
   ],
   "run_history": [
@@ -2411,6 +2427,33 @@
       },
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
       "next_action": "Review adjacent evaluator consumer paths against Unicode fold and source-canonical contracts. No claim of teacher answer correctness or frozen gold; PR27 remains Draft and unmerged."
+    },
+    {
+      "event_id": "interactive-20261018-100-minimal-stage7-wr-h11-card-required",
+      "origin": "INTERACTIVE_CHAT_REAL_WOOL_GRANT_CODE_RED_GREEN",
+      "minimal_task_units_new_this_request": 4,
+      "cumulative_actual_minimal_tasks_this_request": 42,
+      "task_unit_ids": [
+        "WR-H11-REQUIRED-CARD-ORIGINAL-SOURCE-CLASSIFICATION-DEFECT",
+        "WR-H11-SIX-JOB-NATIVE-GRANT-NEGATIVE-RED",
+        "WR-H11-DIRECT-AND-BRAND-FALLBACK-CARD-GATE-FIX",
+        "WR-H11-6X31-PYTHON-NATIVE-GREEN"
+      ],
+      "actual_cases": "At fixed true Wool source a0fc93c4b54d16f399c28ffb401d682fa823b107 audited core/developer_grants.py and collector.py. Real card-required free grant false positive identified. Created independent Draft PR52 with synthetic positive/negative test and Windows/Linux Python3.11/3.12/3.13 CI. Initial actual Actions 39101211909 6 jobs failed: 31 tests, four subtest failing required credit/debit card/payment-method restrictions. Final source head cd415231b54ca9d439dd3988d9b558af67ddf81d introduced conservative card-required predicate with explicit no-card-waiver exemption; both direct lead and brand/free fallback fail closed. Real Actions 39101295493 all 6 jobs each 31/31, 0 skipped, 0 error and exit0. No real source opportunity verified, no app registration/card, no PR merge or production write; business strict acceptance 0/50.",
+      "evidence": {
+        "repo": "WoolRadar",
+        "pr": 52,
+        "source_sha": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+        "red_head": "3af7325b97a0a9a43c5bd8d3e972999af2e9202c",
+        "red_run": 39101211909,
+        "green_head": "cd415231b54ca9d439dd3988d9b558af67ddf81d",
+        "green_run": 39101295493,
+        "jobs": 6,
+        "tests_per_job": 31,
+        "zero_skips": true
+      },
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "next_action": "Public genuine producer + official application policy proof still needed for WR-H11 strict acceptance; do not count synthetic cases as real opportunities. Continue remaining 50 family semantic source checks without repeating this fixed SHAs."
     }
   ],
   "acceptance": {
@@ -2445,7 +2488,8 @@
     "coord_native_original_windows_linux": "SOURCE_SHA_27796_WINDOW_LINUX_57_OF_57_EACH_20261018_STRICT_NOT_ACCEPTED",
     "sam_h14_native_matrix": "SOURCE_H14_N22_24_26_WINDOWS_LINUX_6X18_PASS_20261018_STRICT_NOT_ACCEPTED",
     "sam_h17_native_synthetic_atomic": "WINDOWS_3X13_AND_LINUX_3X18_ALL_PASS_STRICT_RELEASE_PENDING_20261018",
-    "sam_h14_runtime_identity_native": "REAL_SOURCE_RED_GREEN_WINDOWS_LINUX_NODE22_24_26_6x5_PASS_20261018_STRICT_PENDING"
+    "sam_h14_runtime_identity_native": "REAL_SOURCE_RED_GREEN_WINDOWS_LINUX_NODE22_24_26_6x5_PASS_20261018_STRICT_PENDING",
+    "wr_h11_card_required_gate": "REAL_SOURCE_RED_GREEN_6X31_NATIVE_PASS_20261018_STRICT_OFFICIAL_REVIEW_PENDING"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

@@ -254,6 +254,26 @@ class RelaySafetyTests(unittest.TestCase):
                     "python", "-m", "unittest", "discover", "-s", path,
                     "-p", pattern]))
 
+    def test_boolean_exit_code_cannot_pass_formal_subset(self):
+        q = self.queue()
+        eligible = next((i for i, fam in enumerate(q["families"])
+                         if fam["checks"] and fam["disposition"] != "EXTERNAL_OR_POLICY_GATED"), None)
+        self.assertIsNotNone(eligible)
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            state = self.initial(q["repo"])
+            state["cursor"] = eligible
+            worker.save(root / "engine.json", state)
+            receipt = self.receipt(q, cursor=eligible)
+            receipt["results"][0]["checks"][0]["exit_code"] = False
+            with self.assertRaises(ValueError):
+                self.run_persist(root, q, receipt)
+            self.assertEqual(worker.load(root / "engine.json")["revision"], 0)
+            self.assertFalse((root / "history.jsonl").exists())
+            receipt["results"][0]["checks"][0]["exit_code"] = 0
+            final = self.run_persist(root, q, receipt)
+            self.assertEqual(final["revision"], 1)
+
     def test_durable_persist_and_duplicate_replay(self):
         q = self.queue()
         with tempfile.TemporaryDirectory() as tmp:

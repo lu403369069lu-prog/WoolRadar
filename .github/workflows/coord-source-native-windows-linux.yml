@@ -55,6 +55,20 @@ jobs:
           import sys
           import unittest
           from pathlib import Path
+          # Windows runner's default TEMP can be a DOS 8.3 alias (RUNNER~1).
+          # Use the runner's canonical disposable directory; do NOT weaken
+          # GitStateStore's alias rejection or patch the tested source.
+          if sys.platform == "win32":
+              import os
+              import tempfile
+              temp_root = Path(os.environ["RUNNER_TEMP"]).resolve(strict=True)
+              for key in ("TEMP", "TMP", "TMPDIR"):
+                  os.environ[key] = str(temp_root)
+              tempfile.tempdir = str(temp_root)
+              with tempfile.TemporaryDirectory() as probe:
+                  workspace = Path(probe) / "store"
+                  if os.path.normcase(str(workspace.absolute())) != os.path.normcase(str(workspace.resolve())):
+                      raise SystemExit("NO_CANONICAL_DISPOSABLE_WINDOWS_TEMP")
           assert (sys.platform == "win32") == (sys.platform.startswith("win")), "invalid platform"
           required = (
               "test_dispatcher.py",

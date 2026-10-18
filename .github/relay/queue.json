@@ -46,18 +46,7 @@
       "goal": "WAL备份和 CLAIMED 恢复",
       "disposition": "READY_FOR_LOCAL_CODEX",
       "external_gate": null,
-      "checks": [
-        [
-          "python",
-          "-m",
-          "unittest",
-          "discover",
-          "-s",
-          "tests",
-          "-p",
-          "test_config_backup.py"
-        ]
-      ]
+      "checks": []
     },
     {
       "id": "WR-H04",
@@ -292,18 +281,7 @@
       "goal": "已发通知CAS不一致uncertain",
       "disposition": "READY_FOR_LOCAL_CODEX",
       "external_gate": null,
-      "checks": [
-        [
-          "python",
-          "-m",
-          "unittest",
-          "discover",
-          "-s",
-          "tests",
-          "-p",
-          "test_notifications.py"
-        ]
-      ]
+      "checks": []
     },
     {
       "id": "WR-H19",
@@ -328,36 +306,14 @@
       "goal": "离线调度幂等",
       "disposition": "READY_FOR_LOCAL_CODEX",
       "external_gate": null,
-      "checks": [
-        [
-          "python",
-          "-m",
-          "unittest",
-          "discover",
-          "-s",
-          "tests",
-          "-p",
-          "test_orchestrator.py"
-        ]
-      ]
+      "checks": []
     },
     {
       "id": "COORD-H02",
       "goal": "GitHub事件来源适配",
       "disposition": "READY_FOR_LOCAL_CODEX",
       "external_gate": null,
-      "checks": [
-        [
-          "python",
-          "-m",
-          "unittest",
-          "discover",
-          "-s",
-          "tests",
-          "-p",
-          "test_node_entry.py"
-        ]
-      ]
+      "checks": []
     },
     {
       "id": "COORD-H03",
@@ -385,18 +341,7 @@
       "goal": "return-sync 真Git接力",
       "disposition": "READY_FOR_LOCAL_CODEX",
       "external_gate": null,
-      "checks": [
-        [
-          "python",
-          "-m",
-          "unittest",
-          "discover",
-          "-s",
-          "tests",
-          "-p",
-          "test_reindex_preview.py"
-        ]
-      ]
+      "checks": []
     },
     {
       "id": "COORD-H07",

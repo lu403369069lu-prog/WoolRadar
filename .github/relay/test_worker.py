@@ -132,7 +132,12 @@ class RelaySafetyTests(unittest.TestCase):
     def test_failed_subset_is_prioritized_with_revision_cooldown(self):
         q = self.queue()
         state = self.initial(q["repo"])
-        family_id = q["families"][2]["id"]
+        # A queue mapping may deliberately become empty (fail closed).
+        # Pick an actually runnable family; do not rely on fixed slot 2.
+        eligible = [f for f in q["families"][1:]
+                    if f["checks"] and f["disposition"] != "EXTERNAL_OR_POLICY_GATED"]
+        self.assertTrue(eligible, "queue has no eligible priority recheck")
+        family_id = eligible[0]["id"]
         state["families"][family_id] = {"status": "FORMAL_CHECK_FAILED_OR_BLOCKED"}
         picked = worker.choose_recheck(state, q["families"], {q["families"][0]["id"]})
         self.assertEqual(picked["id"], family_id)
@@ -141,6 +146,21 @@ class RelaySafetyTests(unittest.TestCase):
         self.assertIsNone(worker.choose_recheck(state, q["families"], {q["families"][0]["id"]}))
         state["revision"] = 2
         self.assertEqual(worker.choose_recheck(state, q["families"], set())["id"], family_id)
+
+    def test_unrelated_source_tests_do_not_claim_family_formal_pass(self):
+        """An unrelated passing test must never masquerade as family evidence."""
+        q = self.queue()
+        excluded = {
+            "WR-H03": "test_config_backup.py",  # Not WAL/CLAIMED recovery.
+            "COORD-H01": "test_orchestrator.py",  # Not dispatcher replay.
+            "COORD-H02": "test_node_entry.py",  # Not GitHub event adaptation.
+            "COORD-H06": "test_reindex_preview.py",  # Not Git return-sync.
+            "WR-H18": "test_notifications.py",  # Not SENT-CAS uncertainty.
+        }
+        for family_id, unrelated_pattern in excluded.items():
+            with self.subTest(family_id=family_id):
+                family = next(f for f in q["families"] if f["id"] == family_id)
+                self.assertNotIn(unrelated_pattern, repr(family["checks"]))
 
     def test_rotation_two_consecutive_receipts(self):
         q = self.queue()

@@ -95,6 +95,43 @@ class CollectorTests(unittest.TestCase):
                 self.assertEqual(build.return_value.open.call_count, 1)
             redirect.close()
 
+    def test_redirect_to_private_or_non_https_target_never_reaches_transport(self):
+        from core.collector import budgeted_read
+        for target in ('https://127.0.0.1/admin', 'https://[::1]/admin',
+                       'https://localhost/admin', 'http://other.example/feed',
+                       'https://user:pass@other.example/feed'):
+            with self.subTest(target=target), tempfile.TemporaryDirectory(dir=ROOT / '.test-tmp') as td:
+                error = urllib.error.HTTPError('https://entry.example/feed', 302, 'redirect',
+                                               {'Location': target}, io.BytesIO())
+                with patch('core.collector.urllib.request.build_opener') as build, patch('core.collector.time.sleep'):
+                    build.return_value.open.side_effect = [error, AssertionError('unsafe second request')]
+                    with self.assertRaises(SourcePaused):
+                        budgeted_read(urllib.request.Request('https://entry.example/feed'), RequestBudget(Path(td)))
+                    self.assertEqual(build.return_value.open.call_count, 1)
+                error.close()
+
+    def test_direct_private_or_invalid_network_target_is_rejected_before_transport(self):
+        from core.collector import budgeted_read
+        for target in ('http://public.example/feed', 'https://127.0.0.1/private',
+                       'https://[::ffff:127.0.0.1]/private', 'https://localhost/feed',
+                       'https://user:pass@public.example/feed'):
+            with self.subTest(target=target), patch('core.collector.urllib.request.build_opener') as build:
+                with self.assertRaises(SourcePaused):
+                    budgeted_read(urllib.request.Request(target))
+                build.assert_not_called()
+
+    def test_public_https_redirect_still_succeeds_with_each_hop_checked(self):
+        from core.collector import budgeted_read
+        with tempfile.TemporaryDirectory(dir=ROOT / '.test-tmp') as td:
+            error = urllib.error.HTTPError('https://entry.example/feed', 302, 'redirect',
+                                           {'Location': 'https://cdn.example/feed'}, io.BytesIO())
+            with patch('core.collector.urllib.request.build_opener') as build, patch('core.collector.time.sleep'):
+                build.return_value.open.side_effect = [error, io.BytesIO(b'public-feed')]
+                payload = budgeted_read(urllib.request.Request('https://entry.example/feed'), RequestBudget(Path(td)))
+                self.assertEqual(payload, b'public-feed')
+                self.assertEqual(build.return_value.open.call_count, 2)
+            error.close()
+
     def test_401_recovers_and_429_cooldown_cannot_be_forced(self):
         from core.collector import collect_for_node
         source = {'id': 'test', 'kind': 'rss', 'platform': 'Test', 'endpoint': 'https://test.example/feed', 'owner_node': 'openmagpie', 'interval_minutes': 1}
@@ -225,8 +262,8 @@ class CollectorTests(unittest.TestCase):
                 RequestBudget(Path(td)).acquire(source, force=True)
 
     def test_success_http_challenge_is_not_parsed_as_empty_feed(self):
-        with patch('core.collector.urllib.request.urlopen') as mocked:
-            mocked.return_value.__enter__.return_value.read.return_value = b'<html>cf-chl-captcha</html>'
+        with patch('core.collector.urllib.request.build_opener') as mocked:
+            mocked.return_value.open.return_value.__enter__.return_value.read.return_value = b'<html>cf-chl-captcha</html>'
             with self.assertRaises(SourcePaused):
                 _request('https://example.test/', 'text/html')
     def test_parses_rss_and_preserves_original_link(self):

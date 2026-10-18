@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 30,
+    "revision": 31,
     "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
-    "last_completed_review_key": "interactive-20261018-100-minimal-stage8-wr-h07-private-url-path",
+    "last_completed_review_key": "interactive-20261018-100-minimal-stage9-wr-h07-nested-encoded-path",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -62,7 +62,8 @@
       "YinQieJi#26": "9471fc3a5d5bff14aab82c535a792889b95b27a8",
       "YinQieJi#27": "2c5e6ea4450cfe3c6942370399ecfa6ad1e97cbd",
       "WoolRadar#52": "cd415231b54ca9d439dd3988d9b558af67ddf81d",
-      "WoolRadar#53": "b3b80aa83ff61280d37df45016c1521119dd5d8d"
+      "WoolRadar#53": "b3b80aa83ff61280d37df45016c1521119dd5d8d",
+      "WoolRadar#54": "8d32472fe6b6ac7b1dabd136fcb378335333209e"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -95,9 +96,10 @@
       "interactive-20261018-100-minimal-stage5-sam-h17-native-atomic",
       "interactive-20261018-100-minimal-stage6-sam-h14-runtime-fold-redgreen",
       "interactive-20261018-100-minimal-stage7-wr-h11-card-required",
-      "interactive-20261018-100-minimal-stage8-wr-h07-private-url-path"
+      "interactive-20261018-100-minimal-stage8-wr-h07-private-url-path",
+      "interactive-20261018-100-minimal-stage9-wr-h07-nested-encoded-path"
     ],
-    "write_diagnostic": "INTERACTIVE_REAL_SOURCE_CI_STAGE2_PENDING_READBACK",
+    "write_diagnostic": "INTERACTIVE_SOURCE_MULTILAYER_PRIVATE_PATH_RED_GREEN_ACTUAL_SIX_JOB",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -1931,6 +1933,20 @@
       "test_evidence": "Windows/Linux 3.11/3.12/3.13 each 49/49 0 skips",
       "business_accepted": false,
       "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage9-wr-h07-nested-encoded-path",
+      "repo": "WoolRadar",
+      "family": "WR-H07",
+      "status": "NESTED_PERCENT_ENCODED_PRIVATE_PATH_BYPASS_FIXED_NATIVE_CI",
+      "source_sha": "f0d6d3a2dfc0632ef76dbabc9d86ddc8b892abb8",
+      "pr": 54,
+      "red_run": 39101954884,
+      "green_run": 39102041474,
+      "head": "8d32472fe6b6ac7b1dabd136fcb378335333209e",
+      "test_evidence": "Windows/Linux Python3.11/3.12/3.13 each 50/50 and zero skips; red each 4 intended failure subcases",
+      "business_accepted": false,
+      "strictly_complete": false
     }
   ],
   "run_history": [
@@ -2507,6 +2523,34 @@
       },
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
       "next_action": "WR-H07 requires genuine unseen public feed and official original source evidence to accept. Keep Draft PR53 unmerged; provenance and credential-free real producer source unresolved."
+    },
+    {
+      "event_id": "interactive-20261018-100-minimal-stage9-wr-h07-nested-encoded-path",
+      "origin": "INTERACTIVE_CHAT_REAL_WOOL_MULTIDECODE_PRIVACY_RED_GREEN",
+      "minimal_task_units_new_this_request": 4,
+      "cumulative_actual_minimal_tasks_this_request": 51,
+      "task_unit_ids": [
+        "WR-H07-ORIGINAL-PRODUCER-SAMPLER-MULTIDECODE-BYPASS",
+        "WR-H07-NESTED-ESCAPES-SIX_NATIVE_RED",
+        "WR-H07-DUAL_PRODUCER_AND_SAMPLER-BOUNDED_FAIL_CLOSED_FIX",
+        "WR-H07-6X50_NATIVE_GREEN_PR54"
+      ],
+      "actual_cases": "Original public-corpus real source and independent blind sampler decode secret-like URL path only once. Synthetic raw `%2574oken`, `%2540` and `%25252Faccount`, including fragment route, bypassed both admission gates. New PR54 stacked on PR53 branch. Actual red SHA 64a5023: Windows/Linux Python3.11,3.12,3.13 six matrix jobs each 50 tests with 4 expected failing subtests; failure logs point to sampler accepting forged public identity. Bounded repeated percent-decoding fail-closed added to both real producer and sampler, without weakening ordinary `/offer/batch-fall?id=17` control. Actual green SHA 8d32472: six jobs each 50/50, zero skipped/failed/expected failures. No real sensitive data, requests, DNS, eligibility, frozen business acceptance, merge or production.",
+      "evidence": {
+        "repo": "WoolRadar",
+        "pr": 54,
+        "base_pr": 53,
+        "source_sha": "f0d6d3a2dfc0632ef76dbabc9d86ddc8b892abb8",
+        "red_head": "64a5023a1a163648f72a5951b38f53d0b3dd9792",
+        "red_run": 39101954884,
+        "green_head": "8d32472fe6b6ac7b1dabd136fcb378335333209e",
+        "green_run": 39102041474,
+        "jobs": 6,
+        "tests_per_job": 50,
+        "zero_skips": true
+      },
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "next_action": "PR54 still Draft unmerged stacked on PR53, separate source and business qualification pending. Check nested query-key/fragment privacy semantics and separate exact SHA original-source acceptance; no false family acceptance."
     }
   ],
   "acceptance": {
@@ -2543,7 +2587,8 @@
     "sam_h17_native_synthetic_atomic": "WINDOWS_3X13_AND_LINUX_3X18_ALL_PASS_STRICT_RELEASE_PENDING_20261018",
     "sam_h14_runtime_identity_native": "REAL_SOURCE_RED_GREEN_WINDOWS_LINUX_NODE22_24_26_6x5_PASS_20261018_STRICT_PENDING",
     "wr_h11_card_required_gate": "REAL_SOURCE_RED_GREEN_6X31_NATIVE_PASS_20261018_STRICT_OFFICIAL_REVIEW_PENDING",
-    "wr_h07_sensitive_private_url_path": "ORIGINAL_PRODUCER_SAMPLER_6X49_PASS_ZERO_SKIP_20261018_STRICT_SOURCE_PENDING"
+    "wr_h07_sensitive_private_url_path": "ORIGINAL_PRODUCER_SAMPLER_6X49_PASS_ZERO_SKIP_20261018_STRICT_SOURCE_PENDING",
+    "wr_h07_nested_encoded_private_path": "REAL_SOURCE_RED_GREEN_6X50_NATIVE_PASS_20261018_STRICT_SOURCE_PENDING"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

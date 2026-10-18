@@ -164,8 +164,17 @@ def persist(a):
             or receipt.get("strict_new_acceptances") != 0):
         raise ValueError("receipt does not match trusted queue")
     families = queue["families"]
-    n = len(receipt["results"])
-    expected = [families[(s["cursor"] + i) % len(families)] for i in range(n)]
+    n = receipt.get("regular_count", len(receipt["results"]))
+    if type(n) is not int or not 1 <= n <= 3:
+        raise ValueError("invalid regular rotation length")
+    regular = [families[(s["cursor"] + i) % len(families)] for i in range(n)]
+    priority = choose_recheck(s, families, {x["id"] for x in regular}) if n < 3 else None
+    priority_id = priority["id"] if priority else None
+    if receipt.get("priority_recheck") != priority_id:
+        raise ValueError("invalid failed-family priority")
+    expected = ([priority] if priority else []) + regular
+    if len(expected) != len(receipt["results"]):
+        raise ValueError("priority result length mismatch")
     if receipt.get("next_cursor") != (s["cursor"] + n) % len(families):
         raise ValueError("incorrect next cursor")
     for result, entry in zip(receipt["results"], expected):

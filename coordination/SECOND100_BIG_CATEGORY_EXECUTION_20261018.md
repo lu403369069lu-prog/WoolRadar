@@ -46,7 +46,7 @@
 | R2-013 | W2 SQLite数据安全 | 新旧版本兼容拒绝 | 不支持降级明确失败不写坏数据 | PLANNED_NOT_VERIFIED |
 | R2-014 | W2 SQLite数据安全 | 并发 reindex/upsert | 同键不重影且无丢更新 | PLANNED_NOT_VERIFIED |
 | R2-015 | W2 SQLite数据安全 | 数据库损坏与磁盘已满 | 保守停机及可追溯恢复 | PLANNED_NOT_VERIFIED |
-| R2-016 | W3 审计可靠性 | 业务状态与审计同事务 | 任一失败则均不提交 | PLANNED_NOT_VERIFIED |
+| R2-016 | W3 审计可靠性 | 业务状态与审计同事务 | 任一失败则均不提交 | DRAFT_W3_TARGETED_4X3_GREEN_FULL_NATIVE_PENDING |
 | R2-017 | W3 审计可靠性 | 证据写入与审计引用一致 | 不能存在成功状态与失联证据 | PLANNED_NOT_VERIFIED |
 | R2-018 | W3 审计可靠性 | 跨进程审计去重 | 业务键并发只生成一次权威审计 | PLANNED_NOT_VERIFIED |
 | R2-019 | W3 审计可靠性 | 审计链缺口检测 | 伪造与删除可离线发现 | PLANNED_NOT_VERIFIED |
@@ -101,7 +101,7 @@
 | R2-068 | S4 522源件Gold | 冲突及歧义记录 | 原始证据冲突时保守回答 | PLANNED_NOT_VERIFIED |
 | R2-069 | S4 522源件Gold | 人工语义Gold审查 | 机器检查和人工评价分开 | PLANNED_NOT_VERIFIED |
 | R2-070 | S4 522源件Gold | 独立三轮Gold对照 | 三套实际凭据可追溯 | PLANNED_NOT_VERIFIED |
-| R2-071 | S5 Claim证据审核 | H04审查结论源件SHA绑定 | 错SHA撤销审查且保留所有旧测试 | CANDIDATE_CODE_CI_FAILURE_NOT_ACCEPTED |
+| R2-071 | S5 Claim证据审核 | H04审查结论源件SHA绑定 | 错SHA撤销审查且保留所有旧测试 | DRAFT_SAM_TARGETED_4X32_GREEN_FULL_6_FAIL |
 | R2-072 | S5 Claim证据审核 | Claim仓库与提交作用域 | 相同ID跨库不能共享结论 | PLANNED_NOT_VERIFIED |
 | R2-073 | S5 Claim证据审核 | Entailed证据ID真实性 | 空/假证据必须拒绝通过 | PLANNED_NOT_VERIFIED |
 | R2-074 | S5 Claim证据审核 | 审查字段类型抗伪造 | 非预期类型及枚举失败关闭 | PLANNED_NOT_VERIFIED |
@@ -115,7 +115,7 @@
 | R2-082 | S7 发布产物身份 | R5正式发布验收 | 隔离发布完整退出码 | PLANNED_NOT_VERIFIED |
 | R2-083 | S7 发布产物身份 | Windows正式安装运行 | 从安装目录启动MCP | PLANNED_NOT_VERIFIED |
 | R2-084 | S7 发布产物身份 | 消费方发行清单验证 | 错版本明确拒绝 | PLANNED_NOT_VERIFIED |
-| R2-085 | S8 升级回滚事务 | H17真实发布路径接入事务 | 不只是存在工具文件 | CANDIDATE_CODE_CI_FAILURE_NOT_ACCEPTED |
+| R2-085 | S8 升级回滚事务 | H17真实发布路径接入事务 | 不只是存在工具文件 | DRAFT_SAM_TARGETED_4X32_GREEN_FULL_6_FAIL |
 | R2-086 | S8 升级回滚事务 | 进程崩溃后指针恢复 | 中断点全覆盖并守恒 | PLANNED_NOT_VERIFIED |
 | R2-087 | S8 升级回滚事务 | 0.4.1到0.4.2真实升级 | 保留数据及审核证据 | PLANNED_NOT_VERIFIED |
 | R2-088 | S8 升级回滚事务 | 0.4.2到0.4.1真实回滚 | 还原旧版与指针 | PLANNED_NOT_VERIFIED |
@@ -136,3 +136,9 @@
 
 - PR37：https://github.com/lu403369069lu-prog/YinQieJi/pull/37，SAM H04/H17 八源码/测试文件恢复成功，test/card-index原始6测试未丢。H04/H17四矩阵原生专项已无失败；全量测试因缺rg与冻结资料及部分路径环境问题失败；不核销R2-071或R2-085。
 - 本表只能在对照真实SHA和新测试收据后变更状态。不可按已规划数量自动推进完成数。
+
+## 接力追加：同一批 R2 的精确验证收据
+
+- R2-016（W3）：https://github.com/lu403369069lu-prog/WoolRadar/pull/66 ，当前原始基线真实状态审计事务修复，在同一 SQLite 写锁下取得旧状态；新增提交包括原生独立进程竞态测试。初始真正RED https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39118350630 ；初次4×3 GREEN https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39118394861。Windows主套上个已完成run314测试成功313/314（其中跳过1项上游官方运行时），Linux因为原仓库Windows-only PowerShell诊断包装而完整套失败，未核销。
+- R2-071、R2-085（SAM H04/H17）：https://github.com/lu403369069lu-prog/YinQieJi/pull/37 ，真实源码八文件移植和Windows/Linux Node24/26目标32/32每作业通过；完整原始回归 273/279，6件冻结教师/发行资料缺失，不能伪造或跳过核销。证据 https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39118217153 。
+- 所有其他 R2 目标仍未执行/未验收。以上尚不能减少历史0/50严格业务缺口。

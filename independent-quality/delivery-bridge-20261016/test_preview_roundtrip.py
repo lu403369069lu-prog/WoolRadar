@@ -5,6 +5,7 @@ import tempfile
 import unittest
 from pathlib import Path
 from datetime import datetime, timezone, timedelta
+from zoneinfo import ZoneInfo
 from redact_daily import build_preview
 from redact_daily import main as export_preview
 from consume_preview import validate, review_delta
@@ -20,7 +21,10 @@ class FileRoundtrip(unittest.TestCase):
                   'evidence':[{'kind':'official','url':'https://example.org/terms',
                                'checked_at':'2026-10-16T00:00:00Z',
                                'claims':{'public':True,'open':True}}]}
-            src.write_text(json.dumps({'date':'2026-10-16','events':[item],
+            # This CLI uses the real UTC clock; the daily report date must
+            # track the local report day instead of a fixed historical day.
+            report_day=datetime.now(timezone.utc).astimezone(ZoneInfo('Asia/Shanghai')).date().isoformat()
+            src.write_text(json.dumps({'date':report_day,'events':[item],
                                        'notifications':[{'payload':'private'}]}),encoding='utf-8')
             self.assertEqual(export_preview(['--input',str(src),'--output',str(out)]),0)
             raw=out.read_bytes()

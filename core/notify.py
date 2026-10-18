@@ -119,11 +119,51 @@ class NotificationQueue:
                     ], ensure_ascii=False, separators=(',', ':')).encode('utf-8')
                     receipt_id = hashlib.sha256(identity_bytes).hexdigest()[:20]
                     destination = output / f"notification-{item['id']}-{receipt_id}.json"
-                    temporary = destination.with_suffix('.tmp')
-                    temporary.write_text(json.dumps({'event_id': item['event_id'], 'batch_id': item['batch_id'],
-                        'created_at': item['created_at'], 'message': item['payload']}, ensure_ascii=False, indent=2), encoding='utf-8')
-                    temporary.replace(destination)
-                    result = 'SENT'
+                    # An expired claim has a different attempt token. Give each
+                    # attempt its own staging file so stale workers cannot race
+                    # a replacement worker on the same temporary path.
+                    temporary = destination.with_name(
+                        f".{destination.name}.attempt-{item['attempts'] + 1}.tmp")
+                    try:
+                        temporary.write_text(json.dumps({'event_id': item['event_id'], 'batch_id': item['batch_id'],
+                            'created_at': item['created_at'], 'message': item['payload']},
+                            ensure_ascii=False, indent=2), encoding='utf-8')
+                        # Fence the file rename AND the durable SENT update
+                        # with the same SQLite writer reservation. If commit
+                        # fails after rename, a retry reconciles the receipt
+                        # bytes and never publishes that identical file twice.
+                        with self.db.connect() as conn:
+                            conn.execute('BEGIN IMMEDIATE')
+                            fenced = conn.execute('''SELECT 1 FROM notifications WHERE id=?
+                                AND result='CLAIMED' AND attempts=? AND next_attempt=?
+                                AND event_id IS ? AND batch_id=? AND channel=?
+                                AND created_at=? AND payload=?''',
+                                (item['id'], item['attempts'] + 1, claim_deadline,
+                                 item['event_id'], item['batch_id'], item['channel'],
+                                 item['created_at'], item['payload'])).fetchone() is not None
+                            if fenced:
+                                try:
+                                    already_published = destination.read_bytes() == temporary.read_bytes()
+                                except FileNotFoundError:
+                                    already_published = False
+                                if not already_published:
+                                    temporary.replace(destination)
+                                confirmed = conn.execute('''UPDATE notifications SET result='SENT',next_attempt=0
+                                    WHERE id=? AND result='CLAIMED' AND attempts=? AND next_attempt=?
+                                    AND event_id IS ? AND batch_id=? AND channel=?
+                                    AND created_at=? AND payload=?''',
+                                    (item['id'], item['attempts'] + 1, claim_deadline,
+                                     item['event_id'], item['batch_id'], item['channel'],
+                                     item['created_at'], item['payload'])).rowcount
+                                if confirmed != 1:
+                                    raise RuntimeError('LOCAL_RECEIPT_FENCE_LOST')
+                        if fenced:
+                            summary['local'] += 1
+                        else:
+                            summary['uncertain'] = summary.get('uncertain', 0) + 1
+                    finally:
+                        temporary.unlink(missing_ok=True)
+                    continue
                 else:
                     result = (sender or TelegramNotifier(policy).send)(item['payload'])
             except Exception:

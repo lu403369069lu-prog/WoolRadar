@@ -147,7 +147,8 @@ def validate(raw: bytes, expected_digest: str, *, now: datetime | None = None):
             # Equality alone would allow True == 1; compare typed JSON too.
             if json.dumps(public_claims(p['claims']), sort_keys=True) != json.dumps(p['claims'], sort_keys=True):
                 raise UnsafePreview('unsafe official evidence claims')
-            _time(p['checked_at'])
+            if _time(p['checked_at']) > generated:
+                raise UnsafePreview('official evidence checked after snapshot generation')
     return obj
 
 

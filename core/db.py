@@ -67,9 +67,13 @@ class Database:
 
     def _init_schema(self) -> None:
         with self.connect() as conn:
-            conn.execute('CREATE TABLE IF NOT EXISTS campaign_links (url TEXT PRIMARY KEY, review_json TEXT NOT NULL)')
-            conn.execute('CREATE TABLE IF NOT EXISTS migration_evidence_archive (id INTEGER PRIMARY KEY, original_event_id INTEGER, merged_into INTEGER, migrated_at TEXT, payload_json TEXT NOT NULL)')
             conn.executescript('''
+                -- executescript commits any pending transaction before running;
+                -- start the migration inside the script, keeping all subsequent
+                -- ALTER TABLE operations in the same rollback-capable transaction.
+                BEGIN IMMEDIATE;
+                CREATE TABLE IF NOT EXISTS campaign_links (url TEXT PRIMARY KEY, review_json TEXT NOT NULL);
+                CREATE TABLE IF NOT EXISTS migration_evidence_archive (id INTEGER PRIMARY KEY, original_event_id INTEGER, merged_into INTEGER, migrated_at TEXT, payload_json TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS events (
                     id INTEGER PRIMARY KEY,
                     canonical_key TEXT NOT NULL,
@@ -189,6 +193,10 @@ class Database:
 
     def set_status(self, event_id: int, status: Status, reason: str, claim_scope: str = 'NONE') -> None:
         with self.connect() as conn:
+            # Lock before reading the previous status so history cannot record
+            # another worker's state while this transaction is waiting to write.
+            if not conn.in_transaction:
+                conn.execute('BEGIN IMMEDIATE')
             row = conn.execute('SELECT status FROM events WHERE id=?', (event_id,)).fetchone()
             if row is None:
                 raise KeyError(event_id)
@@ -327,9 +335,19 @@ class Database:
                         'SELECT review_json FROM campaign_links WHERE url=?', (url,)).fetchone()
                     if previous and json.loads(previous[0]).get('campaign_url') != campaign_review.get('campaign_url'):
                         raise ValueError('CAMPAIGN_REVIEW_CONFLICT')
-            # Backup through a separate read connection so WAL contents are included.
-            with closing(sqlite3.connect(self.path)) as reader, closing(sqlite3.connect(backup)) as target:
-                reader.backup(target)
+            # Stage and validate the snapshot before exposing a final .db file.
+            # sqlite backup failures can otherwise leave a partially written .db
+            # that looks like a usable recovery point. Same-directory rename is
+            # atomic, including on Windows after all SQLite handles are closed.
+            staging = backup.with_suffix('.tmp')
+            try:
+                with closing(sqlite3.connect(self.path)) as reader, closing(sqlite3.connect(staging)) as target:
+                    reader.backup(target)  # Include committed WAL contents.
+                    if target.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
+                        raise sqlite3.DatabaseError('REINDEX_BACKUP_INTEGRITY_FAILED')
+                staging.replace(backup)
+            finally:
+                staging.unlink(missing_ok=True)
             if campaign_review is not None:
                 for url in campaign_review['member_urls']:
                     conn.execute('INSERT OR REPLACE INTO campaign_links VALUES(?,?)', (normalize_url(url), json.dumps(campaign_review, ensure_ascii=False)))

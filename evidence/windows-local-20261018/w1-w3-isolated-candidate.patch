@@ -1,0 +1,275 @@
+diff --git a/before/core/db.py b/after/core/db.py
+index 9116c16..9c7ece3 100644
+--- a/before/core/db.py
++++ b/after/core/db.py
+@@ -129,6 +129,8 @@ class Database:
+         batch = candidate.batch_id or ''
+         now = candidate.discovered_at or utc_now()
+         with self.connect() as conn:
++            # Serialize the existence check and insertion across worker processes.
++            conn.execute('BEGIN IMMEDIATE')
+             row = conn.execute('SELECT id FROM events WHERE canonical_key=? AND batch_id=?', (key, batch)).fetchone()
+             notify = row is None
+             if row is None:
+@@ -158,6 +160,8 @@ class Database:
+ 
+     def set_status(self, event_id: int, status: Status, reason: str, claim_scope: str = 'NONE') -> None:
+         with self.connect() as conn:
++            # The history's old_status must describe the actual prior committed state.
++            conn.execute('BEGIN IMMEDIATE')
+             row = conn.execute('SELECT status FROM events WHERE id=?', (event_id,)).fetchone()
+             if row is None:
+                 raise KeyError(event_id)
+diff --git a/before/core/notify.py b/after/core/notify.py
+index 720b312..933faa1 100644
+--- a/before/core/notify.py
++++ b/after/core/notify.py
+@@ -57,40 +57,66 @@ class NotificationQueue:
+             return True
+ 
+     def flush(self, policy: dict, sender=None, retry_seconds: int = 300, local_dir: Path | None = None) -> dict:
+-        summary = {'sent': 0, 'retry': 0, 'local': 0}
++        summary = {'sent': 0, 'retry': 0, 'local': 0, 'superseded': 0}
+         for item in self.pending():
+             local = item['channel'].startswith('local')
+             if local and local_dir is None:
+                 continue
+             if not local and not policy.get('telegram_send_enabled', False):
+                 continue
+-            if item['channel'].endswith('-verified'):
+-                event = self.db.get_event(item['event_id'])
+-                validation = VerificationEngine().evaluate(Candidate(event['node'], event['source'],
+-                    event['title'], event['primary_url']), self.db.get_evidence(event['id']))
+-                if validation.status.value != 'CLAIMABLE':
+-                    with self.db.connect() as conn:
+-                        conn.execute("UPDATE notifications SET result='STALE' WHERE id=? "
+-                            "AND result IN ('PENDING','RETRY','CLAIMED') AND next_attempt<=?", (item['id'], time.time()))
+-                    continue
+             now = time.time()
+             with self.db.connect() as conn:
+                 conn.execute('BEGIN IMMEDIATE')
+                 claimed = conn.execute("""UPDATE notifications SET result='CLAIMED',
+                     next_attempt=?,attempts=attempts+1 WHERE id=? AND next_attempt<=?
+                     AND result IN ('PENDING','RETRY','CLAIMED')""", (now + 300, item['id'], now)).rowcount
++                # The attempt counter is the durable fencing token for this claim.
++                attempt = (conn.execute('SELECT attempts FROM notifications WHERE id=?',
++                    (item['id'],)).fetchone()['attempts'] if claimed else None)
+             if not claimed:
+                 continue
+             try:
++                if item['channel'].endswith('-verified'):
++                    event = self.db.get_event(item['event_id'])
++                    validation = VerificationEngine().evaluate(Candidate(event['node'], event['source'],
++                        event['title'], event['primary_url']), self.db.get_evidence(event['id']))
++                    if validation.status.value != 'CLAIMABLE':
++                        with self.db.connect() as conn:
++                            updated = conn.execute("UPDATE notifications SET result='STALE',next_attempt=0 "
++                                "WHERE id=? AND result='CLAIMED' AND attempts=?", (item['id'], attempt)).rowcount
++                        if not updated:
++                            summary['superseded'] += 1
++                        continue
+                 if local:
+                     output = Path(local_dir)
+                     output.mkdir(parents=True, exist_ok=True)
+                     destination = output / f"notification-{item['id']}.json"
+-                    temporary = destination.with_suffix('.tmp')
+-                    temporary.write_text(json.dumps({'event_id': item['event_id'], 'batch_id': item['batch_id'],
+-                        'created_at': item['created_at'], 'message': item['payload']}, ensure_ascii=False, indent=2), encoding='utf-8')
+-                    temporary.replace(destination)
+-                    result = 'SENT'
++                    # An expired worker must never overwrite the file already
++                    # delivered by the worker that reclaimed its lease.
++                    temporary = destination.with_name(f".{destination.name}.attempt-{attempt}.tmp")
++                    try:
++                        temporary.write_text(json.dumps({'event_id': item['event_id'], 'batch_id': item['batch_id'],
++                            'created_at': item['created_at'], 'message': item['payload']}, ensure_ascii=False, indent=2), encoding='utf-8')
++                        with self.db.connect() as conn:
++                            conn.execute('BEGIN IMMEDIATE')
++                            owns_claim = conn.execute("SELECT 1 FROM notifications WHERE id=? "
++                                "AND result='CLAIMED' AND attempts=?", (item['id'], attempt)).fetchone() is not None
++                            if owns_claim:
++                                # A crash or failed SQLite commit can happen after
++                                # the atomic file rename. On recovery, reconcile
++                                # identical on-disk delivery before writing again.
++                                try:
++                                    already_delivered = destination.read_bytes() == temporary.read_bytes()
++                                except FileNotFoundError:
++                                    already_delivered = False
++                                if not already_delivered:
++                                    temporary.replace(destination)
++                                conn.execute("UPDATE notifications SET result='SENT',next_attempt=0 "
++                                    "WHERE id=? AND result='CLAIMED' AND attempts=?", (item['id'], attempt))
++                        summary['local' if owns_claim else 'superseded'] += 1
++                    finally:
++                        temporary.unlink(missing_ok=True)
++                    continue
+                 else:
+                     result = (sender or TelegramNotifier(policy).send)(item['payload'])
+             except Exception:
+@@ -98,9 +124,14 @@ class NotificationQueue:
+                 result = 'FAILED'
+             success = result == 'SENT'
+             with self.db.connect() as conn:
+-                conn.execute('UPDATE notifications SET result=?,next_attempt=? WHERE id=?',
+-                    ('SENT' if success else 'RETRY', 0 if success else now + max(0, retry_seconds), item['id']))
+-            summary['local' if local and success else 'sent' if success else 'retry'] += 1
++                updated = conn.execute("UPDATE notifications SET result=?,next_attempt=? "
++                    "WHERE id=? AND result='CLAIMED' AND attempts=?",
++                    ('SENT' if success else 'RETRY', 0 if success else now + max(0, retry_seconds),
++                     item['id'], attempt)).rowcount
++            if updated:
++                summary['local' if local and success else 'sent' if success else 'retry'] += 1
++            else:
++                summary['superseded'] += 1
+         return summary
+ 
+ 
+diff --git a/before/tests/test_notifications.py b/after/tests/test_notifications.py
+index 63b125f..feb2461 100644
+--- a/before/tests/test_notifications.py
++++ b/after/tests/test_notifications.py
+@@ -1,7 +1,11 @@
+ import json
++import sqlite3
+ import tempfile
++import threading
+ import unittest
++from contextlib import contextmanager
+ from pathlib import Path
++from unittest.mock import patch
+ 
+ from core.db import Database
+ from core.models import Candidate, Evidence
+@@ -13,6 +17,132 @@ TEMP.mkdir(exist_ok=True)
+ 
+ 
+ class NotificationTests(unittest.TestCase):
++    def test_local_file_commit_failure_recovers_without_second_delivery_write(self):
++        with tempfile.TemporaryDirectory(dir=TEMP) as td:
++            root = Path(td)
++            db = Database(root / 'radar.db')
++            event = db.upsert_candidate(Candidate('n', 'rss', 'Notice', 'https://vendor.example/notice')).event_id
++            queue = NotificationQueue(db)
++            self.assertTrue(queue.enqueue(event, '', 'local', 'notice'))
++            destination = root / 'outbox' / 'notification-1.json'
++            original_connect = db.connect
++            fail_once = [True]
++
++            @contextmanager
++            def fail_first_sent_commit():
++                with original_connect() as conn:
++                    yield conn
++                    if fail_once[0] and destination.exists() and conn.execute(
++                            "SELECT result FROM notifications WHERE id=1").fetchone()['result'] == 'SENT':
++                        fail_once[0] = False
++                        raise sqlite3.OperationalError('injected COMMIT failure before durability')
++
++            original_replace = Path.replace
++            replacements = []
++
++            def count_replace(path, target):
++                if Path(target) == destination:
++                    replacements.append(str(path))
++                return original_replace(path, target)
++
++            with patch.object(db, 'connect', fail_first_sent_commit), patch.object(Path, 'replace', count_replace):
++                self.assertEqual(queue.flush({}, local_dir=root / 'outbox')['retry'], 1)
++                self.assertEqual(json.loads(destination.read_text(encoding='utf-8'))['message'], 'notice')
++                with original_connect() as conn:
++                    conn.execute('UPDATE notifications SET next_attempt=0 WHERE id=1')
++                self.assertEqual(queue.flush({}, local_dir=root / 'outbox')['local'], 1)
++
++            self.assertEqual(len(replacements), 1, 'retry must not replace an already delivered identical file')
++            with original_connect() as conn:
++                self.assertEqual(conn.execute('SELECT result FROM notifications WHERE id=1').fetchone()['result'], 'SENT')
++
++    def test_expired_local_claim_cannot_overwrite_newer_delivery(self):
++        with tempfile.TemporaryDirectory(dir=TEMP) as td:
++            root = Path(td)
++            db = Database(root / 'radar.db')
++            event = db.upsert_candidate(Candidate('n', 'rss', 'Notice', 'https://vendor.example/notice')).event_id
++            queue = NotificationQueue(db)
++            self.assertTrue(queue.enqueue(event, '', 'local', 'old payload'))
++            entered = threading.Event()
++            release = threading.Event()
++            failures = []
++            original_write = Path.write_text
++
++            def pause_first_worker(path, *args, **kwargs):
++                if threading.current_thread().name == 'expired-local-worker' and path.suffix == '.tmp':
++                    entered.set()
++                    if not release.wait(5):
++                        raise AssertionError('replacement worker did not finish')
++                return original_write(path, *args, **kwargs)
++
++            def old_worker():
++                try:
++                    queue.flush({}, local_dir=root / 'outbox')
++                except BaseException as exc:
++                    failures.append(exc)
++
++            with patch.object(Path, 'write_text', pause_first_worker):
++                thread = threading.Thread(target=old_worker, name='expired-local-worker')
++                thread.start()
++                try:
++                    self.assertTrue(entered.wait(5), 'old worker should be paused before disk write')
++                    with db.connect() as conn:
++                        conn.execute("UPDATE notifications SET next_attempt=0,payload='new payload' WHERE result='CLAIMED'")
++                    self.assertEqual(NotificationQueue(Database(db.path)).flush({}, local_dir=root / 'outbox')['local'], 1)
++                finally:
++                    release.set()
++                    thread.join(5)
++            self.assertFalse(thread.is_alive())
++            self.assertEqual(failures, [])
++            notices = list((root / 'outbox').glob('notification-*.json'))
++            self.assertEqual(len(notices), 1)
++            self.assertEqual(json.loads(notices[0].read_text(encoding='utf-8'))['message'], 'new payload')
++            with db.connect() as conn:
++                row = conn.execute('SELECT result,attempts FROM notifications').fetchone()
++            self.assertEqual((row['result'], row['attempts']), ('SENT', 2))
++
++    def test_expired_claim_owner_cannot_undo_newer_success(self):
++        with tempfile.TemporaryDirectory(dir=TEMP) as td:
++            db = Database(Path(td) / 'radar.db')
++            event = db.upsert_candidate(Candidate('n', 'rss', 'Free API', 'https://vendor.example/api')).event_id
++            queue = NotificationQueue(db)
++            self.assertTrue(queue.enqueue(event, '', 'telegram', 'notice'))
++            entered = threading.Event()
++            release = threading.Event()
++            failures = []
++
++            def slow_sender(_):
++                entered.set()
++                if not release.wait(5):
++                    raise AssertionError('second worker never reclaimed the delivery')
++                return 'FAILED'
++
++            def old_worker():
++                try:
++                    queue.flush({'telegram_send_enabled': True}, sender=slow_sender, retry_seconds=0)
++                except BaseException as exc:
++                    failures.append(exc)
++
++            thread = threading.Thread(target=old_worker)
++            thread.start()
++            try:
++                self.assertTrue(entered.wait(5), 'first worker must own claim')
++                # Simulate a lease that expired while the first sender was blocked.
++                with db.connect() as conn:
++                    conn.execute('UPDATE notifications SET next_attempt=0 WHERE result=?', ('CLAIMED',))
++                replacement = NotificationQueue(Database(db.path))
++                self.assertEqual(replacement.flush({'telegram_send_enabled': True},
++                    sender=lambda _: 'SENT')['sent'], 1)
++            finally:
++                release.set()
++                thread.join(5)
++            self.assertFalse(thread.is_alive())
++            self.assertEqual(failures, [])
++            with db.connect() as conn:
++                row = conn.execute('SELECT result,attempts FROM notifications').fetchone()
++            self.assertEqual((row['result'], row['attempts']), ('SENT', 2))
++            self.assertEqual(queue.pending(), [])
++
+     def test_passed_official_deadline_suppresses_queued_verified_notice(self):
+         with tempfile.TemporaryDirectory(dir=TEMP) as td:
+             root = Path(td)

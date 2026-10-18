@@ -19,6 +19,7 @@ class NestedQueryCanary(unittest.TestCase):
             'https://publisher.org/offer?batch=fall&%2574oken=SYNTHETIC_CANARY',
             'https://publisher.org/offer?ref=user%2540example.org',
             'https://publisher.org/offer?%2561pi_key=SYNTHETIC_CANARY',
+            'https://publisher.org/offer?batch=1234567890123456',
             'https://publisher.org/offer?batch=fall#/?%2574oken=SYNTHETIC_CANARY',
         )
         for url in cases:

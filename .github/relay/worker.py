@@ -131,6 +131,43 @@ def persist(a):
         raise ValueError("STALE_RECEIPT_REJECTED")
     if not 1 <= len(receipt["results"]) <= 3:
         raise ValueError("invalid receipt size")
+    queue_path = Path(".github/relay/queue.json")
+    queue = load(queue_path)
+    if (queue.get("repo") != a.repo or queue.get("schema_version") != 1
+            or receipt.get("source_ref") != queue.get("source_ref")
+            or receipt.get("queue_sha256") != hashlib.sha256(queue_path.read_bytes()).hexdigest()
+            or receipt.get("strict_new_acceptances") != 0):
+        raise ValueError("receipt does not match trusted queue")
+    families = queue["families"]
+    n = len(receipt["results"])
+    expected = [families[(s["cursor"] + i) % len(families)] for i in range(n)]
+    if receipt.get("next_cursor") != (s["cursor"] + n) % len(families):
+        raise ValueError("incorrect next cursor")
+    for result, entry in zip(receipt["results"], expected):
+        if result.get("id") != entry["id"] or result.get("goal") != entry["goal"]:
+            raise ValueError("receipt task ID/order mismatch")
+        commands = entry["checks"]
+        checks = result.get("checks")
+        if not isinstance(checks, list):
+            raise ValueError("missing check evidence")
+        if entry["disposition"] == "EXTERNAL_OR_POLICY_GATED":
+            expected_status = "EXTERNAL_GATE_NOT_EXECUTED"
+            if checks:
+                raise ValueError("external-gate task executed")
+        elif not commands:
+            expected_status = "NO_FORMAL_MAPPING_NOT_EXECUTED"
+            if checks:
+                raise ValueError("unmapped task executed")
+        else:
+            if [x.get("argv") for x in checks] != commands:
+                raise ValueError("test mapping mismatch")
+            all_pass = all(x.get("status") == "PASS" and x.get("exit_code") == 0
+                           and isinstance(x.get("total"), int) and x["total"] > 0
+                           and x.get("failed") in (0, None) for x in checks)
+            expected_status = ("FORMAL_SUBSET_PASS_NATIVE_PENDING" if all_pass
+                               else "FORMAL_CHECK_FAILED_OR_BLOCKED")
+        if result.get("status") != expected_status:
+            raise ValueError("incorrect task disposition")
     if any(x.get("strictly_complete") is not False or x.get("business_accepted") is not False for x in receipt["results"]):
         raise ValueError("never auto-accept a family")
     s["cursor"] = receipt["next_cursor"]

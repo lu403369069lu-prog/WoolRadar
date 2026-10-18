@@ -30,6 +30,22 @@ jobs:
           ref: ${{ inputs.target_ref || 'e81ef59bc2b0b05fad5acfbb231ead92c0d2925e' }}
           path: candidate
           persist-credentials: false
+      - name: Checkout historical ledger for queue checkpoint
+        uses: actions/checkout@v4
+        with:
+          ref: chatgpt/scheduled-review-ledger-20261017
+          path: ledger
+          persist-credentials: false
+      - name: Verify real historical queue and create relay checkpoint
+        run: python .github/scripts/relay_queue.py
+      - name: Upload relay checkpoint even when acceptance fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relay-checkpoint-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .relay-checkpoint/
+          include-hidden-files: true
+          if-no-files-found: error
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'

@@ -60,6 +60,40 @@ def choose_recheck(state, families, regular_ids):
     return min(candidates)[2] if candidates else None
 
 
+def parse_test_summary(output, exit_code):
+    """An all-skipped or TODO-only test run is NOT formal evidence."""
+    node_totals = re.findall(r"(?m)^# tests (\d+)\s*$", output)
+    python_totals = re.findall(r"(?m)^Ran (\d+) tests?", output)
+    if node_totals:
+        total = int(node_totals[-1])
+        def node_count(key):
+            matches = re.findall(r"(?m)^# " + key + r" (\d+)\s*$", output)
+            return int(matches[-1]) if matches else None
+        passed = node_count("pass")
+        failed = node_count("fail")
+        skipped = node_count("skipped")
+        todo = node_count("todo")
+        cancelled = node_count("cancelled")
+        # Node 22 reports each category. Missing/truncated summaries fail closed.
+        complete = all(type(x) is int for x in (passed, failed, skipped, todo, cancelled))
+        ok = (exit_code == 0 and total > 0 and complete and passed == total
+              and failed == 0 and skipped == 0 and todo == 0 and cancelled == 0)
+    elif python_totals:
+        total = int(python_totals[-1])
+        skipped_matches = re.findall(r"\bskipped=(\d+)\b", output)
+        skipped = int(skipped_matches[-1]) if skipped_matches else 0
+        passed = total - skipped if exit_code == 0 else None
+        failed = None
+        todo = cancelled = 0
+        ok = exit_code == 0 and total > 0 and skipped == 0
+    else:
+        total = passed = failed = skipped = todo = cancelled = None
+        ok = False
+    return {"status": "PASS" if ok else "FAIL", "exit_code": exit_code,
+            "total": total, "passed": passed, "failed": failed,
+            "skipped": skipped, "todo": todo, "cancelled": cancelled}
+
+
 def test(argv, cwd, src):
     paths = [argv[5]] if argv[:5] == ["python", "-m", "unittest", "discover", "-s"] else [a for a in argv if a.endswith((".test.ts", ".test.mjs"))]
     if any(not (cwd / a).resolve().is_relative_to(src) for a in paths):
@@ -72,21 +106,13 @@ def test(argv, cwd, src):
     try:
         proc = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, errors="replace", timeout=180, env=env)
         output = (proc.stdout + "\n" + proc.stderr)[-240000:]
-        py = re.search(r"Ran (\d+) tests?", output)
-        node = re.search(r"(?m)^# tests (\d+)\s*$", output)
-        fail = re.search(r"(?m)^# fail (\d+)\s*$", output)
-        passed = re.search(r"(?m)^# pass (\d+)\s*$", output)
-        total = int(py.group(1)) if py else int(node.group(1)) if node else None
-        fails = int(fail.group(1)) if fail else None
-        ok = proc.returncode == 0 and total is not None and total > 0 and fails in (None, 0)
+        summary = parse_test_summary(output, proc.returncode)
         names = []
-        if not ok:
+        if summary["status"] != "PASS":
             for line in output.splitlines():
                 if line.startswith(("not ok ", "FAIL: ", "ERROR: ")):
                     names.append(re.sub(r"[^a-zA-Z0-9 _.:#()\-]", "?", line)[:150])
-        return {"status": "PASS" if ok else "FAIL", "exit_code": proc.returncode, "total": total,
-                "passed": int(passed.group(1)) if passed else total if ok else None,
-                "failed": fails, "failed_test_names": names[:12]}
+        return {**summary, "failed_test_names": names[:12]}
     except (OSError, subprocess.TimeoutExpired) as exc:
         return {"status": "BLOCKED", "error_kind": type(exc).__name__}
 
@@ -202,8 +228,11 @@ def persist(a):
             if [x.get("argv") for x in checks] != commands:
                 raise ValueError("test mapping mismatch")
             all_pass = all(x.get("status") == "PASS" and x.get("exit_code") == 0
-                           and isinstance(x.get("total"), int) and x["total"] > 0
-                           and x.get("failed") in (0, None) for x in checks)
+                           and type(x.get("total")) is int and x["total"] > 0
+                           and type(x.get("passed")) is int and x["passed"] == x["total"]
+                           and x.get("failed") in (0, None) and x.get("skipped", 0) == 0
+                           and x.get("todo", 0) == 0 and x.get("cancelled", 0) == 0
+                           for x in checks)
             expected_status = ("FORMAL_SUBSET_PASS_NATIVE_PENDING" if all_pass
                                else "FORMAL_CHECK_FAILED_OR_BLOCKED")
         if result.get("status") != expected_status:
@@ -228,7 +257,12 @@ def persist(a):
     if integration["status"] == "PASS" and (
             integration.get("exit_code") != 0 or
             not isinstance(integration.get("total"), int) or integration["total"] <= 0 or
-            integration.get("failed") not in (None, 0)):
+            integration.get("failed") not in (None, 0) or
+            type(integration.get("passed")) is not int or
+            integration["passed"] != integration["total"] or
+            integration.get("skipped", 0) != 0 or
+            integration.get("todo", 0) != 0 or
+            integration.get("cancelled", 0) != 0):
         raise ValueError("forged integration success")
     receipt["integration"] = integration
     s["integration"] = {"status": integration["status"],

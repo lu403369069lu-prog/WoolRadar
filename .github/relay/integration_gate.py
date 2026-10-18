@@ -9,6 +9,8 @@ import re
 import subprocess
 import sys
 
+from worker import parse_test_summary
+
 def run(args):
     root = Path(args.source).resolve()
     if args.repo == "WoolRadar":
@@ -34,19 +36,13 @@ def run(args):
         proc = subprocess.run(cmd, cwd=cwd, env=env, capture_output=True,
                               text=True, errors="replace", timeout=600, check=False)
         output = (proc.stdout + "\n" + proc.stderr)[-400000:]
-        matches = re.findall(r"Ran (\d+) tests?", output)
-        node_total = re.findall(r"(?m)^# tests (\d+)\s*$", output)
-        node_pass = re.findall(r"(?m)^# pass (\d+)\s*$", output)
-        node_fail = re.findall(r"(?m)^# fail (\d+)\s*$", output)
-        total = int(matches[-1]) if matches else int(node_total[-1]) if node_total else None
-        passed = int(node_pass[-1]) if node_pass else total if proc.returncode == 0 else None
-        failures = int(node_fail[-1]) if node_fail else None
+        summary = parse_test_summary(output, proc.returncode)
         failure_names = []
-        if proc.returncode != 0:
+        if summary["status"] != "PASS":
             for line in output.splitlines():
                 if line.startswith(("not ok ", "FAIL: ", "ERROR: ")):
                     failure_names.append(re.sub(r"[^a-zA-Z0-9 _.:#()\-]", "?", line)[:150])
-        ok = proc.returncode == 0 and total is not None and total > 0 and failures in (None, 0)
+
         details = []
         active = None
         for line in output.splitlines():
@@ -63,9 +59,7 @@ def run(args):
                     active["signals"].append(safe)
         if active is not None:
             details.append(active)
-        base.update({"status": "PASS" if ok else "FAIL", "exit_code": proc.returncode,
-                     "total": total, "passed": passed, "failed": failures,
-                     "failed_test_names": failure_names[:30],
+        base.update({**summary, "failed_test_names": failure_names[:30],
                      "failure_details": details[:30]})
     except (OSError, subprocess.TimeoutExpired) as exc:
         base.update({"status": "BLOCKED", "error_kind": type(exc).__name__})

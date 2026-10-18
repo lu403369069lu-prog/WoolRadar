@@ -57,6 +57,30 @@ class RelaySafetyTests(unittest.TestCase):
         worker.persist(SimpleNamespace(state=str(directory), receipt=str(rec), repo=q["repo"]))
         return worker.load(state)
 
+    def test_skip_todo_cancelled_never_count_as_formal_pass(self):
+        cases = [
+            ("Node all skipped", "# tests 2\n# pass 0\n# fail 0\n# cancelled 0\n# skipped 2\n# todo 0\n"),
+            ("Node mixed skip", "# tests 2\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 1\n# todo 0\n"),
+            ("Node todo", "# tests 2\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 1\n"),
+            ("Node cancelled", "# tests 2\n# pass 1\n# fail 0\n# cancelled 1\n# skipped 0\n# todo 0\n"),
+            ("Node missing summary", "# tests 2\n# pass 2\n# fail 0\n"),
+            ("Python all skipped", "Ran 2 tests in 0.001s\n\nOK (skipped=2)\n"),
+        ]
+        for label, output in cases:
+            with self.subTest(label=label):
+                self.assertEqual(worker.parse_test_summary(output, 0)["status"], "FAIL")
+        node_good = "# tests 2\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n"
+        self.assertEqual(worker.parse_test_summary(node_good, 0)["status"], "PASS")
+        self.assertEqual(worker.parse_test_summary("Ran 2 tests in 0.001s\n\nOK\n", 0)["status"], "PASS")
+
+    def test_forged_skipped_receipt_rejected(self):
+        q = self.queue()
+        with tempfile.TemporaryDirectory() as tmp:
+            receipt = self.receipt(q)
+            receipt["results"][0]["checks"][0].update({"skipped": 3, "passed": 0})
+            with self.assertRaises(ValueError):
+                self.run_persist(Path(tmp), q, receipt)
+
     def test_queue_digest_is_lf_crlf_platform_stable(self):
         q = self.queue()
         lf = json.dumps(q, sort_keys=True, indent=2, ensure_ascii=False)

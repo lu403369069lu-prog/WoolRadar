@@ -1,0 +1,50 @@
+name: WR H11 grant card-gate original source native (advisory)
+on:
+  push:
+    branches: [chatgpt/wr-h11-card-required-grants-20261018]
+permissions:
+  contents: read
+concurrency:
+  group: wr-h11-card-native-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  conservative-grant:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        python: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Check original source ancestor and official tests
+        shell: bash
+        run: git merge-base --is-ancestor a0fc93c4b54d16f399c28ffb401d682fa823b107 HEAD
+      - name: Native no-skip conservative grant tests
+        shell: bash
+        run: |
+          python - <<'PY'
+          import unittest
+          from pathlib import Path
+          names = [
+              'test_developer_grant_negations.py',
+              'test_developer_grant_project_scope.py',
+              'test_developer_grant_card_barrier.py',
+          ]
+          for name in names:
+              if not (Path('tests') / name).is_file():
+                  raise SystemExit('MISSING_REQUIRED_TEST')
+          suite=unittest.defaultTestLoader.discover('tests',pattern='test_developer_grant_*.py')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if result.testsRun < 16 or not result.wasSuccessful() or result.skipped or result.expectedFailures or result.unexpectedSuccesses:
+              raise SystemExit('ORIGINAL_GRANT_REGRESSION_FAILED')
+          print(f"WR_H11_NATIVE_PARTIAL_PASS {result.testsRun}/{result.testsRun} zero skips")
+          print("ADVISORY_ONLY: synthetic announcement copy, not original current public source or claimability")
+          PY

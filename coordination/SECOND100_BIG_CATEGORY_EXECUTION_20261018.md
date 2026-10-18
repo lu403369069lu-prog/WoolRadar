@@ -41,8 +41,8 @@
 | R2-008 | W1 通知交付 | 429及断网故障注入 | 每一故障有确定恢复状态 | DRAFT_NATIVE_GREEN_NOT_STRICTLY_ACCEPTED |
 | R2-009 | W2 SQLite数据安全 | Schema 真实数据迁移 | 旧版拷贝升级且索引和行数一致 | PLANNED_NOT_VERIFIED |
 | R2-010 | W2 SQLite数据安全 | 迁移中断事务回滚 | 故障注入后旧库不损坏 | PLANNED_NOT_VERIFIED |
-| R2-011 | W2 SQLite数据安全 | WAL 在线备份 | 未 checkpoint 时可独立恢复 | PLANNED_NOT_VERIFIED |
-| R2-012 | W2 SQLite数据安全 | 备份恢复完整性 | 逐表记录和关键约束可核对 | PLANNED_NOT_VERIFIED |
+| R2-011 | W2 SQLite数据安全 | WAL 在线备份 | 未 checkpoint 时可独立恢复 | DRAFT_NATIVE_GREEN_NOT_STRICTLY_ACCEPTED |
+| R2-012 | W2 SQLite数据安全 | 备份恢复完整性 | 逐表记录和关键约束可核对 | DRAFT_NATIVE_GREEN_NOT_STRICTLY_ACCEPTED |
 | R2-013 | W2 SQLite数据安全 | 新旧版本兼容拒绝 | 不支持降级明确失败不写坏数据 | DRAFT_NATIVE_GREEN_NOT_STRICTLY_ACCEPTED |
 | R2-014 | W2 SQLite数据安全 | 并发 reindex/upsert | 同键不重影且无丢更新 | PLANNED_NOT_VERIFIED |
 | R2-015 | W2 SQLite数据安全 | 数据库损坏与磁盘已满 | 保守停机及可追溯恢复 | PLANNED_NOT_VERIFIED |
@@ -163,3 +163,10 @@
 - **R2-013** SQLite未来版本先读拒绝：[PR73](https://github.com/lu403369069lu-prog/WoolRadar/pull/73)、[RED39132251927](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39132251927)、首个候选[39132322563](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39132322563) Linux绿Windows因测试夹具未close而失败、修复测试后[GREEN39132418582](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39132418582)。只用合成库验证新版本被只读拒绝，旧版0→1保留数据；未接触生产DB。
 
 目前此前5项局部候选 + 本次6项局部候选 = 11项进入不同程度工程验证（不是11项严格完成）。R2业务验收仍**0/100**、历史50大类严格完成仍**0/50**。所有上述PR仍需源码整合、完整无skip回归、业务证据及独立验收；不合并、不改Windows生产、不发送真实消息。
+
+
+### 后续R2-011 / R2-012 独立WAL备份恢复原生收据
+
+- [Draft PR75](https://github.com/lu403369069lu-prog/WoolRadar/pull/75) 源码上真实执行两个区分明确的测试：R2-011 在现存读事务固定旧快照时，新增提交进入WAL且未checkpoint，调用真实reindex在线备份，证明备份包含刚提交的事件、官方模拟证据及入队通知；R2-012 将备份文件复制到独立数据库，逐表比对8表全部记录、SQLite integrity_check=ok、foreign_key_check空。
+- [Actions39132865286](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39132865286) Windows/Linux × Python3.11/3.12 四平台均执行成功，每平台2项新增备份恢复测试与2项前序Schema版本测试通过，零跳过。没有刻意制造RED故障，也没有宣称修正了原本不存在的备份错误。
+- 仅合成数据与隔离草稿；未触碰生产数据库或改动主线。R2-011、012正式业务恢复演练和全部回归仍未进行，**不能核销为严格完成**。目前R2有先前5项候选、本次W1/W2先登记6项、此次新增2项，即共13项曾进入不同程度候选验证；R2严格验收仍0/100。

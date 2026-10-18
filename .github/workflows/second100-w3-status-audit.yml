@@ -22,3 +22,5 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Verify exact W3 source and failure-injection tests
         run: python -X utf8 -m unittest discover -s tests -p test_status_audit_locking.py -v
+      - name: Full original Python regression (not business delivery acceptance)
+        run: python -X utf8 -m unittest discover -s tests -v

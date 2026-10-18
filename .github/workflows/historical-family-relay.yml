@@ -47,6 +47,8 @@ jobs:
           node-version: '22'
       - name: Evaluate next two historical families without write credentials
         run: python .github/relay/worker.py evaluate --repo WoolRadar --source candidate --state checkpoint --limit 2
+      - name: Run and record complete original-source integration suite
+        run: python .github/relay/integration_gate.py --repo WoolRadar --source candidate --output .relay-report/integration.json
       - name: Retain read-only evaluation receipt
         if: always()
         uses: actions/upload-artifact@v4
@@ -105,5 +107,7 @@ jobs:
           report=json.load(open('.relay-report/receipt.json', encoding='utf-8'))
           bad=[row['id'] for row in report['results'] if row['status']=='FORMAL_CHECK_FAILED_OR_BLOCKED']
           print('Persisted failed families:', bad)
-          if bad: sys.exit(1)
+          integration=json.load(open('.relay-report/integration.json', encoding='utf-8'))
+          print('Original-source full-suite:', integration['status'], 'total', integration.get('total'), 'failed', integration.get('failed'))
+          if bad or integration['status'] != 'PASS': sys.exit(1)
           PY

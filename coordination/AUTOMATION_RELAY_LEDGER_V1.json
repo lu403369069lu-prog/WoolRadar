@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 31,
+    "revision": 32,
     "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
-    "last_completed_review_key": "interactive-20261018-100-minimal-stage9-wr-h07-nested-encoded-path",
+    "last_completed_review_key": "interactive-20261018-100-minimal-stage10-wr-h07-nested-query-laundering",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -63,7 +63,8 @@
       "YinQieJi#27": "2c5e6ea4450cfe3c6942370399ecfa6ad1e97cbd",
       "WoolRadar#52": "cd415231b54ca9d439dd3988d9b558af67ddf81d",
       "WoolRadar#53": "b3b80aa83ff61280d37df45016c1521119dd5d8d",
-      "WoolRadar#54": "8d32472fe6b6ac7b1dabd136fcb378335333209e"
+      "WoolRadar#54": "8d32472fe6b6ac7b1dabd136fcb378335333209e",
+      "WoolRadar#55": "53dbe082d95a15da75a8a1cd7e4d6a1129317a4f"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -97,9 +98,10 @@
       "interactive-20261018-100-minimal-stage6-sam-h14-runtime-fold-redgreen",
       "interactive-20261018-100-minimal-stage7-wr-h11-card-required",
       "interactive-20261018-100-minimal-stage8-wr-h07-private-url-path",
-      "interactive-20261018-100-minimal-stage9-wr-h07-nested-encoded-path"
+      "interactive-20261018-100-minimal-stage9-wr-h07-nested-encoded-path",
+      "interactive-20261018-100-minimal-stage10-wr-h07-nested-query-laundering"
     ],
-    "write_diagnostic": "INTERACTIVE_SOURCE_MULTILAYER_PRIVATE_PATH_RED_GREEN_ACTUAL_SIX_JOB",
+    "write_diagnostic": "INTERACTIVE_ORIGINAL_SAMPLER_QUERY_NESTED_PRIVACY_RED_GREEN_VERIFIED",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -1947,6 +1949,22 @@
       "test_evidence": "Windows/Linux Python3.11/3.12/3.13 each 50/50 and zero skips; red each 4 intended failure subcases",
       "business_accepted": false,
       "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage10-wr-h07-nested-query-laundering",
+      "repo": "WoolRadar",
+      "family": "WR-H07",
+      "status": "NESTED_QUERY_PRIVACY_CANARY_AND_NUMERIC_REGEX_FOLLOWUP_NATIVE_PASS",
+      "source_sha": "8d32472fe6b6ac7b1dabd136fcb378335333209e",
+      "pr": 55,
+      "red_run": 39102351638,
+      "first_green_run": 39102454947,
+      "numeric_red_run": 39102536590,
+      "green_run": 39102588075,
+      "head": "53dbe082d95a15da75a8a1cd7e4d6a1129317a4f",
+      "test_evidence": "6x52 Windows/Linux Python3.11/3.12/3.13, final zero skips/fails",
+      "business_accepted": false,
+      "strictly_complete": false
     }
   ],
   "run_history": [
@@ -2551,6 +2569,38 @@
       },
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
       "next_action": "PR54 still Draft unmerged stacked on PR53, separate source and business qualification pending. Check nested query-key/fragment privacy semantics and separate exact SHA original-source acceptance; no false family acceptance."
+    },
+    {
+      "event_id": "interactive-20261018-100-minimal-stage10-wr-h07-nested-query-laundering",
+      "origin": "INTERACTIVE_CHAT_ORIGINAL_BLIND_SAMPLER_NESTED_QUERY_RED_GREEN",
+      "minimal_task_units_new_this_request": 5,
+      "cumulative_actual_minimal_tasks_this_request": 56,
+      "task_unit_ids": [
+        "WR-H07-UNTRUSTED-NESTED-QUERY-ID-LAUNDERING-DEFECT",
+        "WR-H07-6x52-FOUR-CANARY-RED",
+        "WR-H07-INDEPENDENT-SAMPLER-MULTIENCODE-QUERY-GATE",
+        "WR-H07-NUMERIC-PRIVATE-ID-REGEX-SECOND-RED",
+        "WR-H07-NATIVE-SIX-PLATFORM-FINAL-52-GREEN"
+      ],
+      "actual_cases": "At exact original-source parent PR54 HEAD 8d32472f, adversarial private query keys %2574oken, %2561pi_key, double-encoded contact values and hash-route query passed independently into forged public-only sample. Created independent Draft PR55; actual Actions39102351638 six jobs with 52 tests each, four expected canary subfailures per job. Added query decoding/privacy gate; first six-job green Actions39102454947. Review identified regex mistakenly matching literal \\d, not 13+ digits. Added failing numeric canary: six real failures Actions39102536590; corrected the regex and real final Actions39102588075 six Windows/Linux Python3.11/3.12/3.13 jobs each 52/52 zero skipped/failed. All tests synthetic; no actual RSS/official source, credentials, payments, DNS, true holdout, production or PR merge.",
+      "evidence": {
+        "repo": "WoolRadar",
+        "pr": 55,
+        "base_pr": 54,
+        "original_source_sha": "8d32472fe6b6ac7b1dabd136fcb378335333209e",
+        "red_head": "3a98456781d7f2a9c695805099b3208bcab3d620",
+        "red_run": 39102351638,
+        "first_green_run": 39102454947,
+        "second_red_head": "ae63c6ef330de1b53af78a7a96c8b94987be5a42",
+        "second_red_run": 39102536590,
+        "final_head": "53dbe082d95a15da75a8a1cd7e4d6a1129317a4f",
+        "final_green_run": 39102588075,
+        "jobs": 6,
+        "tests_per_job": 52,
+        "zero_skips": true
+      },
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "next_action": "Switch to independent relay parser expectedFailures false-pass across two repos; strict real public qualification and holdout still unavailable."
     }
   ],
   "acceptance": {
@@ -2588,7 +2638,8 @@
     "sam_h14_runtime_identity_native": "REAL_SOURCE_RED_GREEN_WINDOWS_LINUX_NODE22_24_26_6x5_PASS_20261018_STRICT_PENDING",
     "wr_h11_card_required_gate": "REAL_SOURCE_RED_GREEN_6X31_NATIVE_PASS_20261018_STRICT_OFFICIAL_REVIEW_PENDING",
     "wr_h07_sensitive_private_url_path": "ORIGINAL_PRODUCER_SAMPLER_6X49_PASS_ZERO_SKIP_20261018_STRICT_SOURCE_PENDING",
-    "wr_h07_nested_encoded_private_path": "REAL_SOURCE_RED_GREEN_6X50_NATIVE_PASS_20261018_STRICT_SOURCE_PENDING"
+    "wr_h07_nested_encoded_private_path": "REAL_SOURCE_RED_GREEN_6X50_NATIVE_PASS_20261018_STRICT_SOURCE_PENDING",
+    "wr_h07_nested_query_privacy": "REAL_SOURCE_SAMPLER_NESTED_QUERY_6X52_GREEN_STRICT_PENDING_20261018"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

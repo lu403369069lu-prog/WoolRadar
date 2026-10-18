@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 21,
+    "revision": 22,
     "last_persisted_worker_run_utc": "2026-10-18T01:33:11.640Z",
-    "last_completed_review_key": "interactive-20261018-100-minimal-stage1-relay-ci-mappings",
+    "last_completed_review_key": "interactive-20261018-100-minimal-stage2-sam-h06-wr-h18-source-native",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -51,7 +51,8 @@
       "YinQieJi#20": "ac1a36e543851d1ec4708664cfaab918537450a6",
       "YinQieJi#21": "ba24b3db342fc5c648effd95d477eda154cff909",
       "WoolRadar#48": "24781d17ee1ce68668932e883c76cc6f56d007e9",
-      "YinQieJi#23": "f2d5463bbd531fd222fddb5b888b0a0fe100ecce"
+      "YinQieJi#23": "5f49318555b187cd8d67692f2072cdcb64b229b2",
+      "WoolRadar#49": "9d0f78ae6bfa181f31101a3b6ce0a56f192534db"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -75,9 +76,10 @@
       "interactive-20261018-minimal-skip-failclosed-wool-sam-codex",
       "interactive-20261018-pr-acceptance-zero-skips-real-run",
       "interactive-20261018-ten-minimal-actions-five-false-mappings-two-drafts",
-      "interactive-20261018-100-minimal-stage1-relay-ci-mappings"
+      "interactive-20261018-100-minimal-stage1-relay-ci-mappings",
+      "interactive-20261018-100-minimal-stage2-sam-h06-wr-h18-source-native"
     ],
-    "write_diagnostic": "INTERACTIVE_REAL_PR_MAPPING_CI_VERIFIED_PENDING_LEDGER_READBACK",
+    "write_diagnostic": "INTERACTIVE_REAL_SOURCE_CI_STAGE2_PENDING_READBACK",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -1570,6 +1572,67 @@
       "business_accepted": false,
       "native_frozen_accepted": false,
       "next_action": "Draft PR23 remains unmerged. Replace SAM-H06 mapping with genuine 572-case rg matrix & compare Windows semantics. SAM-H13 requires true dist install/upgrade/rollback test, not build-manifest synthesis; real frozen publication source6 still blocked."
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage2-sam-h06-wr-h18-source-native/SAM-H06",
+      "origin": "INTERACTIVE_CHAT_REAL_SOURCE_LINUX_RG572",
+      "repo": "lu403369069lu-prog/YinQieJi",
+      "family_ids": [
+        "SAM-H06"
+      ],
+      "source_sha": "ba24b3db342fc5c648effd95d477eda154cff909",
+      "source_test_blob": "77a27796d2bd3cd696cd2b72993aaf6dfd7acdea",
+      "controller_commit": "5f49318555b187cd8d67692f2072cdcb64b229b2",
+      "evidence_url": "https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39092990746",
+      "checks": [
+        {
+          "group": "native-Linux-frozen-original-source-rg572",
+          "command": "node --import tsx --test ../independent-review/20261016/glob-ripgrep-572-matrix.test.ts",
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0,
+          "todo": 0,
+          "cancelled": 0,
+          "exit_code": 0,
+          "assertion_combinations": 572
+        }
+      ],
+      "status": "FORMAL_SUBSET_PASS_NATIVE_WINDOWS_AND_BUSINESS_PENDING",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "next_action": "Source-anchored original Linux rg572 test proved 572 comparisons; still need original native Windows case parity and full family acceptance. H13 dist install rollback is unmapped separately, original six frozen release documents blocked."
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage2-sam-h06-wr-h18-source-native/WR-H18",
+      "origin": "INTERACTIVE_CHAT_REAL_WINDOWS_ORIGINAL_SOURCE_SYNTHETIC",
+      "repo": "lu403369069lu-prog/WoolRadar",
+      "family_ids": [
+        "WR-H18"
+      ],
+      "source_sha": "9d0f78ae6bfa181f31101a3b6ce0a56f192534db",
+      "base_source_sha": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+      "controller_commit": "24781d17ee1ce68668932e883c76cc6f56d007e9",
+      "evidence_url": "https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39093129257",
+      "source_pr_url": "https://github.com/lu403369069lu-prog/WoolRadar/pull/49",
+      "checks": [
+        {
+          "group": "native-Windows-original-source-SENT-CAS-uncertainty",
+          "command": "unittest defaultTestLoader discover tests pattern=test_notification_cas_uncertain.py; no-skips",
+          "total": 2,
+          "passed": 2,
+          "failed": 0,
+          "errors": 0,
+          "skipped": 0,
+          "exit_code": 0
+        }
+      ],
+      "status": "NATIVE_WINDOWS_SYNTHETIC_SUBSET_PASS_BUSINESS_PENDING",
+      "strictly_complete": false,
+      "business_accepted": false,
+      "native_frozen_accepted": false,
+      "next_action": "Integrate true WR-H18 test with source-pinned machine queue without unrelated test; additional approved native/real notification provenance required for strict complete."
     }
   ],
   "run_history": [
@@ -1865,6 +1928,26 @@
       "strict_delivery": "ZERO_NEW_STRICT_ACCEPTANCES; BOTH_RELAY_PR_CI_9_OF_9_PASS",
       "checkpoint_status": "CAS_PENDING_READBACK",
       "next_action": "Continue original-source bounded family tests and real main/PR CI gate; avoid repeating 7 now-blocked false mappings; complete only with native and frozen business acceptance."
+    },
+    {
+      "event_id": "interactive-20261018-100-minimal-stage2-sam-h06-wr-h18-source-native",
+      "origin": "INTERACTIVE_CHAT_ORIGINAL_SOURCE_REAL_CI",
+      "reviewed_keys": [
+        "SAM-H06/ba24b3db342fc5c648effd95d477eda154cff909/572-matrix",
+        "WR-H18/9d0f78ae6bfa181f31101a3b6ce0a56f192534db/SENT-CAS"
+      ],
+      "actual_cases": "SAM-H06 now uses exact reviewed original-source rg572 matrix, literal safe-path allowlist and negative traversal regressions. GitHub Actions #39092990746 Linux original Node22+rg 572-comparison test TAP 1/1 pass zero skip; PR23 remains Draft. WR-H18 new isolated source PR49 added 2 synthetic SQLite SENT-CAS uncertain cases, Windows Actions #39093129257 2/2 pass zero skip; PR48 queue keeps H18 unmapped pending source provenance link. All unchanged main, 0/50 strict family accepted.",
+      "minimal_task_units_new_this_request": 4,
+      "cumulative_actual_minimal_tasks_this_request": 10,
+      "task_unit_ids": [
+        "SAM-H06-EXACT-ALLOWLIST",
+        "SAM-H06-REAL-RG572-REVIEW-CI",
+        "WR-H18-SOURCE-CAS-REGRESSION",
+        "WR-H18-WINDOWS-NATIVE-REGRESSION"
+      ],
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_ACCEPTANCES",
+      "checkpoint_status": "CAS_PENDING_READBACK",
+      "next_action": "Continue remaining eligible cloud work for selected business classes; Codex only receives true local-only native/manual gates."
     }
   ],
   "acceptance": {

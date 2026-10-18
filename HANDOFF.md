@@ -33,7 +33,7 @@
 - Import local source and document exact current task and unfinished work.
 
 ## 2026-10-18: Native GitHub Actions relay is live (not an AI coding agent)
-- Workflow on default branch: `.github/workflows/historical-family-relay.yml`; hourly UTC minute 23 and `workflow_dispatch`, plus push verification. GitHub schedule is best effort.
+- Workflow on default branch: `.github/workflows/historical-family-relay.yml`; every three hours at UTC minute 23 and `workflow_dispatch`, plus push verification. GitHub schedule is best effort.
 - Audited test/relay script: `.github/relay/worker.py`; regression tests: `.github/relay/test_worker.py`; 26 entries in `.github/relay/queue.json`. Source under test is the independent `chatgpt/wr-h07-public-corpus-url-limit-fixture-20261018` branch, **not** empty main scaffold.
 - Separate unprivileged evaluation and minimally writable persistence jobs. Evidence artifact uploads hidden `.relay-report`; only `chatgpt/actions-live-state-v1-20261018` is mutated by the write job. `engine.json` records cursor/revision and each family partial disposition; `history.jsonl` is append-only per unique run. PRs never auto-merge. All check subsets remain `strictly_complete=false`.
 - Continuous actual Actions read/write verified: [first full persist run](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39083789000) and [main-branch replay regression run](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39084179868), both successful. New workflows on main are not contingent on opening or merging historical Draft PRs.

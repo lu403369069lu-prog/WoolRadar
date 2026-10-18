@@ -182,7 +182,7 @@ def persist(a):
     # The runner's absolute Python executable varies by host. Validate argv structure.
     integration_command = integration.get("command")
     valid_cmd = (isinstance(integration_command, list) and
-                 ((a.repo == "WoolRadar" and len(integration_command) == 7
+                 ((a.repo == "WoolRadar" and len(integration_command) == 8
                    and integration_command[1:] == expected_integration[1:])
                   or (a.repo == "YinQieJi" and integration_command == expected_integration)))
     if (integration.get("schema_version") != 1 or integration.get("repo") != a.repo

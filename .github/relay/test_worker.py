@@ -26,7 +26,8 @@ class RelaySafetyTests(unittest.TestCase):
     def receipt(self, q, *, run_key="123456/1", cursor=0):
         fam = q["families"][cursor]
         checks = [{"argv": c, "status": "PASS", "exit_code": 0, "total": 3,
-                   "passed": 3, "failed": 0, "failed_test_names": []} for c in fam["checks"]]
+                   "passed": 3, "failed": 0, "skipped": 0, "todo": 0,
+                   "cancelled": 0, "failed_test_names": []} for c in fam["checks"]]
         status = ("EXTERNAL_GATE_NOT_EXECUTED" if fam["disposition"] == "EXTERNAL_OR_POLICY_GATED"
                   else "FORMAL_SUBSET_PASS_NATIVE_PENDING" if checks else "NO_FORMAL_MAPPING_NOT_EXECUTED")
         return {

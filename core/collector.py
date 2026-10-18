@@ -24,7 +24,7 @@ from .config import load_keywords, load_sources
 from .models import Candidate, utc_now
 from .public_corpus import record_public_sample
 from .verifier import VerificationEngine
-from .developer_grants import is_developer_grant_lead, has_grant_application_denial
+from .developer_grants import is_developer_grant_lead, has_grant_application_denial, has_grant_card_requirement
 from .developer_benefits import is_explicit_developer_benefit
 
 
@@ -45,7 +45,7 @@ def classify_exception(exc: Exception) -> str:
 def contains_keyword(text: str, keywords: list[str]) -> bool:
     # Brand/free fallback must not resurrect a closed grant from the same
     # source item. Multi-program items require separate manual adjudication.
-    if has_grant_application_denial(text):
+    if has_grant_application_denial(text) or has_grant_card_requirement(text):
         return False
     value = text.casefold()
     brand_only = {'claude', 'gemini', 'grok', 'github', 'cursor pro'}

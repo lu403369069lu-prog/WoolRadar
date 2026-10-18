@@ -100,12 +100,24 @@ def parse_test_summary(output, exit_code):
               and failed == 0 and skipped == 0 and todo == 0 and cancelled == 0)
     elif python_totals:
         total = int(python_totals[-1])
-        skipped_matches = re.findall(r"\bskipped=(\d+)\b", output)
+        skipped_matches = re.findall(r"\\bskipped=(\\d+)\\b", output)
         skipped = int(skipped_matches[-1]) if skipped_matches else 0
-        passed = total - skipped if exit_code == 0 else None
+        # unittest can exit 0 for @expectedFailure, whose terminal summary
+        # is "OK (expected failures=1)". A test run without any genuine OK
+        # marker can also exit 0. Neither is accepted as formal evidence.
+        # Ambiguous multiple summaries fail closed instead of selecting one.
+        ok_markers = [
+            line.strip() for line in output.splitlines()
+            if re.fullmatch(r"OK(?: \\(.*\\))?", line.strip())
+        ]
+        complete = (
+            len(python_totals) == 1 and len(ok_markers) == 1
+            and ok_markers[0] in ("OK", "OK (skipped=0)")
+        )
+        ok = exit_code == 0 and total > 0 and skipped == 0 and complete
+        passed = total if ok else None
         failed = None
         todo = cancelled = 0
-        ok = exit_code == 0 and total > 0 and skipped == 0
     else:
         total = passed = failed = skipped = todo = cancelled = None
         ok = False

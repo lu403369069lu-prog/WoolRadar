@@ -27,7 +27,7 @@ jobs:
       - name: Checkout tracked engineering source branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.target_ref || 'chatgpt/backlog-w39-home-arpa-root-20261017' }}
+          ref: ${{ inputs.target_ref || 'chatgpt/wr-h07-public-corpus-url-limit-fixture-20261018' }}
           path: candidate
           persist-credentials: false
       - name: Print exact tested candidate commit

@@ -119,11 +119,48 @@ class NotificationQueue:
                     ], ensure_ascii=False, separators=(',', ':')).encode('utf-8')
                     receipt_id = hashlib.sha256(identity_bytes).hexdigest()[:20]
                     destination = output / f"notification-{item['id']}-{receipt_id}.json"
-                    temporary = destination.with_suffix('.tmp')
-                    temporary.write_text(json.dumps({'event_id': item['event_id'], 'batch_id': item['batch_id'],
-                        'created_at': item['created_at'], 'message': item['payload']}, ensure_ascii=False, indent=2), encoding='utf-8')
-                    temporary.replace(destination)
-                    result = 'SENT'
+                    # The claim attempt and a random nonce isolate files from
+                    # another worker that reclaimed the same durable outbox row.
+                    attempt = item['attempts'] + 1
+                    temporary = destination.with_name(
+                        f".{destination.name}.attempt-{attempt}-{os.urandom(8).hex()}.tmp")
+                    try:
+                        temporary.write_text(json.dumps({
+                            'event_id': item['event_id'], 'batch_id': item['batch_id'],
+                            'created_at': item['created_at'], 'message': item['payload']
+                        }, ensure_ascii=False, indent=2), encoding='utf-8')
+                        # A worker can lose ownership during the file write.
+                        # Serialize the final claim check, atomic rename, and
+                        # SENT transition with the same SQLite writer lock.
+                        with self.db.connect() as conn:
+                            if not conn.in_transaction:
+                                conn.execute('BEGIN IMMEDIATE')
+                            owned = conn.execute("""SELECT 1 FROM notifications
+                                WHERE id=? AND result='CLAIMED' AND attempts=?
+                                AND next_attempt=? AND event_id IS ? AND batch_id=?
+                                AND channel=? AND created_at=? AND payload=?""",
+                                (item['id'], attempt, claim_deadline, item['event_id'],
+                                 item['batch_id'], item['channel'], item['created_at'],
+                                 item['payload'])).fetchone()
+                            if owned is None:
+                                summary['uncertain'] = summary.get('uncertain', 0) + 1
+                                continue  # Never rename files belonging to a new owner.
+                            try:
+                                identical_receipt = destination.read_bytes() == temporary.read_bytes()
+                            except FileNotFoundError:
+                                identical_receipt = False
+                            if not identical_receipt:
+                                temporary.replace(destination)
+                            updated = conn.execute("""UPDATE notifications
+                                SET result='SENT',next_attempt=0
+                                WHERE id=? AND result='CLAIMED' AND attempts=?""",
+                                (item['id'], attempt)).rowcount
+                            if updated != 1:
+                                raise RuntimeError('LOCAL_DELIVERY_CLAIM_LOST')
+                        summary['local'] += 1
+                        continue  # Local SENT was already committed under fencing.
+                    finally:
+                        temporary.unlink(missing_ok=True)
                 else:
                     result = (sender or TelegramNotifier(policy).send)(item['payload'])
             except Exception:

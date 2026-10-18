@@ -5,7 +5,7 @@
 ## 0. 已有真实结果：不要从头重复
 
 - 2026-10-18 云端 Windows runner 在实际 WoolRadar 源代码 SHA `a0fc93c4b54d16f399c28ffb401d682fa823b107` 上运行：
-  `python -m unittest discover -s tests -p test_*.py` -> **359/359，exit 0**；[Actions 证据](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39086174999)。
+  `python -m unittest discover -s tests -p test_*.py` -> **Ran359、实际pass358/skipped1，原runner exit0曾误作全绿；现已由新fail-closed门禁修正为集成FAIL**；[最新校验](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39089777897)。
 - WR-H03 先前临时目录缺失引起的 CI 错误，环境修复后 6/6；WR-H07 子集 24+46+5 = 75/75。不要把原环境错误当作源码漏洞，不要无意义反复跑已绿的完全相同 SHA。
 - Actions 调度文件位于 `main:.github/workflows/historical-family-relay.yml`；只读 `evaluate` + 独立最小权限 `persist` 已验证，约每3小时 UTC :23。
 - 进度唯一原始机器账本：[engine.json](https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/actions-live-state-v1-20261018/engine.json) / [history.jsonl](https://github.com/lu403369069lu-prog/WoolRadar/blob/chatgpt/actions-live-state-v1-20261018/history.jsonl)；50家族主目录见 `chatgpt/scheduled-review-ledger-20261017:coordination/HISTORICAL_ALL_50_FAMILY_STATUS_20261017.json`。2026-10-18 查到 WoolRadar Rev14/cursor2；**执行时重读**。
@@ -14,7 +14,7 @@
 ## 新增云端实证（2026-10-18 01:58 UTC，Codex 避免重复）
 
 - 已部署 **[独立协调 PR 验收工作流](https://github.com/lu403369069lu-prog/WoolRadar/actions/workflows/coordination-pr-acceptance.yml)**；读取真正的 `codex/relay-return-20261015` 源 SHA `27796df5f9847c1bb5d48d2a445e418dfb3d8e96`。正式 GitHub Linux [Actions #39088393940](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39088393940) **exit0**，六组原模块 **6+11+15+5+4+7 = 48/48**；H03/H04/H05/H06 原源码专项已完成**云端子集验收**，但绝非 4 个业务 family 严格完成。
-- 已部署 **[WoolRadar 新源码 PR Windows 验收工作流](https://github.com/lu403369069lu-prog/WoolRadar/actions/workflows/agent-pr-acceptance.yml)**；从实际 `a0fc93c4b54d16f399c28ffb401d682fa823b107` 源检出，正式 [Actions #39088415016](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39088415016) **359/359 exit0**。
+- 已部署 **[WoolRadar 新源码 PR Windows 验收工作流](https://github.com/lu403369069lu-prog/WoolRadar/actions/workflows/agent-pr-acceptance.yml)**；从实际 `a0fc93c4b54d16f399c28ffb401d682fa823b107` 源检出，正式 [Actions #39088415016](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39088415016) **Ran359/pass358/skipped1/exit0，新防伪门禁标FAIL**（不能声称359项都实际通过）。
 - **Codex 不要再无条件重跑 H03~H06 的同一固定源码、同一测试、同一 Linux 环境**。以下命令保留作版本升级/Windows 原生或修复后重新验证的复现规范。Codex 的增量任务是本机/真实 Git 断点、跨 PR 叠加差异、审批和冻结外部证据，以及把正式测试逐家族联到既有 Actions 自动队列；云端全绿不能取代本地现场验收。
 
 ## 新发现的最小本机阻塞 — WR-H12 / DIGEST-UPSTREAM-01（CODEX_REQUIRED；尚未认领）

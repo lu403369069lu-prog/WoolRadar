@@ -79,24 +79,24 @@ class RelaySafetyTests(unittest.TestCase):
         # Exercise a real unittest process: expected failures intentionally exit 0.
         # A relay must not upgrade that result into formal acceptance.
         source = (
-            "import unittest\\n"
-            "class Probe(unittest.TestCase):\\n"
-            "    @unittest.expectedFailure\\n"
-            "    def test_known_bug(self):\\n"
-            "        self.assertEqual(1, 2)\\n"
-            "unittest.main()\\n"
+            "import unittest\n"
+            "class Probe(unittest.TestCase):\n"
+            "    @unittest.expectedFailure\n"
+            "    def test_known_bug(self):\n"
+            "        self.assertEqual(1, 2)\n"
+            "unittest.main()\n"
         )
         proc = subprocess.run(
             [sys.executable, "-c", source], text=True, capture_output=True,
             timeout=20, check=False)
-        output = proc.stdout + "\\n" + proc.stderr
+        output = proc.stdout + "\n" + proc.stderr
         self.assertEqual(proc.returncode, 0)
         self.assertIn("expected failures=1", output)
         self.assertEqual(worker.parse_test_summary(output, proc.returncode)["status"], "FAIL")
 
     def test_python_summary_missing_ok_never_passes(self):
         self.assertEqual(
-            worker.parse_test_summary("Ran 1 test in 0.001s\\n", 0)["status"], "FAIL")
+            worker.parse_test_summary("Ran 1 test in 0.001s\n", 0)["status"], "FAIL")
 
     def test_forged_skipped_receipt_rejected(self):
         q = self.queue()

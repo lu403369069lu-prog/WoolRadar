@@ -22,3 +22,5 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Actual stale-worker overwrite canary
         run: python -X utf8 -m unittest discover -s tests -p test_notice_stale_local_writer.py -v
+      - name: All original notification regressions on same source SHA
+        run: python -X utf8 -m unittest discover -s tests -p test_notifications.py -v

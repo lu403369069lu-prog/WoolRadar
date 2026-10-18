@@ -8,6 +8,8 @@ import tempfile
 import unittest
 import subprocess
 import sys
+import os
+from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
 SPEC = importlib.util.spec_from_file_location("relay_worker_under_test", HERE / "worker.py")
@@ -41,7 +43,7 @@ class RelaySafetyTests(unittest.TestCase):
                          "business_accepted": False}]
         }
 
-    def run_persist(self, directory, q, receipt, integration_sha="a" * 40, integration_mutator=None):
+    def run_persist(self, directory, q, receipt, integration_sha="a" * 40, integration_mutator=None, runner_key=None):
         state = directory / "engine.json"
         if not state.exists():
             worker.save(state, self.initial(q["repo"]))
@@ -62,7 +64,10 @@ class RelaySafetyTests(unittest.TestCase):
             integration_mutator(integration)
         worker.save(directory / "integration.json", integration)
         worker.save(rec, receipt)
-        worker.persist(SimpleNamespace(state=str(directory), receipt=str(rec), repo=q["repo"]))
+        selected_run = runner_key if runner_key is not None else receipt["run_key"]
+        runner_id, attempt = selected_run.split("/", 1)
+        with patch.dict(os.environ, {"GITHUB_RUN_ID": runner_id, "GITHUB_RUN_ATTEMPT": attempt}):
+            worker.persist(SimpleNamespace(state=str(directory), receipt=str(rec), repo=q["repo"]))
         return worker.load(state)
 
     def test_skip_todo_cancelled_never_count_as_formal_pass(self):
@@ -134,6 +139,14 @@ class RelaySafetyTests(unittest.TestCase):
             self.assertEqual(actual["run_key"], __import__("os").environ.get("GITHUB_RUN_ID", "0") + "/" + __import__("os").environ.get("GITHUB_RUN_ATTEMPT", "1"))
             self.assertEqual(actual["status"], "PASS")
             self.assertIs(actual["verified_business_complete"], False)
+
+    def test_persist_rejects_mismatched_github_actions_run_context(self):
+        q = self.queue()
+        for runner_key in ("999999/1", "123456/2", "synthetic/1"):
+            with self.subTest(runner_key=runner_key), tempfile.TemporaryDirectory() as tmp:
+                receipt = self.receipt(q)
+                with self.assertRaises(ValueError):
+                    self.run_persist(Path(tmp), q, receipt, runner_key=runner_key)
 
     def test_full_integration_receipt_must_bind_exact_actions_run_attempt(self):
         q = self.queue()

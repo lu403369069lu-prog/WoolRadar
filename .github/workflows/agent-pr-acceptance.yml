@@ -1,0 +1,53 @@
+name: WoolRadar unprivileged source PR acceptance
+on:
+  workflow_dispatch:
+    inputs:
+      candidate_ref:
+        description: Reviewed WoolRadar source branch or exact commit
+        type: string
+        required: true
+        default: chatgpt/wr-h07-public-corpus-url-limit-fixture-20261018
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'core/**'
+      - 'tests/**'
+      - 'config/**'
+      - 'independent-quality/**'
+      - '.github/workflows/agent-pr-acceptance.yml'
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/agent-pr-acceptance.yml'
+permissions:
+  contents: read
+concurrency:
+  group: wr-source-formal-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  windows-formal:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout exact candidate without persisted credentials
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || inputs.candidate_ref || 'chatgpt/wr-h07-public-corpus-url-limit-fixture-20261018' }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fail closed when source or test suite is absent
+        shell: pwsh
+        run: |
+          python -c "from pathlib import Path; p=Path('tests'); assert p.is_dir() and list(p.glob('test_*.py')), 'No WoolRadar source test files'"
+          python -c "from pathlib import Path; assert Path('core').is_dir(), 'No original core source'"
+          git rev-parse HEAD
+      - name: Prepare disposable original-source test fixture root
+        shell: pwsh
+        run: New-Item -ItemType Directory -Force .test-tmp | Out-Null
+      - name: Run full original-source regression without skipping failures
+        shell: pwsh
+        run: python -m unittest discover -s tests -p 'test_*.py' -v

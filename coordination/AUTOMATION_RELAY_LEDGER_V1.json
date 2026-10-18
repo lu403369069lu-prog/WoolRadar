@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 32,
+    "revision": 33,
     "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
-    "last_completed_review_key": "interactive-20261018-100-minimal-stage10-wr-h07-nested-query-laundering",
+    "last_completed_review_key": "interactive-20261018-100-minimal-stage11-dual-relay-expectedfailure-native",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -64,7 +64,9 @@
       "WoolRadar#52": "cd415231b54ca9d439dd3988d9b558af67ddf81d",
       "WoolRadar#53": "b3b80aa83ff61280d37df45016c1521119dd5d8d",
       "WoolRadar#54": "8d32472fe6b6ac7b1dabd136fcb378335333209e",
-      "WoolRadar#55": "53dbe082d95a15da75a8a1cd7e4d6a1129317a4f"
+      "WoolRadar#55": "53dbe082d95a15da75a8a1cd7e4d6a1129317a4f",
+      "WoolRadar#56": "68626a6de19552ceb77dcf0cb4759d1d2512b3a5",
+      "YinQieJi#28": "0e82f5154e40b3f3cca791f01bdab723f4cc6648"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -99,9 +101,10 @@
       "interactive-20261018-100-minimal-stage7-wr-h11-card-required",
       "interactive-20261018-100-minimal-stage8-wr-h07-private-url-path",
       "interactive-20261018-100-minimal-stage9-wr-h07-nested-encoded-path",
-      "interactive-20261018-100-minimal-stage10-wr-h07-nested-query-laundering"
+      "interactive-20261018-100-minimal-stage10-wr-h07-nested-query-laundering",
+      "interactive-20261018-100-minimal-stage11-dual-relay-expectedfailure-native"
     ],
-    "write_diagnostic": "INTERACTIVE_ORIGINAL_SAMPLER_QUERY_NESTED_PRIVACY_RED_GREEN_VERIFIED",
+    "write_diagnostic": "DUAL_RELAY_PYTHON_EXPECTEDFAILURE_ORIGINAL_SOURCE_NATIVE_RED_GREEN",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -1965,6 +1968,33 @@
       "test_evidence": "6x52 Windows/Linux Python3.11/3.12/3.13, final zero skips/fails",
       "business_accepted": false,
       "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage11-dual-relay-expectedfailure-native/WoolRadar",
+      "repo": "WoolRadar",
+      "family": "COORD-HISTORY-GATE",
+      "status": "TRUE_PYTHON_EXPECTEDFAILURE_AND_TRUNCATED_OK_FALSE_GREEN_FIXED_IN_DRAFT",
+      "pr": 56,
+      "red_run": 39102924284,
+      "green_run": 39103062323,
+      "head": "68626a6de19552ceb77dcf0cb4759d1d2512b3a5",
+      "test_evidence": "Windows/Linux Python3.11/3.12/3.13 each 13/13, no skipped/expectedFailures",
+      "business_accepted": false,
+      "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage11-dual-relay-expectedfailure-native/YinQieJi",
+      "repo": "YinQieJi",
+      "family": "COORD-HISTORY-GATE",
+      "status": "TRUE_PYTHON_EXPECTEDFAILURE_FALSE_GREEN_FIXED_AND_WINDOWS_UTF8_FIXTURE",
+      "pr": 28,
+      "red_run": 39102926610,
+      "intermediate_run": 39103065721,
+      "green_run": 39103127894,
+      "head": "0e82f5154e40b3f3cca791f01bdab723f4cc6648",
+      "test_evidence": "Windows/Linux Python3.11/3.12/3.13 each 16/16, no skipped/expectedFailures; prior Windows cp1252 error retained",
+      "business_accepted": false,
+      "strictly_complete": false
     }
   ],
   "run_history": [
@@ -2601,6 +2631,50 @@
       },
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
       "next_action": "Switch to independent relay parser expectedFailures false-pass across two repos; strict real public qualification and holdout still unavailable."
+    },
+    {
+      "event_id": "interactive-20261018-100-minimal-stage11-dual-relay-expectedfailure-native",
+      "origin": "INTERACTIVE_CHAT_DUAL_REPO_ORIGINAL_DURABLE_RELAY_PARSER_REDGREEN",
+      "minimal_task_units_new_this_request": 8,
+      "cumulative_actual_minimal_tasks_this_request": 64,
+      "task_unit_ids": [
+        "DUAL-RELAY-REAL-PYTHON-EXPECTEDFAILURE-FALSE-PASS-DEFECT",
+        "WR-RELAY-6X13-EXPECTEDFAILURE-TRUE-RED",
+        "SAM-RELAY-6X16-EXPECTEDFAILURE-TRUE-RED",
+        "WR-RELAY-STRICT-PYTHON-SUMMARY-AND-SKIP-FIX",
+        "SAM-RELAY-STRICT-PYTHON-SUMMARY-AND-SKIP-FIX",
+        "SAM-RELAY-WINDOWS-UTF8-DURABLE-HISTORY-FIXTURE",
+        "WR-RELAY-6X13-NATIVE-GREEN-DRAFT-PR56",
+        "SAM-RELAY-6X16-NATIVE-GREEN-DRAFT-PR28"
+      ],
+      "actual_cases": "Both main .github/relay/worker.py parser implementations previously marked real Python unittest @expectedFailure output `Ran 1 test ... OK (expected failures=1)` as formal PASS solely on exit0; truncated `Ran 1 test` with no final OK also false PASS. Added real subprocess + missing OK tests. Each of six Windows/Linux Python3.11-3.13 matrix jobs genuinely failed (WR 13 test run, 2 intended FAIL, Actions39102924284; SAM 16 tests 2 intended FAIL, Actions39102926610). Added strict single explicit standard OK marker checks while keeping Node TAP logic. WR final Actions39103062323 six jobs each13/13 zero skip. SAM intermediate39103065721 Linux green/Windows red on original CP1252 fixture text reader of UTF8 history; fixed test only by explicit encoding utf-8. SAM final39103127894 six jobs each16/16 zero skip. Draft PR56 WR and PR28 SAM unmerged, main/scheduled runner still old code until integration. No frozen gold, real publisher/source, production, accounts, fees or business final acceptance.",
+      "evidence": {
+        "woolradar": {
+          "repo": "WoolRadar",
+          "pr": 56,
+          "red_head": "a8cb3f439ca72065810ff7cd12d33a4b95442f15",
+          "red_run": 39102924284,
+          "green_head": "68626a6de19552ceb77dcf0cb4759d1d2512b3a5",
+          "green_run": 39103062323,
+          "jobs": 6,
+          "tests_per_job": 13,
+          "zero_skips": true
+        },
+        "sam": {
+          "repo": "YinQieJi",
+          "pr": 28,
+          "red_head": "2872d9e09b2d64ae5ee188385347664b7b3f34ae",
+          "red_run": 39102926610,
+          "partial_run": 39103065721,
+          "green_head": "0e82f5154e40b3f3cca791f01bdab723f4cc6648",
+          "green_run": 39103127894,
+          "jobs": 6,
+          "tests_per_job": 16,
+          "zero_skips": true
+        }
+      },
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "next_action": "Integrate reviewed relay parser after PR decisions; until then main scheduled worker still has original parser. Continue fixed-SHA business-family evidence and unseen official source gates; do not claim unattended arbitrary AI repairs."
     }
   ],
   "acceptance": {
@@ -2639,7 +2713,8 @@
     "wr_h11_card_required_gate": "REAL_SOURCE_RED_GREEN_6X31_NATIVE_PASS_20261018_STRICT_OFFICIAL_REVIEW_PENDING",
     "wr_h07_sensitive_private_url_path": "ORIGINAL_PRODUCER_SAMPLER_6X49_PASS_ZERO_SKIP_20261018_STRICT_SOURCE_PENDING",
     "wr_h07_nested_encoded_private_path": "REAL_SOURCE_RED_GREEN_6X50_NATIVE_PASS_20261018_STRICT_SOURCE_PENDING",
-    "wr_h07_nested_query_privacy": "REAL_SOURCE_SAMPLER_NESTED_QUERY_6X52_GREEN_STRICT_PENDING_20261018"
+    "wr_h07_nested_query_privacy": "REAL_SOURCE_SAMPLER_NESTED_QUERY_6X52_GREEN_STRICT_PENDING_20261018",
+    "dual_relay_python_expectedfailure": "TWO_DRAFT_REAL_SOURCE_6X13_WR_AND_6X16_SAM_NATIVE_RED_GREEN_20261018_BUSINESS_PENDING"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

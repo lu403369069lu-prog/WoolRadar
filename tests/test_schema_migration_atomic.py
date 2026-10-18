@@ -15,7 +15,9 @@ ROOT = Path(__file__).parents[1]
 
 class SchemaMigrationAtomicTests(unittest.TestCase):
     def test_failed_legacy_column_upgrade_rolls_back_and_retry_preserves_rows(self):
-        with tempfile.TemporaryDirectory(dir=ROOT / '.test-tmp') as folder:
+        temp_root = ROOT / '.test-tmp'
+        temp_root.mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=temp_root) as folder:
             path = Path(folder) / 'historical.sqlite'
             with closing(sqlite3.connect(path)) as conn:
                 conn.execute('''CREATE TABLE notifications (

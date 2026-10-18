@@ -1,5 +1,7 @@
 name: Original relay integration run-id attempt binding strict native gate (advisory)
 on:
+  pull_request:
+    branches: [chatgpt/relay-integration-run-key-20261018]
   push:
     branches: [chatgpt/relay-integration-run-key-20261018, chatgpt/relay-check-exit-type-20261018]
 permissions:

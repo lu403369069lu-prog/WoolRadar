@@ -32,7 +32,7 @@ class NotificationQueue:
     def pending(self) -> list[dict]:
         with self.db.connect() as conn:
             return [dict(row) for row in conn.execute(
-                "SELECT * FROM notifications WHERE result IN ('PENDING','RETRY','CLAIMED') ORDER BY id")]
+                "SELECT * FROM notifications WHERE result IN ('PENDING','RETRY','CLAIMED','UNCERTAIN') ORDER BY id")]
 
     def record_health(self, node: str, status: str, error_code: str) -> bool:
         if status == 'SKIPPED':
@@ -92,13 +92,13 @@ class NotificationQueue:
                     if validation is None or validation.status.value != 'CLAIMABLE':
                         with self.db.connect() as conn:
                             conn.execute("UPDATE notifications SET result='STALE' WHERE id=? "
-                                "AND result IN ('PENDING','RETRY','CLAIMED') AND next_attempt<=?", (item['id'], now))
+                                "AND result IN ('PENDING','RETRY','CLAIMED','UNCERTAIN') AND next_attempt<=?", (item['id'], now))
                         continue
                 claim_deadline = now + 300
                 with self.db.connect() as conn:
                     claimed = conn.execute("""UPDATE notifications SET result='CLAIMED',
                         next_attempt=?,attempts=attempts+1 WHERE id=? AND next_attempt<=?
-                        AND result IN ('PENDING','RETRY','CLAIMED')
+                        AND result IN ('PENDING','RETRY','CLAIMED','UNCERTAIN')
                         AND event_id IS ? AND batch_id=? AND channel=? AND created_at=?
                         AND payload=? AND attempts=? AND next_attempt=?""",
                         (claim_deadline, item['id'], now, item['event_id'], item['batch_id'],
@@ -165,14 +165,17 @@ class NotificationQueue:
                     result = (sender or TelegramNotifier(policy).send)(item['payload'])
             except Exception:
                 # Exceptions can contain a bot token in a request URL. Never persist them.
-                result = 'FAILED'
+                # Network timeouts may occur after Telegram accepted the send.
+                # Keep the ambiguity durable instead of claiming a definite fail.
+                result = 'UNCERTAIN' if not local else 'FAILED'
             success = result == 'SENT'
             with self.db.connect() as conn:
                 # Do not mark a recycled ID as SENT after network/file I/O.
                 confirmed = conn.execute('''UPDATE notifications SET result=?,next_attempt=? WHERE id=?
                     AND result='CLAIMED' AND attempts=? AND next_attempt=?
                     AND event_id IS ? AND batch_id=? AND channel=? AND created_at=? AND payload=?''',
-                    ('SENT' if success else 'RETRY', 0 if success else now + max(0, retry_seconds),
+                    ('SENT' if success else 'UNCERTAIN' if result == 'UNCERTAIN' else 'RETRY',
+                     0 if success else now + max(0, retry_seconds),
                      item['id'], item['attempts'] + 1, claim_deadline, item['event_id'],
                      item['batch_id'], item['channel'], item['created_at'], item['payload'])).rowcount
             if confirmed != 1:
@@ -181,7 +184,10 @@ class NotificationQueue:
                 # uncommitted delivery as confirmed. At-least-once remains.
                 summary['uncertain'] = summary.get('uncertain', 0) + 1
             else:
-                summary['local' if local and success else 'sent' if success else 'retry'] += 1
+                if result == 'UNCERTAIN':
+                    summary['uncertain'] = summary.get('uncertain', 0) + 1
+                else:
+                    summary['local' if local and success else 'sent' if success else 'retry'] += 1
         return summary
 
 

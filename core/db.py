@@ -189,6 +189,10 @@ class Database:
 
     def set_status(self, event_id: int, status: Status, reason: str, claim_scope: str = 'NONE') -> None:
         with self.connect() as conn:
+            # Lock before reading the previous status so history cannot record
+            # another worker's state while this transaction is waiting to write.
+            if not conn.in_transaction:
+                conn.execute('BEGIN IMMEDIATE')
             row = conn.execute('SELECT status FROM events WHERE id=?', (event_id,)).fetchone()
             if row is None:
                 raise KeyError(event_id)

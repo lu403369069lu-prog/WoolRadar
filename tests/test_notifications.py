@@ -1,7 +1,11 @@
 import json
+import sqlite3
 import tempfile
+import threading
 import unittest
+from contextlib import contextmanager
 from pathlib import Path
+from unittest.mock import patch
 
 from core.db import Database
 from core.models import Candidate, Evidence
@@ -13,6 +17,86 @@ TEMP.mkdir(exist_ok=True)
 
 
 class NotificationTests(unittest.TestCase):
+    def test_local_receipt_survives_commit_failure_without_second_publish(self):
+        with tempfile.TemporaryDirectory(dir=TEMP) as td:
+            root = Path(td)
+            db = Database(root / 'radar.db')
+            event_id = db.upsert_candidate(Candidate('n', 'rss', 'Notice', 'https://vendor.example/notice')).event_id
+            queue = NotificationQueue(db)
+            self.assertTrue(queue.enqueue(event_id, '', 'local', 'notice'))
+            outbox = root / 'outbox'
+            original_connect = db.connect
+            original_replace = Path.replace
+            fail_once = [True]
+            published = []
+
+            @contextmanager
+            def failing_commit():
+                with original_connect() as conn:
+                    yield conn
+                    if (fail_once[0] and list(outbox.glob('notification-*.json'))
+                            and conn.execute("SELECT result FROM notifications WHERE id=1").fetchone()['result'] == 'SENT'):
+                        fail_once[0] = False
+                        raise sqlite3.OperationalError('injected COMMIT failure before durability')
+
+            def track_replace(source, destination):
+                if Path(destination).name.startswith('notification-') and Path(destination).suffix == '.json':
+                    published.append(Path(destination))
+                return original_replace(source, destination)
+
+            with patch.object(db, 'connect', failing_commit), patch.object(Path, 'replace', track_replace):
+                self.assertEqual(queue.flush({}, local_dir=outbox, retry_seconds=0)['retry'], 1)
+                self.assertEqual(len(list(outbox.glob('notification-*.json'))), 1)
+                self.assertEqual(queue.flush({}, local_dir=outbox, retry_seconds=0)['local'], 1)
+            self.assertEqual(len(published), 1, 'a durable identical receipt must not be published again')
+            with original_connect() as conn:
+                self.assertEqual(conn.execute('SELECT result FROM notifications WHERE id=1').fetchone()['result'], 'SENT')
+
+    def test_expired_local_worker_cannot_publish_after_reclaim(self):
+        with tempfile.TemporaryDirectory(dir=TEMP) as td:
+            root = Path(td)
+            db = Database(root / 'radar.db')
+            event_id = db.upsert_candidate(Candidate('n', 'rss', 'Notice', 'https://vendor.example/notice')).event_id
+            queue = NotificationQueue(db)
+            queue.enqueue(event_id, '', 'local', 'old payload')
+            entered, release = threading.Event(), threading.Event()
+            errors = []
+            original_write = Path.write_text
+
+            def pause_old_writer(path, *args, **kwargs):
+                if threading.current_thread().name == 'stale-local-worker' and path.suffix == '.tmp':
+                    entered.set()
+                    if not release.wait(5):
+                        raise AssertionError('replacement worker did not finish')
+                return original_write(path, *args, **kwargs)
+
+            def old_worker():
+                try:
+                    queue.flush({}, local_dir=root / 'outbox')
+                except BaseException as exc:
+                    errors.append(exc)
+
+            with patch.object(Path, 'write_text', pause_old_writer):
+                thread = threading.Thread(target=old_worker, name='stale-local-worker')
+                thread.start()
+                try:
+                    self.assertTrue(entered.wait(5))
+                    with db.connect() as conn:
+                        conn.execute("UPDATE notifications SET next_attempt=0,payload='new payload' WHERE result='CLAIMED'")
+                    replacement = NotificationQueue(Database(db.path))
+                    self.assertEqual(replacement.flush({}, local_dir=root / 'outbox')['local'], 1)
+                finally:
+                    release.set()
+                    thread.join(5)
+            self.assertFalse(thread.is_alive())
+            self.assertEqual(errors, [])
+            receipts = list((root / 'outbox').glob('notification-*.json'))
+            self.assertEqual(len(receipts), 1)
+            self.assertEqual(json.loads(receipts[0].read_text(encoding='utf-8'))['message'], 'new payload')
+            with db.connect() as conn:
+                state = conn.execute('SELECT result,attempts FROM notifications').fetchone()
+            self.assertEqual((state['result'], state['attempts']), ('SENT', 2))
+
     def test_passed_official_deadline_suppresses_queued_verified_notice(self):
         with tempfile.TemporaryDirectory(dir=TEMP) as td:
             root = Path(td)

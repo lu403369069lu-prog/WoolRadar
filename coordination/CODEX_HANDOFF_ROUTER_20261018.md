@@ -10,7 +10,7 @@
 
 | 工作 | 当前实证 | 当前承接方 / 严格剩余门槛 |
 |---|---|---|
-| WoolRadar 原仓 Windows 云端完整测试 | [#39088415016](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39088415016)，固定业务源 `a0fc93c4b54d16f399c28ffb401d682fa823b107`，359/359 exit0 | **ChatGPT/Actions 已做**，Codex无需对相同源与环境原样重测；Codex 继续真实本地生产脱敏副本/冻结 SQLite/外部审批 |
+| WoolRadar 原仓 Windows 云端完整测试 | 原 [#39088415016](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39088415016) 的退出码0掩盖1项skipped；新fail-closed [#39089777897](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39089777897) 固定业务SHA `a0fc93c4b54d16f399c28ffb401d682fa823b107`，**Ran359/pass358/skipped1/exit0，集成门禁FAIL，已持久化Rev15** | **ChatGPT/Actions已修复跳过误报**；**WR-H12/CODEX_REQUIRED**：本机只读核验 `tests/test_digest_runtime.py` 真实上游venv/HTTP预算；不允许以创建假上游或删skip制造绿灯。仍缺冻结SQLite/真实日报与外部审批 |
 | COORD-H03/H04/H05/H06 原协调单测 | [#39088393940](https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39088393940)，`codex/relay-return-20261015` SHA `27796df5f9847c1bb5d48d2a445e418dfb3d8e96`，6+11+15+5+4+7 = 48/48 exit0 | **ChatGPT/Actions 云端专项已做**；Codex 负责 Windows 本地/真 Git fence/跨 PR 回归、将独立工作流映射回50项机器队列的可信证据协议 |
 | SAM 原仓完整 Node 测试 | [#39088430854](https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39088430854)，实际候选 `ba24b3db342fc5c648effd95d477eda154cff909`，构建 exit0，测试 288/294、6 fail、exit1 | **云端继续保留红灯**；**Codex 必须从本地原插件工作区核验六份真实冻结发布资产**，不得伪造指针、清单、答案或源哈希 |
 | SAM-H18 Windows 大小写语义 | [PR22](https://github.com/lu403369069lu-prog/YinQieJi/pull/22) 的真正 Windows / rg [Actions #39088993315](https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39088993315) **1/1 exit0**：rg 在混合大小写时仍枚举合成受保护文件，但 SAM 策略正确拒绝；源 SHA `80c0b390f63407f3142efe8477bd15d17ef45a86` | **ChatGPT/Actions 已做原生合成用例**；Codex 不必同SHA重测，只需补真实更多 Windows 设备/FS及跨入口集成；仍非严格完成 |
@@ -18,7 +18,7 @@
 
 ## 已部署的 Actions 能力
 
-- 两仓默认分支 `main:.github/workflows/historical-family-relay.yml`：每3小时 UTC :23，`workflow_dispatch`，每轮读、测、故障优先、独立状态分支CAS写回。
+- 两仓 main 已有 fail-closed 跳过检测及回执防伪；GitHub Actions机器 PASS 必须 pass==total、skipped/todo/cancelled==0，原先Ran359被误说成359条全部通过已经更正。\n- 两仓默认分支 `main:.github/workflows/historical-family-relay.yml`：每3小时 UTC :23，`workflow_dispatch`，每轮读、测、故障优先、独立状态分支CAS写回。
 - WoolRadar `main:.github/workflows/agent-pr-acceptance.yml`：新业务 PR 读权限 Windows 全量测试；
   `main:.github/workflows/coordination-pr-acceptance.yml`：新协调 PR 读权限专项测试。
 - SAM `main:.github/workflows/agent-pr-acceptance.yml`：新代码 PR 读权限 Node 构建 + 全量测试。缺少可信冻结物时保持 CI 红灯，而非篡改测试。

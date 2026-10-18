@@ -101,6 +101,36 @@ class RelaySafetyTests(unittest.TestCase):
         self.assertEqual(
             worker.parse_test_summary("Ran 1 test in 0.001s\n", 0)["status"], "FAIL")
 
+    def test_real_integration_report_producer_binds_checked_out_git_sha(self):
+        # Execute the original producer using the real checkout Git identity,
+        # but substitute the external full test process with a synthetic TAP
+        # receipt. This never runs SAM production or fetches real sources.
+        from unittest.mock import patch
+        source_root = HERE.parent.parent
+        spec = importlib.util.spec_from_file_location(
+            "relay_integration_under_test", HERE / "integration_gate.py")
+        integration_gate = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(integration_gate)
+        expected = worker.source_sha(source_root)
+        q = self.queue()
+        sample_output = (
+            "Ran 1 test in 0.001s\n\nOK\n" if q["repo"] == "WoolRadar"
+            else "# tests 1\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n"
+        )
+        stub = SimpleNamespace(stdout=sample_output, stderr="", returncode=0)
+        with tempfile.TemporaryDirectory() as tmp:
+            target = Path(tmp) / "synthetic-integration.json"
+            with patch.object(
+                integration_gate, "subprocess",
+                SimpleNamespace(run=lambda *args, **kwargs: stub)
+            ):
+                integration_gate.run(SimpleNamespace(
+                    source=str(source_root), repo=q["repo"], output=str(target)))
+            actual = json.loads(target.read_text(encoding="utf-8"))
+            self.assertEqual(actual["source_commit"], expected)
+            self.assertEqual(actual["status"], "PASS")
+            self.assertIs(actual["verified_business_complete"], False)
+
     def test_integration_report_must_match_exact_tested_source_commit(self):
         q = self.queue()
         for source_sha in (None, "b" * 40, "invalid", True):

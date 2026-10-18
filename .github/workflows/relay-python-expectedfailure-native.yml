@@ -1,0 +1,41 @@
+name: Original relay Python expectedFailure fail-closed native gate (advisory)
+on:
+  push:
+    branches: [chatgpt/relay-py-expectedfailure-20261018]
+permissions:
+  contents: read
+concurrency:
+  group: relay-python-expectedfailure-${{ github.repository }}-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  native-parse-contract:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Verify actual relay Python parser tests with no hidden expected failures
+        shell: bash
+        run: |
+          python - <<'PY'
+          import pathlib
+          import unittest
+          required=(pathlib.Path('.github/relay/worker.py'),pathlib.Path('.github/relay/test_worker.py'))
+          if not all(p.is_file() for p in required):
+              raise SystemExit('RELAY_PARSER_SOURCE_OR_TEST_MISSING')
+          suite=unittest.defaultTestLoader.discover('.github/relay', pattern='test_worker.py')
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          if (result.testsRun < 9 or not result.wasSuccessful()
+                  or result.skipped or result.expectedFailures or result.unexpectedSuccesses):
+              raise SystemExit('RELAY_NATIVE_PARSER_TESTS_FAILED_OR_INCOMPLETE')
+          print(f'RELAY_PARSER_NATIVE_OK {result.testsRun}/{result.testsRun} zero skips')
+          PY

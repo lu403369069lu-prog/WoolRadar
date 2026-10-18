@@ -155,6 +155,7 @@ class RelaySafetyTests(unittest.TestCase):
             "COORD-H01": "test_orchestrator.py",  # Not dispatcher replay.
             "COORD-H02": "test_node_entry.py",  # Not GitHub event adaptation.
             "COORD-H06": "test_reindex_preview.py",  # Not Git return-sync.
+            "WR-H18": "test_notifications.py",  # Not SENT-CAS uncertainty.
         }
         for family_id, unrelated_pattern in excluded.items():
             with self.subTest(family_id=family_id):

@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 38,
+    "revision": 39,
     "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
-    "last_completed_review_key": "interactive-20261018-100-minimal-stage16-dual-integration-run-key",
+    "last_completed_review_key": "interactive-20261018-100-minimal-stage17-dual-run-context-guard",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -74,7 +74,9 @@
       "WoolRadar#59": "88e1c8f642d1a6c876e3a3e1e172b3f2e32fd9fe",
       "YinQieJi#31": "4b5b439156950be7962a0e19362b9d7eff49fe1a",
       "WoolRadar#60": "44d38d20a50ae2410f771d4f80407774b3b78c7e",
-      "YinQieJi#32": "1b8205adf6ba6385f32a2036bf7dd86d515aa95c"
+      "YinQieJi#32": "1b8205adf6ba6385f32a2036bf7dd86d515aa95c",
+      "WoolRadar#62": "6459ec4f84eb829331e6969f8afc805e89559742",
+      "YinQieJi#34": "4e35f1055687cc7a99078c598fc76cbf5cea1cf8"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -115,9 +117,10 @@
       "interactive-20261018-100-minimal-stage13-dual-integration-exact-sha-binding",
       "interactive-20261018-100-minimal-stage14-source-producer-execution-smoke",
       "interactive-20261018-100-minimal-stage15-dual-full-suite-pass-counts",
-      "interactive-20261018-100-minimal-stage16-dual-integration-run-key"
+      "interactive-20261018-100-minimal-stage16-dual-integration-run-key",
+      "interactive-20261018-100-minimal-stage17-dual-run-context-guard"
     ],
-    "write_diagnostic": "DUAL_INTEGRATION_RUN_ATTEMPT_IDENTITY_RED_GREEN_NATIVE",
+    "write_diagnostic": "DUAL_NATIVE_TRUSTED_ACTIONS_RUN_CONTEXT_GUARD",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -2138,6 +2141,32 @@
       "test_evidence": "6x21 pass, zero skips; red 4 forged run attempt variants and intermediate fixture indentation error fixed",
       "business_accepted": false,
       "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage17-dual-run-context-guard/WR",
+      "repo": "WoolRadar",
+      "family": "COORD-HISTORY-GATE",
+      "status": "RUNNER_ENV_IDENTITY_REQUIRED_BEFORE_REPLAY_SIX_NATIVE_GREEN",
+      "pr": 62,
+      "red_run": 39113125583,
+      "green_run": 39113204756,
+      "head": "6459ec4f84eb829331e6969f8afc805e89559742",
+      "test_evidence": "Windows/Linux Python3.11/3.12/3.13 6x19/19 zero skips; red 3 mismatched trusted runner cases",
+      "business_accepted": false,
+      "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage17-dual-run-context-guard/SAM",
+      "repo": "YinQieJi",
+      "family": "COORD-HISTORY-GATE",
+      "status": "RUNNER_ENV_IDENTITY_REQUIRED_BEFORE_REPLAY_SIX_NATIVE_GREEN",
+      "pr": 34,
+      "red_run": 39113123177,
+      "green_run": 39113208020,
+      "head": "4e35f1055687cc7a99078c598fc76cbf5cea1cf8",
+      "test_evidence": "Windows/Linux Python3.11/3.12/3.13 6x22/22 zero skips; red 3 mismatched trusted runner cases",
+      "business_accepted": false,
+      "strictly_complete": false
     }
   ],
   "run_history": [
@@ -3006,6 +3035,42 @@
       },
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
       "next_action": "Bind formal receipt to trusted CI env GITHUB_RUN_ID/ATTEMPT in persist, then end-to-end smoke; main/scheduled relay unmerged and original frozen/public source business data not accepted."
+    },
+    {
+      "event_id": "interactive-20261018-100-minimal-stage17-dual-run-context-guard",
+      "origin": "INTERACTIVE_CHAT_DUAL_DURABLE_PERSIST_ACTIONS_RUN_CONTEXT_GUARD",
+      "minimal_task_units_new_this_request": 5,
+      "cumulative_actual_minimal_tasks_this_request": 100,
+      "task_unit_ids": [
+        "DUAL-PERSIST-SAME-SHA-FORGED_CURRENT_RUN_DEFECT",
+        "WR-PERSIST-6X19_THREE_TRUE_RED_SUBCASES",
+        "SAM-PERSIST-6X22_THREE_TRUE_RED_SUBCASES",
+        "DUAL-PERSIST_EXACT_RUNNER_ENV_BEFORE_IDEMPOTENT_REPLAY",
+        "DUAL-PERSIST_6x19_WR_6x22_SAM_NATIVE_GREEN"
+      ],
+      "actual_cases": "A formal test receipt and full integration report could agree with each other yet be copied from a different Actions run/attempt. Existing `persist` checked receipt run_key syntax but did not align it to executing GITHUB_RUN_ID/ATTEMPT. Added native original-state-machine negative regression for other run, other retry, malformed runner id. Real red Wool Actions39113125583 six OS/Py3.11/3.12/3.13 jobs each19 tests/3 failed subcases, SAM39113123177 six jobs each22 tests/3 failed subcases. Guard inserted before already-processed idempotent return, requires runner env run ID / attempt valid and equals receipt key. Native green WR Actions39113204756 six jobs each19/19, SAM39113208020 six jobs22/22 no skips. Isolated unmerged Draft PR62 and PR34. Not cryptographic authentication of a compromised runner. Main scheduled relay still old, frozen source and business final 50 family strict0, no deploy/local prod/paid API/auto merge.",
+      "evidence": {
+        "wr": {
+          "pr": 62,
+          "red_run": 39113125583,
+          "head": "6459ec4f84eb829331e6969f8afc805e89559742",
+          "green_run": 39113204756,
+          "jobs": 6,
+          "tests_per_job": 19,
+          "zero_skips": true
+        },
+        "sam": {
+          "pr": 34,
+          "red_run": 39113123177,
+          "head": "4e35f1055687cc7a99078c598fc76cbf5cea1cf8",
+          "green_run": 39113208020,
+          "jobs": 6,
+          "tests_per_job": 22,
+          "zero_skips": true
+        }
+      },
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "next_action": "100 minimal work units reached but overall project not complete: original 50 business strict 0. Review stacked PR ancestry/integration into candidate while preserving frozen teacher/Windows production and implement real source/holdout, trusted delivery, native owner takeover before acceptance. No claim that scheduled main is self-repairing."
     }
   ],
   "acceptance": {
@@ -3049,7 +3114,8 @@
     "dual_relay_complete_pass_counters": "TWO_NATIVE_DRAFTS_WR_6X14_SAM_6X17_TYPED_ZERO_REJECT_20261018_STRICT_PENDING",
     "dual_integration_source_sha": "TWO_DRAFTS_CONSUMER_AND_REAL_GIT_PRODUCER_STUB_SMOKE_6X16_WR_6X19_SAM_STRICT_PENDING",
     "dual_full_integration_counter_authority": "TWO_DRAFTS_TRUE_STATE_MACHINE_NATIVE_WR_6x17_SAM_6x20_RED_GREEN_20261018_STRICT_PENDING",
-    "dual_integration_run_key": "TWO_DRAFTS_ORIGINAL_SOURCE_NATIVE_WR6X18_SAM6X21_EXACT_RUN_ATTEMPT_GREEN_STRICT_BUSINESS_PENDING"
+    "dual_integration_run_key": "TWO_DRAFTS_ORIGINAL_SOURCE_NATIVE_WR6X18_SAM6X21_EXACT_RUN_ATTEMPT_GREEN_STRICT_BUSINESS_PENDING",
+    "dual_relay_runner_context": "SIX_JOB_NATIVE_WR19_SAM22_RUN_ID_ATTEMPT_RED_GREEN_DRAFT_STRICT0_20261018"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

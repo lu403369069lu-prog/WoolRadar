@@ -259,7 +259,7 @@ def persist(a):
         else:
             if [x.get("argv") for x in checks] != commands:
                 raise ValueError("test mapping mismatch")
-            all_pass = all(x.get("status") == "PASS" and x.get("exit_code") == 0
+            all_pass = all(x.get("status") == "PASS" and type(x.get("exit_code")) is int and x["exit_code"] == 0
                            and type(x.get("total")) is int and x["total"] > 0
                            and type(x.get("passed")) is int and x["passed"] == x["total"]
                            and "failed" in x and (x["failed"] is None or
@@ -285,7 +285,8 @@ def persist(a):
                    and integration_command[1:] == expected_integration[1:])
                   or (a.repo == "YinQieJi" and integration_command == expected_integration)))
     if (integration.get("schema_version") != 1 or integration.get("repo") != a.repo
-            or not valid_cmd or integration.get("verified_business_complete") is not False
+            or not valid_cmd or integration.get("source_subdir") != queue["source_subdir"]
+            or integration.get("verified_business_complete") is not False
             or integration.get("status") not in ("PASS", "FAIL", "BLOCKED")
             or type(integration.get("source_commit")) is not str
             or not re.fullmatch(r"[a-f0-9]{40}", integration["source_commit"])

@@ -59,8 +59,9 @@ class RelaySafetyTests(unittest.TestCase):
 
     def test_queue_digest_is_lf_crlf_platform_stable(self):
         q = self.queue()
-        lf = json.dumps(q, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
-        crlf = lf.replace("\\n", "\\r\\n")
+        lf = json.dumps(q, sort_keys=True, indent=2, ensure_ascii=False)
+        crlf = lf.replace("\n", "\r\n")
+        self.assertNotEqual(lf, crlf)
         self.assertEqual(worker.queue_digest(json.loads(lf)), worker.queue_digest(json.loads(crlf)))
 
     def test_command_allowlist_denies_shell_and_arbitrary_code(self):

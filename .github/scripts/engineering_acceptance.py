@@ -4,6 +4,7 @@ import datetime as dt
 import json
 import os
 import pathlib
+import re
 import subprocess
 import sys
 
@@ -40,19 +41,33 @@ for group, commands in GROUPS.items():
         logname = group + "-" + str(i) + ".log"
         try:
             proc = subprocess.run(command, cwd=cwd, capture_output=True, text=True, timeout=480, check=False)
-            status = "PASS" if proc.returncode == 0 else "FAIL"
+            out = proc.stdout + "\n" + proc.stderr
+            zero_tests = command[1:3] == ["-m", "unittest"] and "Ran 0 tests" in out
+            status = "PASS" if proc.returncode == 0 and not zero_tests else "FAIL"
+            count_match = re.search(r"Ran (\d+) tests?", out)
+            test_count = int(count_match.group(1)) if count_match else None
             (OUT / logname).write_text(proc.stdout[-150000:] + "\n--- stderr ---\n" + proc.stderr[-150000:], encoding="utf-8")
-            tests.append({"command": command, "status": status, "exit_code": proc.returncode, "log": logname})
+            tests.append({"command": command, "status": status, "exit_code": proc.returncode, "log": logname, "test_count": test_count})
+            print(json.dumps({"group": group, "index": i, "command": command, "status": status, "exit_code": proc.returncode, "test_count": test_count}), flush=True)
+            if status != "PASS":
+                signals = [line.strip()[:240] for line in out.splitlines() if any(token in line.lower() for token in ("error", "fail", "not ok", "traceback", "ran 0 tests"))]
+                print("FAILURE_SIGNALS " + json.dumps(signals[-12:], ensure_ascii=False), flush=True)
         except (OSError, subprocess.TimeoutExpired) as exc:
             (OUT / logname).write_text(str(exc), encoding="utf-8")
-            tests.append({"command": command, "status": "BLOCKED", "log": logname})
+            tests.append({"command": command, "status": "BLOCKED", "log": logname, "exception": type(exc).__name__})
+            print(json.dumps({"group": group, "index": i, "command": command, "status": "BLOCKED", "error_kind": type(exc).__name__}), flush=True)
     records[group] = {
         "checks": tests,
         "status": "PARTIAL_NEEDS_NATIVE_AND_BUSINESS_GATES" if all(x["status"] == "PASS" for x in tests) else "BLOCKED_OR_FAILED",
         "strictly_complete": False
     }
+try:
+    tested_commit = subprocess.run(["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True, timeout=10, check=True).stdout.strip()
+except (OSError, subprocess.TimeoutExpired, subprocess.CalledProcessError):
+    tested_commit = None
 receipt = {
     "schema_version": 1,
+    "tested_source_commit": tested_commit,
     "generated_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
     "repository": REPO,
     "commit": os.environ.get("GITHUB_SHA"),
@@ -62,4 +77,4 @@ receipt = {
 }
 (OUT / "checkpoint.json").write_text(json.dumps(receipt, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 print(json.dumps({k: v["status"] for k,v in records.items()}))
-sys.exit(0 if all(all(c["status"] == "PASS" for c in v["checks"]) for v in records.values()) else 1)
+sys.exit(0 if tested_commit and all(all(c["status"] == "PASS" for c in v["checks"]) for v in records.values()) else 1)

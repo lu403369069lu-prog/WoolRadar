@@ -41,7 +41,7 @@ class RelaySafetyTests(unittest.TestCase):
                          "business_accepted": False}]
         }
 
-    def run_persist(self, directory, q, receipt):
+    def run_persist(self, directory, q, receipt, integration_sha="a" * 40):
         state = directory / "engine.json"
         if not state.exists():
             worker.save(state, self.initial(q["repo"]))
@@ -55,6 +55,8 @@ class RelaySafetyTests(unittest.TestCase):
             "status": "PASS", "exit_code": 0, "total": 5, "passed": 5, "failed": 0,
             "failed_test_names": []
         }
+        if integration_sha is not None:
+            integration["source_commit"] = integration_sha
         worker.save(directory / "integration.json", integration)
         worker.save(rec, receipt)
         worker.persist(SimpleNamespace(state=str(directory), receipt=str(rec), repo=q["repo"]))
@@ -98,6 +100,14 @@ class RelaySafetyTests(unittest.TestCase):
     def test_python_summary_missing_ok_never_passes(self):
         self.assertEqual(
             worker.parse_test_summary("Ran 1 test in 0.001s\n", 0)["status"], "FAIL")
+
+    def test_integration_report_must_match_exact_tested_source_commit(self):
+        q = self.queue()
+        for source_sha in (None, "b" * 40, "invalid", True):
+            with self.subTest(reported_sha=source_sha), tempfile.TemporaryDirectory() as tmp:
+                receipt = self.receipt(q)
+                with self.assertRaises(ValueError):
+                    self.run_persist(Path(tmp), q, receipt, integration_sha=source_sha)
 
     def test_forged_pass_receipt_requires_explicit_zero_counters(self):
         q = self.queue()

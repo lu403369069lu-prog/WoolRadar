@@ -1,5 +1,5 @@
 {
-  "cursor": 22,
+  "cursor": 24,
   "families": {
     "COORD-H01": {
       "run_key": "39085500115/1",
@@ -19,6 +19,18 @@
       "status": "NO_FORMAL_MAPPING_NOT_EXECUTED",
       "strictly_complete": false
     },
+    "COORD-H04": {
+      "run_key": "39086003761/1",
+      "source_commit": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+      "status": "NO_FORMAL_MAPPING_NOT_EXECUTED",
+      "strictly_complete": false
+    },
+    "COORD-H05": {
+      "run_key": "39086003761/1",
+      "source_commit": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+      "status": "NO_FORMAL_MAPPING_NOT_EXECUTED",
+      "strictly_complete": false
+    },
     "WR-H01": {
       "run_key": "39083789000/1",
       "source_commit": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
@@ -32,9 +44,10 @@
       "strictly_complete": false
     },
     "WR-H03": {
-      "run_key": "39083900738/1",
+      "last_recheck_revision": 12,
+      "run_key": "39086003761/1",
       "source_commit": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
-      "status": "FORMAL_CHECK_FAILED_OR_BLOCKED",
+      "status": "FORMAL_SUBSET_PASS_NATIVE_PENDING",
       "strictly_complete": false
     },
     "WR-H04": {
@@ -136,15 +149,15 @@
   },
   "integration": {
     "failed": null,
-    "passed": null,
-    "run_key": "39085572813/1",
+    "passed": 359,
+    "run_key": "39086003761/1",
     "source_commit": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
-    "status": "FAIL",
+    "status": "PASS",
     "total": 359
   },
-  "last_run_key": "39085572813/1",
+  "last_run_key": "39086003761/1",
   "last_source_commit": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
-  "last_utc": "2026-10-18T01:11:50.748098+00:00",
+  "last_utc": "2026-10-18T01:19:08.927697+00:00",
   "note": "GitHub Actions formal subsets only, not AI repairs nor native/business acceptance.",
   "processed_run_keys": [
     "39083789000/1",
@@ -157,10 +170,11 @@
     "39084179868/1",
     "39084472412/1",
     "39085500115/1",
-    "39085572813/1"
+    "39085572813/1",
+    "39086003761/1"
   ],
   "repo": "WoolRadar",
-  "revision": 11,
+  "revision": 12,
   "schema_version": 1,
   "strict_business_completed": 0
 }

@@ -142,6 +142,13 @@ class RelaySafetyTests(unittest.TestCase):
         state["revision"] = 2
         self.assertEqual(worker.choose_recheck(state, q["families"], set())["id"], family_id)
 
+    def test_coord_git_return_sync_not_mapped_to_reindex_preview(self):
+        """A DB reindex preview cannot prove coordination Git return-sync."""
+        q = self.queue()
+        family = next(f for f in q["families"] if f["id"] == "COORD-H06")
+        self.assertEqual(family["checks"], [])
+        self.assertNotIn("test_reindex_preview.py", repr(family["checks"]))
+
     def test_rotation_two_consecutive_receipts(self):
         q = self.queue()
         with tempfile.TemporaryDirectory() as tmp:

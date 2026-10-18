@@ -1,0 +1,28 @@
+name: Second100 W2 WAL live-backup and standalone restore
+on:
+  push:
+    branches: [chatgpt/second100-w2-wal-backup-20261018]
+  pull_request:
+    branches: [chatgpt/second100-w2-schema-downgrade-20261018]
+permissions:
+  contents: read
+jobs:
+  online-wal:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        python: ['3.11', '3.12']
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Actual WAL concurrent snapshot and verified recovery
+        run: python -X utf8 -m unittest discover -s tests -p test_wal_online_backup.py -v
+      - name: Existing SQLite future schema safety
+        run: python -X utf8 -m unittest discover -s tests -p test_schema_version_guard.py -v

@@ -95,6 +95,16 @@ class RelaySafetyTests(unittest.TestCase):
         self.assertFalse(worker.safe(["node", "--test", "/tmp/x.test.mjs"]))
         self.assertTrue(worker.safe(["python", "-m", "unittest", "discover", "-s", "tests", "-p", "test_core.py"]))
 
+    def test_wool_runner_rejects_unreviewed_node_test_paths(self):
+        q = self.queue()
+        self.assertFalse(any(c[:2] == ["node", "--test"]
+                             for f in q["families"] for c in f["checks"]))
+        for name in ("../unreviewed.test.mjs", "../../escape.test.mjs",
+                     "tools/unreviewed.test.mjs", "tools/../escape.test.mjs",
+                     "C:\\private\\evil.test.mjs"):
+            with self.subTest(path=name):
+                self.assertFalse(worker.safe(["node", "--test", name]))
+
     def test_durable_persist_and_duplicate_replay(self):
         q = self.queue()
         with tempfile.TemporaryDirectory() as tmp:

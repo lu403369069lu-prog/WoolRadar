@@ -40,7 +40,9 @@ def safe(argv):
     if argv[:4] == ["node", "--import", "tsx", "--test"]:
         return len(argv) >= 5 and all(a.startswith("test/") and a.endswith(".test.ts") and ".." not in a for a in argv[4:])
     if argv[:2] == ["node", "--test"]:
-        return len(argv) >= 3 and all(a.endswith(".test.mjs") and not a.startswith("/") and "/../" not in a for a in argv[2:])
+        # WoolRadar historical families contain no approved Node fixtures.
+        # Never allow arbitrary relative .test.mjs from a future queue edit.
+        return False
     return False
 
 def choose_recheck(state, families, regular_ids):

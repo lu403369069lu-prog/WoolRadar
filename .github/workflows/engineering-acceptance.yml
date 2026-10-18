@@ -24,10 +24,10 @@ jobs:
         with:
           ref: ${{ github.sha }}
           persist-credentials: false
-      - name: Checkout current engineering candidate
+      - name: Checkout tracked engineering source branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.target_ref || github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ inputs.target_ref || 'chatgpt/backlog-w39-home-arpa-root-20261017' }}
           path: candidate
           persist-credentials: false
       - name: Print exact tested candidate commit

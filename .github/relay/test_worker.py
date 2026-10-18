@@ -41,7 +41,7 @@ class RelaySafetyTests(unittest.TestCase):
                          "business_accepted": False}]
         }
 
-    def run_persist(self, directory, q, receipt):
+    def run_persist(self, directory, q, receipt, *, integration_drop=None, integration_override=None):
         state = directory / "engine.json"
         if not state.exists():
             worker.save(state, self.initial(q["repo"]))
@@ -53,8 +53,13 @@ class RelaySafetyTests(unittest.TestCase):
             "source_subdir": "." if q["repo"] == "WoolRadar" else "SAM/snapshot",
             "verified_business_complete": False, "checked_utc": "2026-10-18T00:00:00Z",
             "status": "PASS", "exit_code": 0, "total": 5, "passed": 5, "failed": 0,
+            "skipped": 0, "todo": 0, "cancelled": 0,
             "failed_test_names": []
         }
+        if integration_drop is not None:
+            integration.pop(integration_drop)
+        if integration_override is not None:
+            integration.update(integration_override)
         worker.save(directory / "integration.json", integration)
         worker.save(rec, receipt)
         worker.persist(SimpleNamespace(state=str(directory), receipt=str(rec), repo=q["repo"]))
@@ -115,6 +120,27 @@ class RelaySafetyTests(unittest.TestCase):
                 receipt["results"][0]["checks"][0][field] = False
                 with self.assertRaises(ValueError):
                     self.run_persist(Path(tmp), q, receipt)
+
+    def test_integration_pass_requires_explicit_typed_counters(self):
+        # Different from family checks: persist also trusts integration.json.
+        # A missing field or bool False must never be interpreted as numeric zero.
+        q = self.queue()
+        fields = ("exit_code", "total", "passed", "failed",
+                  "skipped", "todo", "cancelled")
+        for field in fields:
+            with self.subTest(missing=field), tempfile.TemporaryDirectory() as tmp:
+                with self.assertRaises(ValueError):
+                    self.run_persist(Path(tmp), q, self.receipt(q),
+                                     integration_drop=field)
+        for field in fields:
+            with self.subTest(boolean=field), tempfile.TemporaryDirectory() as tmp:
+                with self.assertRaises(ValueError):
+                    self.run_persist(Path(tmp), q, self.receipt(q),
+                                     integration_override={field: False})
+        # The fully specified positive control must still persist.
+        with tempfile.TemporaryDirectory() as tmp:
+            state = self.run_persist(Path(tmp), q, self.receipt(q))
+            self.assertEqual(state["integration"]["status"], "PASS")
 
     def test_forged_skipped_receipt_rejected(self):
         q = self.queue()

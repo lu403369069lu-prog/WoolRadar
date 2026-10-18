@@ -9,3 +9,7 @@
 - Run suitable tests for the actual project stack; do not invent passing test results.
 - Update HANDOFF.md with task state, changed files, commands run, blockers and next actions at every handoff.
 - If local Git history already exists, preserve it and merge remote changes safely; do not reinitialize blindly.
+
+## Codex 2026-10-18 work pickup
+
+Read `CODEX_NEXT_TASKS_20261018.md` and `coordination/CODEX_HANDOFF_ROUTER_20261018.md` before claiming unfinished work. Those files point to already-tested cloud results and local-only Codex tasks; do not reinitialize or rerun identical fixed-source tests. Check GitHub Issue #2 and coordination Issue #3, source PR HEAD and the V3 lease/fence contract; a task document is not a lock.

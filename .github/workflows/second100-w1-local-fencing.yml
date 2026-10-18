@@ -1,0 +1,24 @@
+name: Second100 W1 stale-worker local delivery fencing
+on:
+  push:
+    branches: [chatgpt/second100-w1-notice-stale-file-20261018]
+  pull_request:
+    branches: [chatgpt/second100-w3-status-audit-20261018]
+permissions:
+  contents: read
+jobs:
+  w1-native:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        python: ['3.11', '3.12']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Actual stale-worker overwrite canary
+        run: python -X utf8 -m unittest discover -s tests -p test_notice_stale_local_writer.py -v

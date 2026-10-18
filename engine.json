@@ -1,5 +1,5 @@
 {
-  "cursor": 12,
+  "cursor": 14,
   "families": {
     "WR-H01": {
       "run_key": "39083789000/1",
@@ -72,11 +72,23 @@
       "source_commit": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
       "status": "EXTERNAL_GATE_NOT_EXECUTED",
       "strictly_complete": false
+    },
+    "WR-H13": {
+      "run_key": "39084155804/1",
+      "source_commit": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+      "status": "EXTERNAL_GATE_NOT_EXECUTED",
+      "strictly_complete": false
+    },
+    "WR-H14": {
+      "run_key": "39084155804/1",
+      "source_commit": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
+      "status": "EXTERNAL_GATE_NOT_EXECUTED",
+      "strictly_complete": false
     }
   },
-  "last_run_key": "39084069137/1",
+  "last_run_key": "39084155804/1",
   "last_source_commit": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
-  "last_utc": "2026-10-18T00:48:07.031758+00:00",
+  "last_utc": "2026-10-18T00:49:06.829243+00:00",
   "note": "GitHub Actions formal subsets only, not AI repairs nor native/business acceptance.",
   "processed_run_keys": [
     "39083789000/1",
@@ -84,10 +96,11 @@
     "39083913112/1",
     "39083983748/1",
     "39084066405/1",
-    "39084069137/1"
+    "39084069137/1",
+    "39084155804/1"
   ],
   "repo": "WoolRadar",
-  "revision": 6,
+  "revision": 7,
   "schema_version": 1,
   "strict_business_completed": 0
 }

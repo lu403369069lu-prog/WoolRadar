@@ -1,0 +1,47 @@
+name: WR-H03 Windows WAL snapshot and CLAIMED recovery
+on:
+  push:
+    branches: [chatgpt/wr-h03-wal-claimed-backup-tests-20261018]
+    paths:
+      - 'tests/test_wal_claimed_recovery.py'
+      - '.github/workflows/wr-h03-wal-backup.yml'
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    paths:
+      - 'tests/test_wal_claimed_recovery.py'
+      - '.github/workflows/wr-h03-wal-backup.yml'
+permissions:
+  contents: read
+concurrency:
+  group: wr-h03-wal-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  windows-wal-backup:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Show immutable candidate commit
+        shell: pwsh
+        run: git rev-parse HEAD
+      - name: Run actual Windows WAL snapshot and CLAIMED recovery tests
+        shell: pwsh
+        run: |
+          @'
+          import sys
+          import unittest
+          suite=unittest.defaultTestLoader.discover("tests",pattern="test_wal_claimed_recovery.py")
+          result=unittest.TextTestRunner(verbosity=2).run(suite)
+          print("STRICT_WR_H03 total=%d failures=%d errors=%d skipped=%d" %
+                (result.testsRun,len(result.failures),len(result.errors),len(result.skipped)))
+          sys.exit(0 if result.wasSuccessful() and result.testsRun==2
+                   and not result.skipped and not result.expectedFailures
+                   and not result.unexpectedSuccesses else 1)
+          '@ | python -

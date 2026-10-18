@@ -22,6 +22,7 @@
 - WoolRadar `main:.github/workflows/agent-pr-acceptance.yml`：新业务 PR 读权限 Windows 全量测试；
   `main:.github/workflows/coordination-pr-acceptance.yml`：新协调 PR 读权限专项测试。
 - SAM `main:.github/workflows/agent-pr-acceptance.yml`：新代码 PR 读权限 Node 构建 + 全量测试。缺少可信冻结物时保持 CI 红灯，而非篡改测试。
+- 如果 Codex 的修复 PR 以另一条叠加源码分支为 base，且该 base 没有新 workflow，则不能仅凭 PR 存在就认为 `pull_request` 检查已触发。Codex 必须检查实际 Actions run 与被测源码 SHA；必要时用现有 `workflow_dispatch` 的 `candidate_ref` 指向受审固定提交运行低权限工作流，绝不能把缺失的检查当作成功。
 - GitHub Actions **不会调用 ChatGPT/Codex 对话或擅自写任意补丁**；Copilot Cloud Agent 另需已授权的独立编程模型资格。当前本机 Codex 只在真实启动/领取后执行，不能将这份文档当作已唤醒或已 claim。
 
 ## Codex 下一次启动的执行契约

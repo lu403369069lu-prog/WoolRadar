@@ -262,8 +262,10 @@ def persist(a):
             all_pass = all(x.get("status") == "PASS" and x.get("exit_code") == 0
                            and type(x.get("total")) is int and x["total"] > 0
                            and type(x.get("passed")) is int and x["passed"] == x["total"]
-                           and x.get("failed") in (0, None) and x.get("skipped", 0) == 0
-                           and x.get("todo", 0) == 0 and x.get("cancelled", 0) == 0
+                           and "failed" in x and (x["failed"] is None or
+                                                      type(x["failed"]) is int and x["failed"] == 0)
+                           and all(type(x.get(field)) is int and x[field] == 0
+                                   for field in ("skipped", "todo", "cancelled"))
                            for x in checks)
             expected_status = ("FORMAL_SUBSET_PASS_NATIVE_PENDING" if all_pass
                                else "FORMAL_CHECK_FAILED_OR_BLOCKED")

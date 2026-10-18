@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 34,
+    "revision": 35,
     "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
-    "last_completed_review_key": "interactive-20261018-100-minimal-stage12-dual-relay-explicit-counter-authority",
+    "last_completed_review_key": "interactive-20261018-100-minimal-stage13-dual-integration-exact-sha-binding",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -68,7 +68,9 @@
       "WoolRadar#56": "68626a6de19552ceb77dcf0cb4759d1d2512b3a5",
       "YinQieJi#28": "0e82f5154e40b3f3cca791f01bdab723f4cc6648",
       "WoolRadar#57": "f5c0a23523a22d9e53e17ce0dd6ca03d47c1a3cd",
-      "YinQieJi#29": "b9f2a5ce116b4515e6dde743608bdf7dd71cd67a"
+      "YinQieJi#29": "b9f2a5ce116b4515e6dde743608bdf7dd71cd67a",
+      "WoolRadar#58": "7ab976d285bfdbf4b21679335d5c1b40a569a969",
+      "YinQieJi#30": "ac7a224049bf9d1a9e4d23968fba0dbfd7b20356"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -105,9 +107,10 @@
       "interactive-20261018-100-minimal-stage9-wr-h07-nested-encoded-path",
       "interactive-20261018-100-minimal-stage10-wr-h07-nested-query-laundering",
       "interactive-20261018-100-minimal-stage11-dual-relay-expectedfailure-native",
-      "interactive-20261018-100-minimal-stage12-dual-relay-explicit-counter-authority"
+      "interactive-20261018-100-minimal-stage12-dual-relay-explicit-counter-authority",
+      "interactive-20261018-100-minimal-stage13-dual-integration-exact-sha-binding"
     ],
-    "write_diagnostic": "DUAL_RELAYS_STATE_PERSIST_FALSE_PASS_MISSING_BOOL_COUNTS_FIXED_NATIVE",
+    "write_diagnostic": "DUAL_RELAYS_SOURCE_SHA_INTEGRATION_FINGERPRINT_AUTHORITY_NATIVE_WORKER",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -2024,6 +2027,32 @@
       "test_evidence": "6x17 native source state-machine tests no skips, 8 genuine rejected-forged-counter regression subfailures pre-fix",
       "business_accepted": false,
       "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage13-dual-integration-exact-sha-binding/WoolRadar",
+      "repo": "WoolRadar",
+      "family": "COORD-HISTORY-GATE",
+      "status": "FULL_INTEGRATION_REPORT_SOURCE_SHA_BOUND_TO_FORMAL_RECEIPT_PARSER_NATIVE",
+      "pr": 58,
+      "red_run": 39103819990,
+      "green_run": 39103907205,
+      "head": "7ab976d285bfdbf4b21679335d5c1b40a569a969",
+      "test_evidence": "6x15 native persisted source-contract tests, 4 red canary cases, zero skips final; integration producer modified but not separately full-suite-run",
+      "business_accepted": false,
+      "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage13-dual-integration-exact-sha-binding/YinQieJi",
+      "repo": "YinQieJi",
+      "family": "COORD-HISTORY-GATE",
+      "status": "FULL_INTEGRATION_REPORT_SOURCE_SHA_BOUND_TO_FORMAL_RECEIPT_PARSER_NATIVE",
+      "pr": 30,
+      "red_run": 39103822733,
+      "green_run": 39103910827,
+      "head": "ac7a224049bf9d1a9e4d23968fba0dbfd7b20356",
+      "test_evidence": "6x18 native persisted source-contract tests, 4 red canary cases, zero skips final; integration producer modified but not separately full-suite-run",
+      "business_accepted": false,
+      "strictly_complete": false
     }
   ],
   "run_history": [
@@ -2746,6 +2775,44 @@
       },
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
       "next_action": "Independent verify runtime/CLI source-to-receipt SHA authorization; Draft PR57/29 depend on prior PR56/28 and main scheduled relay still old code. Business 50 strict 0 accepted."
+    },
+    {
+      "event_id": "interactive-20261018-100-minimal-stage13-dual-integration-exact-sha-binding",
+      "origin": "INTERACTIVE_CHAT_DUAL_NATIVE_INTEGRATION_REPORT_EXACT_SHA_BIND",
+      "minimal_task_units_new_this_request": 7,
+      "cumulative_actual_minimal_tasks_this_request": 78,
+      "task_unit_ids": [
+        "DUAL-RELAY-FULL_INTEGRATION-SOURCE-COMMIT-MISSING-DEFECT",
+        "WR-RELAY-6X15-INTEGRATION-SHA-FOUR_RED",
+        "SAM-RELAY-6X18-INTEGRATION-SHA-FOUR_RED",
+        "WR-RELAY-INTEGRATION-PRODUCER_AND_PERSIST-COMMIT-BIND",
+        "SAM-RELAY-INTEGRATION-PRODUCER_AND_PERSIST-COMMIT-BIND",
+        "WR-RELAY-6X15-NATIVE-GREEN-DRAFT_PR58",
+        "SAM-RELAY-6X18-NATIVE-GREEN-DRAFT_PR30"
+      ],
+      "actual_cases": "Both real .github/relay/integration_gate.py producers generated whole-source integration receipts without source_commit; .github/relay/worker.py::persist allowed a mismatched or missing integration source SHA while recording it under formal receipt source_commit. Four source SHA authority canaries (absent/mismatched/malformed/bool) were proven as unexpected persistent acceptance by native original state-machine fixtures. Actual six-job red WoolRadar Actions39103819990 15 tests with four failing subcases, SAM Actions39103822733 18 tests/four failures. Integrated exact git rev-parse 40-hex SHA from candidate checkout into integration report and strict equality/hex/type check in persist. Actual green Wool Actions39103907205 6x15/15 no skips, SAM Actions39103910827 6x18/18 no skips. Original integration_gate itself not exercised through complete real-source suite in these new native parser jobs: producer API changed but end-to-end code path remains to be separately verified. New stacked unmerged Draft PR58/PR30, original strict business 0/50, main workflows unchanged; no production, accounts, paid, frozen or source-gold changes.",
+      "evidence": {
+        "wr": {
+          "pr": 58,
+          "red_head": "f68de76a916568b8b05cb6c8e914ac4835ee5ad2",
+          "red_run": 39103819990,
+          "green_head": "7ab976d285bfdbf4b21679335d5c1b40a569a969",
+          "green_run": 39103907205,
+          "jobs": 6,
+          "tests_per_job": 15
+        },
+        "sam": {
+          "pr": 30,
+          "red_head": "56386ff7823976a1b84aed3db7bf94e5dd29f1af",
+          "red_run": 39103822733,
+          "green_head": "ac7a224049bf9d1a9e4d23968fba0dbfd7b20356",
+          "green_run": 39103910827,
+          "jobs": 6,
+          "tests_per_job": 18
+        }
+      },
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "next_action": "Prove actual integration_gate producer runtime generates candidate exact SHA and report persisted source pairing end-to-end, not just synthetically. Drafts require review/merge before main scheduled acceptance uses them."
     }
   ],
   "acceptance": {
@@ -2786,7 +2853,8 @@
     "wr_h07_nested_encoded_private_path": "REAL_SOURCE_RED_GREEN_6X50_NATIVE_PASS_20261018_STRICT_SOURCE_PENDING",
     "wr_h07_nested_query_privacy": "REAL_SOURCE_SAMPLER_NESTED_QUERY_6X52_GREEN_STRICT_PENDING_20261018",
     "dual_relay_python_expectedfailure": "TWO_DRAFT_REAL_SOURCE_6X13_WR_AND_6X16_SAM_NATIVE_RED_GREEN_20261018_BUSINESS_PENDING",
-    "dual_relay_complete_pass_counters": "TWO_NATIVE_DRAFTS_WR_6X14_SAM_6X17_TYPED_ZERO_REJECT_20261018_STRICT_PENDING"
+    "dual_relay_complete_pass_counters": "TWO_NATIVE_DRAFTS_WR_6X14_SAM_6X17_TYPED_ZERO_REJECT_20261018_STRICT_PENDING",
+    "dual_integration_source_sha": "TWO_DRAFTS_SOURCE_CONTRACT_PARSER_NATIVE_6X15_WR_AND_6X18_SAM_GREEN_COMPLETE_RUNTIME_SUITES_NOT_RUN"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

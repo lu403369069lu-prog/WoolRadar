@@ -32,9 +32,9 @@
     "external_policy_gates": 8
   },
   "checkpoint": {
-    "revision": 33,
+    "revision": 34,
     "last_persisted_worker_run_utc": "2026-10-18T04:12:00Z",
-    "last_completed_review_key": "interactive-20261018-100-minimal-stage11-dual-relay-expectedfailure-native",
+    "last_completed_review_key": "interactive-20261018-100-minimal-stage12-dual-relay-explicit-counter-authority",
     "incremental_last_seen": {},
     "seen_branch_heads": {
       "WoolRadar#39": "1aad1c98584dd2c7291ada30ef71e813dbfedd50",
@@ -66,7 +66,9 @@
       "WoolRadar#54": "8d32472fe6b6ac7b1dabd136fcb378335333209e",
       "WoolRadar#55": "53dbe082d95a15da75a8a1cd7e4d6a1129317a4f",
       "WoolRadar#56": "68626a6de19552ceb77dcf0cb4759d1d2512b3a5",
-      "YinQieJi#28": "0e82f5154e40b3f3cca791f01bdab723f4cc6648"
+      "YinQieJi#28": "0e82f5154e40b3f3cca791f01bdab723f4cc6648",
+      "WoolRadar#57": "f5c0a23523a22d9e53e17ce0dd6ca03d47c1a3cd",
+      "YinQieJi#29": "b9f2a5ce116b4515e6dde743608bdf7dd71cd67a"
     },
     "processed_event_keys": [
       "WoolRadar#39/1aad1c98584dd2c7291ada30ef71e813dbfedd50/home-arpa-root-20261017",
@@ -102,9 +104,10 @@
       "interactive-20261018-100-minimal-stage8-wr-h07-private-url-path",
       "interactive-20261018-100-minimal-stage9-wr-h07-nested-encoded-path",
       "interactive-20261018-100-minimal-stage10-wr-h07-nested-query-laundering",
-      "interactive-20261018-100-minimal-stage11-dual-relay-expectedfailure-native"
+      "interactive-20261018-100-minimal-stage11-dual-relay-expectedfailure-native",
+      "interactive-20261018-100-minimal-stage12-dual-relay-explicit-counter-authority"
     ],
-    "write_diagnostic": "DUAL_RELAY_PYTHON_EXPECTEDFAILURE_ORIGINAL_SOURCE_NATIVE_RED_GREEN",
+    "write_diagnostic": "DUAL_RELAYS_STATE_PERSIST_FALSE_PASS_MISSING_BOOL_COUNTS_FIXED_NATIVE",
     "last_write_error": null,
     "last_interactive_recovery_event_id": "interactive-recover-scheduled-unpersisted-20261018-sam-h14-h17"
   },
@@ -1995,6 +1998,32 @@
       "test_evidence": "Windows/Linux Python3.11/3.12/3.13 each 16/16, no skipped/expectedFailures; prior Windows cp1252 error retained",
       "business_accepted": false,
       "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage12-dual-relay-explicit-counter-authority/WoolRadar",
+      "repo": "WoolRadar",
+      "family": "COORD-HISTORY-GATE",
+      "status": "PERSIST_PASS_COUNTERS_REQUIRED_TYPED_NATIVE_RED_GREEN",
+      "pr": 57,
+      "red_run": 39103499993,
+      "green_run": 39103566400,
+      "head": "f5c0a23523a22d9e53e17ce0dd6ca03d47c1a3cd",
+      "test_evidence": "6x14 native source state-machine tests no skips, 8 genuine rejected-forged-counter regression subfailures pre-fix",
+      "business_accepted": false,
+      "strictly_complete": false
+    },
+    {
+      "event_key": "interactive-20261018-100-minimal-stage12-dual-relay-explicit-counter-authority/YinQieJi",
+      "repo": "YinQieJi",
+      "family": "COORD-HISTORY-GATE",
+      "status": "PERSIST_PASS_COUNTERS_REQUIRED_TYPED_NATIVE_RED_GREEN",
+      "pr": 29,
+      "red_run": 39103497202,
+      "green_run": 39103568578,
+      "head": "b9f2a5ce116b4515e6dde743608bdf7dd71cd67a",
+      "test_evidence": "6x17 native source state-machine tests no skips, 8 genuine rejected-forged-counter regression subfailures pre-fix",
+      "business_accepted": false,
+      "strictly_complete": false
     }
   ],
   "run_history": [
@@ -2675,6 +2704,48 @@
       },
       "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
       "next_action": "Integrate reviewed relay parser after PR decisions; until then main scheduled worker still has original parser. Continue fixed-SHA business-family evidence and unseen official source gates; do not claim unattended arbitrary AI repairs."
+    },
+    {
+      "event_id": "interactive-20261018-100-minimal-stage12-dual-relay-explicit-counter-authority",
+      "origin": "INTERACTIVE_CHAT_DUAL_NATIVE_RELAY_STRICT_PERSIST_PASS_EVIDENCE",
+      "minimal_task_units_new_this_request": 7,
+      "cumulative_actual_minimal_tasks_this_request": 71,
+      "task_unit_ids": [
+        "DUAL-RELAY-FORMAL-PASS-INCOMPLETE-BOOLEAN-EVIDENCE-DEFECT",
+        "WR-RELAY-6X14-8-WRONG-PASS-RED",
+        "SAM-RELAY-6X17-8-WRONG-PASS-RED",
+        "WR-RELAY-COMPLETE-EXACT-TYPED-FOUR-COUNTER-FIX",
+        "SAM-RELAY-COMPLETE-EXACT-TYPED-FOUR-COUNTER-FIX",
+        "WR-RELAY-6X14-NATIVE-GREEN-PR57",
+        "SAM-RELAY-6X17-NATIVE-GREEN-PR29"
+      ],
+      "actual_cases": "In both original .github/relay/worker.py persist(), serialized formally passing check with missing failed/skipped/todo/cancelled or boolean False instead of numerical zero could pass receipt verification and durably advance FORMAL_SUBSET_PASS_NATIVE_PENDING. Added original state-machine faked receipt regression that actually executes persist and checks rejected ValueError; each of six native Windows/Linux Py3.11/3.12/3.13 jobs initially failed 8 intended subcases: WoolRadar Actions39103499993 (14 actual tests/job) and YinQieJi Actions39103497202 (17 actual tests/job). Changed each persist PASS gate to require explicit failed key with None or exact integer zero; require exact integer zero for skipped/todo/cancelled; updated legitimate positive fixture with all counters. Actual green WoolRadar Actions39103566400 6x14/14 no skips; SAM Actions39103568578 6x17/17 no skips. New stacked Draft PR57 and PR29, no main/scheduled upgrades or original strict business acceptance; no prod/private-data/API/card changes.",
+      "evidence": {
+        "woolradar": {
+          "repo": "WoolRadar",
+          "pr": 57,
+          "red_head": "9e74bedbfe9ed17df3e53c5e14cb68ca10ae30cc",
+          "red_run": 39103499993,
+          "green_head": "f5c0a23523a22d9e53e17ce0dd6ca03d47c1a3cd",
+          "green_run": 39103566400,
+          "jobs": 6,
+          "tests_per_job": 14,
+          "zero_skips": true
+        },
+        "sam": {
+          "repo": "YinQieJi",
+          "pr": 29,
+          "red_head": "dc349efa5b97c10c4bd5bb1055330c1f990ad6bc",
+          "red_run": 39103497202,
+          "green_head": "b9f2a5ce116b4515e6dde743608bdf7dd71cd67a",
+          "green_run": 39103568578,
+          "jobs": 6,
+          "tests_per_job": 17,
+          "zero_skips": true
+        }
+      },
+      "strict_delivery": "ZERO_NEW_STRICT_BUSINESS_FAMILY_ACCEPTANCES",
+      "next_action": "Independent verify runtime/CLI source-to-receipt SHA authorization; Draft PR57/29 depend on prior PR56/28 and main scheduled relay still old code. Business 50 strict 0 accepted."
     }
   ],
   "acceptance": {
@@ -2714,7 +2785,8 @@
     "wr_h07_sensitive_private_url_path": "ORIGINAL_PRODUCER_SAMPLER_6X49_PASS_ZERO_SKIP_20261018_STRICT_SOURCE_PENDING",
     "wr_h07_nested_encoded_private_path": "REAL_SOURCE_RED_GREEN_6X50_NATIVE_PASS_20261018_STRICT_SOURCE_PENDING",
     "wr_h07_nested_query_privacy": "REAL_SOURCE_SAMPLER_NESTED_QUERY_6X52_GREEN_STRICT_PENDING_20261018",
-    "dual_relay_python_expectedfailure": "TWO_DRAFT_REAL_SOURCE_6X13_WR_AND_6X16_SAM_NATIVE_RED_GREEN_20261018_BUSINESS_PENDING"
+    "dual_relay_python_expectedfailure": "TWO_DRAFT_REAL_SOURCE_6X13_WR_AND_6X16_SAM_NATIVE_RED_GREEN_20261018_BUSINESS_PENDING",
+    "dual_relay_complete_pass_counters": "TWO_NATIVE_DRAFTS_WR_6X14_SAM_6X17_TYPED_ZERO_REJECT_20261018_STRICT_PENDING"
   },
   "safety": "No automatic PR merge, deployment, Windows/PLC/SQLite production actions, secrets, funds, unauthorized account actions or bypass of tool safety blocks.",
   "historical_family_queue": {

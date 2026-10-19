@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "owner": "codex-coordinator",
+  "implementation_head": "c2f4768a2d1cad87127979d6248981c383258014",
+  "source_sha": "c1524ba21ba7b7bb147a2adf22f4107cf2255678",
+  "local_command": "python -B -X utf8 -m unittest discover -s .github/relay -p test_*.py -v",
+  "local_exit_code": 0,
+  "local_passed": 46,
+  "local_total": 46,
+  "local_scope": "19 remote-verified coordinator files; isolated local Git worktree identity differs from remote implementation commit",
+  "native_run_id": 39264765476,
+  "native_attempts": [
+    1,
+    2
+  ],
+  "native_status": "RUNNER_STARTUP_UNVERIFIED",
+  "native_tests_executed": 0,
+  "native_exit_code": null,
+  "native_job_steps": [],
+  "native_logs_error": "404 BlobNotFound",
+  "annotations_error": "connector INVALID_ARGUMENT 400",
+  "business_accepted": false,
+  "overall": "IN_PROGRESS",
+  "output_connection": "OUTPUT_NOT_CONNECTED"
+}

@@ -103,12 +103,12 @@
 | R2-070 | S4 522源件Gold | 独立三轮Gold对照 | 三套实际凭据可追溯 | PLANNED_NOT_VERIFIED |
 | R2-071 | S5 Claim证据审核 | H04审查结论源件SHA绑定 | 错SHA撤销审查且保留所有旧测试 | DRAFT_SAM_4X37_GREEN_FULL_6_MISSING_FROZEN |
 | R2-072 | S5 Claim证据审核 | Claim仓库与提交作用域 | 相同ID跨库不能共享结论 | PLANNED_NOT_VERIFIED |
-| R2-073 | S5 Claim证据审核 | Entailed证据ID真实性 | 空/假证据必须拒绝通过 | PLANNED_NOT_VERIFIED |
-| R2-074 | S5 Claim证据审核 | 审查字段类型抗伪造 | 非预期类型及枚举失败关闭 | PLANNED_NOT_VERIFIED |
+| R2-073 | S5 Claim证据审核 | Entailed证据ID真实性 | 空/假证据必须拒绝通过 | DRAFT_PR41_FOUR_NATIVE_TARGET_GREEN_FULL_6_FROZEN_MISSING |
+| R2-074 | S5 Claim证据审核 | 审查字段类型抗伪造 | 非预期类型及枚举失败关闭 | DRAFT_PR41_FOUR_NATIVE_TARGET_GREEN_FULL_6_FROZEN_MISSING |
 | R2-075 | S5 Claim证据审核 | 资料变动使审核失效 | 保留历史并要求重新验证 | PLANNED_NOT_VERIFIED |
 | R2-076 | S6 严格输入编码 | H14真实运行时Unicode折叠 | 真实评测入口接入修复 | DRAFT_SAM_H14_NATIVE_RED_GREEN_FULL_6_FAIL |
-| R2-077 | S6 严格输入编码 | JSON/JSONL重复键拒绝 | 全部入口不容键覆盖 | PLANNED_NOT_VERIFIED |
-| R2-078 | S6 严格输入编码 | 非法UTF-8换行拒绝 | 不被替换字符掩盖 | PLANNED_NOT_VERIFIED |
+| R2-077 | S6 严格输入编码 | JSON/JSONL重复键拒绝 | 全部入口不容键覆盖 | DRAFT_PR41_FOUR_NATIVE_TARGET_GREEN_FULL_6_FROZEN_MISSING |
+| R2-078 | S6 严格输入编码 | 非法UTF-8换行拒绝 | 不被替换字符掩盖 | DRAFT_PR41_FOUR_NATIVE_TARGET_GREEN_FULL_6_FROZEN_MISSING |
 | R2-079 | S6 严格输入编码 | Windows路径别名安全 | DOS8.3符号链接越界有负例 | PLANNED_NOT_VERIFIED |
 | R2-080 | S7 发布产物身份 | dist清单与源码一致 | 内容哈希可独立证明 | PLANNED_NOT_VERIFIED |
 | R2-081 | S7 发布产物身份 | 缓存与工作区隔离 | 旧dist不能污染新发行 | PLANNED_NOT_VERIFIED |
@@ -149,3 +149,12 @@
 - R2-016 W3 同一真实事件状态写锁及审计连接历史：PR66 https://github.com/lu403369069lu-prog/WoolRadar/pull/66 新增双Windows/Linux原生进程竞争用例，目标4测试均通过；https://github.com/lu403369069lu-prog/WoolRadar/actions/runs/39118649900 Windows全套315=314成功+1跳过，Linux因真实Windows诊断PowerShell脚本有2失败及5系统相关跳过；不宣称完整工程验收。
 - R2-076 SAM H14 真实评测入口Unicode去重：PR37 https://github.com/lu403369069lu-prog/YinQieJi/pull/37，原始事件 RED https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39118823745 全4 native jobs目标测试失败（QS与Qſ重复未阻止），原码改为小写后大写归一，最终专项 37/37 全4作业成功零跳过，https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39118908996；同一源码完整回归 274/280，仍有6项原始教师/正式发布冻结资料缺失，0项正式业务验收新增。
 - 所有工作以各 Draft 的实际 SHA 审核，不自动合并、不推送本机、不读取私人教师材料。不把不同目标的单次GREEN重复计为R2已验收。
+
+## 2026-10-19 SAM R2-073/074/077/078 原生执行收据（严格未核销）
+
+- 独立源码候选：[SAM Draft PR41](https://github.com/lu403369069lu-prog/YinQieJi/pull/41)，固定源 HEAD `fec9754ada87a878dabb235c015186441182f9f9`；本次只引用，不合并。
+- [Actions39197603710](https://github.com/lu403369069lu-prog/YinQieJi/actions/runs/39197603710)：Windows/Linux × Node24/26 四组构建通过；专项每组 **42/42 PASS、0 skip**；全量每组 **279/285 PASS、6 FAIL、0 skip**。六项缺原始冻结教师/来源/发行清单，未替换合成件。
+- `R2-077`：真实 `claim-audit.ts` 入口由逐行 `JSON.parse` 改为 `parseStrictJsonl`，转义重复键及坏字节拒绝；`R2-078`：损坏 UTF-8 跨行负例。
+- `R2-074`：审核字段、Claim Kind、证据数组类型拒绝伪造；`R2-073`：`entailed` 无非空证据ID不得通过（证据ID的真实外部来源/关联仍未完整验收）。
+- 所有四项状态是 **DRAFT + SOURCE_NATIVE_TARGET_PASS + FULL_BLOCKED**，不是四项完成。第二批**严格完成0/100**，历史业务大类0/50；本记录不能代替源件身份、人工Gold或正式交付验收。
+- 另发现R2-006发送前资格TOCTOU缺口，见[Issue2审查](https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6259420862)，只读发现，不计完成。

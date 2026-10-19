@@ -227,12 +227,14 @@ def main() -> int:
         logpath = output_dir / (label + ".log")
         # Store exactly the bytes produced by the child, without lossy transcoding.
         logpath.write_bytes(raw_stdout)
+        invalid_encoding = False
         try:
             stdout = raw_stdout.decode("utf-8", errors="strict")
         except UnicodeDecodeError:
-            stdout = ""  # Undecodable results cannot provide reliable pass evidence.
+            stdout = ""
+            invalid_encoding = True  # Do not accept a forged success trailer.
         rc, counts = evaluate_run(label, rc, stdout)
-        if not stdout and rc == 0:
+        if invalid_encoding and rc == 0:
             rc = 126
         row = {"batch": label, "exit_code": rc,
                "log_sha256": hashlib.sha256(raw_stdout).hexdigest(),

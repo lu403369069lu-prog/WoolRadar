@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "repo": "WoolRadar",
-  "source_ref": "097e3cf1e728fa7e011699abec47a5bd363693f7",
+  "source_ref": "c1524ba21ba7b7bb147a2adf22f4107cf2255678",
   "source_subdir": ".",
-  "source_note": "Immutable PR84 W1/W2/Digest composition candidate as of 2026-10-19; Windows/Linux actual pinned bootstrap and strict zero-skip CI required; no business family accepted solely by pin update.",
+  "source_note": "Immutable PR84 notification reindex and explicit terminal eligibility candidate, independently Windows-tested at this source SHA; fresh pinned upstream native CI required. Local exact-tree root368/combined471 is not clean-host or business acceptance.",
   "families": [
     {
       "id": "WR-H01",

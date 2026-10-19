@@ -1,13 +1,36 @@
 from __future__ import annotations
 
 import json
+import re
+from urllib.parse import urlsplit
 from datetime import datetime, timezone, timedelta
 from dataclasses import dataclass
 from pathlib import Path
 
 from .db import Database
 from .models import Candidate
-from .verifier import VerificationEngine
+from .verifier import VerificationEngine, mainland_eligibility_restricted
+
+
+def _safe_markdown_link(title: str, url: str) -> str:
+    """Make untrusted harvested titles and destinations inert in Markdown."""
+    label = re.sub(r'[\x00-\x1f\x7f]', ' ', str(title))
+    label = label.replace('&', '&amp;').replace('<', '&lt;')
+    label = re.sub(r'([\\*_{}\[\]()#+\-.!|>])', r'\\\1', label)
+    label = label.replace(chr(96), '\\' + chr(96))
+    destination = str(url)
+    if any(ord(ch) < 33 or ord(ch) == 127 for ch in destination):
+        return label
+    try:
+        parsed = urlsplit(destination)
+        if parsed.scheme.lower() not in ('https', 'http') or not parsed.hostname or parsed.username is not None:
+            return label
+    except ValueError:
+        return label
+    for char, encoded in (('\\', '%5C'), ('(', '%28'), (')', '%29'),
+                          ('[', '%5B'), (']', '%5D'), ('<', '%3C'), ('>', '%3E')):
+        destination = destination.replace(char, encoded)
+    return f'[{label}]({destination})'
 
 
 @dataclass(slots=True)
@@ -69,13 +92,20 @@ class ReportGenerator:
                            for evidence in event['evidence'])]
 
         payment_risk_events = [event for event in events if official_payment_risks(event)]
+        def official_mainland_restriction(event):
+            return any(item['kind'] == 'official' and
+                       mainland_eligibility_restricted(item['claims'])
+                       for item in event['evidence'])
+
+        region_risk_events = [event for event in events if official_mainland_restriction(event)]
         sections = [
             ('今日新发现', today_events),
             ('官方已核实、正在开放的福利', [e for e in events if e['status'] == 'CLAIMABLE']),
             ('限时高价值活动', [e for e in events if json.loads(e['metadata_json']).get('high_value')]),
             ('绑卡或自动续费风险：待人工核验', payment_risk_events),
+            ('中国大陆地域资格限制：待人工核验', region_risk_events),
             ('官方来源已找到、开放与条件待核验', [e for e in events if e['status'] == 'OFFICIAL_VERIFIED'
-                and not official_payment_risks(e)]),
+                and not official_payment_risks(e) and not official_mainland_restriction(e)]),
             ('需要账号核验的活动', [e for e in events if json.loads(e['metadata_json']).get('account_required') is True
                 or any(item['claims'].get('account_required') is True for item in e['evidence'])]),
             ('已结束或存在风险的活动', [e for e in events if e['status'] in ('EXPIRED', 'CONFLICTED', 'FAILED')]),
@@ -88,7 +118,7 @@ class ReportGenerator:
                 lines.extend(['- 无已核实条目', ''])
             for row in rows:
                 lines.extend([
-                    f"- [{row['title']}]({row['primary_url']})",
+                    '- ' + _safe_markdown_link(row['title'], row['primary_url']),
                     f"  - 状态：{row['status']}；范围：{row['claim_scope']}；来源：{row['source']}；节点：{row['node']}",
                     f"  - 原帖发布时间：{row['published_at'] or '未知'}；发现时间：{row['first_seen']}",
                 ])
@@ -98,6 +128,8 @@ class ReportGenerator:
                         ('auto_renew', '自动续费')) if field in risk_flags]
                     lines.append('  - 费用风险：官方证据包含' + '、'.join(labels) +
                                  '要求，须人工核验；不得视为无条件免费领取。')
+                if official_mainland_restriction(row):
+                    lines.append('  - 地域资格：官方结构化条款限制中国大陆申请；仅供线索追踪，须人工复核。')
                 for evidence in row['evidence']:
                     if evidence['claims']:
                         lines.append(f"  - 核验时间：{evidence['checked_at']}；证据：{evidence['url']}")
@@ -108,7 +140,7 @@ class ReportGenerator:
                 lines.append('- 无当前有效的排除记录')
             for row in excluded:
                 audit = row['report_audit']
-                lines.append(f"- [{row['title']}]({row['primary_url']})：仅排除报告正文，事件 #{row['id']}")
+                lines.append('- ' + _safe_markdown_link(row['title'], row['primary_url']) + f"：仅排除报告正文，事件 #{row['id']}")
                 lines.append('  - 审核人：' + json.dumps(audit['reviewer'], ensure_ascii=False) +
                              '；时间：' + audit['reviewed_at'] +
                              '；原因：' + json.dumps(audit['reason'], ensure_ascii=False))

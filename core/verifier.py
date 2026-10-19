@@ -5,6 +5,29 @@ import re
 from .models import Candidate, Evidence, Status, VerificationResult
 
 
+def mainland_eligibility_restricted(claims: dict) -> bool:
+    """Only explicit official country restrictions can exclude CN.
+
+    Region prose and unstructured eligibility text are not country evidence.
+    Empty or malformed country lists never prove a geographical restriction.
+    """
+    region = claims.get('region')
+    if isinstance(region, str) and re.fullmatch(r'[A-Z]{2}', region) and region != 'CN':
+        return True
+    constraints = claims.get('eligibility_constraints')
+    if not isinstance(constraints, dict):
+        return False
+    excluded = constraints.get('excluded_countries')
+    if isinstance(excluded, list) and 'CN' in excluded:
+        return True
+    allowed = constraints.get('eligible_countries')
+    if (isinstance(allowed, list) and bool(allowed) and
+            all(isinstance(value, str) and re.fullmatch(r'[A-Z]{2}', value)
+                for value in allowed) and 'CN' not in allowed):
+        return True
+    return False
+
+
 class VerificationEngine:
     def evaluate(self, candidate: Candidate, evidence: list[Evidence]) -> VerificationResult:
         groups: list[set[str]] = []
@@ -81,6 +104,11 @@ class VerificationEngine:
             return VerificationResult(
                 Status.OFFICIAL_VERIFIED,
                 '官方条款包含绑卡或自动续费条件，须人工确认费用与资格',
+                len(provenance), unknown_capacity=unknown_capacity)
+        if any(mainland_eligibility_restricted(item.claims) for item in official):
+            return VerificationResult(
+                Status.OFFICIAL_VERIFIED,
+                '官方地域条件明确限制中国大陆申请，须人工核验地域资格',
                 len(provenance), unknown_capacity=unknown_capacity)
         for item in official:
             try:

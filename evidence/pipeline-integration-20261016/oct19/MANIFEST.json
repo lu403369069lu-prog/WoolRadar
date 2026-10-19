@@ -1,0 +1,202 @@
+{
+  "parent": "6babbe12727652e8626e0fe6f554eb01fecd4a30",
+  "files": [
+    {
+      "path": "core/collector.py",
+      "git_blob": "d2220f8c2b4e55a8524cbce8bb112418247899a2"
+    },
+    {
+      "path": "core/db.py",
+      "git_blob": "683e895145ee65942b72ffef4b0f00007271c0f5"
+    },
+    {
+      "path": "core/dedup.py",
+      "git_blob": "d1265f0d4193303c19996387cb37abe80aa0bd0d"
+    },
+    {
+      "path": "core/notify.py",
+      "git_blob": "b963a15a7a393c79ee69c65c91668074aa1f85fe"
+    },
+    {
+      "path": "core/official_trace.py",
+      "git_blob": "2e4911740c0bea5dfe62151ffbeb2debd0143f49"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/consume_preview.py",
+      "git_blob": "e7386aeadf6a6b34e5610acc224ca27c5b6283cc"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/redact_daily.py",
+      "git_blob": "07de3757a3b60fe288f6621018ecd4eb31944841"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/run_combined_tests.py",
+      "git_blob": "93548372e10ebc7c11e373e1d06e8ef2f489bded"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/test_delivery_boundaries.py",
+      "git_blob": "3f4d7c28ca976c954cf60a60db5044f051334ac9"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/test_preview_roundtrip.py",
+      "git_blob": "8fe7a6dcf5075a96b1e5011e8093080e6757cac3"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/test_redact_daily.py",
+      "git_blob": "714d83ff779b8380eb1ca74b630d79ef782faded"
+    },
+    {
+      "path": "tests/test_collectors.py",
+      "git_blob": "b8d4607f7d0dba5c1bb177efc2cad96e97c76fba"
+    },
+    {
+      "path": "tests/test_concurrent_upsert.py",
+      "git_blob": "bb3763054296ccee6f548611d703858855275b67"
+    },
+    {
+      "path": "tests/test_notice_concurrent_enqueue.py",
+      "git_blob": "920fe6aee6d7ad495db86d3f3707cc57cf76888a"
+    },
+    {
+      "path": "tests/test_notice_retry_restart.py",
+      "git_blob": "480ece80d92f7ea240861c230970876d8e3b5ac3"
+    },
+    {
+      "path": "tests/test_notice_sent_monotonic.py",
+      "git_blob": "6f47e27ae8e100d7a77b564d4cf0d02559ed9008"
+    },
+    {
+      "path": "tests/test_notice_stale_local_writer.py",
+      "git_blob": "7428dba45431d4bdd1d8f9fc51b7f4235cbee43c"
+    },
+    {
+      "path": "tests/test_notifications.py",
+      "git_blob": "985c25aa1b7921f71bcdb37119d7307110c532f5"
+    },
+    {
+      "path": "tests/test_official_trace.py",
+      "git_blob": "b1d5d3c12f28b207c3d58dc1ffad3a62744a5798"
+    },
+    {
+      "path": "tests/test_reindex_backup_atomic.py",
+      "git_blob": "5222fe20442a2b1335ea08d75eca9023cf0efdbb"
+    },
+    {
+      "path": "tests/test_reviewed_official_campaign.py",
+      "git_blob": "f1560e227bd855de6e828facc3449a8551ddfa1e"
+    },
+    {
+      "path": "tests/test_schema_cooldown_interleavings.py",
+      "git_blob": "3c01fbe804e4aa6e59220cfee5fc8c4e098ccc7f"
+    },
+    {
+      "path": "tests/test_schema_migration_atomic.py",
+      "git_blob": "009ec3c009e719672f9874d40f0391a4c83282af"
+    },
+    {
+      "path": "tests/test_schema_version_guard.py",
+      "git_blob": "c0418bc8f35a3ecc8e338444b4183113fce5561b"
+    },
+    {
+      "path": "tests/test_status_audit_locking.py",
+      "git_blob": "8af61de889246db25b3d5c216decd3da33d1abca"
+    },
+    {
+      "path": "tests/test_telegram_cooldown_boundary.py",
+      "git_blob": "52387cc07c19629afeff75146dcb784118ccdfcc"
+    },
+    {
+      "path": "tests/test_telegram_rate_limit.py",
+      "git_blob": "c20978d1b743de296809f8b3f1c03622d35ffc4c"
+    },
+    {
+      "path": "tests/test_telegram_timeout_uncertainty.py",
+      "git_blob": "1569043d19fa6ad7502b72e8f05944201cf9b58d"
+    },
+    {
+      "path": "tests/test_wal_online_backup.py",
+      "git_blob": "105b2e5e415f118e94718c76f4f2d684c134076d"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct19/oct19-new-contracts-before.json",
+      "git_blob": "36566c2c7cb6d9561b64c24cbc36a14cef3922cf"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct19/oct19-first-combined.json",
+      "git_blob": "580fd8d7f0af51356ac56efbeec4a5019c0ff69c"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct19/oct19-combined-db-finished.json",
+      "git_blob": "198ba99751c092f278599f5f92f42982b389131d"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct19/oct19-combined-spawn-fixed.json",
+      "git_blob": "7f7c89faa58e2ca3b7b2616b0fb589ca412d0c8b"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct19/oct19-cooldown-before.json",
+      "git_blob": "e314436daa02ba285fa58d24a593b1b4c9ef5ba1"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct19/oct19-cooldown-fixed.json",
+      "git_blob": "8de902a2191ed64eb446687fe04096cb5f9294f0"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct19/oct19-review-interleavings-before.json",
+      "git_blob": "69d20eafb060def69a209afed150c3938c404539"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct19/oct19-review-interleavings-fixed.json",
+      "git_blob": "ebc02c72bcfdb161ad8e4bbc6aba292117682151"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct19/oct19-combined-final.json",
+      "git_blob": "0795dc69704c1ed383933df52032b45ac89a33e6"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct19/candidate-manifest.json",
+      "git_blob": "70292d47231089964848d24b631b27938f9d1711"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct19/composition.json",
+      "git_blob": "7210502febecadca21cf5443c5323012b2816c4f"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct19/review.json",
+      "git_blob": "9968c40809910078c21a5dcccb1d17a4cf455068"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct19/rereview.json",
+      "git_blob": "1e7d108396f234f408a224dff79315fc3b135a8a"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct19/independent_checks.py",
+      "git_blob": "e791998812e59caa120d328d615176baada2c056"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct19/rereview_checks.py",
+      "git_blob": "02c08641530289582eb70b29d3d55cb3f58d2004"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct19/HANDOFF.md",
+      "git_blob": "968856399eb00d64c0694cac227d4e8b15197c6d"
+    },
+    {
+      "path": "HANDOFF.md",
+      "git_blob": "a3cd44b77cde596ebd439f92e81cc5b44d9a314e"
+    }
+  ],
+  "executed_composition": {
+    "methods": 455,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "test_seconds": 19.421
+  },
+  "project_complete": false,
+  "data_uploaded": false,
+  "production_changed": false,
+  "delivery": "OUTPUT_NOT_CONNECTED",
+  "cycle": 1792390058
+}

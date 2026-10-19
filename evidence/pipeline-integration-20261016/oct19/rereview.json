@@ -1,0 +1,68 @@
+{
+  "date": "2026-10-19",
+  "reviewer": "independent child /root/budget_review",
+  "scope": "Bounded rereview of schema-version reservation and notification cooldown merge fixes, including prior counterexamples, SENT/CLAIMED, DDL rollback, backup restoration and local receipt commit failure.",
+  "decision": "Both previous P2 counterexamples fixed in the reviewed source. No new actionable P1/P2 reproduced in this bounded rereview.",
+  "source_sha256": {
+    "db.py": "091dca148820f3c352a0221cf81bf6a50a592cfe4a3646f34771c6e63977b426",
+    "notify.py": "795049dab91b0c447b51b898a8501e799b4e6d215171e3e6ed82207aaddc41d9",
+    "collector.py": "e5d8a3a1ab2d63e3159aab4e166c03bac6285b67c05c4d911fd9c8e9e0b82c05",
+    "official_trace.py": "dd24150f06b12a8c942530263eac2177520af30f7efc5a941af0c3a3a4582821",
+    "dedup.py": "013794c629264ac2b4d4ebd4da8ce0983a3282c4c0f78abbfd0a38cea7c99006"
+  },
+  "source_stable_during_run": true,
+  "findings": [],
+  "resolved": [
+    {
+      "id": "schema-version-inspection-race",
+      "observed": "Initialization rejects UNSUPPORTED_DATABASE_SCHEMA_VERSION after second-connection upgrade; user_version remains 2. DDL is individually executed under the retained BEGIN IMMEDIATE reservation."
+    },
+    {
+      "id": "merge-discards-retry-cooldown",
+      "observed": "RETRY loser retains 7200-second deadline and attempts=2; UNCERTAIN loser retains UNCERTAIN/deadline/attempts. Formal contracts additionally test both RETRY/UNCERTAIN directions and active CLAIMED cooldown."
+    }
+  ],
+  "verification": {
+    "command": "python -B _outbox/oct19-integration/rereview_checks.py '[local-workspace]'",
+    "exit_code": 0,
+    "focused_methods": 18,
+    "failures": 0,
+    "errors": 0,
+    "skips": 0,
+    "focused_modules": [
+      "test_schema_version_guard",
+      "test_schema_migration_atomic",
+      "test_notice_sent_monotonic",
+      "test_notice_retry_restart",
+      "test_notify_reindex_transaction",
+      "test_telegram_rate_limit",
+      "test_reindex_backup_atomic",
+      "test_schema_cooldown_interleavings"
+    ],
+    "independent_controls": [
+      "Original schema and RETRY/UNCERTAIN counterexamples now pass unchanged.",
+      "SENT and CLAIMED loser merge controls retain terminal status or longest lease/attempts.",
+      "Actual flush sender callback triggers reindex after claim, before returned SENT ACK. Changed fence prevents old ACK; summary uncertain=1, sent=0; database CLAIMED until now+7200; next flush at now+400 makes zero additional sender calls.",
+      "Injected failure during fresh evidence CREATE TABLE rolls back all earlier tables: sqlite_master table list empty and user_version=0; normal initialization retry succeeds.",
+      "Existing legacy ALTER failure rollback/retry and backup failure/no-publication plus committed-WAL backup restore contracts pass.",
+      "Local receipt final commit failure/retry retains one identical receipt and leaves zero temp files.",
+      "Current sender cooldown and W5 mock controls remain passing."
+    ],
+    "harness": "Only synthetic disposable outbox databases/files. Existing test ROOT, __file__ and default temp paths redirected in memory; no assertions or product source modified."
+  },
+  "remaining_boundaries": [
+    "This is focused verification; no repeated full455 suite. Parent full-suite results must remain separately attributed.",
+    "Active external delivery invalidated by migration remains uncertain, and may be sent again after the preserved cooldown. This preserves documented at-least-once behavior, not exactly-once remote delivery.",
+    "Schema interleaving uses deterministic independent SQLite connection scheduling; not a true simultaneous future-version process stress test.",
+    "No real network, Telegram, credentials, production/private data or product/worktree writes. W5 child-process implementations remain outside this review scope."
+  ],
+  "preserved_prior_review": {
+    "path": "review.json",
+    "sha256": "d187647f18bd6b24c5391c16f466ea83097fcd7f3e164f9fbc79e14c1ca51ffe"
+  },
+  "artifacts": {
+    "script": "rereview_checks.py",
+    "checks": "rereview-check-results.json",
+    "checks_sha256": "e88439b3607536b90677f09026ee2398bd8f0fa6c4da4eb62f41d689de58205e"
+  }
+}

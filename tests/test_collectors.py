@@ -95,6 +95,81 @@ class CollectorTests(unittest.TestCase):
                 self.assertEqual(build.return_value.open.call_count, 1)
             redirect.close()
 
+    def test_redirect_to_private_or_non_https_target_never_reaches_transport(self):
+        from core.collector import budgeted_read
+        for target in ('https://127.0.0.1/admin', 'https://[::1]/admin',
+                       'https://localhost/admin', 'http://other.example/feed',
+                       'https://user:pass@other.example/feed'):
+            with self.subTest(target=target), tempfile.TemporaryDirectory(dir=ROOT / '.test-tmp') as td:
+                error = urllib.error.HTTPError('https://entry.example/feed', 302, 'redirect',
+                                               {'Location': target}, io.BytesIO())
+                with patch('core.collector.urllib.request.build_opener') as build, patch('core.collector.time.sleep'):
+                    build.return_value.open.side_effect = [error, AssertionError('unsafe second request')]
+                    with self.assertRaises(SourcePaused):
+                        budgeted_read(urllib.request.Request('https://entry.example/feed'), RequestBudget(Path(td)))
+                    self.assertEqual(build.return_value.open.call_count, 1)
+                error.close()
+
+    def test_direct_private_or_invalid_network_target_is_rejected_before_transport(self):
+        from core.collector import budgeted_read
+        for target in ('http://public.example/feed', 'https://127.0.0.1/private',
+                       'https://[::ffff:127.0.0.1]/private', 'https://localhost/feed',
+                       'https://user:pass@public.example/feed'):
+            with self.subTest(target=target), patch('core.collector.urllib.request.build_opener') as build:
+                with self.assertRaises(SourcePaused):
+                    budgeted_read(urllib.request.Request(target))
+                build.assert_not_called()
+
+    def test_dns_private_or_mixed_answers_never_open_a_socket(self):
+        from core.collector import _connect_public_peer, SourcePaused
+        public = (socket.AF_INET, socket.SOCK_STREAM, 6, '', ('8.8.8.8', 443))
+        private = (socket.AF_INET, socket.SOCK_STREAM, 6, '', ('127.0.0.1', 443))
+        for answers in ([private], [public, private], []):
+            with self.subTest(answers=answers):
+                with patch('core.collector.socket.getaddrinfo', return_value=answers), \
+                     patch('core.collector.socket.socket') as create_socket:
+                    with self.assertRaisesRegex(SourcePaused, 'NON_PUBLIC_RESOLVED_PEER'):
+                        _connect_public_peer(('public.example', 443), timeout=5)
+                    create_socket.assert_not_called()
+
+    def test_dns_public_address_is_pinned_for_tls_connection(self):
+        from core.collector import _PublicPeerHTTPSConnection
+        from unittest.mock import Mock
+        target = ('8.8.8.8', 443)
+        endpoint = (socket.AF_INET, socket.SOCK_STREAM, 6, '', target)
+        context = Mock()
+        with patch('core.collector.socket.getaddrinfo', return_value=[endpoint]) as resolve, \
+             patch('core.collector.socket.socket') as create_socket:
+            connection = _PublicPeerHTTPSConnection('public.example', timeout=5, context=context)
+            connection.connect()
+            resolve.assert_called_once_with('public.example', 443, type=socket.SOCK_STREAM)
+            create_socket.return_value.connect.assert_called_once_with(target)
+            context.wrap_socket.assert_called_once()
+            self.assertEqual(context.wrap_socket.call_args.kwargs['server_hostname'], 'public.example')
+
+    def test_budgeted_fetch_disables_environment_connect_proxies(self):
+        from core.collector import budgeted_read
+        from urllib.request import ProxyHandler
+        with patch('core.collector.urllib.request.build_opener') as build:
+            build.return_value.open.return_value.__enter__.return_value.read.return_value = b'example'
+            self.assertEqual(budgeted_read(urllib.request.Request('https://public.example/')), b'example')
+            handlers = build.call_args.args
+            proxy_handlers = [handler for handler in handlers if isinstance(handler, ProxyHandler)]
+            self.assertEqual(len(proxy_handlers), 1)
+            self.assertEqual(proxy_handlers[0].proxies, {})
+
+    def test_public_https_redirect_still_succeeds_with_each_hop_checked(self):
+        from core.collector import budgeted_read
+        with tempfile.TemporaryDirectory(dir=ROOT / '.test-tmp') as td:
+            error = urllib.error.HTTPError('https://entry.example/feed', 302, 'redirect',
+                                           {'Location': 'https://cdn.example/feed'}, io.BytesIO())
+            with patch('core.collector.urllib.request.build_opener') as build, patch('core.collector.time.sleep'):
+                build.return_value.open.side_effect = [error, io.BytesIO(b'public-feed')]
+                payload = budgeted_read(urllib.request.Request('https://entry.example/feed'), RequestBudget(Path(td)))
+                self.assertEqual(payload, b'public-feed')
+                self.assertEqual(build.return_value.open.call_count, 2)
+            error.close()
+
     def test_401_recovers_and_429_cooldown_cannot_be_forced(self):
         from core.collector import collect_for_node
         source = {'id': 'test', 'kind': 'rss', 'platform': 'Test', 'endpoint': 'https://test.example/feed', 'owner_node': 'openmagpie', 'interval_minutes': 1}
@@ -225,8 +300,8 @@ class CollectorTests(unittest.TestCase):
                 RequestBudget(Path(td)).acquire(source, force=True)
 
     def test_success_http_challenge_is_not_parsed_as_empty_feed(self):
-        with patch('core.collector.urllib.request.urlopen') as mocked:
-            mocked.return_value.__enter__.return_value.read.return_value = b'<html>cf-chl-captcha</html>'
+        with patch('core.collector.urllib.request.build_opener') as mocked:
+            mocked.return_value.open.return_value.__enter__.return_value.read.return_value = b'<html>cf-chl-captcha</html>'
             with self.assertRaises(SourcePaused):
                 _request('https://example.test/', 'text/html')
     def test_parses_rss_and_preserves_original_link(self):

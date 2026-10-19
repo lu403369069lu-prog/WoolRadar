@@ -36,20 +36,10 @@ def validate_public_reference(url: str, hosts: set[str]) -> bool:
 
 
 def fetch_public_page(url: str, hosts: set[str], budget: RequestBudget | None = None) -> bytes:
-    if budget is not None:
-        request = urllib.request.Request(url, headers={'User-Agent': USER_AGENT, 'Accept': 'text/html'})
-        return budgeted_read(request, budget, 1_000_000, lambda target: validate_public_reference(target, hosts))
-    class CheckedRedirect(urllib.request.HTTPRedirectHandler):
-        def redirect_request(self, req, fp, code, msg, headers, newurl):
-            if not validate_public_reference(newurl, hosts):
-                raise SourcePaused('UNAPPROVED_REFERENCE_REDIRECT')
-            return super().redirect_request(req, fp, code, msg, headers, newurl)
-    if not validate_public_reference(url, hosts):
-        raise SourcePaused('UNAPPROVED_REFERENCE_URL')
-    opener = urllib.request.build_opener(CheckedRedirect())
     request = urllib.request.Request(url, headers={'User-Agent': USER_AGENT, 'Accept': 'text/html'})
-    with opener.open(request, timeout=20) as response:
-        payload = response.read(1_000_000)
+    # All reference paths share redirect checks, proxy isolation, and pinned DNS.
+    payload = budgeted_read(request, budget, 1_000_000,
+                            lambda target: validate_public_reference(target, hosts))
     code = VerificationEngine.classify_fetch_failure(200, payload[:65536].decode('utf-8', errors='replace'))
     if code == 'CAPTCHA_REQUIRED':
         raise SourcePaused(code)

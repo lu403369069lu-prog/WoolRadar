@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import html
+import http.client
+import ipaddress
 import io
 import json
 import os
@@ -416,19 +418,97 @@ def _request(url: str, accept: str, budget: RequestBudget | None = None) -> byte
     return payload
 
 
+def _safe_public_fetch_url(url: str) -> bool:
+    """Conservatively reject direct-to-private and ambiguous network targets.
+
+    This is a URL syntax barrier, not a DNS rebinding defense: the actual
+    resolved peer still requires enforcement at the network boundary.
+    """
+    try:
+        parsed = urllib.parse.urlsplit(url)
+        host = parsed.hostname
+        if (parsed.scheme != 'https' or not host or parsed.username is not None
+                or parsed.password is not None or '\\' in url or any(ord(ch) < 32 for ch in url)):
+            return False
+        if parsed.port is not None and not (1 <= parsed.port <= 65535):
+            return False
+        host = host.casefold().rstrip('.')
+        if (not host or host == 'localhost' or host.endswith(('.localhost', '.local', '.internal'))
+                or re.fullmatch(r'(?:0x[0-9a-f]+|[0-9]+)(?:\.(?:0x[0-9a-f]+|[0-9]+))*', host)):
+            return False
+        try:
+            return ipaddress.ip_address(host).is_global
+        except ValueError:
+            return True
+    except (TypeError, ValueError):
+        return False
+
+
+def _connect_public_peer(address, timeout=socket._GLOBAL_DEFAULT_TIMEOUT, source_address=None):
+    """Resolve once, reject every nonpublic answer and connect to that exact IP.
+
+    ``socket.create_connection`` resolves again, so a separate DNS precheck
+    would leave a rebinding window between validation and the actual connect.
+    """
+    host, port = address
+    endpoints = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
+    if not endpoints or any(not ipaddress.ip_address(item[4][0]).is_global for item in endpoints):
+        raise SourcePaused('NON_PUBLIC_RESOLVED_PEER')
+    last_error = None
+    for family, socktype, proto, _, peer in endpoints:
+        sock = None
+        try:
+            sock = socket.socket(family, socktype, proto)
+            if timeout is not socket._GLOBAL_DEFAULT_TIMEOUT:
+                sock.settimeout(timeout)
+            if source_address:
+                sock.bind(source_address)
+            sock.connect(peer)
+            return sock
+        except OSError as exc:
+            last_error = exc
+            if sock is not None:
+                sock.close()
+    if last_error is not None:
+        raise last_error
+    raise SourcePaused('NON_PUBLIC_RESOLVED_PEER')
+
+
+class _PublicPeerHTTPSConnection(http.client.HTTPSConnection):
+    def connect(self):
+        # A configured proxy owns the CONNECT tunnel and its destination DNS.
+        # This guard protects direct origin connections; proxy enforcement
+        # needs its own independent network-boundary acceptance.
+        if not self._tunnel_host:
+            self._create_connection = _connect_public_peer
+        super().connect()
+
+
+class _PublicPeerHTTPSHandler(urllib.request.HTTPSHandler):
+    def https_open(self, request):
+        return self.do_open(_PublicPeerHTTPSConnection, request, context=self._context)
+
+
 def budgeted_read(request, budget: RequestBudget | None = None, max_bytes: int = 2_000_000, validate=None) -> bytes:
     class NoRedirect(urllib.request.HTTPRedirectHandler):
         def redirect_request(self, req, fp, code, msg, headers, newurl):
             return None
-    opener = urllib.request.build_opener(NoRedirect()) if budget is not None else None
+    # Never use urllib's automatic redirects: those bypass the per-hop checks
+    # below even when the caller didn't provide a request budget.
+    opener = None
     for hop in range(6):
         url = request.full_url
-        if validate is not None and not validate(url):
+        if not _safe_public_fetch_url(url) or (validate is not None and not validate(url)):
             raise SourcePaused('UNAPPROVED_REFERENCE_URL')
         if budget is not None and not budget.acquire_http(url):
             raise SourcePaused('REQUEST_BUDGET')
+        if opener is None:
+            # Explicitly disable environment proxies: a CONNECT proxy resolves
+            # the origin itself and would bypass the pinned-public-peer check.
+            opener = urllib.request.build_opener(NoRedirect(), urllib.request.ProxyHandler({}),
+                                                 _PublicPeerHTTPSHandler())
         try:
-            with (opener.open(request, timeout=20) if opener else urllib.request.urlopen(request, timeout=20)) as response:
+            with opener.open(request, timeout=20) as response:
                 payload = response.read(max_bytes)
             if budget is not None and VerificationEngine.classify_fetch_failure(200, payload[:65536].decode('utf-8', errors='replace')) == 'CAPTCHA_REQUIRED':
                 budget.pause({'id': 'http-host:' + urllib.parse.urlsplit(url).hostname, 'endpoint': url}, 'CAPTCHA_REQUIRED')
@@ -447,14 +527,14 @@ def budgeted_read(request, budget: RequestBudget | None = None, max_bytes: int =
                     retry = 3600
                 if exc.code in (403, 429) or code == 'CAPTCHA_REQUIRED':
                     budget.pause({'id': 'http-host:' + urllib.parse.urlsplit(url).hostname, 'endpoint': url}, code, retry if code == 'RATE_LIMITED_429' else None)
-            if exc.code not in (301, 302, 303, 307, 308) or not opener:
+            if exc.code not in (301, 302, 303, 307, 308):
                 raise
             destination = urllib.parse.urljoin(url, exc.headers.get('Location', ''))
             exc.close()
             parsed = urllib.parse.urlsplit(destination)
             if request.data is not None or request.has_header('Authorization'):
                 raise SourcePaused('AUTHENTICATED_REDIRECT_REJECTED')
-            if (parsed.scheme != 'https' or not parsed.hostname or parsed.username or parsed.password
+            if (not _safe_public_fetch_url(destination)
                     or re.search(r'/(login|signin|signup|oauth|authorize|checkout|redeem)(/|$)', urllib.parse.unquote(parsed.path), re.I)):
                 raise SourcePaused('UNAPPROVED_REFERENCE_REDIRECT')
             time.sleep(2)

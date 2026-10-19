@@ -1,0 +1,176 @@
+[
+  {
+    "pr": 64,
+    "path": "core/collector.py",
+    "ref": "403399c539f2082bd66a0333c41cea05c2ce4752",
+    "sha": "d2220f8c2b4e55a8524cbce8bb112418247899a2"
+  },
+  {
+    "pr": 64,
+    "path": "core/db.py",
+    "ref": "403399c539f2082bd66a0333c41cea05c2ce4752",
+    "sha": "cbad1a995c4cee2f7f58aa3af2f846362df04250"
+  },
+  {
+    "pr": 64,
+    "path": "core/notify.py",
+    "ref": "403399c539f2082bd66a0333c41cea05c2ce4752",
+    "sha": "4a56cb4ecdc5084a4c562b9a496efdca57d28ae5"
+  },
+  {
+    "pr": 64,
+    "path": "core/official_trace.py",
+    "ref": "403399c539f2082bd66a0333c41cea05c2ce4752",
+    "sha": "2e4911740c0bea5dfe62151ffbeb2debd0143f49"
+  },
+  {
+    "pr": 64,
+    "path": "independent-quality/delivery-bridge-20261016/consume_preview.py",
+    "ref": "403399c539f2082bd66a0333c41cea05c2ce4752",
+    "sha": "e7386aeadf6a6b34e5610acc224ca27c5b6283cc"
+  },
+  {
+    "pr": 64,
+    "path": "independent-quality/delivery-bridge-20261016/redact_daily.py",
+    "ref": "403399c539f2082bd66a0333c41cea05c2ce4752",
+    "sha": "07de3757a3b60fe288f6621018ecd4eb31944841"
+  },
+  {
+    "pr": 64,
+    "path": "independent-quality/delivery-bridge-20261016/test_delivery_boundaries.py",
+    "ref": "403399c539f2082bd66a0333c41cea05c2ce4752",
+    "sha": "3f4d7c28ca976c954cf60a60db5044f051334ac9"
+  },
+  {
+    "pr": 64,
+    "path": "independent-quality/delivery-bridge-20261016/test_preview_roundtrip.py",
+    "ref": "403399c539f2082bd66a0333c41cea05c2ce4752",
+    "sha": "8fe7a6dcf5075a96b1e5011e8093080e6757cac3"
+  },
+  {
+    "pr": 64,
+    "path": "independent-quality/delivery-bridge-20261016/test_redact_daily.py",
+    "ref": "403399c539f2082bd66a0333c41cea05c2ce4752",
+    "sha": "714d83ff779b8380eb1ca74b630d79ef782faded"
+  },
+  {
+    "pr": 64,
+    "path": "tests/test_collectors.py",
+    "ref": "403399c539f2082bd66a0333c41cea05c2ce4752",
+    "sha": "b8d4607f7d0dba5c1bb177efc2cad96e97c76fba"
+  },
+  {
+    "pr": 64,
+    "path": "tests/test_notifications.py",
+    "ref": "403399c539f2082bd66a0333c41cea05c2ce4752",
+    "sha": "985c25aa1b7921f71bcdb37119d7307110c532f5"
+  },
+  {
+    "pr": 64,
+    "path": "tests/test_official_trace.py",
+    "ref": "403399c539f2082bd66a0333c41cea05c2ce4752",
+    "sha": "b1d5d3c12f28b207c3d58dc1ffad3a62744a5798"
+  },
+  {
+    "pr": 64,
+    "path": "tests/test_reindex_backup_atomic.py",
+    "ref": "403399c539f2082bd66a0333c41cea05c2ce4752",
+    "sha": "5222fe20442a2b1335ea08d75eca9023cf0efdbb"
+  },
+  {
+    "pr": 64,
+    "path": "tests/test_schema_migration_atomic.py",
+    "ref": "403399c539f2082bd66a0333c41cea05c2ce4752",
+    "sha": "009ec3c009e719672f9874d40f0391a4c83282af"
+  },
+  {
+    "pr": 66,
+    "path": "core/db.py",
+    "ref": "999fac6159020514ca8224e529aa117e2a035b06",
+    "sha": "51f1722ec633ff6e3b601b7e78452651e1a703bc"
+  },
+  {
+    "pr": 66,
+    "path": "tests/test_status_audit_locking.py",
+    "ref": "999fac6159020514ca8224e529aa117e2a035b06",
+    "sha": "8af61de889246db25b3d5c216decd3da33d1abca"
+  },
+  {
+    "pr": 67,
+    "path": "core/notify.py",
+    "ref": "2fe603516dac00d3132783bf1422ddde3cf4ae14",
+    "sha": "3a784499377803cece9838b0c66bf17fb36208ea"
+  },
+  {
+    "pr": 67,
+    "path": "tests/test_notice_stale_local_writer.py",
+    "ref": "2fe603516dac00d3132783bf1422ddde3cf4ae14",
+    "sha": "7428dba45431d4bdd1d8f9fc51b7f4235cbee43c"
+  },
+  {
+    "pr": 68,
+    "path": "core/db.py",
+    "ref": "4aa17e792d33271a4f68175bcc65c05bd27ed07b",
+    "sha": "15d452a6d273e9e69eb02adb567e567f122dacb3"
+  },
+  {
+    "pr": 68,
+    "path": "tests/test_notice_sent_monotonic.py",
+    "ref": "4aa17e792d33271a4f68175bcc65c05bd27ed07b",
+    "sha": "6f47e27ae8e100d7a77b564d4cf0d02559ed9008"
+  },
+  {
+    "pr": 69,
+    "path": "tests/test_notice_concurrent_enqueue.py",
+    "ref": "f17cb388ee06b01f465d7970af21dc7db06c2e88",
+    "sha": "920fe6aee6d7ad495db86d3f3707cc57cf76888a"
+  },
+  {
+    "pr": 70,
+    "path": "tests/test_notice_retry_restart.py",
+    "ref": "5e168b3dc9a8357934f96a41cd4e05042ba974d9",
+    "sha": "480ece80d92f7ea240861c230970876d8e3b5ac3"
+  },
+  {
+    "pr": 71,
+    "path": "core/notify.py",
+    "ref": "f82fb67654e19605ebd7156ee6e8dc53d44a9819",
+    "sha": "334673f65afad4585c3d390b9642c8e026441ab4"
+  },
+  {
+    "pr": 71,
+    "path": "tests/test_telegram_timeout_uncertainty.py",
+    "ref": "f82fb67654e19605ebd7156ee6e8dc53d44a9819",
+    "sha": "1569043d19fa6ad7502b72e8f05944201cf9b58d"
+  },
+  {
+    "pr": 72,
+    "path": "core/notify.py",
+    "ref": "22422e34982b810db12e5533f36c20322e308a28",
+    "sha": "c6bc1e40fd3ade01a4d4cbbc3907315279fbbaf7"
+  },
+  {
+    "pr": 72,
+    "path": "tests/test_telegram_rate_limit.py",
+    "ref": "22422e34982b810db12e5533f36c20322e308a28",
+    "sha": "c20978d1b743de296809f8b3f1c03622d35ffc4c"
+  },
+  {
+    "pr": 73,
+    "path": "core/db.py",
+    "ref": "04b1f3dd819b576e8468db5eca7c9ec0a1b1349b",
+    "sha": "5b00b2f6a3ecd8bc924d382bbcf6f63898761e2b"
+  },
+  {
+    "pr": 73,
+    "path": "tests/test_schema_version_guard.py",
+    "ref": "04b1f3dd819b576e8468db5eca7c9ec0a1b1349b",
+    "sha": "c0418bc8f35a3ecc8e338444b4183113fce5561b"
+  },
+  {
+    "pr": 75,
+    "path": "tests/test_wal_online_backup.py",
+    "ref": "b4cba86f9efaca670d721ba7967c592f703b5667",
+    "sha": "105b2e5e415f118e94718c76f4f2d684c134076d"
+  }
+]

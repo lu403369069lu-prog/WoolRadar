@@ -31,6 +31,17 @@ class DeliveryBoundaryTests(unittest.TestCase):
         for value in [{},'https://localhost/terms','https://benefit.example/terms?token=synthetic']:
             p=preview();p['events'][0]['official_evidence']=[{'url':value,'checked_at':'2026-10-16T00:00:00Z','claims':{}}]
             with self.subTest(value=value),self.assertRaises(UnsafePreview):checked(p)
+    def test_exporter_discards_future_dated_official_proof(self):
+        row=dict(ROW,evidence=[{'kind':'official','url':'https://benefit.example/terms',
+            'checked_at':'2026-10-17T00:00:00Z','claims':{'open':True}}])
+        exported=preview(row)
+        self.assertEqual(len(exported['events']),1)
+        self.assertEqual(exported['events'][0]['official_evidence'],[])
+    def test_consumer_rejects_future_dated_official_proof(self):
+        p=preview()
+        p['events'][0]['official_evidence']=[{'url':'https://benefit.example/terms',
+            'checked_at':'2026-10-17T00:00:00Z','claims':{'open':True}}]
+        with self.assertRaises(UnsafePreview):checked(p)
     def test_same_identity_status_change_requires_recheck(self):
         old=preview();old['generated_at']=(NOW-timedelta(seconds=1)).isoformat();old=checked(old);new=checked(preview(dict(ROW,status='CLAIMABLE')))
         self.assertEqual(review_delta(new,old)['candidate_keys'],[new['events'][0]['event_key']])

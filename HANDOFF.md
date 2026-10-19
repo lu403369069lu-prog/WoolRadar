@@ -1,3 +1,7 @@
+## October19 current Windows integration
+
+See evidence/pipeline-integration-20261016/oct19/HANDOFF.md. Unified455passed with original red logs and independent rereview, business/P06/actual09:30delivery incomplete. Shared25% upload barrier currentcycle1792390058; wait3receipts+coordinatorRESUME after upload. Historical userstop revoked by explicitOct19resume.
+
 ## October17 new-window acceptance failure and repair
 
 Latest exact8023 full406passed. New blind47 evaluation TP1/FN3, failed; subsequently retired to development, discovery repair plus independent counterexamples formal411passed; one true duplicate pair remains split. See evidence/pipeline-integration-20261016/oct17/QUALITY_CHECKPOINT.md. OUTPUT_NOT_CONNECTED and original P06 remain.

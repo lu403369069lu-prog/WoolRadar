@@ -28,6 +28,7 @@ jobs:
         run: |
           python -c "import json,re,os; q=json.load(open('.github/relay/queue.json',encoding='utf-8')); s=q['source_ref']; assert re.fullmatch('[0-9a-f]{40}',s); assert q['repo']=='WoolRadar'; open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8').write('sha='+s+'\n')"
       - uses: actions/checkout@v4
+        id: candidate
         with:
           ref: ${{ steps.pin.outputs.sha }}
           path: candidate
@@ -42,8 +43,9 @@ jobs:
       - name: Formal root integration and immutable receipt
         run: |
           python -X utf8 -B .github/relay/integration_gate.py --repo WoolRadar --source candidate --output .relay-report/integration.json
-          python -c "import json; q=json.load(open('.github/relay/queue.json',encoding='utf-8')); r=json.load(open('.relay-report/integration.json',encoding='utf-8')); assert r['source_commit']==q['source_ref']; assert r['status']=='PASS' and r['exit_code']==0 and r['passed']==r['total'] and r['total']>0; print(json.dumps(r))"
+          python -c "import json; q=json.load(open('.github/relay/queue.json',encoding='utf-8')); r=json.load(open('.relay-report/integration.json',encoding='utf-8')); print(json.dumps(r)); assert r['source_commit']==q['source_ref']; assert r['status']=='PASS' and r['exit_code']==0 and r['passed']==r['total'] and r['total']>0; print(json.dumps(r))"
       - name: Combined actual source modules
+        if: ${{ !cancelled() && steps.candidate.outcome == 'success' }}
         working-directory: candidate
         run: python -B -X utf8 independent-quality/delivery-bridge-20261016/run_combined_tests.py
       - uses: actions/upload-artifact@v4

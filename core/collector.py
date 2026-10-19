@@ -657,11 +657,16 @@ def fetch_x_browser(root: Path) -> list[dict]:
 
 
 def fetch_digest_rss(root: Path, source: dict) -> list[dict]:
-    python = root / 'nodes' / 'digest-ai-agent' / 'upstream' / '.venv' / 'Scripts' / 'python.exe'
+    # Resolve the real pinned upstream runtime within this checkout on either OS.
+    venv = root / 'nodes' / 'digest-ai-agent' / 'upstream' / '.venv'
+    python = venv / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
     script = root / 'nodes' / 'digest-ai-agent' / 'rss_collect.py'
-    result = subprocess.run([str(python), '-X', 'utf8', str(script), source['endpoint'], str(root)],
-        capture_output=True, text=True, encoding='utf-8', timeout=40,
-        creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
+    try:
+        result = subprocess.run([str(python), '-X', 'utf8', str(script), source['endpoint'], str(root)],
+            capture_output=True, text=True, encoding='utf-8', timeout=40,
+            creationflags=getattr(subprocess,'CREATE_NO_WINDOW',0))
+    except FileNotFoundError:
+        raise SourcePaused('UPSTREAM_RUNTIME_NOT_INSTALLED') from None
     payload = json.loads(result.stdout)
     if result.returncode != 0:
         error = payload.get('error', {})

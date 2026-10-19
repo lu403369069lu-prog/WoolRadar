@@ -219,19 +219,23 @@ def main() -> int:
         cwd = repo / rel
         try:
             done = subprocess.run(command, cwd=cwd, stdout=subprocess.PIPE,
-                                  stderr=subprocess.STDOUT, text=True,
-                                  errors="replace", timeout=1800, check=False,
+                                  stderr=subprocess.STDOUT, timeout=1800, check=False,
                                   env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"})
-            rc, stdout = done.returncode, done.stdout
+            rc, raw_stdout = done.returncode, done.stdout
         except (OSError, subprocess.TimeoutExpired) as exc:
-            rc, stdout = 125, repr(exc)
+            rc, raw_stdout = 125, repr(exc).encode("utf-8")
         logpath = output_dir / (label + ".log")
-        # Write literal UTF-8 bytes: Windows text newline translation would
-        # make the receipt digest differ from the on-disk log digest.
-        logpath.write_bytes(stdout.encode("utf-8"))
+        # Store exactly the bytes produced by the child, without lossy transcoding.
+        logpath.write_bytes(raw_stdout)
+        try:
+            stdout = raw_stdout.decode("utf-8", errors="strict")
+        except UnicodeDecodeError:
+            stdout = ""  # Undecodable results cannot provide reliable pass evidence.
         rc, counts = evaluate_run(label, rc, stdout)
+        if not stdout and rc == 0:
+            rc = 126
         row = {"batch": label, "exit_code": rc,
-               "log_sha256": hashlib.sha256(stdout.encode("utf-8")).hexdigest(),
+               "log_sha256": hashlib.sha256(raw_stdout).hexdigest(),
                "counts": counts}
         results.append(row)
         print(json.dumps(row))

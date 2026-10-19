@@ -9,14 +9,10 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+from checkpoint_store import save, persist_lock, recover_history, verify_replay
 
 def load(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
-
-def save(path, obj):
-    p = Path(path)
-    p.parent.mkdir(parents=True, exist_ok=True)
-    p.write_text(json.dumps(obj, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
 
 def queue_digest(queue):
     """Cross-platform canonical hash; Git checkout CRLF/LF must not change identity."""
@@ -204,10 +200,16 @@ def evaluate(a):
     print(json.dumps({"evaluation": "COMPLETE", "source_commit": sha, "count": n, "next_cursor": receipt["next_cursor"]}))
 
 def persist(a):
+    with persist_lock(a.state):
+        _persist_locked(a)
+
+
+def _persist_locked(a):
     receipt = load(a.receipt)
     root = Path(a.state)
     state_path = root / "engine.json"
     s = load(state_path)
+    recover_history(root, s, save)
     if receipt.get("schema_version") != 1 or s.get("schema_version") != 1 or receipt.get("repo") != a.repo or s.get("repo") != a.repo:
         raise ValueError("invalid receipt/state")
     key = receipt.get("run_key", "")
@@ -220,6 +222,9 @@ def persist(a):
     if not re.fullmatch(r"\d+/\d+", executing_key) or executing_key != key:
         raise ValueError("receipt run key differs from executing runner context")
     if key in s.get("processed_run_keys", []):
+        replay = dict(receipt)
+        replay['integration'] = load(Path(a.receipt).with_name('integration.json'))
+        verify_replay(root, replay)
         print("IDEMPOTENT_REPLAY " + key)
         return
     if s["cursor"] != receipt["previous_cursor"]:
@@ -334,9 +339,10 @@ def persist(a):
         elif x["status"] == "FORMAL_CHECK_FAILED_OR_BLOCKED" and "last_recheck_revision" in old:
             record["last_recheck_revision"] = old["last_recheck_revision"]
         s["families"][x["id"]] = record
+    s['pending_history_receipt'] = receipt
+    s['last_receipt_sha256'] = queue_digest(receipt)
     save(state_path, s)
-    with (root / "history.jsonl").open("a", encoding="utf-8") as stream:
-        stream.write(json.dumps(receipt, sort_keys=True, ensure_ascii=False) + "\n")
+    recover_history(root, s, save)
     print(json.dumps({"persisted_locally": True, "revision": s["revision"], "cursor": s["cursor"], "run_key": key}))
 
 if __name__ == "__main__":

@@ -1,0 +1,137 @@
+[
+  {
+    "repo": "WoolRadar",
+    "a": "main",
+    "b": "63",
+    "source_shas": [
+      "e44589104585c4b2a93081d00a145263666f9264",
+      "c70525f7624b81cf51e6e12a25be8192d9b09b69"
+    ],
+    "a_is_ancestor": true,
+    "merge_tree_exit": 0,
+    "tree": "08e8fe0df1a3aa88499223798729961bbe82bdd2",
+    "conflict_paths": [],
+    "not_verified": "Business runtime compatibility; these are static disposable Git tree comparisons only"
+  },
+  {
+    "repo": "WoolRadar",
+    "a": "64",
+    "b": "72",
+    "source_shas": [
+      "403399c539f2082bd66a0333c41cea05c2ce4752",
+      "22422e34982b810db12e5533f36c20322e308a28"
+    ],
+    "a_is_ancestor": false,
+    "merge_tree_exit": 1,
+    "tree": "1409a4ec149cbf20d85a0c2b4a44c0841c13ad83",
+    "conflict_paths": [
+      "core/db.py",
+      "core/notify.py"
+    ],
+    "not_verified": "Business runtime compatibility; these are static disposable Git tree comparisons only"
+  },
+  {
+    "repo": "WoolRadar",
+    "a": "64",
+    "b": "75",
+    "source_shas": [
+      "403399c539f2082bd66a0333c41cea05c2ce4752",
+      "b4cba86f9efaca670d721ba7967c592f703b5667"
+    ],
+    "a_is_ancestor": false,
+    "merge_tree_exit": 1,
+    "tree": "e2d7a04dcc55e955fd3d5ab5dfc1304246dcdc02",
+    "conflict_paths": [
+      "core/db.py"
+    ],
+    "not_verified": "Business runtime compatibility; these are static disposable Git tree comparisons only"
+  },
+  {
+    "repo": "WoolRadar",
+    "a": "72",
+    "b": "75",
+    "source_shas": [
+      "22422e34982b810db12e5533f36c20322e308a28",
+      "b4cba86f9efaca670d721ba7967c592f703b5667"
+    ],
+    "a_is_ancestor": false,
+    "merge_tree_exit": 1,
+    "tree": "f80ca4696b8b3afe8c490e8b8209695093af914c",
+    "conflict_paths": [
+      "core/db.py"
+    ],
+    "not_verified": "Business runtime compatibility; these are static disposable Git tree comparisons only"
+  },
+  {
+    "repo": "WoolRadar",
+    "a": "23",
+    "b": "63",
+    "source_shas": [
+      "6babbe12727652e8626e0fe6f554eb01fecd4a30",
+      "c70525f7624b81cf51e6e12a25be8192d9b09b69"
+    ],
+    "a_is_ancestor": false,
+    "merge_tree_exit": 128,
+    "tree": null,
+    "conflict_paths": [],
+    "not_verified": "Business runtime compatibility; these are static disposable Git tree comparisons only"
+  },
+  {
+    "repo": "YinQieJi",
+    "a": "main",
+    "b": "35",
+    "source_shas": [
+      "668e219569aff780621bf6a1e24aa8cbe5f4e806",
+      "c6a537441113b57195bd31a594e7ca723117bcdf"
+    ],
+    "a_is_ancestor": true,
+    "merge_tree_exit": 0,
+    "tree": "0850f5dc5c9ed126bbee6e2ffd6299758f173a91",
+    "conflict_paths": [],
+    "not_verified": "Business runtime compatibility; these are static disposable Git tree comparisons only"
+  },
+  {
+    "repo": "YinQieJi",
+    "a": "35",
+    "b": "41",
+    "source_shas": [
+      "c6a537441113b57195bd31a594e7ca723117bcdf",
+      "fec9754ada87a878dabb235c015186441182f9f9"
+    ],
+    "a_is_ancestor": false,
+    "merge_tree_exit": 128,
+    "tree": null,
+    "conflict_paths": [],
+    "not_verified": "Business runtime compatibility; these are static disposable Git tree comparisons only"
+  },
+  {
+    "repo": "YinQieJi",
+    "a": "37",
+    "b": "40",
+    "source_shas": [
+      "76a60c57a1396535fc42e99db27b30e1cbe9c706",
+      "79d065ff5d1a126316d7001a34fdb218fa56bd82"
+    ],
+    "a_is_ancestor": true,
+    "merge_tree_exit": 0,
+    "tree": "a0c22b3b3d66aa2f1c3a61dca523f042c27b0355",
+    "conflict_paths": [],
+    "not_verified": "Business runtime compatibility; these are static disposable Git tree comparisons only"
+  },
+  {
+    "repo": "YinQieJi",
+    "a": "40",
+    "b": "41",
+    "source_shas": [
+      "79d065ff5d1a126316d7001a34fdb218fa56bd82",
+      "fec9754ada87a878dabb235c015186441182f9f9"
+    ],
+    "a_is_ancestor": false,
+    "merge_tree_exit": 1,
+    "tree": "887f13df8afb485e2201955d2483cc1891886cfb",
+    "conflict_paths": [
+      "SAM/snapshot/src/claim-audit.ts"
+    ],
+    "not_verified": "Business runtime compatibility; these are static disposable Git tree comparisons only"
+  }
+]

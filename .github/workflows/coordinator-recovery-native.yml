@@ -1,0 +1,34 @@
+name: Coordinator checkpoint recovery (native)
+on:
+  push:
+    branches: [codex/coordinator-recovery-20261019]
+  pull_request:
+    paths: ['.github/relay/**', '.github/workflows/coordinator-recovery-native.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: coordinator-recovery-${{ github.repository }}-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  recovery:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Exact source and runner identity
+        shell: python
+        run: |
+          import json,os,subprocess
+          print(json.dumps({'source_sha':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'run_id':os.environ['GITHUB_RUN_ID'],'attempt':os.environ['GITHUB_RUN_ATTEMPT'],'business_accepted':False}))
+      - name: Full relay regression including real child-process crashes
+        run: python -X utf8 -B -m unittest discover -s .github/relay -p test_*.py -v

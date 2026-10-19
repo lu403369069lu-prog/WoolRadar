@@ -65,7 +65,7 @@ class DigestCleanPinnedCheckoutTests(unittest.TestCase):
 
     def test_clean_pin_with_only_virtualenv_is_admitted(self):
         path, calls = self.prepare_with_fake_import(verify_only=True)
-        self.assertEqual(path, self.python)
+        self.assertTrue(path.samefile(self.python))
         self.assertTrue(any("status" in c for c in calls))
 
     def test_tracked_python_tamper_rejected_before_import(self):

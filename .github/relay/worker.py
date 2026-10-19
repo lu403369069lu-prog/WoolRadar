@@ -144,9 +144,19 @@ def test(argv, cwd, src):
     for k in ("GITHUB_TOKEN", "GH_TOKEN", "COPILOT_GITHUB_TOKEN", "OPENAI_API_KEY"):
         env.pop(k, None)
     env["PYTHONDONTWRITEBYTECODE"] = "1"
+    # Preserve the reviewed child-output contract: no lossy decoding of evidence.
+    if argv[0] == "python":
+        env["PYTHONIOENCODING"] = "utf-8"
     try:
-        proc = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, errors="replace", timeout=180, env=env)
-        output = (proc.stdout + "\n" + proc.stderr)[-240000:]
+        proc = subprocess.run(cmd, cwd=cwd, stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE, timeout=180, env=env)
+        try:
+            output = (proc.stdout + b"\n" + proc.stderr).decode("utf-8", "strict")[-240000:]
+        except UnicodeDecodeError:
+            return {"status": "BLOCKED", "exit_code": proc.returncode,
+                    "error_kind": "NON_UTF8_CHILD_OUTPUT", "total": None,
+                    "passed": None, "failed": None, "skipped": None,
+                    "todo": None, "cancelled": None, "failed_test_names": []}
         summary = parse_test_summary(output, proc.returncode)
         names = []
         if summary["status"] != "PASS":

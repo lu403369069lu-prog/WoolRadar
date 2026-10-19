@@ -125,7 +125,7 @@ class RelaySafetyTests(unittest.TestCase):
             "Ran 1 test in 0.001s\n\nOK\n" if q["repo"] == "WoolRadar"
             else "# tests 1\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n"
         )
-        stub = SimpleNamespace(stdout=sample_output, stderr="", returncode=0)
+        stub = SimpleNamespace(stdout=sample_output.encode("utf-8"), stderr=b"", returncode=0)
         with tempfile.TemporaryDirectory() as tmp:
             target = Path(tmp) / "synthetic-integration.json"
             with patch.object(

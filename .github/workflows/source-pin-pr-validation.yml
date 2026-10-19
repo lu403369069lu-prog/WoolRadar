@@ -10,7 +10,11 @@ permissions:
   contents: read
 jobs:
   source-integration:
-    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     defaults:
       run:
@@ -40,6 +44,11 @@ jobs:
       - name: Canonical isolated temporary directory
         run: |
           python -c "import os; from pathlib import Path; p=(Path.cwd()/'.source-test-temp').resolve(); p.mkdir(exist_ok=True); open(os.environ['GITHUB_ENV'],'a',encoding='utf-8').write('TEMP='+str(p)+'\nTMP='+str(p)+'\nPYTHONUTF8=1\n')"
+      - name: Install and verify manifest-pinned Digest upstream (fresh checkout)
+        working-directory: candidate
+        run: |
+          python -B -X utf8 scripts/prepare_digest_upstream.py
+          python -B -X utf8 scripts/prepare_digest_upstream.py --verify-only
       - name: Verify source identity and relay rejection controls
         run: |
           python -c "import json,os,subprocess; q=json.load(open('.github/relay/queue.json',encoding='utf-8')); s=subprocess.check_output(['git','-C','candidate','rev-parse','HEAD'],text=True).strip(); assert s==q['source_ref']; print(json.dumps({'source_sha':s,'run_id':os.environ['GITHUB_RUN_ID'],'attempt':os.environ['GITHUB_RUN_ATTEMPT'],'business_accepted':False}))"

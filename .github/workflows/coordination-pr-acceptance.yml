@@ -51,6 +51,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Use canonical isolated temporary directory
+        run: |
+          python -c "import os; from pathlib import Path; p=(Path.cwd()/'.coord-test-temp').resolve(); p.mkdir(exist_ok=True); f=open(os.environ['GITHUB_ENV'],'a',encoding='utf-8'); f.write('TEMP='+str(p)+'\nTMP='+str(p)+'\n'); f.close()"
       - name: Fail closed if expected original tests are absent
         run: |
           set -euo pipefail

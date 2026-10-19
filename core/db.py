@@ -37,7 +37,9 @@ class Database:
         conn = sqlite3.connect(self.path, timeout=30)
         conn.row_factory = sqlite3.Row
         try:
-            conn.execute('PRAGMA journal_mode=WAL')
+            # A caller can hold this Database after another process upgrades
+            # the file. Changing journal mode here would mutate a future
+            # schema *before* write_transaction() can reject that version.
             conn.execute('PRAGMA foreign_keys=ON')
             yield conn
             conn.commit()
@@ -84,12 +86,18 @@ class Database:
         # Reject a future version before calling connect(), which otherwise
         # switches SQLite into WAL and may execute DDL against an unknown file.
         # The inspection URI is read-only and leaves the DB untouched.
-        if self.path.is_file():
+        new_file = not self.path.is_file()
+        if not new_file:
             uri = self.path.resolve().as_uri() + '?mode=ro'
             with closing(sqlite3.connect(uri, uri=True)) as inspection:
                 version = inspection.execute('PRAGMA user_version').fetchone()[0]
             if version > 1:
                 raise RuntimeError('UNSUPPORTED_DATABASE_SCHEMA_VERSION')
+        if new_file:
+            # Establish WAL only when initializing a new file. Existing files
+            # may belong to a newer application and must retain their mode.
+            with self.connect() as conn:
+                conn.execute('PRAGMA journal_mode=WAL')
         with self.write_transaction() as conn:
             # Recheck after the writer reservation: another version may have
             # committed since the read-only preflight. Never use executescript

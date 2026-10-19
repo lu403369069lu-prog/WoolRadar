@@ -54,18 +54,33 @@ jobs:
           python -c "import json,os,subprocess; q=json.load(open('.github/relay/queue.json',encoding='utf-8')); s=subprocess.check_output(['git','-C','candidate','rev-parse','HEAD'],text=True).strip(); assert s==q['source_ref']; print(json.dumps({'source_sha':s,'run_id':os.environ['GITHUB_RUN_ID'],'attempt':os.environ['GITHUB_RUN_ATTEMPT'],'business_accepted':False}))"
           python -X utf8 -B -m unittest discover -s .github/relay -p test_*.py -v
       - name: Formal root integration and immutable receipt
+        if: ${{ matrix.os == 'windows-latest' }}
         run: |
           python -X utf8 -B .github/relay/integration_gate.py --repo WoolRadar --source candidate --output .relay-report/integration.json
           python -c "import json; q=json.load(open('.github/relay/queue.json',encoding='utf-8')); r=json.load(open('.relay-report/integration.json',encoding='utf-8')); print(json.dumps(r)); assert r['source_commit']==q['source_ref']; assert r['status']=='PASS' and r['exit_code']==0 and r['passed']==r['total'] and r['total']>0; print(json.dumps(r))"
       - name: Combined actual source modules; require zero skipped tests
-        if: ${{ !cancelled() && steps.candidate.outcome == 'success' }}
+        if: ${{ matrix.os == 'windows-latest' && !cancelled() && steps.candidate.outcome == 'success' }}
         working-directory: candidate
         run: |
           python -B -X utf8 ../.github/relay/strict_combined_gate.py --source . --expected-sha "${{ steps.pin.outputs.sha }}" --report ../.relay-report/combined.json
+      - name: Linux pinned upstream runtime contracts (platform-scoped)
+        id: linux_runtime
+        if: ${{ matrix.os == 'ubuntu-latest' && !cancelled() && steps.candidate.outcome == 'success' }}
+        working-directory: candidate
+        run: |
+          python -B -X utf8 -m unittest discover -s tests -p 'test_digest_runtime.py' -v
+          python -B -X utf8 -m unittest discover -s tests -p 'test_prepare_digest_upstream.py' -v
+      - name: Record Linux runtime scope and immutable result
+        if: ${{ matrix.os == 'ubuntu-latest' && always() }}
+        env:
+          LINUX_TEST_OUTCOME: ${{ steps.linux_runtime.outcome }}
+          SOURCE_SHA: ${{ steps.pin.outputs.sha }}
+        run: |
+          python -c "import json,os,pathlib; p=pathlib.Path('.relay-report/linux-runtime.json'); p.parent.mkdir(exist_ok=True); p.write_text(json.dumps({'schema':1,'scope':'linux-pinned-digest-runtime','source_commit':os.environ['SOURCE_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'run_attempt':os.environ['GITHUB_RUN_ATTEMPT'],'step_outcome':os.environ['LINUX_TEST_OUTCOME'],'business_accepted':False},sort_keys=True)+'\n',encoding='utf-8')"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: pinned-source-${{ github.run_id }}-${{ github.run_attempt }}
+          name: pinned-source-${{ matrix.os }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: .relay-report/
           include-hidden-files: true
           if-no-files-found: error

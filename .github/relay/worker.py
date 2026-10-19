@@ -86,20 +86,25 @@ def choose_recheck(state, families, regular_ids):
 
 def parse_test_summary(output, exit_code):
     """An all-skipped or TODO-only test run is NOT formal evidence."""
-    node_totals = re.findall(r"(?m)^# tests (\d+)\s*$", output)
+    node_totals = re.findall(r"(?m)^(?:#|\u2139) tests (\d+)\s*$", output)
     python_totals = re.findall(r"(?m)^Ran (\d+) tests?", output)
     if node_totals:
         total = int(node_totals[-1])
         def node_count(key):
-            matches = re.findall(r"(?m)^# " + key + r" (\d+)\s*$", output)
-            return int(matches[-1]) if matches else None
+            matches = re.findall(r"(?m)^(?:#|\u2139) " + key + r" (\d+)\s*$", output)
+            return int(matches[0]) if len(matches) == 1 else None
         passed = node_count("pass")
         failed = node_count("fail")
         skipped = node_count("skipped")
         todo = node_count("todo")
         cancelled = node_count("cancelled")
-        # Node 22 reports each category. Missing/truncated summaries fail closed.
-        complete = all(type(x) is int for x in (passed, failed, skipped, todo, cancelled))
+        # TAP uses '#', while current Node spec reporters use the info marker.
+        # One complete reporter summary is required; never select a final PASS
+        # after a conflicting earlier run or mix Python/Node totals.
+        prefixes = set(re.findall(
+            r"(?m)^(#|\u2139) (?:tests|pass|fail|skipped|todo|cancelled) \d+\s*$", output))
+        complete = (len(node_totals) == 1 and not python_totals and len(prefixes) == 1
+                    and all(type(x) is int for x in (passed, failed, skipped, todo, cancelled)))
         ok = (exit_code == 0 and total > 0 and complete and passed == total
               and failed == 0 and skipped == 0 and todo == 0 and cancelled == 0)
     elif python_totals:

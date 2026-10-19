@@ -66,7 +66,7 @@ def prepare(root: Path, verify_only: bool = False) -> Path:
                   '--ignored', '--exclude-standard', '--', '.',
                   ':(exclude).venv', env=env)
     if any(path.casefold().endswith(('.py', '.pyi', '.so', '.pyd', '.pth', '.dll'))
-           for path in ignored.split('\\0') if path):
+           for path in ignored.split('\0') if path):
         raise RuntimeError('UPSTREAM_IGNORED_EXECUTABLE_SOURCE')
 
     venv = checkout / '.venv'

@@ -60,6 +60,14 @@ def prepare(root: Path, verify_only: bool = False) -> Path:
     if run('git', '-C', str(checkout), 'status', '--porcelain=v1',
            '--untracked-files=all', '--', '.', ':(exclude).venv', env=env):
         raise RuntimeError('UPSTREAM_WORKTREE_DIRTY')
+    # git status hides paths intentionally ignored by upstream .gitignore.
+    # Importable .py/native modules in those paths still affect runtime bytes.
+    ignored = run('git', '-C', str(checkout), 'ls-files', '-z', '--others',
+                  '--ignored', '--exclude-standard', '--', '.',
+                  ':(exclude).venv', env=env)
+    if any(path.casefold().endswith(('.py', '.pyi', '.so', '.pyd', '.pth', '.dll'))
+           for path in ignored.split('\\0') if path):
+        raise RuntimeError('UPSTREAM_IGNORED_EXECUTABLE_SOURCE')
 
     venv = checkout / '.venv'
     interpreter = venv / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')

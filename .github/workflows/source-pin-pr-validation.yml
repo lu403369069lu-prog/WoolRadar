@@ -68,6 +68,7 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' && !cancelled() && steps.candidate.outcome == 'success' }}
         working-directory: candidate
         run: |
+          python -c "from pathlib import Path; Path('.test-tmp').mkdir(exist_ok=True)"
           python -B -X utf8 -m unittest discover -s tests -p 'test_digest_runtime.py' -v
           python -B -X utf8 -m unittest discover -s tests -p 'test_prepare_digest_upstream.py' -v
       - name: Record Linux runtime scope and immutable result

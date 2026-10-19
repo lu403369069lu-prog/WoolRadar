@@ -1,0 +1,14 @@
+[
+  {
+    "autocrlf": "true",
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"C:\\Users\\lh\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\coordination-20261019\\checkout-true\\coordination\\verify_original_suite.py\", line 29, in <module>\n    print(json.dumps({'verified_original_files': verify(Path(__file__).resolve().parent.parent)}))\n                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\lh\\Documents\\ChatGPT\\\u603b\u534f\u8c03\\_outbox\\coordination-20261019\\checkout-true\\coordination\\verify_original_suite.py\", line 24, in verify\n    raise ValueError('ORIGINAL_SUITE_BYTES_MISMATCH')\nValueError: ORIGINAL_SUITE_BYTES_MISMATCH\n"
+  },
+  {
+    "autocrlf": "false",
+    "exit_code": 0,
+    "stdout": "{\"verified_original_files\": 11}\n",
+    "stderr": ""
+  }
+]

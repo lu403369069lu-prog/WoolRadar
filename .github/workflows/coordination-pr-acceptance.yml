@@ -41,6 +41,10 @@ jobs:
     steps:
       - name: Checkout exact candidate without persisted Git credentials
         uses: actions/checkout@v4
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
         with:
           ref: ${{ github.event.pull_request.head.sha || inputs.candidate_ref || github.sha }}
           persist-credentials: false

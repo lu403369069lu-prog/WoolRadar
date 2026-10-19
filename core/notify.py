@@ -55,7 +55,7 @@ class NotificationQueue:
         self.db = db
 
     def enqueue(self, event_id: int, batch_id: str, channel: str, payload: str) -> bool:
-        with self.db.connect() as conn:
+        with self.db.write_transaction() as conn:
             cursor = conn.execute('''INSERT OR IGNORE INTO notifications
                 (event_id,batch_id,channel,created_at,result,payload) VALUES(?,?,?,?,?,?)''',
                 (event_id, batch_id, channel, utc_now(), 'PENDING', payload))
@@ -76,8 +76,9 @@ class NotificationQueue:
         if status == 'SKIPPED':
             return False  # No request means no evidence of recovery.
         fingerprint = 'OK' if status == 'OK' else ('ISSUE:' + error_code if error_code else status + ':')
-        with self.db.connect() as conn:
-            conn.execute('BEGIN IMMEDIATE')
+        with self.db.write_transaction() as conn:
+            if not conn.in_transaction:
+                conn.execute('BEGIN IMMEDIATE')
             previous = conn.execute('SELECT fingerprint FROM node_health WHERE node=?', (node,)).fetchone()
             previous_fingerprint = previous['fingerprint'] if previous else ''
             if previous_fingerprint.partition(':')[0] in ('PARTIAL', 'PAUSED', 'FAILED'):
@@ -128,12 +129,12 @@ class NotificationQueue:
                         validation = VerificationEngine().evaluate(Candidate(event['node'], event['source'],
                             event['title'], event['primary_url']), self.db.get_evidence(event['id']))
                     if validation is None or validation.status.value != 'CLAIMABLE':
-                        with self.db.connect() as conn:
+                        with self.db.write_transaction() as conn:
                             conn.execute("UPDATE notifications SET result='STALE' WHERE id=? "
                                 "AND result IN ('PENDING','RETRY','CLAIMED','UNCERTAIN') AND next_attempt<=?", (item['id'], now))
                         continue
                 claim_deadline = now + 300
-                with self.db.connect() as conn:
+                with self.db.write_transaction() as conn:
                     claimed = conn.execute("""UPDATE notifications SET result='CLAIMED',
                         next_attempt=?,attempts=attempts+1 WHERE id=? AND next_attempt<=?
                         AND result IN ('PENDING','RETRY','CLAIMED','UNCERTAIN')
@@ -144,6 +145,49 @@ class NotificationQueue:
                          item['attempts'], item['next_attempt'])).rowcount
             if not claimed:
                 continue
+            # Narrow the revocation/dispatch gap: the original evidence check
+            # preceded committing CLAIMED. Other SQLite writers can revoke a
+            # campaign after that commit, while this worker prepares transport.
+            # Recheck both the claim owner and current official evidence at the
+            # last local boundary before I/O. Never hold a write lock during
+            # network delivery; later revocations remain an in-flight concern.
+            if item['channel'].endswith('-verified'):
+                with self.db.candidate_transaction():
+                    with self.db.connect() as conn:
+                        latest = conn.execute(
+                            'SELECT * FROM notifications WHERE id=?', (item['id'],)
+                        ).fetchone()
+                    still_owned = (
+                        latest is not None and
+                        latest['result'] == 'CLAIMED' and
+                        latest['attempts'] == item['attempts'] + 1 and
+                        latest['next_attempt'] == claim_deadline and
+                        all(latest[key] == item[key] for key in
+                            ('event_id', 'batch_id', 'channel', 'created_at', 'payload'))
+                    )
+                    still_eligible = False
+                    if still_owned:
+                        try:
+                            current_event = self.db.get_event(item['event_id'])
+                        except KeyError:
+                            pass
+                        else:
+                            current_result = VerificationEngine().evaluate(
+                                Candidate(current_event['node'], current_event['source'],
+                                          current_event['title'], current_event['primary_url']),
+                                self.db.get_evidence(current_event['id']))
+                            still_eligible = current_result.status.value == 'CLAIMABLE'
+                        if not still_eligible:
+                            with self.db.connect() as conn:
+                                conn.execute(
+                                    "UPDATE notifications SET result='STALE',next_attempt=0 "
+                                    "WHERE id=? AND result='CLAIMED' AND attempts=? "
+                                    "AND next_attempt=?",
+                                    (item['id'], item['attempts'] + 1, claim_deadline))
+                if not still_eligible:
+                    if not still_owned:
+                        summary['uncertain'] = summary.get('uncertain', 0) + 1
+                    continue
             retry_delay = max(0, retry_seconds)
             try:
                 if local:
@@ -171,7 +215,7 @@ class NotificationQueue:
                         # A worker can lose ownership during the file write.
                         # Serialize the final claim check, atomic rename, and
                         # SENT transition with the same SQLite writer lock.
-                        with self.db.connect() as conn:
+                        with self.db.write_transaction() as conn:
                             if not conn.in_transaction:
                                 conn.execute('BEGIN IMMEDIATE')
                             owned = conn.execute("""SELECT 1 FROM notifications
@@ -184,6 +228,30 @@ class NotificationQueue:
                             if owned is None:
                                 summary['uncertain'] = summary.get('uncertain', 0) + 1
                                 continue  # Never rename files belonging to a new owner.
+                            # File preparation runs outside the writer lock.
+                            # Recheck eligibility under the final writer lock,
+                            # before making a verified local receipt visible.
+                            if item['channel'].endswith('-verified'):
+                                try:
+                                    current_event = self.db.get_event(item['event_id'])
+                                except KeyError:
+                                    still_eligible = False
+                                else:
+                                    assessment = VerificationEngine().evaluate(
+                                        Candidate(current_event['node'], current_event['source'],
+                                                  current_event['title'], current_event['primary_url']),
+                                        self.db.get_evidence(current_event['id']))
+                                    still_eligible = assessment.status.value == 'CLAIMABLE'
+                                if not still_eligible:
+                                    conn.execute("""UPDATE notifications SET result='STALE',
+                                        next_attempt=0 WHERE id=? AND result='CLAIMED'
+                                        AND attempts=? AND next_attempt=?
+                                        AND event_id IS ? AND batch_id=? AND channel=?
+                                        AND created_at=? AND payload=?""",
+                                        (item['id'], attempt, claim_deadline, item['event_id'],
+                                         item['batch_id'], item['channel'], item['created_at'],
+                                         item['payload']))
+                                    continue
                             try:
                                 identical_receipt = destination.read_bytes() == temporary.read_bytes()
                             except FileNotFoundError:
@@ -225,7 +293,7 @@ class NotificationQueue:
                 # Keep the ambiguity durable instead of claiming a definite fail.
                 result = 'UNCERTAIN' if not local else 'FAILED'
             success = result == 'SENT'
-            with self.db.connect() as conn:
+            with self.db.write_transaction() as conn:
                 # Do not mark a recycled ID as SENT after network/file I/O.
                 confirmed = conn.execute('''UPDATE notifications SET result=?,next_attempt=? WHERE id=?
                     AND result='CLAIMED' AND attempts=? AND next_attempt=?

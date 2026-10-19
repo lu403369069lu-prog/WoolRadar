@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "unit": "W1/R2-006",
+  "date": "2026-10-19",
+  "status": "PARTIAL_LOCAL_GREEN_NOT_BUSINESS_ACCEPTED",
+  "source_base_pr23_sha": "34380339b96026ef99032e4ae2c67c8f59d015e5",
+  "previous_pr80_head": "ef3494756c2a24e47e35b717622c5c8d9c48ba97",
+  "source_git_blobs": {
+    "core/notify.py": "73421e38c55b6411a228400b648ce728ca30ae92",
+    "tests/test_verified_send_revocation.py": "bcc54a413fe4dd09813bed0a0159392af9d19b05"
+  },
+  "environment": "Isolated Windows, Python 3.14.5, disposable SQLite and synthetic notification sender; TEMP/TMP/TMPDIR in isolated workspace",
+  "red_before_fix": "Revocation during local receipt write exposed local=1 instead of expected local=0; focused RED exit 1",
+  "validation": [
+    {
+      "scope": "focused tests.test_verified_send_revocation",
+      "run": 4,
+      "passed": 4,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "scope": "root unittest discover",
+      "run": 356,
+      "passed": 356,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "scope": "delivery bridge formal combined",
+      "run": 459,
+      "passed": 459,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0
+    }
+  ],
+  "logs": {
+    "focus4-redacted.log": {
+      "path": "evidence/w1-r2-006/logs/20261019-focus4-redacted.log",
+      "sha256": "1d4973c5edcbe4ade4ba2bf8658d7bbdfcfafa60e7f8c402f495a91cac477186",
+      "original_sha256": "1d4973c5edcbe4ade4ba2bf8658d7bbdfcfafa60e7f8c402f495a91cac477186",
+      "bytes": 865
+    },
+    "root4-redacted.log": {
+      "archive": "evidence/w1-r2-006/logs/20261019-root-combined4-redacted.zip",
+      "sha256": "5693fadae88dd68d27dce2be05ccb8ba0388925d0c57a2af2bce3e7788f527b5",
+      "original_sha256": "c8112d4de59786e2d17d9f76088eb53e4703728b5e30eb6c96c23af72cfd64d3",
+      "bytes": 58995
+    },
+    "combined4-redacted.log": {
+      "archive": "evidence/w1-r2-006/logs/20261019-root-combined4-redacted.zip",
+      "sha256": "22cd201a8ac3dbf9f2e4196a3ab63a887a2989a06f379e8503e879ff28c4444d",
+      "original_sha256": "9328edc19f7d1c959ea0303fb79880c13882bec147dc9d6330af77754373cb8f",
+      "bytes": 77159
+    },
+    "archive_sha256": "dec1afee24bc188a55f2977837313a21195ed51cf32ad67b8d378a90bb94d4bb",
+    "archive_bytes": 22748
+  },
+  "contracts": [
+    "After final SQLite ownership/eligibility check but before local receipt publication, revocation prevents receipt publication and durable SENT.",
+    "If external in-flight sender has already confirmed SENT, later revocation cannot undo delivery; durable SENT remains.",
+    "If the external sender times out after dispatch, delivery is unknown; durable UNCERTAIN remains, never falsely declare undelivered."
+  ],
+  "remaining": [
+    "No independent ChatGPT reviewer or hosted Windows CI acceptance for new combined HEAD",
+    "Network/Telegram at-least-once retry semantics remain distinct from local receipt atomicity",
+    "W1 full matrix, W2–W7, P06, new frozen blind holdout, W6 OUTPUT_NOT_CONNECTED, actual 09:30 consumer, 3 independent final verification rounds"
+  ],
+  "sensitive_data": "Contains no live token, production SQLite, private reports, personal or payment data."
+}

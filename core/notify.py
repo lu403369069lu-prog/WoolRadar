@@ -227,6 +227,30 @@ class NotificationQueue:
                             if owned is None:
                                 summary['uncertain'] = summary.get('uncertain', 0) + 1
                                 continue  # Never rename files belonging to a new owner.
+                            # File preparation runs outside the writer lock.
+                            # Recheck eligibility under the final writer lock,
+                            # before making a verified local receipt visible.
+                            if item['channel'].endswith('-verified'):
+                                try:
+                                    current_event = self.db.get_event(item['event_id'])
+                                except KeyError:
+                                    still_eligible = False
+                                else:
+                                    assessment = VerificationEngine().evaluate(
+                                        Candidate(current_event['node'], current_event['source'],
+                                                  current_event['title'], current_event['primary_url']),
+                                        self.db.get_evidence(current_event['id']))
+                                    still_eligible = assessment.status.value == 'CLAIMABLE'
+                                if not still_eligible:
+                                    conn.execute("""UPDATE notifications SET result='STALE',
+                                        next_attempt=0 WHERE id=? AND result='CLAIMED'
+                                        AND attempts=? AND next_attempt=?
+                                        AND event_id IS ? AND batch_id=? AND channel=?
+                                        AND created_at=? AND payload=?""",
+                                        (item['id'], attempt, claim_deadline, item['event_id'],
+                                         item['batch_id'], item['channel'], item['created_at'],
+                                         item['payload']))
+                                    continue
                             try:
                                 identical_receipt = destination.read_bytes() == temporary.read_bytes()
                             except FileNotFoundError:

@@ -1,0 +1,54 @@
+
+test_batch_atomicity (test_dispatcher.DispatcherTests.test_batch_atomicity) ... ok
+test_corrupt_database_preserves_original_error (test_dispatcher.DispatcherTests.test_corrupt_database_preserves_original_error) ... ok
+test_dry_run_does_not_persist (test_dispatcher.DispatcherTests.test_dry_run_does_not_persist) ... ok
+test_dry_run_on_existing_db_reads_state_without_writing (test_dispatcher.DispatcherTests.test_dry_run_on_existing_db_reads_state_without_writing) ... ok
+test_dry_run_on_missing_db_has_no_filesystem_side_effects (test_dispatcher.DispatcherTests.test_dry_run_on_missing_db_has_no_filesystem_side_effects) ... ok
+test_duplicate_and_persistent_restart (test_dispatcher.DispatcherTests.test_duplicate_and_persistent_restart) ... ok
+test_project_isolation (test_dispatcher.DispatcherTests.test_project_isolation) ... ok
+test_quota_warning_blocks_and_untrusted_restore (test_dispatcher.DispatcherTests.test_quota_warning_blocks_and_untrusted_restore) ... ok
+test_rollback_on_conflicting_same_key (test_dispatcher.DispatcherTests.test_rollback_on_conflicting_same_key) ... ok
+test_scope_validation_fails_closed (test_dispatcher.DispatcherTests.test_scope_validation_fails_closed) ... ok
+test_unknown_denies_codex_by_default (test_dispatcher.DispatcherTests.test_unknown_denies_codex_by_default) ... ok
+test_correct_signed_event (test_github_webhook.WebhookTests.test_correct_signed_event) ... ok
+test_empty_secret_rejected (test_github_webhook.WebhookTests.test_empty_secret_rejected) ... ok
+test_non_pr_event_ignored (test_github_webhook.WebhookTests.test_non_pr_event_ignored) ... ok
+test_tampered_payload_rejected (test_github_webhook.WebhookTests.test_tampered_payload_rejected) ... ok
+test_unrecognized_action_ignored (test_github_webhook.WebhookTests.test_unrecognized_action_ignored) ... ok
+test_unsigned_rejected (test_github_webhook.WebhookTests.test_unsigned_rejected) ... ok
+test_checkpoint_advances_code_and_invalidates_old_evidence (test_relay.RelayContractTests.test_checkpoint_advances_code_and_invalidates_old_evidence) ... ok
+test_exclusive_claim_and_fenced_old_owner (test_relay.RelayContractTests.test_exclusive_claim_and_fenced_old_owner) ... ok
+test_forged_done_state_denied (test_relay.RelayContractTests.test_forged_done_state_denied) ... ok
+test_idempotency_survives_restart_and_changed_payload_denied (test_relay.RelayContractTests.test_idempotency_survives_restart_and_changed_payload_denied) ... ok
+test_outbox_preserves_causal_order (test_relay.RelayContractTests.test_outbox_preserves_causal_order) ... ok
+test_outbox_stops_after_transient_failure (test_relay.RelayContractTests.test_outbox_stops_after_transient_failure) ... ok
+test_overlapping_file_claim_rejected (test_relay.RelayContractTests.test_overlapping_file_claim_rejected) ... ok
+test_quota_pause_release_and_resume_requires_fresh_claim (test_relay.RelayContractTests.test_quota_pause_release_and_resume_requires_fresh_claim) ... ok
+test_register_new_task_without_reinitializing_remote (test_relay.RelayContractTests.test_register_new_task_without_reinitializing_remote) ... ok
+test_replay_queue_retries_permission_rate_and_crash_after_ack (test_relay.RelayContractTests.test_replay_queue_retries_permission_rate_and_crash_after_ack) ... ok
+test_retry_ceiling_and_changed_queue_content (test_relay.RelayContractTests.test_retry_ceiling_and_changed_queue_content) ... ok
+test_stale_code_wrong_scope_and_unsafe_paths_denied (test_relay.RelayContractTests.test_stale_code_wrong_scope_and_unsafe_paths_denied) ... ok
+test_transition_needs_evidence_and_independent_review (test_relay.RelayContractTests.test_transition_needs_evidence_and_independent_review) ... ok
+test_unknown_event_data_and_boolean_fence_denied (test_relay.RelayContractTests.test_unknown_event_data_and_boolean_fence_denied) ... ok
+test_unknown_schema_corruption_and_unknown_field_fail_closed (test_relay.RelayContractTests.test_unknown_schema_corruption_and_unknown_field_fail_closed) ... ok
+test_local_version_retention_and_failed_replace (test_relay_faults.FaultRecoveryTests.test_local_version_retention_and_failed_replace) ... ok
+test_process_exit_preserves_last_checkpoint_and_queue (test_relay_faults.FaultRecoveryTests.test_process_exit_preserves_last_checkpoint_and_queue) ... ok
+test_quota_unavailable_cold_recovery_uses_no_model (test_relay_faults.FaultRecoveryTests.test_quota_unavailable_cold_recovery_uses_no_model) ... ok
+test_retries_403_rate_limit_429_5xx_and_network (test_relay_faults.FaultRecoveryTests.test_retries_403_rate_limit_429_5xx_and_network) ... ok
+test_windows_aliases_and_stale_recovered_evidence_denied (test_relay_faults.FaultRecoveryTests.test_windows_aliases_and_stale_recovered_evidence_denied) ... ok
+test_cli_persist_queue_and_sync_without_model (test_relay_git.GitConcurrencyTests.test_cli_persist_queue_and_sync_without_model) ... ok
+test_publish_rejects_precomputed_progress_after_lease_expiry (test_relay_git.GitConcurrencyTests.test_publish_rejects_precomputed_progress_after_lease_expiry) ... ok
+test_synthetic_closed_loop_with_new_sha_and_local_conflict (test_relay_git.GitConcurrencyTests.test_synthetic_closed_loop_with_new_sha_and_local_conflict) ... ok
+test_two_real_writers_and_crash_replay (test_relay_git.GitConcurrencyTests.test_two_real_writers_and_crash_replay) ... ok
+test_auth_failure_is_terminal_without_retry_loop (test_return_sync.ReturnSyncTests.test_auth_failure_is_terminal_without_retry_loop) ... ok
+test_domain_conflict_is_persisted_and_stops_successors (test_return_sync.ReturnSyncTests.test_domain_conflict_is_persisted_and_stops_successors) ... ok
+test_expired_output_lease_rejected (test_return_sync.ReturnSyncTests.test_expired_output_lease_rejected) ... ok
+test_http401_is_blocked_auth_and_ref_race_is_conflict (test_return_sync.ReturnSyncTests.test_http401_is_blocked_auth_and_ref_race_is_conflict) ... ok
+test_observe_ref_change_is_persistent_and_idempotent (test_return_sync.ReturnSyncTests.test_observe_ref_change_is_persistent_and_idempotent) ... ok
+test_reject_business_git_directory (test_return_sync.ReturnSyncTests.test_reject_business_git_directory) ... ok
+test_repository_digits_do_not_turn_network_failure_into_http403 (test_return_sync.ReturnSyncTests.test_repository_digits_do_not_turn_network_failure_into_http403) ... ok
+
+----------------------------------------------------------------------
+Ran 48 tests in 18.213s
+
+OK

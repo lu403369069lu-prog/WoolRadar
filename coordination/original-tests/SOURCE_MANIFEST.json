@@ -1,0 +1,68 @@
+[
+  {
+    "source": "tests/test_github_webhook.py",
+    "target": "coordination/original-tests/test_github_webhook.py",
+    "source_commit": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "sha256": "24ae932b9f8d51bb7743c5d570a1a96732f3640d02a24e5c00a7978f2cde3764"
+  },
+  {
+    "source": "tests/test_dispatcher.py",
+    "target": "coordination/original-tests/test_dispatcher.py",
+    "source_commit": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "sha256": "440b0fc33113094dff43b6a64c54e4766741f6256fc0a518bc04f5efdac9a325"
+  },
+  {
+    "source": "tests/test_relay.py",
+    "target": "coordination/original-tests/test_relay.py",
+    "source_commit": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "sha256": "830337bd2a979238b1c4bbee23cc202bec2d93e1ae3f1fe8d1a9bd96ef24754e"
+  },
+  {
+    "source": "tests/test_relay_faults.py",
+    "target": "coordination/original-tests/test_relay_faults.py",
+    "source_commit": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "sha256": "3d2cbd1446bd1cbe93fcd667a1a866a4e2860af8b6a55d1fc577ae2c1b8d28df"
+  },
+  {
+    "source": "tests/test_relay_git.py",
+    "target": "coordination/original-tests/test_relay_git.py",
+    "source_commit": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "sha256": "73d15d540a85ad60a1832c8d422a74a0bccedb1495263a33a9c0fcc8278c0a55"
+  },
+  {
+    "source": "tests/test_return_sync.py",
+    "target": "coordination/original-tests/test_return_sync.py",
+    "source_commit": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "sha256": "c5d82f3e45f33e69507071c260f513460beb3fc55fe633393d51503d4bbaa9d8"
+  },
+  {
+    "source": "coordination/relay.py",
+    "target": "coordination/relay.py",
+    "source_commit": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "sha256": "6fa4770f62457a1b0aff20ff3ff8919de2a041d5c8feffbb5fb835fe07839e1d"
+  },
+  {
+    "source": "coordination/relay_git.py",
+    "target": "coordination/relay_git.py",
+    "source_commit": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "sha256": "e4da8bed3e7faca4a813bd448991698f0d71a0a7c41b02db1d807713b7ae4ecd"
+  },
+  {
+    "source": "coordination/dispatcher.py",
+    "target": "coordination/dispatcher.py",
+    "source_commit": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "sha256": "c8b60d217141f7cd0f740832173382b8b6d99ba9f62e310a173356aa8b2687d7"
+  },
+  {
+    "source": "coordination/github_event_adapter.py",
+    "target": "coordination/github_event_adapter.py",
+    "source_commit": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "sha256": "bf6f9949d1df497e36184fb514c87150b8c92db70f9629283d027c619e182344"
+  },
+  {
+    "source": "coordination/github_webhook.py",
+    "target": "coordination/github_webhook.py",
+    "source_commit": "27796df5f9847c1bb5d48d2a445e418dfb3d8e96",
+    "sha256": "0293ed5947f3d58845a3e920323a203071a7ec7f30fedeecfb12751fb3f2e582"
+  }
+]

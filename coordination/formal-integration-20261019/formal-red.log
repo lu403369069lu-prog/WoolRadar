@@ -1,0 +1,221 @@
+
+test_dispatcher (unittest.loader._FailedTest.test_dispatcher) ... ERROR
+test_github_webhook (unittest.loader._FailedTest.test_github_webhook) ... ERROR
+test_checkpoint_advances_code_and_invalidates_old_evidence (test_relay.RelayContractTests.test_checkpoint_advances_code_and_invalidates_old_evidence) ... FAIL
+test_exclusive_claim_and_fenced_old_owner (test_relay.RelayContractTests.test_exclusive_claim_and_fenced_old_owner) ... FAIL
+test_forged_done_state_denied (test_relay.RelayContractTests.test_forged_done_state_denied) ... FAIL
+test_idempotency_survives_restart_and_changed_payload_denied (test_relay.RelayContractTests.test_idempotency_survives_restart_and_changed_payload_denied) ... FAIL
+test_outbox_preserves_causal_order (test_relay.RelayContractTests.test_outbox_preserves_causal_order) ... FAIL
+test_outbox_stops_after_transient_failure (test_relay.RelayContractTests.test_outbox_stops_after_transient_failure) ... FAIL
+test_overlapping_file_claim_rejected (test_relay.RelayContractTests.test_overlapping_file_claim_rejected) ... FAIL
+test_quota_pause_release_and_resume_requires_fresh_claim (test_relay.RelayContractTests.test_quota_pause_release_and_resume_requires_fresh_claim) ... FAIL
+test_register_new_task_without_reinitializing_remote (test_relay.RelayContractTests.test_register_new_task_without_reinitializing_remote) ... FAIL
+test_replay_queue_retries_permission_rate_and_crash_after_ack (test_relay.RelayContractTests.test_replay_queue_retries_permission_rate_and_crash_after_ack) ... FAIL
+test_retry_ceiling_and_changed_queue_content (test_relay.RelayContractTests.test_retry_ceiling_and_changed_queue_content) ... FAIL
+test_stale_code_wrong_scope_and_unsafe_paths_denied (test_relay.RelayContractTests.test_stale_code_wrong_scope_and_unsafe_paths_denied) ... FAIL
+test_transition_needs_evidence_and_independent_review (test_relay.RelayContractTests.test_transition_needs_evidence_and_independent_review) ... FAIL
+test_unknown_event_data_and_boolean_fence_denied (test_relay.RelayContractTests.test_unknown_event_data_and_boolean_fence_denied) ... FAIL
+test_unknown_schema_corruption_and_unknown_field_fail_closed (test_relay.RelayContractTests.test_unknown_schema_corruption_and_unknown_field_fail_closed) ... FAIL
+test_relay_faults (unittest.loader._FailedTest.test_relay_faults) ... ERROR
+test_relay_git (unittest.loader._FailedTest.test_relay_git) ... ERROR
+test_return_sync (unittest.loader._FailedTest.test_return_sync) ... ERROR
+
+======================================================================
+ERROR: test_dispatcher (unittest.loader._FailedTest.test_dispatcher)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_dispatcher
+Traceback (most recent call last):
+  File "C:\Users\lh\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lh\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_dispatcher.py", line 5, in <module>
+    from coordination.dispatcher import dispatch
+ModuleNotFoundError: No module named 'coordination.dispatcher'
+
+
+======================================================================
+ERROR: test_github_webhook (unittest.loader._FailedTest.test_github_webhook)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_github_webhook
+Traceback (most recent call last):
+  File "C:\Users\lh\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lh\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_github_webhook.py", line 5, in <module>
+    from coordination.github_webhook import receive_pr_event
+ModuleNotFoundError: No module named 'coordination.github_webhook'
+
+
+======================================================================
+ERROR: test_relay_faults (unittest.loader._FailedTest.test_relay_faults)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_relay_faults
+Traceback (most recent call last):
+  File "C:\Users\lh\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lh\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay_faults.py", line 9, in <module>
+    from coordination import relay
+ImportError: cannot import name 'relay' from 'coordination' (unknown location)
+
+
+======================================================================
+ERROR: test_relay_git (unittest.loader._FailedTest.test_relay_git)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_relay_git
+Traceback (most recent call last):
+  File "C:\Users\lh\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lh\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay_git.py", line 9, in <module>
+    from coordination import relay
+ImportError: cannot import name 'relay' from 'coordination' (unknown location)
+
+
+======================================================================
+ERROR: test_return_sync (unittest.loader._FailedTest.test_return_sync)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_return_sync
+Traceback (most recent call last):
+  File "C:\Users\lh\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lh\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\unittest\loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_return_sync.py", line 6, in <module>
+    from coordination import relay
+ImportError: cannot import name 'relay' from 'coordination' (unknown location)
+
+
+======================================================================
+FAIL: test_checkpoint_advances_code_and_invalidates_old_evidence (test_relay.RelayContractTests.test_checkpoint_advances_code_and_invalidates_old_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay.py", line 15, in setUp
+    self.assertIsNotNone(relay, 'V3 relay engine is required')
+AssertionError: unexpectedly None : V3 relay engine is required
+
+======================================================================
+FAIL: test_exclusive_claim_and_fenced_old_owner (test_relay.RelayContractTests.test_exclusive_claim_and_fenced_old_owner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay.py", line 15, in setUp
+    self.assertIsNotNone(relay, 'V3 relay engine is required')
+AssertionError: unexpectedly None : V3 relay engine is required
+
+======================================================================
+FAIL: test_forged_done_state_denied (test_relay.RelayContractTests.test_forged_done_state_denied)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay.py", line 15, in setUp
+    self.assertIsNotNone(relay, 'V3 relay engine is required')
+AssertionError: unexpectedly None : V3 relay engine is required
+
+======================================================================
+FAIL: test_idempotency_survives_restart_and_changed_payload_denied (test_relay.RelayContractTests.test_idempotency_survives_restart_and_changed_payload_denied)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay.py", line 15, in setUp
+    self.assertIsNotNone(relay, 'V3 relay engine is required')
+AssertionError: unexpectedly None : V3 relay engine is required
+
+======================================================================
+FAIL: test_outbox_preserves_causal_order (test_relay.RelayContractTests.test_outbox_preserves_causal_order)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay.py", line 15, in setUp
+    self.assertIsNotNone(relay, 'V3 relay engine is required')
+AssertionError: unexpectedly None : V3 relay engine is required
+
+======================================================================
+FAIL: test_outbox_stops_after_transient_failure (test_relay.RelayContractTests.test_outbox_stops_after_transient_failure)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay.py", line 15, in setUp
+    self.assertIsNotNone(relay, 'V3 relay engine is required')
+AssertionError: unexpectedly None : V3 relay engine is required
+
+======================================================================
+FAIL: test_overlapping_file_claim_rejected (test_relay.RelayContractTests.test_overlapping_file_claim_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay.py", line 15, in setUp
+    self.assertIsNotNone(relay, 'V3 relay engine is required')
+AssertionError: unexpectedly None : V3 relay engine is required
+
+======================================================================
+FAIL: test_quota_pause_release_and_resume_requires_fresh_claim (test_relay.RelayContractTests.test_quota_pause_release_and_resume_requires_fresh_claim)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay.py", line 15, in setUp
+    self.assertIsNotNone(relay, 'V3 relay engine is required')
+AssertionError: unexpectedly None : V3 relay engine is required
+
+======================================================================
+FAIL: test_register_new_task_without_reinitializing_remote (test_relay.RelayContractTests.test_register_new_task_without_reinitializing_remote)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay.py", line 15, in setUp
+    self.assertIsNotNone(relay, 'V3 relay engine is required')
+AssertionError: unexpectedly None : V3 relay engine is required
+
+======================================================================
+FAIL: test_replay_queue_retries_permission_rate_and_crash_after_ack (test_relay.RelayContractTests.test_replay_queue_retries_permission_rate_and_crash_after_ack)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay.py", line 15, in setUp
+    self.assertIsNotNone(relay, 'V3 relay engine is required')
+AssertionError: unexpectedly None : V3 relay engine is required
+
+======================================================================
+FAIL: test_retry_ceiling_and_changed_queue_content (test_relay.RelayContractTests.test_retry_ceiling_and_changed_queue_content)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay.py", line 15, in setUp
+    self.assertIsNotNone(relay, 'V3 relay engine is required')
+AssertionError: unexpectedly None : V3 relay engine is required
+
+======================================================================
+FAIL: test_stale_code_wrong_scope_and_unsafe_paths_denied (test_relay.RelayContractTests.test_stale_code_wrong_scope_and_unsafe_paths_denied)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay.py", line 15, in setUp
+    self.assertIsNotNone(relay, 'V3 relay engine is required')
+AssertionError: unexpectedly None : V3 relay engine is required
+
+======================================================================
+FAIL: test_transition_needs_evidence_and_independent_review (test_relay.RelayContractTests.test_transition_needs_evidence_and_independent_review)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay.py", line 15, in setUp
+    self.assertIsNotNone(relay, 'V3 relay engine is required')
+AssertionError: unexpectedly None : V3 relay engine is required
+
+======================================================================
+FAIL: test_unknown_event_data_and_boolean_fence_denied (test_relay.RelayContractTests.test_unknown_event_data_and_boolean_fence_denied)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay.py", line 15, in setUp
+    self.assertIsNotNone(relay, 'V3 relay engine is required')
+AssertionError: unexpectedly None : V3 relay engine is required
+
+======================================================================
+FAIL: test_unknown_schema_corruption_and_unknown_field_fail_closed (test_relay.RelayContractTests.test_unknown_schema_corruption_and_unknown_field_fail_closed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-formal-integration-20261019\coordination\original-tests\test_relay.py", line 15, in setUp
+    self.assertIsNotNone(relay, 'V3 relay engine is required')
+AssertionError: unexpectedly None : V3 relay engine is required
+
+----------------------------------------------------------------------
+Ran 20 tests in 0.001s
+
+FAILED (failures=15, errors=5)

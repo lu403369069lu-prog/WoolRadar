@@ -43,19 +43,19 @@ class RawBytesEvidenceTests(unittest.TestCase):
 
     def test_invalid_utf8_with_forged_ok_trailer_is_not_pass(self):
         rc, receipt = self.run_fixture(
-            b"\\xff\\xfe\\nRan 1 test in 0.001s\\n\\nOK\\n")
+            b"\xff\xfe\nRan 1 test in 0.001s\n\nOK\n")
         self.assertEqual(rc, 1)
         self.assertNotEqual(receipt["results"][0]["status"], "PASS_EXACT_HEAD")
 
     def test_clean_utf8_valid_summary_passes(self):
         rc, receipt = self.run_fixture(
-            b"test_x ... ok\\n\\n----------------------------------------------------------------------\\n"
-            b"Ran 1 test in 0.001s\\n\\nOK\\n")
+            b"test_x ... ok\n\n----------------------------------------------------------------------\n"
+            b"Ran 1 test in 0.001s\n\nOK\n")
         self.assertEqual(rc, 0)
         self.assertEqual(receipt["results"][0]["status"], "PASS_EXACT_HEAD")
 
     def test_arbitrary_utf8_without_test_summary_is_not_pass(self):
-        rc, receipt = self.run_fixture(b"Everything is great, trust me!\\n")
+        rc, receipt = self.run_fixture(b"Everything is great, trust me!\n")
         self.assertEqual(rc, 1)
         self.assertNotEqual(receipt["results"][0]["status"], "PASS_EXACT_HEAD")
 

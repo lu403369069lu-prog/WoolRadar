@@ -13,9 +13,13 @@ from core.models import Candidate, Evidence
 from core.notify import NotificationQueue
 
 
+TEMP = Path(__file__).parents[1] / '.test-tmp'
+TEMP.mkdir(exist_ok=True)
+
+
 class VerifiedSendRevocationTests(TestCase):
     def test_evidence_revoked_after_claim_never_reaches_sender(self):
-        with TemporaryDirectory() as temp:
+        with TemporaryDirectory(dir=TEMP) as temp:
             db = Database(Path(temp) / "revoke.sqlite")
             event = db.upsert_candidate(Candidate(
                 "n", "rss", "Synthetic public developer grant",

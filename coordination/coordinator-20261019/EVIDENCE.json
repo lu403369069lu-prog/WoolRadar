@@ -1,0 +1,45 @@
+{
+  "project": "WoolRadar",
+  "baseline_sha": "c70525f7624b81cf51e6e12a25be8192d9b09b69",
+  "local_environment": "Windows/Python3.12.14",
+  "command": "python -X utf8 -m unittest discover -s .github/relay -p test_*.py -v",
+  "exit_code": 0,
+  "total": 24,
+  "passed": 24,
+  "failed": 0,
+  "skipped": 0,
+  "red": {
+    "total": 4,
+    "failures": 4,
+    "exit_code": 1
+  },
+  "logs": [
+    {
+      "path": "coordination/coordinator-20261019/red-recovery-four.log",
+      "sha256": "84966cf2d729032b877807b1d60a8e07d50a2ec97a0bf9b83405ca6a9bf6b51e"
+    },
+    {
+      "path": "coordination/coordinator-20261019/green-wool-all.log",
+      "sha256": "7d729ae25d53cc539e3b41f4da8c976ef3aefe155912b210c522496ac5689843"
+    }
+  ],
+  "code": [
+    {
+      "path": ".github/relay/worker.py",
+      "blob": "ccb0e29a7229dfb207eb89557ebbc1c65c34d3e3"
+    },
+    {
+      "path": ".github/relay/checkpoint_store.py",
+      "blob": "0106dd81725d96d2e9fc4e0e441d39a31d9442d8"
+    },
+    {
+      "path": ".github/relay/test_checkpoint_recovery.py",
+      "blob": "a2e2edb9bbf7cdb45dac950ae1d68a9f018aed6a"
+    },
+    {
+      "path": ".github/workflows/coordinator-recovery-native.yml",
+      "blob": "9a30a9994a593399d4ec51edf2c8e6f2e4d58e87"
+    }
+  ],
+  "business_accepted": false
+}

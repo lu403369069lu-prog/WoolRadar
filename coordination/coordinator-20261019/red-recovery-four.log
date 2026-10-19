@@ -1,0 +1,58 @@
+test_concurrent_same_cursor_has_one_winner (test_checkpoint_recovery.CheckpointRecoveryTests.test_concurrent_same_cursor_has_one_winner) ... FAIL
+test_crash_after_engine_commit_repairs_history_once (test_checkpoint_recovery.CheckpointRecoveryTests.test_crash_after_engine_commit_repairs_history_once) ... FAIL
+test_interrupted_json_save_preserves_last_valid_engine (test_checkpoint_recovery.CheckpointRecoveryTests.test_interrupted_json_save_preserves_last_valid_engine) ... FAIL
+test_same_run_key_different_content_is_rejected (test_checkpoint_recovery.CheckpointRecoveryTests.test_same_run_key_different_content_is_rejected) ... FAIL
+
+======================================================================
+FAIL: test_concurrent_same_cursor_has_one_winner (test_checkpoint_recovery.CheckpointRecoveryTests.test_concurrent_same_cursor_has_one_winner)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-recovery-20261019-woolradar\.github\relay\test_checkpoint_recovery.py", line 92, in test_concurrent_same_cursor_has_one_winner
+    self.assertEqual(sorted(r[0] for r in results),[0,3],repr(results))
+AssertionError: Lists differ: [0, 0] != [0, 3]
+
+First differing element 1:
+0
+3
+
+- [0, 0]
+?     ^
+
++ [0, 3]
+?     ^
+ : [(0, (b'{"persisted_locally": true, "revision": 1, "cursor": 1, "run_key": "901001/1"}\r\n', b'')), (0, (b'{"persisted_locally": true, "revision": 1, "cursor": 1, "run_key": "901002/1"}\r\n', b''))]
+
+======================================================================
+FAIL: test_crash_after_engine_commit_repairs_history_once (test_checkpoint_recovery.CheckpointRecoveryTests.test_crash_after_engine_commit_repairs_history_once)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-recovery-20261019-woolradar\.github\relay\test_checkpoint_recovery.py", line 43, in test_crash_after_engine_commit_repairs_history_once
+    self.assertTrue(history.exists(), 'engine committed but history was permanently lost')
+AssertionError: False is not true : engine committed but history was permanently lost
+
+======================================================================
+FAIL: test_interrupted_json_save_preserves_last_valid_engine (test_checkpoint_recovery.CheckpointRecoveryTests.test_interrupted_json_save_preserves_last_valid_engine)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-recovery-20261019-woolradar\.github\relay\test_checkpoint_recovery.py", line 52, in test_interrupted_json_save_preserves_last_valid_engine
+    with self.assertRaises(OSError):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: OSError not raised
+
+======================================================================
+FAIL: test_same_run_key_different_content_is_rejected (test_checkpoint_recovery.CheckpointRecoveryTests.test_same_run_key_different_content_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "COORDINATOR_WORKSPACE\_work\coordinator-recovery-20261019-woolradar\.github\relay\test_checkpoint_recovery.py", line 62, in test_same_run_key_different_content_is_rejected
+    with self.assertRaisesRegex(ValueError,'REPLAY_CONTENT_CONFLICT'):
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ValueError not raised
+
+IDEMPOTENT_REPLAY 123456/1
+IDEMPOTENT_REPLAY 123456/1
+{"persisted_locally": true, "revision": 1, "cursor": 1, "run_key": "123456/1"}
+IDEMPOTENT_REPLAY 123456/1
+----------------------------------------------------------------------
+Ran 4 tests in 0.349s
+
+FAILED (failures=4)

@@ -85,7 +85,8 @@ class DigestCleanPinnedCheckoutTests(unittest.TestCase):
     def test_gitignored_importable_source_is_rejected(self):
         hidden = self.checkout / "newsbrief" / "sources" / "hidden_plugin.py"
         hidden.write_text("UNREVIEWED = True\\n", encoding="utf-8")
-        self.assertEqual(self.git("status", "--porcelain=v1"), "")
+        self.assertEqual(self.git("status", "--porcelain=v1", "--untracked-files=all",
+                                  "--", ".", ":(exclude).venv"), "")
         with self.assertRaisesRegex(RuntimeError, "UPSTREAM_IGNORED_EXECUTABLE_SOURCE"):
             self.prepare_with_fake_import(verify_only=True)
 

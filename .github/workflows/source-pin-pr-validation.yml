@@ -48,10 +48,11 @@ jobs:
         run: |
           python -X utf8 -B .github/relay/integration_gate.py --repo WoolRadar --source candidate --output .relay-report/integration.json
           python -c "import json; q=json.load(open('.github/relay/queue.json',encoding='utf-8')); r=json.load(open('.relay-report/integration.json',encoding='utf-8')); print(json.dumps(r)); assert r['source_commit']==q['source_ref']; assert r['status']=='PASS' and r['exit_code']==0 and r['passed']==r['total'] and r['total']>0; print(json.dumps(r))"
-      - name: Combined actual source modules
+      - name: Combined actual source modules; require zero skipped tests
         if: ${{ !cancelled() && steps.candidate.outcome == 'success' }}
         working-directory: candidate
-        run: python -B -X utf8 independent-quality/delivery-bridge-20261016/run_combined_tests.py
+        run: |
+          python -B -X utf8 ../.github/relay/strict_combined_gate.py --source . --expected-sha "${{ steps.pin.outputs.sha }}" --report ../.relay-report/combined.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:

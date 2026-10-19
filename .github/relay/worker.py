@@ -136,4 +136,234 @@ def test(argv, cwd, src):
     env = dict(os.environ)
     for k in ("GITHUB_TOKEN", "GH_TOKEN", "COPILOT_GITHUB_TOKEN", "OPENAI_API_KEY"):
         env.pop(k, None)
-  6×m¢G§²ÚîÆ­yÖÖ–Æ–W5²‡5²&7W'6÷"%Ò²’’RÆVâ†fÖ–Æ–W2•Òf÷"’–â&ævR†â•ĞĞ¢&–÷&—G’Ò6†ö÷6U÷&V6†V6²‡2ÂfÖ–Æ–W2Â·…²&–B%Òf÷"‚–â&VwVÆ'Ò’–bâÂ2VÇ6RæöæPĞ¢&–÷&—G•ö–BÒ&–÷&—G•²&–B%Ò–b&–÷&—G’VÇ6RæöæPĞ¢–b&V6V—BævWB‚'&–÷&—G•÷&V6†V6²"’Ò&–÷&—G•ö–C Ğ¢&—6RfÇVTW'&÷"‚&–çfÆ–Bf–ÆVBÖfÖ–Ç’&–÷&—G’"Ğ¢W‡V7FVBÒ…·&–÷&—G•Ò–b&–÷&—G’VÇ6RµÒ’²&VwVÆ Ğ¢–bÆVâ†W‡V7FVB’ÒÆVâ‡&V6V—E²'&W7VÇG2%Ò“ Ğ¢&—6RfÇVTW'&÷"‚'&–÷&—G’&W7VÇBÆVæwF‚Ö—6ÖF6‚"Ğ¢–b&V6V—BævWB‚&æW‡Eö7W'6÷""’Ò‡5²&7W'6÷"%Ò²â’RÆVâ†fÖ–Æ–W2“ Ğ¢&—6RfÇVTW'&÷"‚&–æ6÷'&V7BæW‡B7W'6÷""Ğ¢f÷"&W7VÇBÂVçG'’–â¦—‡&V6V—E²'&W7VÇG2%ÒÂW‡V7FVB“ Ğ¢–b&W7VÇBævWB‚&–B"’ÒVçG'•²&–B%Ò÷"&W7VÇBævWB‚&vöÂ"’ÒVçG'•²&vöÂ%Ó Ğ¢&—6RfÇVTW'&÷"‚'&V6V—BF6²”Bö÷&FW"Ö—6ÖF6‚"Ğ¢6öÖÖæG2ÒVçG'•²&6†V6·2%ĞĞ¢6†V6·2Ò&W7VÇBævWB‚&6†V6·2"Ğ¢–bæ÷B—6–ç7Fæ6R†6†V6·2ÂÆ—7B“ Ğ¢&—6RfÇVTW'&÷"‚&Ö—76–ær6†V6²Wf–FVæ6R"Ğ¢–bVçG'•²&F—7÷6—F–öâ%ÒÓÒ$U…DU$äÅôõ%õôÄ”5•ôtDTB# Ğ¢W‡V7FVE÷7FGW2Ò$U…DU$äÅôtDUôäõEôU„T5UDTB Ğ¢–b6†V6·3 Ğ¢&—6RfÇVTW'&÷"‚&W‡FW&æÂÖvFRF6²W†V7WFVB"Ğ¢VÆ–bæ÷B6öÖÖæG3 Ğ¢W‡V7FVE÷7FGW2Ò$äõôdõ$ÔÅôÔ”äuôäõEôU„T5UDTB Ğ¢–b6†V6·3 Ğ¢&—6RfÇVTW'&÷"‚'VæÖVBF6²W†V7WFVB"Ğ¢VÇ6S Ğ¢–b·‚ævWB‚&&wb"’f÷"‚–â6†V6·5ÒÒ6öÖÖæG3 Ğ¢&—6RfÇVTW'&÷"‚'FW7BÖ–ærÖ—6ÖF6‚"Ğ¢ÆÅ÷72ÒÆÂ‡‚ævWB‚'7FGW2"’ÓÒ%52"æBG—R‡‚ævWB‚&W†—Eö6öFR"’’—2–çBæB…²&W†—Eö6öFR%ÒÓÒ Ğ¢æBG—R‡‚ævWB‚'F÷FÂ"’’—2–çBæB…²'F÷FÂ%Òâ Ğ¢æBG—R‡‚ævWB‚'76VB"’’—2–çBæB…²'76VB%ÒÓÒ…²'F÷FÂ%ĞĞ¢æB&f–ÆVB"–â‚æB‡…²&f–ÆVB%Ò—2æöæR÷ Ğ¢G—R‡…²&f–ÆVB%Ò’—2–çBæB…²&f–ÆVB%ÒÓÒĞ¢æBÆÂ‡G—R‡‚ævWB†f–VÆB’’—2–çBæB…¶f–VÆEÒÓÒ Ğ¢f÷"f–VÆB–â‚'6¶—VB"Â'FöFò"Â&6æ6VÆÆVB"’Ğ¢f÷"‚–â6†V6·2Ğ¢W‡V7FVE÷7FGW2Ò‚$dõ$ÔÅõ5T%4UEõ55ôäD•dUõTäD”är"–bÆÅ÷70Ğ¢VÇ6R$dõ$ÔÅô4„T4µôd”ÄTEôõ%ô$Äô4´TB"Ğ¢–b&W7VÇBævWB‚'7FGW2"’ÒW‡V7FVE÷7FGW3 Ğ¢&—6RfÇVTW'&÷"‚&–æ6÷'&V7BF6²F—7÷6—F–öâ"Ğ¢–bç’‡‚ævWB‚'7G&–7FÇ•ö6ö×ÆWFR"’—2æ÷BfÇ6R÷"‚ævWB‚&'W6–æW75ö66WFVB"’—2æ÷BfÇ6Rf÷"‚–â&V6V—E²'&W7VÇG2%Ò“ Ğ¢&—6RfÇVTW'&÷"‚&æWfW"WFòÖ66WBfÖ–Ç’"Ğ¢2GF6‚F†R–æFWVæFVçBv†öÆR×6÷W&6R&Vw&W76–öâWf–FVæ6RFòF†RGW&&ÆPĞ¢2†—7F÷'’âF†—2—2äõB'W6–æW72öæF—fR66WFæ6RvFRàĞ¢–çFVw&F–öâÒÆöB…F‚†ç&V6V—B’çv—F…öæÖR‚&–çFVw&F–öâæ§6öâ"’Ğ¢W‡V7FVEö–çFVw&F–öâÒ…·7—2æW†V7WF&ÆRÂ"ÖÒ"Â'Væ—GFW7B"Â&F—66÷fW""Â"×2"Â'FW7G2"Â"×"Â'FW7Eò¢ç’%ĞĞ¢–bç&WòÓÒ%vööÅ&F""VÇ6R²&çÒ"Â'FW7B%ÒĞ¢2F†R'VææW"w2'6öÇWFR—F†öâW†V7WF&ÆRf&–W2'’†÷7BâfÆ–FFR&wb7G'V7GW&RàĞ¢–çFVw&F–öåö6öÖÖæBÒ–çFVw&F–öâævWB‚&6öÖÖæB"Ğ¢fÆ–Eö6ÖBÒ†—6–ç7Fæ6R†–çFVw&F–öåö6öÖÖæBÂÆ—7B’æ@Ğ¢‚†ç&WòÓÒ%vööÅ&F""æBÆVâ†–çFVw&F–öåö6öÖÖæB’ÓÒ€Ğ¢æB–çFVw&F–öåö6öÖÖæE³¥ÒÓÒW‡V7FVEö–çFVw&F–öå³¥ÒĞ¢÷"†ç&WòÓÒ%––å–T¦’"æB–çFVw&F–öåö6öÖÖæBÓÒW‡V7FVEö–çFVw&F–öâ’’Ğ¢–b†–çFVw&F–öâævWB‚'66†VÖ÷fW'6–öâ"’Ò÷"–çFVw&F–öâævWB‚'&Wò"’Òç&WğĞ¢÷"æ÷BfÆ–Eö6ÖB÷"–çFVw&F–öâævWB‚'fW&–f–VEö'W6–æW75ö6ö×ÆWFR"’—2æ÷BfÇ6PĞ¢÷"–çFVw&F–öâævWB‚'7FGW2"’æ÷B–â‚%52"Â$d”Â"Â$$Äô4´TB"Ğ¢÷"G—R†–çFVw&F–öâævWB‚'6÷W&6Uö6öÖÖ—B"’’—2æ÷B7G Ğ¢÷"æ÷B&RægVÆÆÖF6‚‡"%¶ÖcÓ•×³CÒ"Â–çFVw&F–öå²'6÷W&6Uö6öÖÖ—B%ÒĞ¢÷"–çFVw&F–öå²'6÷W&6Uö6öÖÖ—B%ÒÒ&V6V—E²'6÷W&6Uö6öÖÖ—B%ĞĞ¢÷"G—R†–çFVw&F–öâævWB‚''Våö¶W’"’’—2æ÷B7G Ğ¢÷"æ÷B&RægVÆÆÖF6‚‡"%ÆB²õÆB²"Â–çFVw&F–öå²''Våö¶W’%ÒĞ¢÷"–çFVw&F–öå²''Våö¶W’%ÒÒ¶W’“ Ğ¢&—6RfÇVTW'&÷"‚&–çfÆ–B–æFWVæFVçB–çFVw&F–öâ&W÷'B"Ğ¢–b–çFVw&F–öå²'7FGW2%ÒÓÒ%52"æB€Ğ¢G—R†–çFVw&F–öâævWB‚&W†—Eö6öFR"’’—2æ÷B–çB÷"–çFVw&F–öå²&W†—Eö6öFR%ÒÒ÷ Ğ¢G—R†–çFVw&F–öâævWB‚'F÷FÂ"’’—2æ÷B–çB÷"–çFVw&F–öå²'F÷FÂ%ÒÃÒ÷ Ğ¢G—R†–çFVw&F–öâævWB‚'76VB"’’—2æ÷B–çB÷ Ğ¢–çFVw&F–öå²'76VB%ÒÒ–çFVw&F–öå²'F÷FÂ%Ò÷ Ğ¢&f–ÆVB"æ÷B–â–çFVw&F–öâ÷ Ğ¢æ÷B†–çFVw&F–öå²&f–ÆVB%Ò—2æöæR÷ Ğ¢G—R†–çFVw&F–öå²&f–ÆVB%Ò’—2–çBæB–çFVw&F–öå²&f–ÆVB%ÒÓÒ’÷ Ğ¢ç’‡G—R†–çFVw&F–öâævWB†¶W’’’—2æ÷B–çB÷"–çFVw&F–öå¶¶W•ÒÒ Ğ¢f÷"¶W’–â‚'6¶—VB"Â'FöFò"Â&6æ6VÆÆVB"’’“ Ğ¢&—6RfÇVTW'&÷"‚&f÷&vVB–çFVw&F–öâ7V66W72"Ğ¢&V6V—E²&–çFVw&F–öâ%ÒÒ–çFVw&F–öàĞ¢5²&–çFVw&F–öâ%ÒÒ²'7FGW2#¢–çFVw&F–öå²'7FGW2%ÒÀĞ¢'6÷W&6Uö6öÖÖ—B#¢&V6V—E²'6÷W&6Uö6öÖÖ—B%ÒÀĞ¢''Våö¶W’#¢¶W’Â'F÷FÂ#¢–çFVw&F–öâævWB‚'F÷FÂ"’ÀĞ¢'76VB#¢–çFVw&F–öâævWB‚'76VB"’ÀĞ¢&f–ÆVB#¢–çFVw&F–öâævWB‚&f–ÆVB"—ĞĞ¢5²&7W'6÷"%ÒÒ&V6V—E²&æW‡Eö7W'6÷"%ĞĞ¢5²'&Wf—6–öâ%ÒÒ2ævWB‚'&Wf—6–öâ"Â’²Ğ¢5²&Æ7E÷6÷W&6Uö6öÖÖ—B%ÒÒ&V6V—E²'6÷W&6Uö6öÖÖ—B%ĞĞ¢5²&Æ7E÷'Våö¶W’%ÒÒ¶WĞ¢5²&Æ7E÷WF2%ÒÒ&V6V—E²&vVæW&FVE÷WF2%ĞĞ¢2ç6WFFVfVÇB‚'&ö6W76VE÷'Våö¶W—2"ÂµÒ’æVæB†¶W’Ğ¢5²'&ö6W76VE÷'Våö¶W—2%ÒÒ5²'&ö6W76VE÷'Våö¶W—2%Õ²Ó#S¥ĞĞ¢2ç6WFFVfVÇB‚&fÖ–Æ–W2"Â·ÒĞ¢f÷"‚–â&V6V—E²'&W7VÇG2%Ó Ğ¢öÆBÒ5²&fÖ–Æ–W2%ÒævWB‡…²&–B%ÒÂ·ÒĞ¢&V6÷&BÒ²'7FGW2#¢…²'7FGW2%ÒÂ'6÷W&6Uö6öÖÖ—B#¢&V6V—E²'6÷W&6Uö6öÖÖ—B%ÒÀĞ¢''Våö¶W’#¢¶W’Â'7G&–7FÇ•ö6ö×ÆWFR#¢fÇ6WĞĞ¢–b…²&–B%ÒÓÒ&–÷&—G•ö–C Ğ¢&V6÷&E²&Æ7E÷&V6†V6µ÷&Wf—6–öâ%ÒÒ5²'&Wf—6–öâ%ĞĞ¢VÆ–b…²'7FGW2%ÒÓÒ$dõ$ÔÅô4„T4µôd”ÄTEôõ%ô$Äô4´TB"æB&Æ7E÷&V6†V6µ÷&Wf—6–öâ"–âöÆC Ğ¢&V6÷&E²&Æ7E÷&V6†V6µ÷&Wf—6–öâ%ÒÒöÆE²&Æ7E÷&V6†V6µ÷&Wf—6–öâ%ĞĞ¢5²&fÖ–Æ–W2%Õ·…²&–B%ÕÒÒ&V6÷&@Ğ¢5²wVæF–æuö†—7F÷'•÷&V6V—BuÒÒ&V6V—@Ğ¢5²vÆ7E÷&V6V—E÷6†#SbuÒÒVWVUöF–vW7B‡&V6V—BĞ¢6fR‡7FFU÷F‚Â2Ğ¢&V6÷fW%ö†—7F÷'’‡&ö÷BÂ2Â6fRĞ¢&–çB†§6öâæGV×2‡²'W'6—7FVEöÆö6ÆÇ’#¢G'VRÂ'&Wf—6–öâ#¢5²'&Wf—6–öâ%ÒÂ&7W'6÷"#¢5²&7W'6÷"%ÒÂ''Våö¶W’#¢¶W—Ò’Ğ Ğ¦–bõöæÖUõòÓÒ%õöÖ–åõò# Ğ¢Ò&w'6Rä&wVÖVçE'6W"‚Ğ¢æFEö&wVÖVçB‚&ÖöFR"Â6†ö–6W3Õ²&WfÇVFR"Â'W'6—7B%ÒĞ¢æFEö&wVÖVçB‚"Ò×&Wò"Â&WV—&VCÕG'VRÂ6†ö–6W3Õ²%vööÅ&F""Â%––å–T¦’%ÒĞ¢æFEö&wVÖVçB‚"Ò×VWVR"ÂFVfVÇCÒ"æv—F‡V"÷&VÆ’÷VWVRæ§6öâ"Ğ¢æFEö&wVÖVçB‚"Ò×6÷W&6R"ÂFVfVÇCÒ&6æF–FFR"Ğ¢æFEö&wVÖVçB‚"Ò×7FFR"Â&WV—&VCÕG'VRĞ¢æFEö&wVÖVçB‚"ÒÖ÷WGWB"ÂFVfVÇCÒ"ç&VÆ’×&W÷'B÷&V6V—Bæ§6öâ"Ğ¢æFEö&wVÖVçB‚"Ò×&V6V—B"ÂFVfVÇCÒ"ç&VÆ’×&W÷'B÷&V6V—Bæ§6öâ"Ğ¢æFEö&wVÖVçB‚"ÒÖÆ–Ö—B"ÂG—SÖ–çBÂFVfVÇCÓ"Ğ¢÷BÒç'6Uö&w2‚Ğ¢–bæ÷BÃÒ÷BæÆ–Ö—BÃÒ3 Ğ¢æW'&÷"‚&Æ–Ö—B×W7B&RÓ2"Ğ¢†WfÇVFR–b÷BæÖöFRÓÒ&WfÇVFR"VÇ6RW'6—7B’†÷BĞ
+    env["PYTHONDONTWRITEBYTECODE"] = "1"
+    try:
+        proc = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, errors="replace", timeout=180, env=env)
+        output = (proc.stdout + "\n" + proc.stderr)[-240000:]
+        summary = parse_test_summary(output, proc.returncode)
+        names = []
+        if summary["status"] != "PASS":
+            for line in output.splitlines():
+                if line.startswith(("not ok ", "FAIL: ", "ERROR: ")):
+                    names.append(re.sub(r"[^a-zA-Z0-9 _.:#()\-]", "?", line)[:150])
+        return {**summary, "failed_test_names": names[:12]}
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        return {"status": "BLOCKED", "error_kind": type(exc).__name__}
+
+def evaluate(a):
+    raw = Path(a.queue).read_bytes()
+    q = json.loads(raw)
+    s = load(Path(a.state) / "engine.json")
+    if q.get("repo") != a.repo or s.get("repo") != a.repo or q.get("schema_version") != 1 or s.get("schema_version") != 1:
+        raise ValueError("repository/schema mismatch")
+    families = q["families"]
+    if not 1 <= len(families) <= 60 or not 0 <= s["cursor"] < len(families):
+        raise ValueError("invalid family queue/cursor")
+    ids = [f["id"] for f in families]
+    if len(ids) != len(set(ids)) or any(not re.fullmatch(r"(WR|SAM|COORD)-H\d\d", i) for i in ids):
+        raise ValueError("invalid family IDs")
+    for family in families:
+        if len(family["checks"]) > 4 or not all(safe(cmd) for cmd in family["checks"]):
+            raise ValueError("invalid formal test mapping: " + family["id"])
+    src = Path(a.source).resolve()
+    cwd = (src / q["source_subdir"]).resolve()
+    if not cwd.is_dir() or not cwd.is_relative_to(src):
+        raise ValueError("missing/unsafe source directory")
+    sha = source_sha(src)
+    enforce_source_pin(q, sha)
+    # Pin verification must occur before any filesystem writes, including test TEMP.
+    # This is the disposable Actions checkout, never the Windows production tree.
+    if a.repo == "WoolRadar":
+        (cwd / ".test-tmp").mkdir(exist_ok=True)
+    n = min(a.limit, len(families))
+    regular = [families[(s["cursor"] + i) % len(families)] for i in range(n)]
+    priority = choose_recheck(s, families, {x["id"] for x in regular}) if n < 3 else None
+    selected = ([priority] if priority else []) + regular
+    results = []
+    for item in selected:
+        checks = []
+        if item["disposition"] == "EXTERNAL_OR_POLICY_GATED":
+            status = "EXTERNAL_GATE_NOT_EXECUTED"
+        elif not item["checks"]:
+            status = "NO_FORMAL_MAPPING_NOT_EXECUTED"
+        else:
+            for cmd in item["checks"]:
+                checks.append({"argv": cmd, **test(cmd, cwd, src)})
+            status = "FORMAL_SUBSET_PASS_NATIVE_PENDING" if all(c["status"] == "PASS" for c in checks) else "FORMAL_CHECK_FAILED_OR_BLOCKED"
+        results.append({"id": item["id"], "goal": item["goal"], "status": status,
+                        "external_gate": item.get("external_gate"), "checks": checks,
+                        "strictly_complete": False, "business_accepted": False})
+        print(json.dumps({"family": item["id"], "status": status,
+                          "tests": [{"status": c["status"], "total": c.get("total"), "exit_code": c.get("exit_code")} for c in checks]}), flush=True)
+    receipt = {"schema_version": 1, "repo": a.repo,
+               "run_key": os.environ.get("GITHUB_RUN_ID", "0") + "/" + os.environ.get("GITHUB_RUN_ATTEMPT", "1"),
+               "generated_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
+               "source_commit": sha, "source_ref": q["source_ref"], "queue_sha256": queue_digest(q),
+               "previous_cursor": s["cursor"], "regular_count": n,
+               "priority_recheck": priority["id"] if priority else None,
+               "next_cursor": (s["cursor"] + n) % len(families),
+               "results": results, "strict_new_acceptances": 0}
+    save(a.output, receipt)
+    print(json.dumps({"evaluation": "COMPLETE", "source_commit": sha, "count": n, "next_cursor": receipt["next_cursor"]}))
+
+def persist(a):
+    with persist_lock(a.state):
+        _persist_locked(a)
+
+
+def _persist_locked(a):
+    receipt = load(a.receipt)
+    root = Path(a.state)
+    state_path = root / "engine.json"
+    s = load(state_path)
+    recover_history(root, s, save)
+    if receipt.get("schema_version") != 1 or s.get("schema_version") != 1 or receipt.get("repo") != a.repo or s.get("repo") != a.repo:
+        raise ValueError("invalid receipt/state")
+    key = receipt.get("run_key", "")
+    if not re.fullmatch(r"\d+/\d+", key) or not re.fullmatch(r"[a-f0-9]{40}", receipt.get("source_commit", "")):
+        raise ValueError("invalid run identity/source")
+    # Ensure the receipt actually belongs to the executing Actions run and
+    # attempt, not merely another report claiming the same run_key. This is
+    # a provenance check, not cryptographic runner attestation.
+    executing_key = os.environ.get("GITHUB_RUN_ID", "") + "/" + os.environ.get("GITHUB_RUN_ATTEMPT", "")
+    if not re.fullmatch(r"\d+/\d+", executing_key) or executing_key != key:
+        raise ValueError("receipt run key differs from executing runner context")
+    if key in s.get("processed_run_keys", []):
+        replay = dict(receipt)
+        replay['integration'] = load(Path(a.receipt).with_name('integration.json'))
+        verify_replay(root, replay)
+        print("IDEMPOTENT_REPLAY " + key)
+        return
+    if s["cursor"] != receipt["previous_cursor"]:
+        raise ValueError("STALE_RECEIPT_REJECTED")
+    if not 1 <= len(receipt["results"]) <= 3:
+        raise ValueError("invalid receipt size")
+    queue_path = Path(".github/relay/queue.json")
+    queue = load(queue_path)
+    if (queue.get("repo") != a.repo or queue.get("schema_version") != 1
+            or receipt.get("source_ref") != queue.get("source_ref")
+            or receipt.get("queue_sha256") != queue_digest(queue)
+            or receipt.get("strict_new_acceptances") != 0):
+        raise ValueError("receipt does not match trusted queue")
+    enforce_source_pin(queue, receipt['source_commit'])
+    families = queue["families"]
+    n = receipt.get("regular_count", len(receipt["results"]))
+    if type(n) is not int or not 1 <= n <= 3:
+        raise ValueError("invalid regular rotation length")
+    regular = [families[(s["cursor"] + i) % len(families)] for i in range(n)]
+    priority = choose_recheck(s, families, {x["id"] for x in regular}) if n < 3 else None
+    priority_id = priority["id"] if priority else None
+    if receipt.get("priority_recheck") != priority_id:
+        raise ValueError("invalid failed-family priority")
+    expected = ([priority] if priority else []) + regular
+    if len(expected) != len(receipt["results"]):
+        raise ValueError("priority result length mismatch")
+    if receipt.get("next_cursor") != (s["cursor"] + n) % len(families):
+        raise ValueError("incorrect next cursor")
+    for result, entry in zip(receipt["results"], expected):
+        if result.get("id") != entry["id"] or result.get("goal") != entry["goal"]:
+            raise ValueError("receipt task ID/order mismatch")
+        commands = entry["checks"]
+        checks = result.get("checks")
+        if not isinstance(checks, list):
+            raise ValueError("missing check evidence")
+        if entry["disposition"] == "EXTERNAL_OR_POLICY_GATED":
+            expected_status = "EXTERNAL_GATE_NOT_EXECUTED"
+            if checks:
+                raise ValueError("external-gate task executed")
+        elif not commands:
+            expected_status = "NO_FORMAL_MAPPING_NOT_EXECUTED"
+            if checks:
+                raise ValueError("unmapped task executed")
+        else:
+            if [x.get("argv") for x in checks] != commands:
+                raise ValueError("test mapping mismatch")
+            all_pass = all(x.get("status") == "PASS" and type(x.get("exit_code")) is int and x["exit_code"] == 0
+                           and type(x.get("total")) is int and x["total"] > 0
+                           and type(x.get("passed")) is int and x["passed"] == x["total"]
+                           and "failed" in x and (x["failed"] is None or
+                                                      type(x["failed"]) is int and x["failed"] == 0)
+                           and all(type(x.get(field)) is int and x[field] == 0
+                                   for field in ("skipped", "todo", "cancelled"))
+                           for x in checks)
+            expected_status = ("FORMAL_SUBSET_PASS_NATIVE_PENDING" if all_pass
+                               else "FORMAL_CHECK_FAILED_OR_BLOCKED")
+        if result.get("status") != expected_status:
+            raise ValueError("incorrect task disposition")
+    if any(x.get("strictly_complete") is not False or x.get("business_accepted") is not False for x in receipt["results"]):
+        raise ValueError("never auto-accept a family")
+    # Attach the independent whole-source regression evidence to the durable
+    # history. This is NOT a business/native acceptance gate.
+    integration = load(Path(a.receipt).with_name("integration.json"))
+    expected_integration = ([sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py"]
+                            if a.repo == "WoolRadar" else ["npm", "test"])
+    # The runner's absolute Python executable varies by host. Validate argv structure.
+    integration_command = integration.get("command")
+    valid_cmd = (isinstance(integration_command, list) and
+                 ((a.repo == "WoolRadar" and len(integration_command) == 8
+                   and integration_command[1:] == expected_integration[1:])
+                  or (a.repo == "YinQieJi" and integration_command == expected_integration)))
+    if (integration.get("schema_version") != 1 or integration.get("repo") != a.repo
+            or not valid_cmd or integration.get("verified_business_complete") is not False
+            or integration.get("status") not in ("PASS", "FAIL", "BLOCKED")
+            or type(integration.get("source_commit")) is not str
+            or not re.fullmatch(r"[a-f0-9]{40}", integration["source_commit"])
+            or integration["source_commit"] != receipt["source_commit"]
+            or type(integration.get("run_key")) is not str
+            or not re.fullmatch(r"\d+/\d+", integration["run_key"])
+            or integration["run_key"] != key):
+        raise ValueError("invalid independent integration report")
+    if integration["status"] == "PASS" and (
+            type(integration.get("exit_code")) is not int or integration["exit_code"] != 0 or
+            type(integration.get("total")) is not int or integration["total"] <= 0 or
+            type(integration.get("passed")) is not int or
+            integration["passed"] != integration["total"] or
+            "failed" not in integration or
+            not (integration["failed"] is None or
+                 type(integration["failed"]) is int and integration["failed"] == 0) or
+            any(type(integration.get(key)) is not int or integration[key] != 0
+                for key in ("skipped", "todo", "cancelled"))):
+        raise ValueError("forged integration success")
+    receipt["integration"] = integration
+    s["integration"] = {"status": integration["status"],
+                        "source_commit": receipt["source_commit"],
+                        "run_key": key, "total": integration.get("total"),
+                        "passed": integration.get("passed"),
+                        "failed": integration.get("failed")}
+    s["cursor"] = receipt["next_cursor"]
+    s["revision"] = s.get("revision", 0) + 1
+    s["last_source_commit"] = receipt["source_commit"]
+    s["last_run_key"] = key
+    s["last_utc"] = receipt["generated_utc"]
+    s.setdefault("processed_run_keys", []).append(key)
+    s["processed_run_keys"] = s["processed_run_keys"][-250:]
+    s.setdefault("families", {})
+    for x in receipt["results"]:
+        old = s["families"].get(x["id"], {})
+        record = {"status": x["status"], "source_commit": receipt["source_commit"],
+                  "run_key": key, "strictly_complete": False}
+        if x["id"] == priority_id:
+            record["last_recheck_revision"] = s["revision"]
+        elif x["status"] == "FORMAL_CHECK_FAILED_OR_BLOCKED" and "last_recheck_revision" in old:
+            record["last_recheck_revision"] = old["last_recheck_revision"]
+        s["families"][x["id"]] = record
+    s['pending_history_receipt'] = receipt
+    s['last_receipt_sha256'] = queue_digest(receipt)
+    save(state_path, s)
+    recover_history(root, s, save)
+    print(json.dumps({"persisted_locally": True, "revision": s["revision"], "cursor": s["cursor"], "run_key": key}))
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("mode", choices=["evaluate", "persist"])
+    ap.add_argument("--repo", required=True, choices=["WoolRadar", "YinQieJi"])
+    ap.add_argument("--queue", default=".github/relay/queue.json")
+    ap.add_argument("--source", default="candidate")
+    ap.add_argument("--state", required=True)
+    ap.add_argument("--output", default=".relay-report/receipt.json")
+    ap.add_argument("--receipt", default=".relay-report/receipt.json")
+    ap.add_argument("--limit", type=int, default=2)
+    opt = ap.parse_args()
+    if not 1 <= opt.limit <= 3:
+        ap.error("limit must be 1-3")
+    (evaluate if opt.mode == "evaluate" else persist)(opt)

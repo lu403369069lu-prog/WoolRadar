@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import re
+from urllib.parse import urlsplit
 from datetime import datetime, timezone, timedelta
 from dataclasses import dataclass
 from pathlib import Path
@@ -8,6 +10,27 @@ from pathlib import Path
 from .db import Database
 from .models import Candidate
 from .verifier import VerificationEngine
+
+
+def _safe_markdown_link(title: str, url: str) -> str:
+    """Make untrusted harvested titles and destinations inert in Markdown."""
+    label = re.sub(r'[\x00-\x1f\x7f]', ' ', str(title))
+    label = label.replace('&', '&amp;').replace('<', '&lt;')
+    label = re.sub(r'([\\*_{}\[\]()#+\-.!|>])', r'\\\1', label)
+    label = label.replace(chr(96), '\\' + chr(96))
+    destination = str(url)
+    if any(ord(ch) < 33 or ord(ch) == 127 for ch in destination):
+        return label
+    try:
+        parsed = urlsplit(destination)
+        if parsed.scheme.lower() not in ('https', 'http') or not parsed.hostname or parsed.username is not None:
+            return label
+    except ValueError:
+        return label
+    for char, encoded in (('\\', '%5C'), ('(', '%28'), (')', '%29'),
+                          ('[', '%5B'), (']', '%5D'), ('<', '%3C'), ('>', '%3E')):
+        destination = destination.replace(char, encoded)
+    return f'[{label}]({destination})'
 
 
 @dataclass(slots=True)
@@ -88,7 +111,7 @@ class ReportGenerator:
                 lines.extend(['- 无已核实条目', ''])
             for row in rows:
                 lines.extend([
-                    f"- [{row['title']}]({row['primary_url']})",
+                    '- ' + _safe_markdown_link(row['title'], row['primary_url']),
                     f"  - 状态：{row['status']}；范围：{row['claim_scope']}；来源：{row['source']}；节点：{row['node']}",
                     f"  - 原帖发布时间：{row['published_at'] or '未知'}；发现时间：{row['first_seen']}",
                 ])
@@ -108,7 +131,7 @@ class ReportGenerator:
                 lines.append('- 无当前有效的排除记录')
             for row in excluded:
                 audit = row['report_audit']
-                lines.append(f"- [{row['title']}]({row['primary_url']})：仅排除报告正文，事件 #{row['id']}")
+                lines.append('- ' + _safe_markdown_link(row['title'], row['primary_url']) + f"：仅排除报告正文，事件 #{row['id']}")
                 lines.append('  - 审核人：' + json.dumps(audit['reviewer'], ensure_ascii=False) +
                              '；时间：' + audit['reviewed_at'] +
                              '；原因：' + json.dumps(audit['reason'], ensure_ascii=False))

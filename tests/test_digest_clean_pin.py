@@ -27,7 +27,8 @@ class DigestCleanPinnedCheckoutTests(unittest.TestCase):
         (self.checkout / "newsbrief" / "sources").mkdir(parents=True)
         self.source = self.checkout / "newsbrief" / "sources" / "rss.py"
         self.source.write_text("AUTHENTIC = True\n", encoding="utf-8")
-        self.git("add", "newsbrief/sources/rss.py")
+        (self.checkout / ".gitignore").write_text("newsbrief/sources/hidden_plugin.py\n", encoding="utf-8")
+        self.git("add", "newsbrief/sources/rss.py", ".gitignore")
         self.git("-c", "user.name=Test", "-c", "user.email=test@example.invalid",
                  "commit", "-qm", "frozen source")
         self.pin = self.git("rev-parse", "HEAD")
@@ -79,6 +80,13 @@ class DigestCleanPinnedCheckoutTests(unittest.TestCase):
         (self.checkout / "newsbrief" / "sources" / "hijack.py").write_text(
             "SHOULD_NOT_LOAD = True\n", encoding="utf-8")
         with self.assertRaisesRegex(RuntimeError, "UPSTREAM_WORKTREE_DIRTY"):
+            self.prepare_with_fake_import(verify_only=True)
+
+    def test_gitignored_importable_source_is_rejected(self):
+        hidden = self.checkout / "newsbrief" / "sources" / "hidden_plugin.py"
+        hidden.write_text("UNREVIEWED = True\\n", encoding="utf-8")
+        self.assertEqual(self.git("status", "--porcelain=v1"), "")
+        with self.assertRaisesRegex(RuntimeError, "UPSTREAM_IGNORED_EXECUTABLE_SOURCE"):
             self.prepare_with_fake_import(verify_only=True)
 
     def test_dirty_python_cannot_reach_pip(self):

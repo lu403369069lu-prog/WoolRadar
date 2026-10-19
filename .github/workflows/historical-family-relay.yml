@@ -28,7 +28,7 @@ jobs:
       - name: Checkout independent source candidate (unprivileged)
         uses: actions/checkout@v4
         with:
-          ref: chatgpt/wr-h07-public-corpus-url-limit-fixture-20261018
+          ref: 34380339b96026ef99032e4ae2c67c8f59d015e5
           path: candidate
           persist-credentials: false
       - name: Checkout last durable checkpoint (unprivileged)

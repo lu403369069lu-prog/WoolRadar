@@ -1,0 +1,56 @@
+name: Pinned Wool source integration (read only)
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/relay/**'
+      - '.github/workflows/historical-family-relay.yml'
+      - '.github/workflows/source-pin-pr-validation.yml'
+permissions:
+  contents: read
+jobs:
+  source-integration:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Read reviewed immutable queue pin
+        id: pin
+        run: |
+          python -c "import json,re,os; q=json.load(open('.github/relay/queue.json',encoding='utf-8')); s=q['source_ref']; assert re.fullmatch('[0-9a-f]{40}',s); assert q['repo']=='WoolRadar'; open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8').write('sha='+s+'\n')"
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.pin.outputs.sha }}
+          path: candidate
+          persist-credentials: false
+      - name: Canonical isolated temporary directory
+        run: |
+          python -c "import os; from pathlib import Path; p=(Path.cwd()/'.source-test-temp').resolve(); p.mkdir(exist_ok=True); open(os.environ['GITHUB_ENV'],'a',encoding='utf-8').write('TEMP='+str(p)+'\nTMP='+str(p)+'\nPYTHONUTF8=1\n')"
+      - name: Verify source identity and relay rejection controls
+        run: |
+          python -c "import json,os,subprocess; q=json.load(open('.github/relay/queue.json',encoding='utf-8')); s=subprocess.check_output(['git','-C','candidate','rev-parse','HEAD'],text=True).strip(); assert s==q['source_ref']; print(json.dumps({'source_sha':s,'run_id':os.environ['GITHUB_RUN_ID'],'attempt':os.environ['GITHUB_RUN_ATTEMPT'],'business_accepted':False}))"
+          python -X utf8 -B -m unittest discover -s .github/relay -p test_*.py -v
+      - name: Formal root integration and immutable receipt
+        run: |
+          python -X utf8 -B .github/relay/integration_gate.py --repo WoolRadar --source candidate --output .relay-report/integration.json
+          python -c "import json; q=json.load(open('.github/relay/queue.json',encoding='utf-8')); r=json.load(open('.relay-report/integration.json',encoding='utf-8')); assert r['source_commit']==q['source_ref']; assert r['status']=='PASS' and r['exit_code']==0 and r['passed']==r['total'] and r['total']>0; print(json.dumps(r))"
+      - name: Combined actual source modules
+        working-directory: candidate
+        run: python -B -X utf8 independent-quality/delivery-bridge-20261016/run_combined_tests.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pinned-source-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .relay-report/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,9 @@
+# Current source identity integration / overall IN_PROGRESS
+
+Original queue/workflow used old PR47 source while integrated PR23 moved. Independently checked immutable34380339b96026ef99032e4ae2c67c8f59d015e5: native Windows root352/352 and actual combined455/455 exit0, no skips; clean isolated worktree. Queue source_ref and scheduled candidate checkout now both name this SHA. Scheduled main is NOT deployed by this Draft.
+
+Actual RED: pin a*40 but execute b*40 was accepted and tests ran; same-ref self-consistent wrong-source receipt/integration pair b*40 was accepted.3 tests:1positive pass,2 failures,exit1. Minimal guard rejects pinned checkout before any tests and mismatched new receipt before state mutation. Legacy reviewed branch refs remain supported for SAM until its canonical source exists. Retained replay history still verifies exact durable content; old history is historical evidence, not current source PASS. Fixture defaults now derive source identity from queue or explicit test parameter; missing/boolean/different SHA controls remain unchanged.
+
+Full current relay28/28 pass exit0 zero skip. Read-only Windows source-pin CI checks actual candidate SHA/run ID/attempt, all current relay contracts, original root integration report and combined business regression; uploads immutable-run report. No write job, state branch push, account, production data or deployment. Existing strict formal workflow continues original48+integrity4+current28 on Windows/Linux. No business family accepted. W6 OUTPUT_NOT_CONNECTED, fresh blinded corpus/P06 and W1 send-boundary open; SAM10/61+522 gold/release still unaccepted. Original50 families and plannedR2 never inferred complete.
+
+Next: verify actual latest native run, persist source-bound evidence, update owner and Issues. SAM queue remains old until main developer delivers independently tested canonical source; never copy Wool PASS into SAM.

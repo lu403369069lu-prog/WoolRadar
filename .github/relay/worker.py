@@ -26,6 +26,12 @@ def source_sha(path):
         raise ValueError("invalid commit SHA")
     return s
 
+def enforce_source_pin(queue, actual):
+    ref = queue.get('source_ref')
+    if isinstance(ref, str) and re.fullmatch(r'[a-f0-9]{40}', ref) and actual != ref:
+        raise ValueError('pinned source SHA mismatch')
+
+
 def safe(argv):
     if not isinstance(argv, list) or len(argv) < 3 or not all(isinstance(a, str) for a in argv):
         return False
@@ -168,6 +174,7 @@ def evaluate(a):
     if a.repo == "WoolRadar":
         (cwd / ".test-tmp").mkdir(exist_ok=True)
     sha = source_sha(src)
+    enforce_source_pin(q, sha)
     n = min(a.limit, len(families))
     regular = [families[(s["cursor"] + i) % len(families)] for i in range(n)]
     priority = choose_recheck(s, families, {x["id"] for x in regular}) if n < 3 else None
@@ -238,6 +245,7 @@ def _persist_locked(a):
             or receipt.get("queue_sha256") != queue_digest(queue)
             or receipt.get("strict_new_acceptances") != 0):
         raise ValueError("receipt does not match trusted queue")
+    enforce_source_pin(queue, receipt['source_commit'])
     families = queue["families"]
     n = receipt.get("regular_count", len(receipt["results"]))
     if type(n) is not int or not 1 <= n <= 3:

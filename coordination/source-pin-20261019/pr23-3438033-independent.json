@@ -1,0 +1,16 @@
+{
+  "sha": "34380339b96026ef99032e4ae2c67c8f59d015e5",
+  "command": [
+    "C:\\Users\\lh\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+    "-B",
+    "-X",
+    "utf8",
+    "independent-quality/delivery-bridge-20261016/run_combined_tests.py"
+  ],
+  "exit_code": 0,
+  "summaries": [
+    "Ran 455 tests in 25.004s"
+  ],
+  "tail": "ublic_sample_dedup.CleanSample.test_reject_bad_source_identity_public_only) ... ok\ntest_upstream_query_loss_makes_blind_identity_unverified (wool_public_corpus_blind_dedup_20261016_test_freeze_public_sample_dedup.CleanSample.test_upstream_query_loss_makes_blind_identity_unverified) ... ok\ntest_url_userinfo_removed_not_republished (wool_public_corpus_blind_dedup_20261016_test_freeze_public_sample_dedup.CleanSample.test_url_userinfo_removed_not_republished) ... ok\ntest_utm_campaign_may_encode_real_round_and_is_retained (wool_public_corpus_blind_dedup_20261016_test_freeze_public_sample_dedup.CleanSample.test_utm_campaign_may_encode_real_round_and_is_retained) ... ok\ntest_within_source_duplicate_removed_before_cap (wool_public_corpus_blind_dedup_20261016_test_freeze_public_sample_dedup.CleanSample.test_within_source_duplicate_removed_before_cap) ... ok\ntest_official_producer_output_deduplicates_before_local_review (wool_public_corpus_blind_dedup_20261016_test_public_corpus_real_schema.RealCorpusProducerCompatibility.test_official_producer_output_deduplicates_before_local_review) ... ok\n\n----------------------------------------------------------------------\nRan 455 tests in 25.004s\n\nOK\n",
+  "status_after": ""
+}

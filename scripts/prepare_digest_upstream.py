@@ -44,7 +44,15 @@ def prepare(root: Path, verify_only: bool = False) -> Path:
         run('git', '-C', str(checkout), 'checkout', '--detach', pinned, env=env)
     actual = run('git', '-C', str(checkout), 'rev-parse', 'HEAD', env=env)
     if actual != pinned:
-        raise RuntimeError('UPSTREAM_PIN_MISMATCH')
+        if verify_only:
+            raise RuntimeError('UPSTREAM_PIN_MISMATCH')
+        # A previous clone may have stopped before the detached pin checkout.
+        # Git refuses to overwrite dirty files without --force; leave such
+        # checkouts for manual review rather than deleting or resetting them.
+        run('git', '-C', str(checkout), 'checkout', '--detach', pinned, env=env)
+        actual = run('git', '-C', str(checkout), 'rev-parse', 'HEAD', env=env)
+        if actual != pinned:
+            raise RuntimeError('UPSTREAM_PIN_MISMATCH')
 
     venv = checkout / '.venv'
     interpreter = venv / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')

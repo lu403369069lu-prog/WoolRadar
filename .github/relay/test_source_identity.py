@@ -36,6 +36,24 @@ class PinnedSourceIdentityTests(unittest.TestCase):
                 self.assertFalse((root / '.test-tmp').exists(),
                                  'a mismatched source must not cause a filesystem write')
 
+    def test_missing_or_malformed_pin_rejected_before_any_test(self):
+        for invalid in (None, '', 'not-a-sha', 'A' * 40, 42):
+            with self.subTest(source_ref=invalid), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                q = self.pinned_queue()
+                q['source_ref'] = invalid
+                worker.save(root / 'queue.json', q)
+                worker.save(root / 'engine.json', fixtures.RelaySafetyTests().initial(q['repo']))
+                args = SimpleNamespace(queue=str(root / 'queue.json'), state=tmp,
+                                       source=tmp, repo=q['repo'], limit=1,
+                                       output=str(root / 'result.json'))
+                with patch.object(worker, 'source_sha', return_value='a' * 40), \
+                     patch.object(worker, 'test', return_value={'status': 'PASS', 'total': 1, 'exit_code': 0}) as run:
+                    with self.assertRaisesRegex(ValueError, 'invalid source_ref'):
+                        worker.evaluate(args)
+                    run.assert_not_called()
+                    self.assertFalse((root / '.test-tmp').exists())
+
     def test_self_consistent_wrong_sha_receipt_is_rejected(self):
         q = self.pinned_queue();fixture = fixtures.RelaySafetyTests()
         receipt = fixture.receipt(q);receipt['source_commit'] = 'b'*40

@@ -28,7 +28,9 @@ def source_sha(path):
 
 def enforce_source_pin(queue, actual):
     ref = queue.get('source_ref')
-    if isinstance(ref, str) and re.fullmatch(r'[a-f0-9]{40}', ref) and actual != ref:
+    if not isinstance(ref, str) or not re.fullmatch(r'[a-f0-9]{40}', ref):
+        raise ValueError('invalid source_ref: expected exact lowercase 40-hex Git SHA')
+    if actual != ref:
         raise ValueError('pinned source SHA mismatch')
 
 

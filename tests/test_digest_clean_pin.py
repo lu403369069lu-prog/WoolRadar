@@ -56,7 +56,8 @@ class DigestCleanPinnedCheckoutTests(unittest.TestCase):
             if not verify_only and args[1:4] == ("-m", "pip", "install"):
                 return ""
             if len(args) >= 2 and args[1] == "-c":
-                self.assertEqual(Path(args[0]).resolve(), self.python.resolve())
+                # Windows TEMP may use DOS 8.3 aliases (RUNNER~1 vs runneradmin).
+                self.assertTrue(Path(args[0]).samefile(self.python))
                 return ""
             raise AssertionError(f"unexpected side effect: {args}")
         with patch.object(mod, "run", side_effect=controlled):

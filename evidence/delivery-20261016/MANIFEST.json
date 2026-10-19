@@ -1,0 +1,95 @@
+{
+  "base_pr23": "719d87719eef171dbcb8472743d38d5461b8c9ab",
+  "integrated_pr26": "45237d1fa737e722acf6d4086e6c13b6c59c713f",
+  "files": [
+    {
+      "path": "independent-quality/delivery-bridge-20261016/consume_preview.py",
+      "git_blob": "a84c0d88db4ebe6fed607759af1fa0df4a62a907",
+      "sha256": "17d15b00cb6bb37df8da83a30e86d67198f7ea084fe61682aae9b440f63eff67"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/README.md",
+      "git_blob": "019c2411d4f3f759077554c5630b2940bd59664e",
+      "sha256": "9ed4c527e2441ac177933ba7f568742a6ce6b54288ac9d7db511dbe99cc93fdb"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/redact_daily.py",
+      "git_blob": "8e555dfd91e47812837e6cf69200823cc95a9b26",
+      "sha256": "07339ef8218ba766dc3652f6f517d6ede7486704a2a804797e49744c94013c74"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/test_consume_preview.py",
+      "git_blob": "20ec4ce32525b08134e897669b12d710704208cd",
+      "sha256": "a2a9cebc31213acea482e016cf46bf6e9a550f04c4709bbbc93bf44c6034cdad"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/test_delivery_boundaries.py",
+      "git_blob": "1d6e2d467381f571361fe44fe40b8634232c2753",
+      "sha256": "802068d231db65df0c9c8c74c2b4dca063e0540db45d11da818ad13d38450159"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/test_noise_audit.py",
+      "git_blob": "c9779ea9545a0b86072411386f4efeacfa3c4882",
+      "sha256": "ceb710319557d8236ab7b26134d69727245a4e8bb429f974f67abc74bf3b12fb"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/test_preview_roundtrip.py",
+      "git_blob": "947f78918f749ad9fdd32dc556516265b47c57c4",
+      "sha256": "499160bd98f9252a7438eeedc1d4e5fc2449b02992bf7c0d8ac1dda7c9813d27"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/test_redact_daily.py",
+      "git_blob": "792e3b3f542b35d9db7a6549a84a174beca99cb6",
+      "sha256": "c416e9059aa4b74e9af7a5392335c4e3dc9e35ca9a8c7fef8c15fd1d3472f2e0"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/run_combined_tests.py",
+      "git_blob": "438a5ddd327882f1579d98e21a611c5e6132580e",
+      "sha256": "c20403816268b302cb0c1ea6beda497a2456ebe796c1acde88f23dc0ad48bc85"
+    },
+    {
+      "path": "evidence/delivery-20261016/exact26-combined.json",
+      "git_blob": "28171df1032215c727f445ffa4efec20e281ccdb",
+      "sha256": "e343c97f729ab4f6fb14e59d6f66cd1cf125c5b80f13310ccce87e59b53a2d03"
+    },
+    {
+      "path": "evidence/delivery-20261016/bridge-boundaries-before.json",
+      "git_blob": "083e50a80a8ffaa3581e97675abcc4030d778544",
+      "sha256": "e132026fb29ac971ad55791bafdad3494e522b36e22a6e9efd676feb2ba115fd"
+    },
+    {
+      "path": "evidence/delivery-20261016/independent-review-before.json",
+      "git_blob": "180f3268ad85ff3ecf2175fbbe8f7881317cd27f",
+      "sha256": "658fd112ad2ca28e78a880102d3d90aad045f355501ee26922321b1eede97e3b"
+    },
+    {
+      "path": "evidence/delivery-20261016/combined-reviewed-final.json",
+      "git_blob": "096aac2c123a36ce5494c7e7efdfc76d3d5280d9",
+      "sha256": "aa42de18ad7cd7d4c8ec6eca5e962187bc43b125820f4c20f46d134f9578e0a6"
+    },
+    {
+      "path": "evidence/delivery-20261016/local-report-roundtrip.json",
+      "git_blob": "8c8858ad88690f335cfa4ee029c11fe125f073af",
+      "sha256": "4dd7e4dd1b1b4f4b6a78f9c971f752c6404b29e4cbfa21714c7ecf9f3e9b01ce"
+    },
+    {
+      "path": "evidence/delivery-20261016/independent-final-review.json",
+      "git_blob": "56a6182c436489e60755ca8deeb3ec5aeca8d780",
+      "sha256": "bca5f2892f8f245a2751d26743e24f6a66dd26fd5d1c583d2a1012397fc50128"
+    },
+    {
+      "path": "evidence/delivery-20261016/CHECKPOINT.md",
+      "git_blob": "7c79408d14189fc4060c7ea7bb585087eade60d3",
+      "sha256": "be92172aaa3e49e2eab91a7c98525a2b4cf57c80708f4d6d681b87414a9a4afe"
+    },
+    {
+      "path": "HANDOFF.md",
+      "git_blob": "3d327b40a78744761b0e0254651d6cf02ebe506c",
+      "sha256": "c0bffb6ebf7fc9a53854d2196cc20ff0f0c848defe76f357a686f93fca456190"
+    }
+  ],
+  "production_changed": false,
+  "raw_data_uploaded": false,
+  "endpoint_status": "OUTPUT_NOT_CONNECTED",
+  "goal_complete": false
+}

@@ -4,11 +4,49 @@ import json
 import hashlib
 import os
 import time
+import math
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 import urllib.parse
 import urllib.request
+import urllib.error
 from .models import utc_now, Candidate
 from .verifier import VerificationEngine
+
+
+class TelegramRateLimited(Exception):
+    """Sanitized transport signal containing no URL, credentials or body text."""
+    def __init__(self, retry_after: float):
+        super().__init__('TELEGRAM_RATE_LIMITED')
+        self.retry_after = retry_after
+
+
+def _retry_after(header=None, body=None, now=None) -> float:
+    """Preserve server cooldown; invalid metadata never overrides local backoff."""
+    now = time.time() if now is None else now
+    delays = [0.0]
+    if isinstance(header, str) and len(header) <= 128:
+        value = header.strip()
+        try:
+            if value.isascii() and value.isdecimal():
+                delay = float(value)
+            else:
+                stamp = parsedate_to_datetime(value)
+                delay = stamp.timestamp() - now if stamp.tzinfo is not None else 0
+            if math.isfinite(delay) and delay >= 0:
+                delays.append(delay)
+        except (ValueError, TypeError, OverflowError, IndexError):
+            pass
+    if isinstance(body, dict) and isinstance(body.get('parameters'), dict):
+        raw = body['parameters'].get('retry_after')
+        if type(raw) is int and raw >= 0:
+            try:
+                delay = float(raw)
+                if math.isfinite(delay):
+                    delays.append(delay)
+            except OverflowError:
+                pass
+    return max(delays)
 
 
 class NotificationQueue:
@@ -32,7 +70,7 @@ class NotificationQueue:
     def pending(self) -> list[dict]:
         with self.db.connect() as conn:
             return [dict(row) for row in conn.execute(
-                "SELECT * FROM notifications WHERE result IN ('PENDING','RETRY','CLAIMED') ORDER BY id")]
+                "SELECT * FROM notifications WHERE result IN ('PENDING','RETRY','CLAIMED','UNCERTAIN') ORDER BY id")]
 
     def record_health(self, node: str, status: str, error_code: str) -> bool:
         if status == 'SKIPPED':
@@ -92,13 +130,13 @@ class NotificationQueue:
                     if validation is None or validation.status.value != 'CLAIMABLE':
                         with self.db.connect() as conn:
                             conn.execute("UPDATE notifications SET result='STALE' WHERE id=? "
-                                "AND result IN ('PENDING','RETRY','CLAIMED') AND next_attempt<=?", (item['id'], now))
+                                "AND result IN ('PENDING','RETRY','CLAIMED','UNCERTAIN') AND next_attempt<=?", (item['id'], now))
                         continue
                 claim_deadline = now + 300
                 with self.db.connect() as conn:
                     claimed = conn.execute("""UPDATE notifications SET result='CLAIMED',
                         next_attempt=?,attempts=attempts+1 WHERE id=? AND next_attempt<=?
-                        AND result IN ('PENDING','RETRY','CLAIMED')
+                        AND result IN ('PENDING','RETRY','CLAIMED','UNCERTAIN')
                         AND event_id IS ? AND batch_id=? AND channel=? AND created_at=?
                         AND payload=? AND attempts=? AND next_attempt=?""",
                         (claim_deadline, item['id'], now, item['event_id'], item['batch_id'],
@@ -106,6 +144,7 @@ class NotificationQueue:
                          item['attempts'], item['next_attempt'])).rowcount
             if not claimed:
                 continue
+            retry_delay = max(0, retry_seconds)
             try:
                 if local:
                     output = Path(local_dir)
@@ -119,23 +158,80 @@ class NotificationQueue:
                     ], ensure_ascii=False, separators=(',', ':')).encode('utf-8')
                     receipt_id = hashlib.sha256(identity_bytes).hexdigest()[:20]
                     destination = output / f"notification-{item['id']}-{receipt_id}.json"
-                    temporary = destination.with_suffix('.tmp')
-                    temporary.write_text(json.dumps({'event_id': item['event_id'], 'batch_id': item['batch_id'],
-                        'created_at': item['created_at'], 'message': item['payload']}, ensure_ascii=False, indent=2), encoding='utf-8')
-                    temporary.replace(destination)
-                    result = 'SENT'
+                    # The claim attempt and a random nonce isolate files from
+                    # another worker that reclaimed the same durable outbox row.
+                    attempt = item['attempts'] + 1
+                    temporary = destination.with_name(
+                        f".{destination.name}.attempt-{attempt}-{os.urandom(8).hex()}.tmp")
+                    try:
+                        temporary.write_text(json.dumps({
+                            'event_id': item['event_id'], 'batch_id': item['batch_id'],
+                            'created_at': item['created_at'], 'message': item['payload']
+                        }, ensure_ascii=False, indent=2), encoding='utf-8')
+                        # A worker can lose ownership during the file write.
+                        # Serialize the final claim check, atomic rename, and
+                        # SENT transition with the same SQLite writer lock.
+                        with self.db.connect() as conn:
+                            if not conn.in_transaction:
+                                conn.execute('BEGIN IMMEDIATE')
+                            owned = conn.execute("""SELECT 1 FROM notifications
+                                WHERE id=? AND result='CLAIMED' AND attempts=?
+                                AND next_attempt=? AND event_id IS ? AND batch_id=?
+                                AND channel=? AND created_at=? AND payload=?""",
+                                (item['id'], attempt, claim_deadline, item['event_id'],
+                                 item['batch_id'], item['channel'], item['created_at'],
+                                 item['payload'])).fetchone()
+                            if owned is None:
+                                summary['uncertain'] = summary.get('uncertain', 0) + 1
+                                continue  # Never rename files belonging to a new owner.
+                            try:
+                                identical_receipt = destination.read_bytes() == temporary.read_bytes()
+                            except FileNotFoundError:
+                                identical_receipt = False
+                            if not identical_receipt:
+                                temporary.replace(destination)
+                            updated = conn.execute("""UPDATE notifications
+                                SET result='SENT',next_attempt=0
+                                WHERE id=? AND result='CLAIMED' AND attempts=?""",
+                                (item['id'], attempt)).rowcount
+                            if updated != 1:
+                                raise RuntimeError('LOCAL_DELIVERY_CLAIM_LOST')
+                        summary['local'] += 1
+                        continue  # Local SENT was already committed under fencing.
+                    finally:
+                        temporary.unlink(missing_ok=True)
                 else:
                     result = (sender or TelegramNotifier(policy).send)(item['payload'])
+            except TelegramRateLimited as exc:
+                retry_delay = max(retry_delay, exc.retry_after)
+                result = 'RATE_LIMITED'
+            except urllib.error.HTTPError as exc:
+                # A server-declared 429 cooldown is a definite throttling
+                # response, not confirmation of a sent message. Do not store
+                # exception text (the request URL can contain a bot token).
+                if not local and exc.code == 429:
+                    header = exc.headers.get('Retry-After') if exc.headers else None
+                    try:
+                        body = json.loads(exc.read(8192))
+                    except (ValueError, TypeError, OSError):
+                        body = None
+                    retry_delay = max(retry_delay, _retry_after(header, body, now))
+                    result = 'RATE_LIMITED'
+                else:
+                    result = 'UNCERTAIN' if not local else 'FAILED'
             except Exception:
                 # Exceptions can contain a bot token in a request URL. Never persist them.
-                result = 'FAILED'
+                # Network timeouts may occur after Telegram accepted the send.
+                # Keep the ambiguity durable instead of claiming a definite fail.
+                result = 'UNCERTAIN' if not local else 'FAILED'
             success = result == 'SENT'
             with self.db.connect() as conn:
                 # Do not mark a recycled ID as SENT after network/file I/O.
                 confirmed = conn.execute('''UPDATE notifications SET result=?,next_attempt=? WHERE id=?
                     AND result='CLAIMED' AND attempts=? AND next_attempt=?
                     AND event_id IS ? AND batch_id=? AND channel=? AND created_at=? AND payload=?''',
-                    ('SENT' if success else 'RETRY', 0 if success else now + max(0, retry_seconds),
+                    ('SENT' if success else 'UNCERTAIN' if result == 'UNCERTAIN' else 'RETRY',
+                     0 if success else now + retry_delay,
                      item['id'], item['attempts'] + 1, claim_deadline, item['event_id'],
                      item['batch_id'], item['channel'], item['created_at'], item['payload'])).rowcount
             if confirmed != 1:
@@ -144,7 +240,10 @@ class NotificationQueue:
                 # uncommitted delivery as confirmed. At-least-once remains.
                 summary['uncertain'] = summary.get('uncertain', 0) + 1
             else:
-                summary['local' if local and success else 'sent' if success else 'retry'] += 1
+                if result == 'UNCERTAIN':
+                    summary['uncertain'] = summary.get('uncertain', 0) + 1
+                else:
+                    summary['local' if local and success else 'sent' if success else 'retry'] += 1
         return summary
 
 
@@ -163,4 +262,6 @@ class TelegramNotifier:
         request = urllib.request.Request(f'https://api.telegram.org/bot{token}/sendMessage', data=payload, method='POST')
         with urllib.request.urlopen(request, timeout=15) as response:
             result = json.loads(response.read())
-        return 'SENT' if result.get('ok') else 'FAILED'
+        if isinstance(result, dict) and result.get('ok') is False and result.get('error_code') == 429:
+            raise TelegramRateLimited(_retry_after(body=result))
+        return 'SENT' if isinstance(result, dict) and result.get('ok') is True else 'FAILED'

@@ -1,0 +1,113 @@
+{
+  "base_main": "e3b31af746776bf976aba7418fce06ff2ae2ccde",
+  "security_commit": "af199e6e74655d184575d171a68321e0fb670628",
+  "candidates": {
+    "28": "dfe21a0991735f940cc283bb38cc94eaa2dbd61f",
+    "29": "87be0c915531701cb63ec577ac08433bcf18a303",
+    "31": "989be0afe36b51efab96025cc8847458143cdf7d",
+    "32": "2fc34f77472880d2a6a024d5ad8520c4af9f5830"
+  },
+  "files": [
+    {
+      "path": "core/collector.py",
+      "git_blob": "e8183456ae5d25423c7dca76c7ae712a4e2a84e2"
+    },
+    {
+      "path": "core/developer_grants.py",
+      "git_blob": "678b9447d238c8f96a4e727a02719725be1cd837"
+    },
+    {
+      "path": "tests/test_developer_grant_discovery.py",
+      "git_blob": "7ee21ca15d6e215264b378b207b3eb46480bec01"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/consume_preview.py",
+      "git_blob": "71bdbd60ce8e4d70e525748b79954bdbd5a9251b"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/redact_daily.py",
+      "git_blob": "fa27080ccaac4388ffdcc9dccc095a62d62b0015"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/run_combined_tests.py",
+      "git_blob": "aced31d49c48cd74b1c27cd6dbab6408f4070c68"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/test_consume_preview.py",
+      "git_blob": "8d7364c041493a714c724a815dbb244071fa1d2b"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/test_delivery_boundaries.py",
+      "git_blob": "3efdbe3484d9e8210b86a00572f3476f0eb7a4ae"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/test_preview_roundtrip.py",
+      "git_blob": "ecab7dda094929f8d4d217e4115353496420b6af"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/test_raw_daily_json_strict.py",
+      "git_blob": "6281c96d9dddb443b901b1c96de2f76b625982dc"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/test_redact_daily.py",
+      "git_blob": "8457e340fffdf1f40c12ff9d966a3c367562b5c3"
+    },
+    {
+      "path": "independent-quality/delivery-bridge-20261016/test_snapshot_chronology.py",
+      "git_blob": "abd6bd20b2cb8eabf7fbe21ed80d20f2c1f38193"
+    },
+    {
+      "path": "independent-quality/developer-grant-20261016/README.md",
+      "git_blob": "8d227841817df568b24aa71a9caf952bc7f6f406"
+    },
+    {
+      "path": "independent-quality/developer-grant-20261016/test_developer_grants.py",
+      "git_blob": "691e2e95dcff4e16bb1a1700f21601d5d22b275f"
+    },
+    {
+      "path": "independent-quality/public-corpus-blind-dedup-20261016/freeze_public_sample_dedup.py",
+      "git_blob": "03496b3a4067947e3ee5825303ae060abb369115"
+    },
+    {
+      "path": "independent-quality/public-corpus-blind-dedup-20261016/README.md",
+      "git_blob": "024f1338ed38dbbcac883a474a1c5e54d5a61f57"
+    },
+    {
+      "path": "independent-quality/public-corpus-blind-dedup-20261016/test_freeze_public_sample_dedup.py",
+      "git_blob": "2104949658f54eaa009b186c83ba510cb4ef3012"
+    },
+    {
+      "path": "independent-quality/public-corpus-blind-dedup-20261016/test_public_corpus_real_schema.py",
+      "git_blob": "4de99ac9fa494f6e7f14a0ed29622042534058df"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/first-combined.json",
+      "git_blob": "6781014eb229ec5124f8e9e67cca83c21cb11ffe"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/imports-fixed.json",
+      "git_blob": "6aaaf29e65d81e3528a21f99eb12417a64680671"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/chronology-aligned.json",
+      "git_blob": "0bec497cc2ae1e6c4049f2d9a6d026166cc2cfec"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/fixture-cleanup.json",
+      "git_blob": "53213370cbaab89b8b78a3814c5d00915af93306"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/CHECKPOINT.md",
+      "git_blob": "865b62fbcff16aa21ebc27851c3bfddc27976eef"
+    },
+    {
+      "path": "HANDOFF.md",
+      "git_blob": "c881195bdd6a47759ea42eeb37bd93c6cf112c1d"
+    }
+  ],
+  "sensitive_value_printed": false,
+  "raw_data_uploaded": false,
+  "production_changed": false,
+  "endpoint": "OUTPUT_NOT_CONNECTED",
+  "goal_complete": false
+}

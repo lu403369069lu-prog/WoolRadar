@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+from datetime import datetime, timezone, timedelta
 import re
 import unicodedata
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
@@ -110,6 +111,8 @@ def reviewed_campaign_url(review, member_url: str, title: str | None = None) -> 
     try:
         url = review.get('campaign_url', '')
         parsed = urlsplit(url)
+        if review.get('review_kind') == 'official_campaign_v2' and parsed.hostname != 'gleam.io':
+            return _reviewed_official_identity(review, parsed)
         if (parsed.scheme != 'https' or parsed.hostname != 'gleam.io' or parsed.username or parsed.password
                 or parsed.port not in (None, 443) or parsed.query or parsed.fragment
                 or not re.fullmatch(r'/[A-Za-z0-9]{5}', parsed.path)):
@@ -117,3 +120,31 @@ def reviewed_campaign_url(review, member_url: str, title: str | None = None) -> 
         return 'https://gleam.io' + parsed.path
     except (TypeError, ValueError):
         return None
+
+
+def _reviewed_official_identity(review, parsed) -> str | None:
+    """Identity from an explicit local review, never proof of offer eligibility.
+
+    Audit fields record the operator assertion; they are not authenticated by
+    this parser. Import only reviewed local files through the existing CLI.
+    """
+    hosts = review.get('official_hosts')
+    if (not isinstance(hosts,list) or not 1 <= len(hosts) <= 20
+            or not all(isinstance(h,str) and re.fullmatch(r'[a-z0-9]+(?:[.-][a-z0-9]+)*\.[a-z]{2,63}',h) for h in hosts)
+            or parsed.scheme != 'https' or parsed.hostname not in hosts
+            or parsed.netloc != parsed.hostname or parsed.query or parsed.fragment
+            or not re.fullmatch(r'/[A-Za-z0-9][A-Za-z0-9/_-]{2,200}',parsed.path)
+            or '//' in parsed.path):
+        return None
+    actor,reason,checked=review.get('reviewer'),review.get('reason'),review.get('reviewed_at')
+    if (not isinstance(actor,str) or not 1 <= len(actor.strip()) <= 100
+            or not isinstance(reason,str) or not 10 <= len(reason.strip()) <= 1000
+            or not isinstance(checked,str)):
+        return None
+    try:
+        timestamp=datetime.fromisoformat(checked.replace('Z','+00:00'))
+        if timestamp.tzinfo is None or timestamp > datetime.now(timezone.utc)+timedelta(minutes=5):
+            return None
+    except (TypeError,ValueError):
+        return None
+    return 'https://' + parsed.hostname + parsed.path

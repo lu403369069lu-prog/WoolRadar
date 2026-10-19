@@ -1,0 +1,43 @@
+{
+  "checked_at": "2026-10-17T00:03:57.950301+00:00",
+  "command": "python -X utf8 verify_oct17_delivery_copy.py",
+  "exit_code": 0,
+  "base_sha": "8023232586fd5d017981ea83ea0785cf381f7cc2",
+  "source": "previously sanitized historical 110-event SQLite snapshot; not refreshed production",
+  "report_events": 110,
+  "exported_before_synthetic_exclusion": 102,
+  "exported_after_synthetic_exclusion": 101,
+  "synthetic_exclusion_preserved": true,
+  "baseline_candidate_count": 0,
+  "source_copy_unchanged": true,
+  "integrity": "ok",
+  "foreign_key_errors": 0,
+  "commands": [
+    {
+      "command": "redact_daily.py explicit-local-report/output",
+      "exit_code": 0
+    },
+    {
+      "command": "consume_preview.py explicit-local-preview + SHA256",
+      "exit_code": 0
+    }
+  ],
+  "format_checks": [
+    "current ReportGenerator MD and JSON",
+    "current exporter CLI explicit file",
+    "current consumer CLI expected hash",
+    "strict payload schema",
+    "baseline zero candidates",
+    "noise exclusion retained"
+  ],
+  "endpoint_status": "OUTPUT_NOT_CONNECTED",
+  "uploaded_data": false,
+  "production_changed": false,
+  "limits": [
+    "Real historical sanitized data roundtrip is local only.",
+    "Synthetic noise exclusion is a test, not human approval.",
+    "SHA establishes file integrity, not trusted origin, publish permission or account eligibility.",
+    "No runtime scheduler, remote ChatGPT task or real delivery proof.",
+    "No report, SQLite or private logs included in shared evidence."
+  ]
+}

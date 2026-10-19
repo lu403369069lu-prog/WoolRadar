@@ -1,0 +1,155 @@
+{
+  "original_freeze": {
+    "created_at": "2026-10-17T00:00:35.116470+00:00",
+    "frozen_code_sha": "8023232586fd5d017981ea83ea0785cf381f7cc2",
+    "blinded_sha256": "dfc5a00fdbe2b0ecbc5b98756de88ae8f6c21e58b318300ce117b9e48a95275e",
+    "window_start_utc": "2026-10-16T20:00:00+00:00",
+    "sources": [
+      {
+        "source_id": "hackernews",
+        "sampled_at": "2026-10-16T23:09:53Z",
+        "original_sha256": "37d3e2baa7d13300aa25802f7ae4c9e2b81b096983ac97b3279c313fd3f3da6d",
+        "derivative_sha256": "a11ed7f1fff4a48e9672056c0a4f05dc285a20b0d7ee40a7383f8867580e3e12",
+        "original_population": 20,
+        "eligible_rows": 20,
+        "excluded": {
+          "previously_seen": 0,
+          "identity_unverified": 0,
+          "truncated_content": 0,
+          "invalid_url": 0
+        }
+      },
+      {
+        "source_id": "reddit-hot-rss",
+        "sampled_at": "2026-10-16T22:38:55Z",
+        "original_sha256": "4cc01a598a49a4ce8b46e0d3b11b6df957155aeb9b7e0d94069bf8d1717a4e46",
+        "derivative_sha256": "b44b27efa2a7244445f6a6aa314fe1386ec49a4b6f6dab978d6ca2b160167d98",
+        "original_population": 25,
+        "eligible_rows": 8,
+        "excluded": {
+          "previously_seen": 17,
+          "identity_unverified": 0,
+          "truncated_content": 0,
+          "invalid_url": 0
+        }
+      },
+      {
+        "source_id": "lowendbox",
+        "sampled_at": "2026-10-16T23:38:55Z",
+        "original_sha256": "0fc3081a00d64e15228ca2a1ae7ed117ce974a20653fc5bc5269a8a8e941f3e7",
+        "derivative_sha256": "4bc70bd300baa2a728451e39a8e6802892e18bb1eaffc6e19735f706b80759bd",
+        "original_population": 20,
+        "eligible_rows": 5,
+        "excluded": {
+          "previously_seen": 15,
+          "identity_unverified": 0,
+          "truncated_content": 0,
+          "invalid_url": 0
+        }
+      },
+      {
+        "source_id": "github-education",
+        "sampled_at": "2026-10-16T23:09:56Z",
+        "original_sha256": "44d0b8d779fe4c94d851085c744a4d88a90852945dccc17c2a4170ca210c3c62",
+        "derivative_sha256": "08a5b2e86f90412fc73adbc889781a2fd2f86d827235497c6b227151b34bc52c",
+        "original_population": 4,
+        "eligible_rows": 4,
+        "excluded": {
+          "previously_seen": 0,
+          "identity_unverified": 0,
+          "truncated_content": 0,
+          "invalid_url": 0
+        }
+      },
+      {
+        "source_id": "mlh",
+        "sampled_at": "2026-10-16T23:10:00Z",
+        "original_sha256": "9e7dec916e5dcf63611d483281b37cefaec9e71843092fbba8c2d2720eb66939",
+        "derivative_sha256": "175f103177df79efb475b350baebf58547962938266d29c9ff28d1f4db40a559",
+        "original_population": 12,
+        "eligible_rows": 6,
+        "excluded": {
+          "previously_seen": 6,
+          "identity_unverified": 0,
+          "truncated_content": 0,
+          "invalid_url": 0
+        }
+      },
+      {
+        "source_id": "producthunt",
+        "sampled_at": "2026-10-16T23:09:54Z",
+        "original_sha256": "36ca3bcc1ebdd10e390eb75a992b816e446a88eaee7dc675b89533e492018432",
+        "derivative_sha256": "7bba6039e742be4f939797ade594e6cc2ad6af5d15a736f9ed6df408ab5011a6",
+        "original_population": 50,
+        "eligible_rows": 48,
+        "excluded": {
+          "previously_seen": 2,
+          "identity_unverified": 0,
+          "truncated_content": 0,
+          "invalid_url": 0
+        }
+      },
+      {
+        "source_id": "cursor",
+        "sampled_at": "2026-10-16T23:10:03Z",
+        "original_sha256": "080214970a56bc3c1ad240311ed57978412d49b00478fff564f90cea660363e2",
+        "derivative_sha256": "041e5b89e283b915b1be3e79f5c05c8043d2b9c83ec739827a81cb787a816505",
+        "original_population": 282,
+        "eligible_rows": 214,
+        "excluded": {
+          "previously_seen": 62,
+          "identity_unverified": 6,
+          "truncated_content": 0,
+          "invalid_url": 0
+        }
+      }
+    ],
+    "selection": "Latest complete real public snapshots read-only; prior-viewed URLs, identity-loss and truncated content excluded BEFORE PR32 deterministic source/cross-source dedup and8/source cap. No accepted flag used.",
+    "selected_rows": 47,
+    "unique_urls": 47,
+    "scope": "Snippet-level explicit free AI service, developer benefit/cloud free resource, credit/trial/giveaway/promo lead. Ordinary paid pricing, troubleshooting, feature announcement or ordinary open-source release without explicit offered benefit excluded. Unclear evidence null. Public source is not live eligibility proof.",
+    "labels_frozen": false,
+    "predictions_run": false,
+    "data_uploaded": false,
+    "production_changed": false,
+    "limits": [
+      "Cached real public capture, not a new request made by this script.",
+      "Capture dates do not prove newly published activities.",
+      "8/source stratified cap, not source-prevalence estimate or platform recall.",
+      "Known prior URL overlap excluded; unknown semantic overlap remains possible.",
+      "Same campaign across different URLs requires independent annotation.",
+      "Raw source/derivative/blind content stays local; no approval to publish it.",
+      "No personal eligibility, current availability or95% claim."
+    ]
+  },
+  "independent_annotation": {
+    "reviewer": "independent budget_review agent",
+    "frozen_blinded_sha256": "dfc5a00fdbe2b0ecbc5b98756de88ae8f6c21e58b318300ce117b9e48a95275e",
+    "labels_sha256": "8898d2d952c43868d56e18f1df5f49a562bc8999f2e7447a0f2e83857514508c",
+    "label_count": 47,
+    "counts": {
+      "true": 4,
+      "false": 40,
+      "null": 3
+    },
+    "independence_statement": "For this task only blinded.json and manifest.json were read as labeling inputs. No original/eligible files, current collector source, old labels, predictions, real DB or reports read. No predictions run, network requests, or uploads. All labels assigned before any comparison with predictions.",
+    "limits": [
+      "Cached real public capture, not a new request made by this script.",
+      "Capture dates do not prove newly published activities.",
+      "8/source stratified cap, not source-prevalence estimate or platform recall.",
+      "Known prior URL overlap excluded; unknown semantic overlap remains possible.",
+      "Same campaign across different URLs requires independent annotation.",
+      "Raw source/derivative/blind content stays local; no approval to publish it.",
+      "No personal eligibility, current availability or95% claim.",
+      "Labels apply only to the supplied title/snippet/URL. No page-level or live-source verification.",
+      "Campaign batches not stated in text remain unspecified; no invented campaign year.",
+      "Forty-seven unique URLs do not imply forty-seven independent campaigns.",
+      "These labels alone do not establish classifier precision/recall or 95% acceptance.",
+      "Any future change informed by these labels makes this set development evidence, not an independent new holdout."
+    ]
+  },
+  "label_contents_uploaded": false,
+  "original_inputs_uploaded": false,
+  "independent_acceptance_failed": true,
+  "retired_to_development_after_first_evaluation": true
+}

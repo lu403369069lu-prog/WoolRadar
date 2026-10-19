@@ -1,0 +1,8 @@
+{
+  "checked_at": "2026-10-15T18:54:10.394951+00:00",
+  "command": "python -X utf8 -m unittest discover -s tests -p test_offer_fallback_boundaries.py -v",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "test_closed_free_start_is_not_a_current_offer (test_offer_fallback_boundaries.OfferFallbackBoundaryTests.test_closed_free_start_is_not_a_current_offer) ... ok\ntest_coupon_closed_in_same_statement_is_not_available (test_offer_fallback_boundaries.OfferFallbackBoundaryTests.test_coupon_closed_in_same_statement_is_not_available) ... ok\ntest_expired_credit_award_is_not_a_current_offer (test_offer_fallback_boundaries.OfferFallbackBoundaryTests.test_expired_credit_award_is_not_a_current_offer) ... ok\ntest_free_base_with_optional_upgrade_is_kept (test_offer_fallback_boundaries.OfferFallbackBoundaryTests.test_free_base_with_optional_upgrade_is_kept) ... ok\ntest_live_credit_award_is_kept (test_offer_fallback_boundaries.OfferFallbackBoundaryTests.test_live_credit_award_is_kept) ... ok\ntest_request_for_credit_provider_is_not_an_announcement (test_offer_fallback_boundaries.OfferFallbackBoundaryTests.test_request_for_credit_provider_is_not_an_announcement) ... ok\n\n----------------------------------------------------------------------\nRan 6 tests in 0.003s\n\nOK\n",
+  "production_changed": false
+}

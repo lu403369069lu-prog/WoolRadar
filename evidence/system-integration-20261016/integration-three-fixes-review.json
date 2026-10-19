@@ -1,0 +1,68 @@
+{
+  "reviewer": "independent budget_review agent",
+  "command": "python -B three_fixes_checks.py --repo-root <integration-worktree>",
+  "exit_code": 0,
+  "source_sha256": {
+    "core/db.py": "d2b13749ed41a448d150871c7550f4b23e6cbae564082867b05e70848f56ef3a",
+    "core/official_trace.py": "dc13aa63664174d90b734e7a11b42792a5b4a6110b9d5c40e1d0343f7d1bcbed",
+    "core/report.py": "d536a2cef8e9caa06eb70581147cd62ea0ea96feb5d0fcbbae26927c1b0d3081",
+    "tests/test_reindex_notification_collision.py": "05dcef487b4f77aaba319fd7eef7a14b66a8d7da5e3c38b55764d653a7c11eb9",
+    "tests/test_trace_audit_atomic.py": "16ae6f819968f2bdb986f24456d8b0c2a935dc115871f36c428933b9bbe5091d",
+    "tests/test_report_snapshot.py": "fcf7b29f4866072082b7f803d721f7d7fbf0c8d5cb9712497f31d42ecf8bfb65"
+  },
+  "focused_methods": {
+    "test_reindex_notification_collision.py": 5,
+    "test_trace_audit_atomic.py": 1,
+    "test_report_snapshot.py": 2,
+    "test_notify_reindex_transaction.py": 5
+  },
+  "focused_methods_run": 13,
+  "test_output": ".....E.......\n======================================================================\nERROR: test_identical_concurrent_records_are_complete_and_idempotent (test_trace_audit_atomic.TraceAuditPublicationTests.test_identical_concurrent_records_are_complete_and_idempotent)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"[local-path]\\tests\\test_trace_audit_atomic.py\", line 38, in test_identical_concurrent_records_are_complete_and_idempotent\n    tracer._write_record(1,record)\n    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^\n  File \"[local-path]\\core\\official_trace.py\", line 91, in _write_record\n    os.link(temporary, archived)\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^\nPermissionError: [WinError 5] 拒绝访问。: 'C:\\\\Users\\\\lh\\\\Documents\\\\ChatGPT\\\\简报部署\\\\_outbox\\\\integration-20261016\\\\review-temp\\\\tmpg4sj3jw_\\\\evidence\\\\official-trace\\\\history\\\\.trace-n4_mwgut.tmp' -> 'C:\\\\Users\\\\lh\\\\Documents\\\\ChatGPT\\\\简报部署\\\\_outbox\\\\integration-20261016\\\\review-temp\\\\tmpg4sj3jw_\\\\evidence\\\\official-trace\\\\history\\\\1-a1cc8b0817f8594f28a79950175016da55553bb9d329078be2d35322c8808cd6.json'\n\n----------------------------------------------------------------------\nRan 13 tests in 1.737s\n\nFAILED (errors=1)\n",
+  "additional_checks": [
+    {
+      "name": "existing-different-bytes-collision-preserved-and-temp-cleaned",
+      "passed": true
+    },
+    {
+      "name": "link-failure-preserves-prior-view-and-cleans-temp",
+      "passed": true
+    },
+    {
+      "name": "replace-failure-preserves-prior-view-and-cleans-temp",
+      "passed": true
+    },
+    {
+      "name": "fsync-failure-preserves-prior-view-and-cleans-temp",
+      "passed": true
+    },
+    {
+      "name": "report-second-revalidation-error-rolls-back-first-status-and-history",
+      "passed": true
+    },
+    {
+      "name": "report-file-rendering-uses-no-database-after-snapshot-release",
+      "passed": true
+    }
+  ],
+  "environment": {
+    "hard_link_available": false,
+    "type": "PermissionError",
+    "winerror": 5,
+    "errno": 13
+  },
+  "focused_tests_passed": false,
+  "blocking_findings": [
+    {
+      "priority": "P1 environment compatibility",
+      "title": "Actual review runtime denies os.link with WinError 5",
+      "impact": "Normal trace audit publication also raises before returning; must verify intended operational runtime or provide supported atomic publisher."
+    }
+  ],
+  "conclusion": "Focused run has an atomic audit publication error; no all-pass claim. Notification and report checks pass; review-runtime os.link denied.",
+  "limits": [
+    "Only focused tests, not full regression or production recovery.",
+    "Publication permission/fsync/link/replace errors propagate; prior complete views survive and temporary files are cleaned. Unsupported hard-link filesystems still require operational handling; no silent audit success.",
+    "No network, production writes or worktree source edits.",
+    "Sequential collision/replace fault-handler checks use simulated successful link publication; this is not evidence of real hard-link support."
+  ]
+}

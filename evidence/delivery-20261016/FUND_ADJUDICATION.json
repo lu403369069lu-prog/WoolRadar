@@ -1,0 +1,45 @@
+{
+  "checked_at": "2026-10-16T00:52:45.435864+00:00",
+  "command": "python -B -X utf8 adjudicate_fund_misses.py",
+  "exit_code": 0,
+  "executed_source_sha": "afc24c15d9847905b6949065ee676d6e5ad8631b",
+  "remote_evidence_only_head": "eb096bbaab44c83ab6229a37ee06b084284059eb",
+  "checks": [
+    {
+      "sample_id": "S046",
+      "url_allowed": true,
+      "keyword_match": false
+    },
+    {
+      "sample_id": "S047",
+      "url_allowed": true,
+      "keyword_match": false
+    }
+  ],
+  "same_url": true,
+  "duplicate_groups": [
+    [
+      "S041",
+      "S042"
+    ],
+    [
+      "S044",
+      "S045"
+    ],
+    [
+      "S046",
+      "S047"
+    ]
+  ],
+  "unique_urls": 53,
+  "sample_rows": 56,
+  "adjudication": "Both labels are developer-support discovery leads under declared scope, not verified current benefits. One underlying URL/campaign is represented twice; preserve original row metrics and report this denominator limitation, do not silently count two independent opportunities.",
+  "source_probe": "Connected GitHub fetch_file on supplied repository README.md returned404. An earlier /readme endpoint was rejected as unsupported, not a source404. No Chrome/third-party fallback.404 cannot distinguish missing/private/path failure; no official availability confirmation.",
+  "sampler_issue": "Within-source candidate rows were queued before selected URL set updated, allowing duplicate URLs in the same source. Existing frozen input/labels/results are preserved. Future sampler must dedup within source before hash selection, record exclusions and freeze new unseen data.",
+  "next": "First verify correct public official source and business scope. Then fail-first narrow funding/grant discovery contract and malformed/duplicate scraper row contracts; avoid broad fund keyword admission or label changes. Any resulting fix retires current56 as development data.",
+  "code_modified": false,
+  "labels_modified": false,
+  "raw_data_uploaded": false,
+  "live_claimability_verified": false,
+  "endpoint": "OUTPUT_NOT_CONNECTED"
+}

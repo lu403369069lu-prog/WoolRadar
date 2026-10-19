@@ -1,0 +1,51 @@
+{
+  "base_main": "2a0fea314f3728e22a334cbf6fe4202d2b5da422",
+  "candidate_pr36": "0e4c228da43a137886e60463bdf83dc7e56e09fc",
+  "files": [
+    {
+      "path": "core/collector.py",
+      "git_blob": "57f21501846316a3f1383c7fdd2cf540e5307f4f"
+    },
+    {
+      "path": "core/developer_grants.py",
+      "git_blob": "76994c181da6503fd52123e69a7d0580749b0ee9"
+    },
+    {
+      "path": "core/public_corpus.py",
+      "git_blob": "412a41db4c445a6df69f0c85c082c57abc1ffd5f"
+    },
+    {
+      "path": "tests/test_developer_grant_negations.py",
+      "git_blob": "ec55b3de6629726510e1cdbd8438c8f1c37b3c6a"
+    },
+    {
+      "path": "tests/test_public_corpus_identity.py",
+      "git_blob": "e4e9d815b364fd95aa7e9db35574988555a25271"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/oct17-pr36-before.json",
+      "git_blob": "795e3354414c3a20d0109b128b5068b57ce4d29d"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/oct17-pr36-combined.json",
+      "git_blob": "40c8d9e843df8b80302f2e4f1d50277603f5f426"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/HANDOFF.md",
+      "git_blob": "c6f9fd03475ec4e069f6c5701d1dbb3571642812"
+    },
+    {
+      "path": "HANDOFF.md",
+      "git_blob": "94acfc847d7a729127e52cb510cfb1920e3c1cb3"
+    }
+  ],
+  "formal_methods": 406,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "scope": "latest composition, source blobs identify changes; not holdout or real delivery",
+  "production_changed": false,
+  "raw_data_uploaded": false,
+  "goal_complete": false
+}

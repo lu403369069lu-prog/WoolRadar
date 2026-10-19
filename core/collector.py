@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import html
+import http.client
+import ipaddress
 import io
 import json
 import os
@@ -24,6 +26,8 @@ from .config import load_keywords, load_sources
 from .models import Candidate, utc_now
 from .public_corpus import record_public_sample
 from .verifier import VerificationEngine
+from .developer_grants import is_developer_grant_lead, has_grant_application_denial
+from .developer_benefits import is_explicit_developer_benefit
 
 
 USER_AGENT = 'WoolRadar/7.1 (+local-read-only-monitor; contact=local-user)'
@@ -41,6 +45,10 @@ def classify_exception(exc: Exception) -> str:
 
 
 def contains_keyword(text: str, keywords: list[str]) -> bool:
+    # Brand/free fallback must not resurrect a closed grant from the same
+    # source item. Multi-program items require separate manual adjudication.
+    if has_grant_application_denial(text):
+        return False
     value = text.casefold()
     brand_only = {'claude', 'gemini', 'grok', 'github', 'cursor pro'}
     strong = [keyword.casefold() for keyword in keywords if keyword.casefold() not in brand_only]
@@ -58,16 +66,55 @@ def contains_keyword(text: str, keywords: list[str]) -> bool:
     trial_offer = re.search(r'\bfree\s+trial\b|\b\d+[\s-]*(?:hours?|days?|weeks?|months?|years?)'
                             r'[\s-]+(?:[a-z0-9]+(?:-[a-z0-9]+)*\s+){0,3}trial\b|'
                             r'\bstart\s+(?:your\s+|a\s+)?trial\b|\btrial\s+(?:credits?|offer|available)\b', value)
-    if any(matches(keyword) and (keyword != 'trial' or trial_offer) for keyword in strong):
-        return True
+    # A benefit keyword must belong to a clause asserting an available
+    # offer. Requests, denials and already-closed promotions are not freebies.
+    negative_offer = re.compile(
+        r'\b(?:i|we)\s+(?:want|need|am\s+looking|are\s+looking|searching)\b|'
+        r'\b(?:can|could|may|would)\s+(?:i|we)\b|'
+        r'\bwhere\s+(?:can|do)\s+(?:i|we)\b|'
+        r'\b(?:does?\s+anyone\s+know|is\s+there|are\s+there)\b|'
+        r'\b(?:no\s+longer|not\s+available|discontinued|expired|has\s+ended|have\s+ended|is\s+over|are\s+over|entries\s+closed)\b|'
+        r'\b(?:do|does|did)\s+not\s+(?:offer|provide|have)\b|'
+        r'\b(?:don[\x27’]t|doesn[\x27’]t|didn[\x27’]t)\s+(?:offer|provide|have)\b|'
+        r'\b(?:requires?|only\s+with|included\s+only\s+with)\b.{0,55}\bpaid\b')
+    def available_clauses(sample: str) -> list[str]:
+        clauses = []
+        for sentence in re.split(r'[!?\n]|\.(?=\s|$)', sample):
+            parts = sentence.split(';')
+            if not negative_offer.search(sentence):
+                clauses.extend(parts)
+                continue
+            # A trailing closure/paid restriction qualifies the same statement.
+            # Only an explicit new campaign after a semicolon resets that scope.
+            for part in parts[1:]:
+                if (re.search(r'\b(?:new|another|replacement|different)\s+'
+                              r'(?:program|campaign|promotion|offer|grant)\b', part)
+                        and not negative_offer.search(part)):
+                    clauses.append(part)
+        return clauses
+
+    offer_clauses = available_clauses(value)
+    for clause in offer_clauses:
+        if negative_offer.search(clause):
+            continue
+        if any(matches(keyword, clause) and (keyword != 'trial' or trial_offer)
+               for keyword in strong):
+            return True
     # A stated monetary credit award is a lead; it proves no personal eligibility.
-    for clause in re.split(r'[!?\n]|\.(?=\s|$)', value):
+    for clause in offer_clauses:
+        # Fallback recognition must honor the same closed/request/paid guard
+        # as direct keyword and branded matching. It cannot revive a denial.
+        if negative_offer.search(clause):
+            continue
         award = re.search(r'\b(?:receives?|awarded|grants?|offers?|claim|get)\s+(?:up\s+to\s+)?'
                           r'\$\s*\d[\d,]*(?:\.\d{1,2})?\s+(?:in\s+)?(?:cloud\s+|ai\s+)?credits\b', clause)
         free_start = re.search(r'\bstart\s+using\s+for\s+free\b', clause)
         coupon = (re.search(r'\b(?:special|use|apply|redeem|exclusive)\s+coupon\s+code\b', clause)
                   if 'promo code' in strong else None)
-        offer = award or free_start or coupon
+        diagnostic = (re.search(r'\bfree\s+(?:email|dns)\s+(?:testing|diagnostic)\s+tools?\b|'
+                                r'\b(?:email|dns)\s+(?:testing|diagnostic)\s+tools?\s+(?:is|are)\s+free\b', clause)
+                      if 'developer perks' in strong else None)
+        offer = award or free_start or coupon or diagnostic
         if not offer:
             continue
         prefix, suffix = clause[:offer.start()], clause[offer.end():]
@@ -79,6 +126,21 @@ def contains_keyword(text: str, keywords: list[str]) -> bool:
             continue
         if award and (re.search(r'\bpaid\b', prefix) or re.search(r'\bfor\s+\$', suffix)):
             continue
+        if diagnostic:
+            if re.search(r'\b(?:is\s+there|does\s+anyone\s+know)\b', prefix):
+                continue
+            if (re.search(r'\bpaid\b|\b(?:buy|purchase)\b', prefix)
+                    or re.search(r'\bfor\s+\$', prefix + suffix)
+                    or re.search(r'\b(?:requires?|only\s+with)\b[^.!?;]{0,60}\bpaid\b', suffix)):
+                continue
+            if re.search(r'\b(?:no\s+longer|not\s+available|discontinued|retired)\b|\b(?:is|are)\s+not\b', suffix):
+                continue
+        return True
+    # Developer grants are discovery leads only. They never imply a verified
+    # award or account eligibility, and respect the existing keyword toggle.
+    if 'developer perks' in strong and is_explicit_developer_benefit(text):
+        return True
+    if 'developer perks' in strong and is_developer_grant_lead(text):
         return True
     if not any(matches(brand) for brand in brand_only):
         return False
@@ -89,7 +151,12 @@ def contains_keyword(text: str, keywords: list[str]) -> bool:
         'free', 'giveaway', 'credit', 'credits', 'perk', 'perks', 'trial', 'promo', 'promotion', 'coupon', 'redeem',
         '免费', '赠金', '兑换码', '限量', '抽奖', '羊毛', '送码', '优惠',
     )
-    return any(matches(cue, promotion_text) and (cue != 'trial' or trial_offer) for cue in promo_cues)
+    # Brand-only matching must not undo the same closed/request/paid gate.
+    return any(
+        any(matches(cue, clause) and (cue != 'trial' or trial_offer)
+            for cue in promo_cues)
+        for clause in available_clauses(promotion_text)
+        if not negative_offer.search(clause))
 
 
 def _local_name(tag: str) -> str:
@@ -351,19 +418,97 @@ def _request(url: str, accept: str, budget: RequestBudget | None = None) -> byte
     return payload
 
 
+def _safe_public_fetch_url(url: str) -> bool:
+    """Conservatively reject direct-to-private and ambiguous network targets.
+
+    This is a URL syntax barrier, not a DNS rebinding defense: the actual
+    resolved peer still requires enforcement at the network boundary.
+    """
+    try:
+        parsed = urllib.parse.urlsplit(url)
+        host = parsed.hostname
+        if (parsed.scheme != 'https' or not host or parsed.username is not None
+                or parsed.password is not None or '\\' in url or any(ord(ch) < 32 for ch in url)):
+            return False
+        if parsed.port is not None and not (1 <= parsed.port <= 65535):
+            return False
+        host = host.casefold().rstrip('.')
+        if (not host or host == 'localhost' or host.endswith(('.localhost', '.local', '.internal'))
+                or re.fullmatch(r'(?:0x[0-9a-f]+|[0-9]+)(?:\.(?:0x[0-9a-f]+|[0-9]+))*', host)):
+            return False
+        try:
+            return ipaddress.ip_address(host).is_global
+        except ValueError:
+            return True
+    except (TypeError, ValueError):
+        return False
+
+
+def _connect_public_peer(address, timeout=socket._GLOBAL_DEFAULT_TIMEOUT, source_address=None):
+    """Resolve once, reject every nonpublic answer and connect to that exact IP.
+
+    ``socket.create_connection`` resolves again, so a separate DNS precheck
+    would leave a rebinding window between validation and the actual connect.
+    """
+    host, port = address
+    endpoints = socket.getaddrinfo(host, port, type=socket.SOCK_STREAM)
+    if not endpoints or any(not ipaddress.ip_address(item[4][0]).is_global for item in endpoints):
+        raise SourcePaused('NON_PUBLIC_RESOLVED_PEER')
+    last_error = None
+    for family, socktype, proto, _, peer in endpoints:
+        sock = None
+        try:
+            sock = socket.socket(family, socktype, proto)
+            if timeout is not socket._GLOBAL_DEFAULT_TIMEOUT:
+                sock.settimeout(timeout)
+            if source_address:
+                sock.bind(source_address)
+            sock.connect(peer)
+            return sock
+        except OSError as exc:
+            last_error = exc
+            if sock is not None:
+                sock.close()
+    if last_error is not None:
+        raise last_error
+    raise SourcePaused('NON_PUBLIC_RESOLVED_PEER')
+
+
+class _PublicPeerHTTPSConnection(http.client.HTTPSConnection):
+    def connect(self):
+        # A configured proxy owns the CONNECT tunnel and its destination DNS.
+        # This guard protects direct origin connections; proxy enforcement
+        # needs its own independent network-boundary acceptance.
+        if not self._tunnel_host:
+            self._create_connection = _connect_public_peer
+        super().connect()
+
+
+class _PublicPeerHTTPSHandler(urllib.request.HTTPSHandler):
+    def https_open(self, request):
+        return self.do_open(_PublicPeerHTTPSConnection, request, context=self._context)
+
+
 def budgeted_read(request, budget: RequestBudget | None = None, max_bytes: int = 2_000_000, validate=None) -> bytes:
     class NoRedirect(urllib.request.HTTPRedirectHandler):
         def redirect_request(self, req, fp, code, msg, headers, newurl):
             return None
-    opener = urllib.request.build_opener(NoRedirect()) if budget is not None else None
+    # Never use urllib's automatic redirects: those bypass the per-hop checks
+    # below even when the caller didn't provide a request budget.
+    opener = None
     for hop in range(6):
         url = request.full_url
-        if validate is not None and not validate(url):
+        if not _safe_public_fetch_url(url) or (validate is not None and not validate(url)):
             raise SourcePaused('UNAPPROVED_REFERENCE_URL')
         if budget is not None and not budget.acquire_http(url):
             raise SourcePaused('REQUEST_BUDGET')
+        if opener is None:
+            # Explicitly disable environment proxies: a CONNECT proxy resolves
+            # the origin itself and would bypass the pinned-public-peer check.
+            opener = urllib.request.build_opener(NoRedirect(), urllib.request.ProxyHandler({}),
+                                                 _PublicPeerHTTPSHandler())
         try:
-            with (opener.open(request, timeout=20) if opener else urllib.request.urlopen(request, timeout=20)) as response:
+            with opener.open(request, timeout=20) as response:
                 payload = response.read(max_bytes)
             if budget is not None and VerificationEngine.classify_fetch_failure(200, payload[:65536].decode('utf-8', errors='replace')) == 'CAPTCHA_REQUIRED':
                 budget.pause({'id': 'http-host:' + urllib.parse.urlsplit(url).hostname, 'endpoint': url}, 'CAPTCHA_REQUIRED')
@@ -382,14 +527,14 @@ def budgeted_read(request, budget: RequestBudget | None = None, max_bytes: int =
                     retry = 3600
                 if exc.code in (403, 429) or code == 'CAPTCHA_REQUIRED':
                     budget.pause({'id': 'http-host:' + urllib.parse.urlsplit(url).hostname, 'endpoint': url}, code, retry if code == 'RATE_LIMITED_429' else None)
-            if exc.code not in (301, 302, 303, 307, 308) or not opener:
+            if exc.code not in (301, 302, 303, 307, 308):
                 raise
             destination = urllib.parse.urljoin(url, exc.headers.get('Location', ''))
             exc.close()
             parsed = urllib.parse.urlsplit(destination)
             if request.data is not None or request.has_header('Authorization'):
                 raise SourcePaused('AUTHENTICATED_REDIRECT_REJECTED')
-            if (parsed.scheme != 'https' or not parsed.hostname or parsed.username or parsed.password
+            if (not _safe_public_fetch_url(destination)
                     or re.search(r'/(login|signin|signup|oauth|authorize|checkout|redeem)(/|$)', urllib.parse.unquote(parsed.path), re.I)):
                 raise SourcePaused('UNAPPROVED_REFERENCE_REDIRECT')
             time.sleep(2)

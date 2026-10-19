@@ -1,0 +1,108 @@
+{
+  "reviewer": "independent budget_review agent",
+  "command": "python -B _outbox/pipeline-integration-20261016/oct17_benefits_checks.py --repo-root <delivery-worktree>",
+  "exit_code": 0,
+  "source_sha256": {
+    "core/developer_benefits.py": "0376dbbe1d058b8e71ecba5eb7e91145c53ac0e38dd30bb86fdaf452f6197922",
+    "core/collector.py": "866bc8e710f123715b22bf77555664af0c1f5554df3792f100ae902cad17a0c1",
+    "tests/test_explicit_developer_benefits.py": "211538d56243667963a1ce82b87e9e6c42fd6e5a77a9df2cb2d073662b07feb4"
+  },
+  "formal_tests": {
+    "run": 17,
+    "passed": true,
+    "failure_ids": [],
+    "error_ids": []
+  },
+  "checks": [
+    {
+      "name": "waiver-event-positive-and-keyword-opt-in-controls",
+      "passed": true
+    },
+    {
+      "name": "invalid-and-overlong-helper-input-does-not-create-new-benefit-lead",
+      "passed": true
+    },
+    {
+      "name": "explicit-paid-exam-control-rejected",
+      "passed": true
+    },
+    {
+      "name": "direct-past-control-rejected",
+      "passed": true
+    },
+    {
+      "name": "explicit-negation-control-rejected",
+      "passed": true
+    },
+    {
+      "name": "unrelated-event-control-rejected",
+      "passed": true
+    }
+  ],
+  "findings": [
+    {
+      "priority": "P2",
+      "title": "New benefit hook accepts closed/question/paid/history context",
+      "cases": [
+        {
+          "case": "closed-suffix",
+          "synthetic_text": "The software certification exam fee is now waived. This offer is over.",
+          "helper": true,
+          "collector": true,
+          "expected": false
+        },
+        {
+          "case": "question",
+          "synthetic_text": "Does anyone know whether the developer certification exam fee is now waived?",
+          "helper": true,
+          "collector": true,
+          "expected": false
+        },
+        {
+          "case": "paid-condition",
+          "synthetic_text": "The software certification exam fee is now waived only with a paid subscription.",
+          "helper": true,
+          "collector": true,
+          "expected": false
+        },
+        {
+          "case": "quoted-past",
+          "synthetic_text": "Last year's announcement said: 'The developer certification exam fee is now waived for students'.",
+          "helper": true,
+          "collector": true,
+          "expected": false
+        }
+      ],
+      "detail": "Whole-text helper executes after existing clause guards and can revive a rejected statement. Direct past-tense and basic not-waived controls pass, but equivalent suffix/question or historical quotation contexts do not.",
+      "minimal_fix": "Add scoped tests for these exact contexts and share or extend the existing intent/closure guard without suppressing genuine waiver and host-support announcements."
+    },
+    {
+      "priority": "P2",
+      "title": "Unrelated developer/software mention supplies scope for non-developer benefit",
+      "cases": [
+        {
+          "case": "unrelated-certification-scope",
+          "synthetic_text": "Software industry news. The driving exam fee is now waived for motorists.",
+          "helper": true,
+          "collector": true,
+          "expected": false
+        },
+        {
+          "case": "unrelated-event-scope",
+          "synthetic_text": "Developer biography. Company picnic hosts will receive T-shirts. Apply to host a Fest.",
+          "helper": true,
+          "collector": true,
+          "expected": false
+        }
+      ],
+      "detail": "Scope is required only somewhere in the text, so unrelated driving certification or company-picnic swag can acquire developer scope from another sentence.",
+      "minimal_fix": "Bind the technical/developer scope to the claimed certification or event with bounded contextual rules and retain the intended long-form developer-event positives."
+    }
+  ],
+  "qualification_boundary": "In the three reviewed files this is a boolean discovery branch. No evidence/status/account-eligibility promotion is introduced by the branch; whole-system qualification behavior was not re-audited.",
+  "limits": [
+    "All new counterexamples are synthetic development checks, not a new holdout or 95% acceptance.",
+    "No retired sample, original data, DB, report, network or paid API used.",
+    "No worktree/product edits or full-suite rerun. No raw data upload."
+  ]
+}

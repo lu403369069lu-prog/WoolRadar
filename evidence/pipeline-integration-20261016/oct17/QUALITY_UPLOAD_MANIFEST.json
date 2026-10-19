@@ -1,0 +1,106 @@
+{
+  "parent": "8023232586fd5d017981ea83ea0785cf381f7cc2",
+  "files": [
+    {
+      "path": "core/collector.py",
+      "git_blob": "5924cb3f104f064c24b98da4ed273f2c1a00b11a"
+    },
+    {
+      "path": "core/developer_benefits.py",
+      "git_blob": "0b494d15e1db79d803e6ef8b4877f98899cb7efd"
+    },
+    {
+      "path": "tests/test_explicit_developer_benefits.py",
+      "git_blob": "f91d2ffb4dc22312ad1680dacd26e4f2901cddfd"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/oct17-exact-8023232.json",
+      "git_blob": "c6512aa49fef5fd909e73c9e6c45cf62dd7f012d"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/oct17-local-report-roundtrip.json",
+      "git_blob": "c680cfa4335f04a60bbed58a34fd8db8e85c5847"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/oct17-benefits-before.json",
+      "git_blob": "479d55c8d807ac7a90cf358a7b7f642290d4c795"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/oct17-benefits-fixed.json",
+      "git_blob": "dd2129dca067c821e1f83260b55d096d03b0d16f"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/oct17-benefits-review-red.json",
+      "git_blob": "e6f3dd8fa6c72ce9e47a2c1e9026238828bc8b50"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/oct17-benefits-review-fixed.json",
+      "git_blob": "23745eb0dacc469bc2c48f4edfc1fbc976930824"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/oct17-benefits-review.json",
+      "git_blob": "96883cb096f892f0af83a9eda504e3c19ce21e23"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/oct17_benefits_checks.py",
+      "git_blob": "7892329d68bc01aeed0c8b9df5e44635785d9910"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/oct17-benefits-rereview.json",
+      "git_blob": "798294c070c2a1f2c46ebcfcf50deed13727e5a2"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/oct17-benefits-domain-red.json",
+      "git_blob": "c26989a0f0c7f9b4e5f0c2ea4cc7fc8ebfa30fec"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/oct17-benefits-domain-green.json",
+      "git_blob": "e7ca9f10bb907cfb36ad7d9d1dc68bd570e88622"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/oct17-benefits-final.json",
+      "git_blob": "9aa128110ceed8a28f989a06c1e354875936a0b1"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/oct17_benefits_rereview_checks.py",
+      "git_blob": "229a92446da301b7be7314324e0f343426974e7a"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/evaluation.json",
+      "git_blob": "f326ec8ff80c83ddb68fcbc33b5b6bd860cee6d8"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/development-replay.json",
+      "git_blob": "4f558592be7484f36d00c14e2c2f13c1dacecd8e"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/development-reviewed-replay.json",
+      "git_blob": "b83bacca5e0addc1984b9f49c2c4f8fe89783fbc"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/QUALITY_FREEZE_RECEIPT.json",
+      "git_blob": "9498f58fd78358cff4370e46b8e666ceb6a6565c"
+    },
+    {
+      "path": "evidence/pipeline-integration-20261016/oct17/QUALITY_CHECKPOINT.md",
+      "git_blob": "835ef4b8ff5f20ff7c6ae7d5d7a212e3cf115675"
+    },
+    {
+      "path": "HANDOFF.md",
+      "git_blob": "58dcb50587dc5034512ba198fa533cadc4afef7b"
+    }
+  ],
+  "full_suite": {
+    "methods": 412,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "exit_code": 0,
+    "composition_not_new_commit_yet": true
+  },
+  "business_acceptance": "FAILED_NEW_HOLDOUT",
+  "delivery": "OUTPUT_NOT_CONNECTED",
+  "project_complete": false,
+  "raw_data_uploaded": false,
+  "production_changed": false
+}

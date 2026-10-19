@@ -1,6 +1,10 @@
 """Bounded read-only official-reference checking; never infer eligibility."""
 import hashlib
 import json
+import os
+import tempfile
+import time
+from contextlib import contextmanager
 import re
 import urllib.error
 import urllib.parse
@@ -32,24 +36,48 @@ def validate_public_reference(url: str, hosts: set[str]) -> bool:
 
 
 def fetch_public_page(url: str, hosts: set[str], budget: RequestBudget | None = None) -> bytes:
-    if budget is not None:
-        request = urllib.request.Request(url, headers={'User-Agent': USER_AGENT, 'Accept': 'text/html'})
-        return budgeted_read(request, budget, 1_000_000, lambda target: validate_public_reference(target, hosts))
-    class CheckedRedirect(urllib.request.HTTPRedirectHandler):
-        def redirect_request(self, req, fp, code, msg, headers, newurl):
-            if not validate_public_reference(newurl, hosts):
-                raise SourcePaused('UNAPPROVED_REFERENCE_REDIRECT')
-            return super().redirect_request(req, fp, code, msg, headers, newurl)
-    if not validate_public_reference(url, hosts):
-        raise SourcePaused('UNAPPROVED_REFERENCE_URL')
-    opener = urllib.request.build_opener(CheckedRedirect())
     request = urllib.request.Request(url, headers={'User-Agent': USER_AGENT, 'Accept': 'text/html'})
-    with opener.open(request, timeout=20) as response:
-        payload = response.read(1_000_000)
+    # All reference paths share redirect checks, proxy isolation, and pinned DNS.
+    payload = budgeted_read(request, budget, 1_000_000,
+                            lambda target: validate_public_reference(target, hosts))
     code = VerificationEngine.classify_fetch_failure(200, payload[:65536].decode('utf-8', errors='replace'))
     if code == 'CAPTCHA_REQUIRED':
         raise SourcePaused(code)
     return payload
+
+
+@contextmanager
+def _trace_publication_lock(path: Path):
+    # A kernel-owned lock works without hard-link privileges. Keep the stable
+    # lock file: deleting it could let concurrent writers lock different inodes.
+    with path.open('a+b') as guard:
+        guard.seek(0, os.SEEK_END)
+        if guard.tell() == 0:
+            guard.write(b'0')
+            guard.flush()
+        deadline = time.monotonic() + 5
+        while True:
+            guard.seek(0)
+            try:
+                if os.name == 'nt':
+                    import msvcrt
+                    msvcrt.locking(guard.fileno(), msvcrt.LK_NBLCK, 1)
+                else:
+                    import fcntl
+                    fcntl.flock(guard.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except OSError:
+                if time.monotonic() >= deadline:
+                    raise OSError('TRACE_AUDIT_PUBLICATION_BUSY')
+                time.sleep(.01)
+        try:
+            yield
+        finally:
+            guard.seek(0)
+            if os.name == 'nt':
+                msvcrt.locking(guard.fileno(), msvcrt.LK_UNLCK, 1)
+            else:
+                fcntl.flock(guard.fileno(), fcntl.LOCK_UN)
 
 
 class OfficialTracer:
@@ -76,14 +104,34 @@ class OfficialTracer:
         history.mkdir(parents=True, exist_ok=True)
         digest = hashlib.sha256(serialized.encode('utf-8')).hexdigest()
         archived = history / f'{event_id}-{digest}.json'
+        # Publish complete bytes, never an open-but-unwritten history file.
+        # Serialize the immutable existence check and atomic publication under
+        # a kernel lock; no hard-link privileges or partial archive reads.
+        fd, temporary = tempfile.mkstemp(prefix='.trace-', suffix='.tmp', dir=history)
         try:
-            with archived.open('x', encoding='utf-8') as output:
+            with os.fdopen(fd, 'w', encoding='utf-8', newline='') as output:
                 output.write(serialized)
-        except FileExistsError:
-            if archived.read_text(encoding='utf-8') != serialized:
-                raise ValueError('OFFICIAL_TRACE_AUDIT_HASH_COLLISION')
-        (destination / f'{event_id}.json').write_text(
-            serialized, encoding='utf-8')
+                output.flush()
+                os.fsync(output.fileno())
+            with _trace_publication_lock(destination / '.publish.lock'):
+                if archived.exists():
+                    if archived.read_text(encoding='utf-8') != serialized:
+                        raise ValueError('OFFICIAL_TRACE_AUDIT_HASH_COLLISION')
+                else:
+                    os.replace(temporary, archived)
+            # The mutable latest view also publishes a complete temporary file.
+            # Use its own temporary inode, separate from immutable history.
+            latest_fd, latest_temp = tempfile.mkstemp(prefix='.trace-', suffix='.tmp', dir=destination)
+            try:
+                with os.fdopen(latest_fd, 'w', encoding='utf-8', newline='') as output:
+                    output.write(serialized)
+                    output.flush()
+                    os.fsync(output.fileno())
+                os.replace(latest_temp, destination / f'{event_id}.json')
+            finally:
+                Path(latest_temp).unlink(missing_ok=True)
+        finally:
+            Path(temporary).unlink(missing_ok=True)
 
     def trace(self, event_id: int, expected_event: dict | None = None) -> dict:
         # Ingest releases its candidate transaction before network tracing.

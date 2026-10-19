@@ -1,3 +1,31 @@
+## October19 current Windows integration
+
+See evidence/pipeline-integration-20261016/oct19/HANDOFF.md. Unified455passed with original red logs and independent rereview, business/P06/actual09:30delivery incomplete. Shared25% upload barrier currentcycle1792390058; wait3receipts+coordinatorRESUME after upload. Historical userstop revoked by explicitOct19resume.
+
+## October17 new-window acceptance failure and repair
+
+Latest exact8023 full406passed. New blind47 evaluation TP1/FN3, failed; subsequently retired to development, discovery repair plus independent counterexamples formal411passed; one true duplicate pair remains split. See evidence/pipeline-integration-20261016/oct17/QUALITY_CHECKPOINT.md. OUTPUT_NOT_CONNECTED and original P06 remain.
+
+## USER RESUMED — 2026-10-17
+
+Explicit user continuation overrides prior stop. See evidence/pipeline-integration-20261016/oct17/HANDOFF.md. PR36 fixes have formal Windows regression evidence; business acceptance and OUTPUT_NOT_CONNECTED gates remain. Historical sections below are past checkpoints.
+
+## USER STOP — 2026-10-16
+
+User requested upload then stop. See evidence/pipeline-integration-20261016/user-stop/HANDOFF.md. No automatic resumption. Current draft includes known failing grant-negation contracts and an unfixed URL-truncation finding; overall project incomplete. Historical sections below are not current authorization.
+
+## Latest pipeline candidate — 2026-10-16
+
+See evidence/pipeline-integration-20261016/CHECKPOINT.md and MANIFEST.json. Latest PR28/29/31/32 combined; actual09:30 consumer remains OUTPUT_NOT_CONNECTED. Historical sections are not current locks.
+
+## Current delivery integration — 2026-10-16
+
+See evidence/delivery-20261016/CHECKPOINT.md and MANIFEST.json. Actual ChatGPT delivery remains OUTPUT_NOT_CONNECTED. P06 continues; production unchanged. Historical sections below are not current ownership.
+
+## Active integration checkpoint — 2026-10-16
+
+See evidence/system-integration-20261016/CHECKPOINT.md. P06 remains active; no production changes or merges. The historical sections below describe earlier snapshots and are not current locks.
+
 ---
 type: handoff
 date: 2026-10-14

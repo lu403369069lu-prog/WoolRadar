@@ -26,13 +26,15 @@ class StartBarrierConnection:
 
 class DatabaseWithStartBarrier(Database):
     def __init__(self, path, barrier):
-        self.barrier = barrier
+        # Synchronize the two upserts, not the single-threaded schema migration.
+        self.barrier = None
         super().__init__(path)
+        self.barrier = barrier
 
     @contextmanager
     def connect(self):
         with super().connect() as conn:
-            yield StartBarrierConnection(conn, self.barrier)
+            yield StartBarrierConnection(conn, self.barrier) if self.barrier is not None else conn
 
 
 class ConcurrentUpsertTests(unittest.TestCase):

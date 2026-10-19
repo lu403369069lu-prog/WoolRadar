@@ -103,6 +103,10 @@ class StaleOfficialTraceTests(unittest.TestCase):
 
 
 class ReusedEventIdentityTests(unittest.TestCase):
+    def report(self, root, event_id):
+        return json.loads((root / 'evidence' / 'official-trace' /
+                           f'{event_id}.json').read_text(encoding='utf-8'))
+
     seed = StaleOfficialTraceTests.seed
 
     def test_old_merged_id_reused_before_trace_start_is_not_treated_as_original(self):

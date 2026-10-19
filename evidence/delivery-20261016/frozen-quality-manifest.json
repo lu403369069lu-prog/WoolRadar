@@ -1,0 +1,72 @@
+{
+  "created_at": "2026-10-16T00:40:53.892371+00:00",
+  "frozen_code_sha": "afc24c15d9847905b6949065ee676d6e5ad8631b",
+  "blinded_sha256": "e188a00ba0ac5f322978f1a12c47bb3dbc532121746599977a53a50e771da565",
+  "sources": [
+    {
+      "source_id": "hackernews",
+      "sha256": "1e55c342e4f03553dd7a737241b4ed1c5a1d035835188e5ce6d3c464027d3ce6",
+      "sampled_at": "2026-10-15T23:09:53Z",
+      "population": 20,
+      "selected": 8
+    },
+    {
+      "source_id": "reddit-rss",
+      "sha256": "5fbeef98f9e414ad91d595a0c32b77759f1504671463c671d4d6fb21ee231750",
+      "sampled_at": "2026-10-16T00:00:04Z",
+      "population": 25,
+      "selected": 8
+    },
+    {
+      "source_id": "reddit-hot-rss",
+      "sha256": "5966ea5b5fc0a4d7a6da62d5dc5e9fcd3f47840995b19342b51597d8f35cd87f",
+      "sampled_at": "2026-10-16T00:08:54Z",
+      "population": 25,
+      "selected": 8
+    },
+    {
+      "source_id": "lowendbox",
+      "sha256": "1e821f9d00f6090cd8f6a21bde0a65a042d2f3ebc6bf19a60e86a20edc3efc58",
+      "sampled_at": "2026-10-16T00:09:15Z",
+      "population": 20,
+      "selected": 8
+    },
+    {
+      "source_id": "producthunt",
+      "sha256": "8023b2e17b70a72615563bd3973f626e54f1b88b8b91630c376f39d71987e519",
+      "sampled_at": "2026-10-16T00:08:53Z",
+      "population": 50,
+      "selected": 8
+    },
+    {
+      "source_id": "devhunt",
+      "sha256": "62d8fc88b276e59751cb509722e1e544d3c272d4f8cdfb3f9be2177266a1a97f",
+      "sampled_at": "2026-10-15T15:09:57Z",
+      "population": 259,
+      "selected": 8
+    },
+    {
+      "source_id": "cloudflare-dev",
+      "sha256": "7e774e46b0a35d6b1980d7ae1e68464ec23006f6ad25d9049f880a877fa6cf2f",
+      "sampled_at": "2026-10-16T00:00:12Z",
+      "population": 20,
+      "selected": 8
+    }
+  ],
+  "selected_rows": 56,
+  "excluded_previously_seen_urls": 34,
+  "excluded_cross_source_duplicate_urls": 8,
+  "selection": "up to8/source ascending SHA256 fixed prefix+URL, after known test/Oct14 development/historical report URL exclusion; no accepted flag used",
+  "scope": "Snippet-level explicit free AI service, developer benefit/cloud free resource, credit/trial/giveaway/promo lead. Ordinary paid pricing, troubleshooting, feature announcement or ordinary open-source project release without an explicit offered benefit excluded. Unclear evidence null. Availability and personal eligibility never inferred.",
+  "labels_frozen": false,
+  "predictions_run": false,
+  "data_uploaded": false,
+  "limits": [
+    "Bounded cached public sample, not platform-wide recall.",
+    "Eight per source cap creates a stratified sample, not deployment prevalence.",
+    "Observed snapshot time does not prove live availability.",
+    "Known URL overlap excluded; unknown historical semantic overlap cannot be ruled out.",
+    "Snippet truth uncertainty must remain null, never forced to pass.",
+    "A future fix informed by this sample makes it development data, not a new independent acceptance set."
+  ]
+}

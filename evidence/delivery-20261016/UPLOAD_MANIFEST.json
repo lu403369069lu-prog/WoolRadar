@@ -1,0 +1,40 @@
+{
+  "checked_at": "2026-10-16T00:45:05.658022+00:00",
+  "cycle": 1792127893,
+  "trigger_remaining": 23,
+  "phase": "prepared",
+  "code_sha": "afc24c15d9847905b6949065ee676d6e5ad8631b",
+  "files": [
+    {
+      "path": "evidence/delivery-20261016/published-afc24c1.json",
+      "git_blob": "45021c13ef9dd5f6ded53a8bcaa926e9d2a28736"
+    },
+    {
+      "path": "evidence/delivery-20261016/DELIVERY_CHANNEL_REVIEW.md",
+      "git_blob": "99f9fc8003fa7fcb1b4d8eab33789fcc07e8729a"
+    },
+    {
+      "path": "evidence/delivery-20261016/frozen-quality-manifest.json",
+      "git_blob": "163dc2d7c8b0c3d587f0602b17cefca21b6a45f5"
+    },
+    {
+      "path": "evidence/delivery-20261016/freeze-integrity-supplement.json",
+      "git_blob": "a11adb250fc515cc05962b33791fe0e782829a9d"
+    },
+    {
+      "path": "evidence/delivery-20261016/frozen-label-review.json",
+      "git_blob": "9909f9a77968be33e201e47b798d8ce35c0ab72f"
+    },
+    {
+      "path": "evidence/delivery-20261016/frozen-quality-evaluation.json",
+      "git_blob": "e736dbe6230a4b8ec88ab739d94aaa47a9aed227"
+    },
+    {
+      "path": "evidence/delivery-20261016/QUOTA_HANDOFF.md",
+      "git_blob": "2e66328d30f2a4971c9de6c13d9a6fb0cc3a2e98"
+    }
+  ],
+  "raw_data_uploaded": false,
+  "goal_complete": false,
+  "next_unit": "Adjudicate/fix S046/S047 discovery misses; new independent holdout required after fix; actual consumer remains unconnected"
+}

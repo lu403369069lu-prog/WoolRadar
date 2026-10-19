@@ -66,10 +66,25 @@ class Database:
                 del self._transaction_state.connection
 
     def _init_schema(self) -> None:
+        # Reject a future version before calling connect(), which otherwise
+        # switches SQLite into WAL and may execute DDL against an unknown file.
+        # The inspection URI is read-only and leaves the DB untouched.
+        if self.path.is_file():
+            uri = self.path.resolve().as_uri() + '?mode=ro'
+            with closing(sqlite3.connect(uri, uri=True)) as inspection:
+                version = inspection.execute('PRAGMA user_version').fetchone()[0]
+            if version > 1:
+                raise RuntimeError('UNSUPPORTED_DATABASE_SCHEMA_VERSION')
         with self.connect() as conn:
-            conn.execute('CREATE TABLE IF NOT EXISTS campaign_links (url TEXT PRIMARY KEY, review_json TEXT NOT NULL)')
-            conn.execute('CREATE TABLE IF NOT EXISTS migration_evidence_archive (id INTEGER PRIMARY KEY, original_event_id INTEGER, merged_into INTEGER, migrated_at TEXT, payload_json TEXT NOT NULL)')
-            conn.executescript('''
+            # Recheck after the writer reservation: another version may have
+            # committed since the read-only preflight. Never use executescript
+            # here: its implicit COMMIT would release this migration fence.
+            conn.execute('BEGIN IMMEDIATE')
+            if conn.execute('PRAGMA user_version').fetchone()[0] > 1:
+                raise RuntimeError('UNSUPPORTED_DATABASE_SCHEMA_VERSION')
+            schema = '''
+                CREATE TABLE IF NOT EXISTS campaign_links (url TEXT PRIMARY KEY, review_json TEXT NOT NULL);
+                CREATE TABLE IF NOT EXISTS migration_evidence_archive (id INTEGER PRIMARY KEY, original_event_id INTEGER, merged_into INTEGER, migrated_at TEXT, payload_json TEXT NOT NULL);
                 CREATE TABLE IF NOT EXISTS events (
                     id INTEGER PRIMARY KEY,
                     canonical_key TEXT NOT NULL,
@@ -137,14 +152,29 @@ class Database:
                     node TEXT PRIMARY KEY,
                     fingerprint TEXT NOT NULL,
                     checked_at TEXT NOT NULL
-                );
-            ''')
+                );            '''
+            # This is the fixed internal CREATE TABLE schema, with no external
+            # SQL, trigger bodies or semicolons inside values.
+            for statement in schema.split(';'):
+                if statement.strip():
+                    conn.execute(statement)
+
             columns = {row[1] for row in conn.execute('PRAGMA table_info(notifications)')}
             for name, declaration in (('payload', "TEXT NOT NULL DEFAULT ''"),
                                       ('attempts', 'INTEGER NOT NULL DEFAULT 0'),
                                       ('next_attempt', 'REAL NOT NULL DEFAULT 0')):
                 if name not in columns:
                     conn.execute(f'ALTER TABLE notifications ADD COLUMN {name} {declaration}')
+            # A confirmed external/local delivery is terminal across every SQLite
+            # connection and process, not merely within NotificationQueue.flush.
+            # Existing older databases receive this idempotent trigger on open.
+            conn.execute('''CREATE TRIGGER IF NOT EXISTS notifications_sent_final
+                BEFORE UPDATE OF result ON notifications
+                FOR EACH ROW
+                WHEN OLD.result='SENT' AND NEW.result!='SENT'
+                BEGIN SELECT RAISE(ABORT, 'SENT_FINAL'); END''')
+            # Publish version with all schema changes, within the migration transaction.
+            conn.execute('PRAGMA user_version=1')
 
     def upsert_candidate(self, candidate: Candidate) -> UpsertResult:
         with self.connect() as conn:
@@ -189,6 +219,10 @@ class Database:
 
     def set_status(self, event_id: int, status: Status, reason: str, claim_scope: str = 'NONE') -> None:
         with self.connect() as conn:
+            # Lock before reading the previous status so history cannot record
+            # another worker's state while this transaction is waiting to write.
+            if not conn.in_transaction:
+                conn.execute('BEGIN IMMEDIATE')
             row = conn.execute('SELECT status FROM events WHERE id=?', (event_id,)).fetchone()
             if row is None:
                 raise KeyError(event_id)
@@ -327,9 +361,19 @@ class Database:
                         'SELECT review_json FROM campaign_links WHERE url=?', (url,)).fetchone()
                     if previous and json.loads(previous[0]).get('campaign_url') != campaign_review.get('campaign_url'):
                         raise ValueError('CAMPAIGN_REVIEW_CONFLICT')
-            # Backup through a separate read connection so WAL contents are included.
-            with closing(sqlite3.connect(self.path)) as reader, closing(sqlite3.connect(backup)) as target:
-                reader.backup(target)
+            # Stage and validate the snapshot before exposing a final .db file.
+            # sqlite backup failures can otherwise leave a partially written .db
+            # that looks like a usable recovery point. Same-directory rename is
+            # atomic, including on Windows after all SQLite handles are closed.
+            staging = backup.with_suffix('.tmp')
+            try:
+                with closing(sqlite3.connect(self.path)) as reader, closing(sqlite3.connect(staging)) as target:
+                    reader.backup(target)  # Include committed WAL contents.
+                    if target.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
+                        raise sqlite3.DatabaseError('REINDEX_BACKUP_INTEGRITY_FAILED')
+                staging.replace(backup)
+            finally:
+                staging.unlink(missing_ok=True)
             if campaign_review is not None:
                 for url in campaign_review['member_urls']:
                     conn.execute('INSERT OR REPLACE INTO campaign_links VALUES(?,?)', (normalize_url(url), json.dumps(campaign_review, ensure_ascii=False)))
@@ -377,7 +421,7 @@ class Database:
                 # a sender actually recorded SENT on one of the two events.
                 old_notices = conn.execute(
                     "SELECT batch_id,channel,result,payload,attempts,next_attempt "
-                    "FROM notifications WHERE event_id=? AND result IN ('SENT','CLAIMED')",
+                    "FROM notifications WHERE event_id=? AND result IN ('SENT','CLAIMED','RETRY','UNCERTAIN')",
                     (old,)).fetchall()
                 for notice in old_notices:
                     survivor = conn.execute(
@@ -391,12 +435,25 @@ class Database:
                             "UPDATE notifications SET result='SENT',payload=?,"
                             "attempts=max(attempts,?),next_attempt=0 WHERE id=?",
                             (notice['payload'], notice['attempts'], survivor['id']))
-                    elif notice['result'] == 'CLAIMED' and survivor['result'] != 'CLAIMED':
+                    elif notice['result'] == 'CLAIMED':
+                        # Both rows can be in flight. Preserve the longest lease
+                        # and attempts even when the survivor is also CLAIMED.
                         conn.execute(
                             "UPDATE notifications SET result='CLAIMED',payload=?,"
                             "attempts=max(attempts,?),next_attempt=max(next_attempt,?) WHERE id=?",
                             (notice['payload'], notice['attempts'],
                              notice['next_attempt'], survivor['id']))
+                    elif notice['result'] in ('RETRY', 'UNCERTAIN'):
+                        # Identity reindex must not shorten a server cooldown or
+                        # erase an ambiguous accepted-send history. Keep an
+                        # active claim; changing its fence invalidates stale ACKs.
+                        state = ('CLAIMED' if survivor['result'] == 'CLAIMED' else
+                                 'UNCERTAIN' if 'UNCERTAIN' in (survivor['result'], notice['result']) else
+                                 'RETRY')
+                        conn.execute(
+                            'UPDATE notifications SET result=?,attempts=max(attempts,?),'
+                            'next_attempt=max(next_attempt,?) WHERE id=?',
+                            (state, notice['attempts'], notice['next_attempt'], survivor['id']))
                 for table, columns in (
                     ('sightings', 'node,source,url,discovered_at'),
                     ('notifications', 'batch_id,channel,created_at,result,payload,attempts,next_attempt')):

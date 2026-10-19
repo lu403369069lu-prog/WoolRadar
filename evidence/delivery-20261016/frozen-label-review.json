@@ -1,0 +1,40 @@
+{
+  "reviewer": "independent budget_review agent",
+  "frozen_blinded_sha256": "a5182a8d6e08de2f2d0927bd951f5aba6dea5383c01d057b3dd913d298026190",
+  "manifest_blinded_sha256": "e188a00ba0ac5f322978f1a12c47bb3dbc532121746599977a53a50e771da565",
+  "lf_normalized_blinded_sha256": "e188a00ba0ac5f322978f1a12c47bb3dbc532121746599977a53a50e771da565",
+  "hash_note": "Input is CRLF; manifest digest matches exactly after CRLF-to-LF normalization. Input and manifest were not modified. Raw-byte digest retained separately.",
+  "frozen_code_sha_from_manifest": "afc24c15d9847905b6949065ee676d6e5ad8631b",
+  "labels_file": "reviewer-labels.json",
+  "labels_sha256": "10ce0dfbc44a740ba30cfa4ef13eed91195f878fc5fc3add86c517f2d97baddc",
+  "label_count": 56,
+  "counts": {
+    "true": 2,
+    "false": 47,
+    "null": 7
+  },
+  "true_campaign_groups": 1,
+  "independent_label_statement": "In this labeling task only blinded.json and manifest.json were read as input. No *-original.json, predictions, current collector, real DB or reports read; no prediction run, network, or upload. Labels assigned from supplied title/snippet/URL before prediction comparison.",
+  "interpretation_notes": [
+    "Named GitHub secure open-source fund is treated as a developer-support lead; identical named URLs grouped conservatively, with batch unspecified. No grant size/current opening/personal eligibility inferred.",
+    "Education/startup plan names without explicit benefits remain null; competition without described prize or free entitlement remains null.",
+    "Ordinary paid pricing, consumer freebies, feature announcements and ordinary open-source releases excluded under manifest scope."
+  ],
+  "limits": [
+    "Bounded cached public sample, not platform-wide recall.",
+    "Eight per source cap creates a stratified sample, not deployment prevalence.",
+    "Observed snapshot time does not prove live availability.",
+    "Known URL overlap excluded; unknown historical semantic overlap cannot be ruled out.",
+    "Snippet truth uncertainty must remain null, never forced to pass.",
+    "A future fix informed by this sample makes it development data, not a new independent acceptance set.",
+    "Repeated same-source URLs mean row counts are not independent campaign counts.",
+    "No source-page verification: labels apply only to provided snippets.",
+    "Labels alone imply no classifier accuracy or 95% acceptance claim.",
+    "Any subsequent fix informed by this sample makes it development data."
+  ],
+  "verification": {
+    "labels_exists": true,
+    "json_readback_matches": true,
+    "all_56_sample_ids_once": true
+  }
+}

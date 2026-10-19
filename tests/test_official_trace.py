@@ -14,6 +14,15 @@ TEST_TMP.mkdir(exist_ok=True)
 
 
 class OfficialTraceTests(unittest.TestCase):
+    def test_unbudgeted_reference_still_uses_pinned_public_transport(self):
+        from core.official_trace import fetch_public_page
+        with patch('core.official_trace.budgeted_read', return_value=b'<html>ok</html>') as read:
+            result = fetch_public_page('https://cursor.com/changelog', {'cursor.com'})
+            self.assertEqual(result, b'<html>ok</html>')
+            self.assertIsNone(read.call_args.args[1])
+            self.assertFalse(read.call_args.args[3]('https://127.0.0.1/admin'))
+            self.assertFalse(read.call_args.args[3]('https://evil.example/'))
+
     def test_http_budget_rejection_is_skipped_without_permanent_pause(self):
         from core.collector import SourcePaused
         with tempfile.TemporaryDirectory(dir=TEST_TMP) as td:

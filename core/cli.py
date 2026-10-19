@@ -19,7 +19,7 @@ def main() -> int:
         sys.stdout.reconfigure(encoding='utf-8', errors='backslashreplace')
         sys.stderr.reconfigure(encoding='utf-8', errors='backslashreplace')
     parser = argparse.ArgumentParser(description='WoolRadar 7.1 core')
-    parser.add_argument('--root', type=Path, default=Path(r'C:\WoolRadar'))
+    parser.add_argument('--root', type=Path)
     sub = parser.add_subparsers(dest='command', required=True)
     sub.add_parser('init')
     node_parser = sub.add_parser('run-node')
@@ -31,6 +31,12 @@ def main() -> int:
     ingest_parser.add_argument('node', choices=NODES)
     report_parser = sub.add_parser('report')
     report_parser.add_argument('--date', default=date.today().isoformat())
+    report_parser.add_argument('--noise-audit',type=Path,help='explicit snapshot-bound audit ledger; no filtering by default')
+    noise_parser=sub.add_parser('audit-noise')
+    noise_parser.add_argument('event_id',type=int)
+    noise_parser.add_argument('--decision',choices=['exclude','restore'],required=True)
+    noise_parser.add_argument('--reason',required=True)
+    noise_parser.add_argument('--reviewer',required=True)
     verify_parser = sub.add_parser('verify-file')
     verify_parser.add_argument('path', type=Path)
     status_parser = sub.add_parser('status')
@@ -44,7 +50,21 @@ def main() -> int:
     campaign_parser = sub.add_parser('review-campaign')
     campaign_parser.add_argument('path', type=Path)
     args = parser.parse_args()
-    root = args.root.resolve()
+    if args.command=='audit-noise' and args.root is None:
+        parser.error('audit-noise requires explicit --root')
+    root = (args.root or Path(r'C:\WoolRadar')).resolve()
+
+    if args.command=='audit-noise':
+        from dataclasses import asdict
+        from .noise_audit import NoiseAudit
+        if not (root/'data/woolradar.db').is_file():
+            parser.error('audit-noise requires an existing database')
+        db=Database(root/'data/woolradar.db')
+        event=db.get_event(args.event_id)
+        event['evidence']=[asdict(e) for e in db.get_evidence(args.event_id)]
+        changed=NoiseAudit(root/'data/noise-audit.json').record(event,args.decision,args.reason,args.reviewer)
+        print(json.dumps({'changed':changed,'event_id':args.event_id,'decision':args.decision}))
+        return 0
 
     if args.command == 'review-campaign':
         payload = json.loads(args.path.read_text(encoding='utf-8'))
@@ -98,7 +118,9 @@ def main() -> int:
         print(json.dumps(Pipeline(root).ingest_node(args.node), ensure_ascii=False))
         return 0
     if args.command == 'report':
-        paths = ReportGenerator(Database(root / 'data' / 'woolradar.db'), root / 'reports').generate(args.date)
+        from .noise_audit import NoiseAudit
+        audit=NoiseAudit(args.noise_audit) if args.noise_audit is not None else None
+        paths = ReportGenerator(Database(root / 'data' / 'woolradar.db'), root / 'reports',noise_audit=audit).generate(args.date)
         print(paths.markdown)
         print(paths.json)
         return 0

@@ -1,0 +1,83 @@
+{
+  "reviewer": "independent child /root/budget_review",
+  "date": "2026-10-19",
+  "scope": "Current core/db.py, notify.py, collector.py, official_trace.py, dedup.py; offline synthetic fixtures only.",
+  "source_sha256": {
+    "db.py": "40b2f0b03d38d90d974a79acafcd34a8399842cb80a596897eb5ef30e4f2d69a",
+    "notify.py": "795049dab91b0c447b51b898a8501e799b4e6d215171e3e6ed82207aaddc41d9",
+    "collector.py": "e5d8a3a1ab2d63e3159aab4e166c03bac6285b67c05c4d911fd9c8e9e0b82c05",
+    "official_trace.py": "dd24150f06b12a8c942530263eac2177520af30f7efc5a941af0c3a3a4582821",
+    "dedup.py": "013794c629264ac2b4d4ebd4da8ce0983a3282c4c0f78abbfd0a38cea7c99006"
+  },
+  "source_stable_during_final_checks": true,
+  "decision": "Two reproducible P2 issues remain. This is not full-system acceptance or a production/deployment authorization.",
+  "findings": [
+    {
+      "id": "schema-version-inspection-race",
+      "priority": "P2",
+      "file": "core/db.py",
+      "lines": [
+        75,
+        78,
+        83,
+        170
+      ],
+      "problem": "Read-only user_version inspection is outside the migration writer reservation. An independent writer can publish a future version after inspection, and this initializer then runs old DDL and resets user_version to 1.",
+      "reproduction": "Seed normal Database. Subclass connect() solely to schedule a second real SQLite connection committing PRAGMA user_version=2 after inspection and before migration connection. RacingDatabase construction succeeds; observed version_after=1, rejected=false.",
+      "impact": "A concurrent future-version upgrade loses its compatibility marker; old code can continue against unknown schema. This is a deterministic legal connection interleaving, not a stress test or a claim that a future production version currently exists.",
+      "minimal_fix": "Keep the early read-only check, but recheck user_version under BEGIN IMMEDIATE before any DDL and fail/rollback if unsupported. Preserve that same reservation through all migration statements; a second executescript() implicitly commits, so do not accidentally release the lock while splitting the script."
+    },
+    {
+      "id": "merge-discards-retry-cooldown",
+      "priority": "P2",
+      "file": "core/db.py",
+      "lines": [
+        417,
+        424,
+        439,
+        443,
+        445
+      ],
+      "problem": "reindex arbitrates only SENT/CLAIMED loser notices. INSERT OR IGNORE then discards a colliding RETRY or UNCERTAIN loser, including its later cooldown and attempt count.",
+      "reproduction": "Two synthetic historical key variants reindex into one event. Survivor telegram notice RETRY at now+300; loser same channel/batch RETRY (or UNCERTAIN), attempts=2, next_attempt=now+7200. After reindex: only survivor RETRY remains, next_attempt=now+300, attempts=0. SENT and CLAIMED variants pass.",
+      "impact": "A valid server 429 cooldown can be shortened by campaign migration even though the current sender correctly records it. Ambiguous delivery metadata may likewise disappear.",
+      "minimal_fix": "For conflicting nonterminal, non-active-claim notices, preserve max(next_attempt) and max(attempts), with UNCERTAIN precedence when either side is uncertain. Keep SENT terminal and preserve existing active CLAIMED fencing; explicitly test RETRY/RETRY and RETRY/UNCERTAIN alongside SENT/CLAIMED controls."
+    }
+  ],
+  "confirmed": [
+    "Current notify 795049d... preserves 7200-second delta, HTTP-date, HTTP429 JSON parameters and structured HTTP200 JSON429 through the real TelegramNotifier with only urlopen mocked. No credential values read; os.getenv returns synthetic values.",
+    "15 existing focused methods pass: schema_version_guard, schema_migration_atomic, notice_sent_monotonic, notice_retry_restart, notify_reindex_transaction, telegram_rate_limit, reindex_backup_atomic. No full regression repeated.",
+    "Injected local receipt final-commit failure rolls back notification status; retry reaches SENT with one identical receipt and zero temporary files.",
+    "SENT winner remains SENT in merge; CLAIMED loser retains its longer lease/attempts in merge.",
+    "W5 socket-only mocks: one resolver call and pinned approved public address; private or mixed public/private answers reject before socket creation. Static reviewed fetch path uses no environment proxy and follows guarded redirects; OAuth and official reference use budgeted_read.",
+    "Independent actual replay of existing manual-campaign script exits 0, five formal methods and six extra groups; no findings in that bounded explicit local review path. Parent root had also replayed it separately; this report does not count the root execution as independent."
+  ],
+  "commands": [
+    {
+      "command": "python -B _outbox/oct19-integration/independent_checks.py '[local-workspace]'",
+      "exit_code": 0,
+      "meaning": "Check runner exits normally; adverse findings intentionally reported as passed=false, not hidden by exit0."
+    },
+    {
+      "command": "python -B _outbox/pipeline-integration-20261016/oct17_manual_campaign_checks.py --repo-root '[local-workspace]'",
+      "exit_code": 0,
+      "log": "manual-campaign-run.txt"
+    }
+  ],
+  "history": [
+    "Initial notify e634494... exhibited truncated/ignored cooldowns. Parent updated notify during review; current 795049d... independently passes those cases. Old results remain initial-sandbox-temp-errors.json and second-run-results.json; do not report obsolete notify findings as current.",
+    "First focused run hit sandbox TEMP access errors; initial-sandbox-temp-errors.json retained. Third run hit two tests hardcoding worktree .test-tmp; third-run-hardcoded-temp-errors.json retained. Final harness redirects tempfile.tempdir, module ROOT and module __file__ to disposable outbox fixtures; no assertions/product code changed; 15/0/0/0 final."
+  ],
+  "limitations": [
+    "No live Telegram, DNS, browser, credentials, private records, production database or production files accessed. No network or product/worktree source writes.",
+    "External browser/digest child implementations fall outside requested source scope; this review does not certify W5 coverage of every child process.",
+    "Remote accepted-send followed by commit failure remains documented at-least-once ambiguity, not an exactly-once guarantee. Tested commit recovery is local receipt path.",
+    "Schema race is deterministic two-connection interleaving injected at initialization boundary; no true simultaneous future-version process was run.",
+    "Current root full-suite results are parent evidence, not rerun or combined with focused method counts here."
+  ],
+  "artifacts": {
+    "checks": "independent-check-results.json",
+    "script": "independent_checks.py",
+    "checks_sha256": "ea6a3c02710471636f951e710b310031ac7f16fdffc14c5103133e68f4bfbaad"
+  }
+}

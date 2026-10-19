@@ -1,0 +1,86 @@
+{
+  "checked_at": "2026-10-15T18:43:08.045569+00:00",
+  "source_id": "production-readonly-sqlite-snapshot",
+  "source_open": "file URI mode=ro + query_only; sqlite backup into local private directory",
+  "command": "python -X utf8 verify_historical_copy.py",
+  "exit_code": 0,
+  "before": {
+    "tables": {
+      "campaign_links": 2,
+      "events": 110,
+      "evidence": 213,
+      "migration_evidence_archive": 0,
+      "node_health": 5,
+      "node_runs": 650,
+      "notifications": 170,
+      "sightings": 113,
+      "status_history": 1555
+    },
+    "integrity": "ok",
+    "foreign_keys": [],
+    "statuses": {
+      "EXPIRED": 1,
+      "OFFICIAL_VERIFIED": 19,
+      "UNKNOWN": 90
+    },
+    "notification_states": {
+      "SENT": 170
+    }
+  },
+  "preview": {
+    "total_events": 110,
+    "changed_keys": 2,
+    "would_merge_events": 0,
+    "collision_groups": [],
+    "notification_conflict_count": 0,
+    "unrecoverable_prior_merges": "cannot infer from current event rows"
+  },
+  "migration": {
+    "merged": 0,
+    "remaining": 110
+  },
+  "after": {
+    "tables": {
+      "campaign_links": 2,
+      "events": 110,
+      "evidence": 213,
+      "migration_evidence_archive": 0,
+      "node_health": 5,
+      "node_runs": 650,
+      "notifications": 170,
+      "sightings": 113,
+      "status_history": 1555
+    },
+    "integrity": "ok",
+    "foreign_keys": [],
+    "statuses": {
+      "EXPIRED": 1,
+      "OFFICIAL_VERIFIED": 19,
+      "UNKNOWN": 90
+    },
+    "notification_states": {
+      "SENT": 170
+    }
+  },
+  "second_migration": {
+    "merged": 0,
+    "remaining": 110
+  },
+  "backup_semantic_dump_matches_snapshot": true,
+  "restored_semantic_dump_matches_snapshot": true,
+  "report_events": 110,
+  "production_changed": false,
+  "private_artifacts_not_for_upload": [
+    "raw snapshot",
+    "sanitized SQLite",
+    "backups",
+    "restored DB",
+    "raw generated report"
+  ],
+  "limits": [
+    "This snapshot cannot reconstruct previously merged-away vendor events.",
+    "No external notification was sent; copied history preservation is not actual delivery.",
+    "Sanitization is local-only defense in depth; no database/raw report is approved for upload.",
+    "No reboot/sleep or continuous scheduling claim."
+  ]
+}

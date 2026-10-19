@@ -1,0 +1,27 @@
+{
+  "composition": "PR64 sources except notify; PR72 notifier includes67/71/72, PR64already contains66status lock; add68SENTtrigger and73version guard; retain local campaign review",
+  "production_changed": false,
+  "source_sha256": {
+    "core/browser_guard.py": "47e3845874ef6777c826229fb095871e667359b84e17067572f7a2859fb89f7d",
+    "core/cli.py": "1c84df4992f566db932a3265330aa2d282c9732962738c3a28ede786ab7a385a",
+    "core/collector.py": "e5d8a3a1ab2d63e3159aab4e166c03bac6285b67c05c4d911fd9c8e9e0b82c05",
+    "core/config.py": "d65a9379a311e42e7540d0da1b4d616d569e381de6b20f5c600972754f43352b",
+    "core/config_backup.py": "cc5522d11662154c81d364c0ae0e77c1998305d73acdc566beb8cac749c913c0",
+    "core/db.py": "40b2f0b03d38d90d974a79acafcd34a8399842cb80a596897eb5ef30e4f2d69a",
+    "core/dedup.py": "013794c629264ac2b4d4ebd4da8ce0983a3282c4c0f78abbfd0a38cea7c99006",
+    "core/developer_benefits.py": "446be8e762641e4ee125ed3f12e433d4f2f15ba20c10bf2fd4e1cd0e6de6b1fb",
+    "core/developer_grants.py": "5b30fda2fefaff9f2a0f2856c56baa5a41c0e5b838379170a84aede386c623e6",
+    "core/diagnostics.py": "be2553da3144590cc4b0fd56a5dca407973e18019590295d64b8130a6b18724f",
+    "core/models.py": "27cfb4bb39af3b0e422bd781a332a39aa2ffb49d0049140a3a27aaa28c0fb295",
+    "core/noise_audit.py": "692df96dc9ba1c6604b6dafeba7f2d8a263af8204e69c25fec62ce6681fffec7",
+    "core/notify.py": "e63449463702dbce9f93e02366c0179c4fd0245bf555fa5a610f44a9b9c687a9",
+    "core/official_trace.py": "dd24150f06b12a8c942530263eac2177520af30f7efc5a941af0c3a3a4582821",
+    "core/orchestrator.py": "85a510f6e7a7ff7d9def5e83a7a2d71c02d1775bf9618ae8d7c5286b9c687250",
+    "core/pipeline.py": "453ec20e0a9c3baca802a5f1fb42d2f7f140256ba7855e0d44a33e219284bd77",
+    "core/public_corpus.py": "1f92477753adfc9d164b6f3838a60c1fb50600bb5e4b1c50fc1b1a34ff6a4a8c",
+    "core/report.py": "d536a2cef8e9caa06eb70581147cd62ea0ea96feb5d0fcbbae26927c1b0d3081",
+    "core/review_import.py": "dafee0646b50dcb98533821c3007a70a5777bbb9531a58d513d11b68f3458d57",
+    "core/verifier.py": "9901fccc311b5d91aecb8c1bf027fac4fce4ffd6860f9f18c09bf001c4168d67",
+    "core/__init__.py": "fd430bd221acdd736e2318e7123a90205ecbad3d5b068aafc0c724d1a530027a"
+  }
+}

@@ -33,6 +33,8 @@ class PinnedSourceIdentityTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'pinned source SHA'):
                     worker.evaluate(args)
                 run.assert_not_called()
+                self.assertFalse((root / '.test-tmp').exists(),
+                                 'a mismatched source must not cause a filesystem write')
 
     def test_self_consistent_wrong_sha_receipt_is_rejected(self):
         q = self.pinned_queue();fixture = fixtures.RelaySafetyTests()

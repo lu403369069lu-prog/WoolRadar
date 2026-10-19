@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "repo": "WoolRadar",
-  "source_ref": "34380339b96026ef99032e4ae2c67c8f59d015e5",
+  "source_ref": "29962ed49a1b9c4f9e3a5ee6b20cc2d3358fc2b2",
   "source_subdir": ".",
-  "source_note": "Immutable PR23 integrated SHA independently verified Windows root352 and combined455; subset PASS does not accept business families.",
+  "source_note": "Immutable latest PR80 (stacked on PR23) review candidate at 2026-10-19; independent exact-SHA Windows cloud strict acceptance required; no business family accepted by pin update.",
   "families": [
     {
       "id": "WR-H01",

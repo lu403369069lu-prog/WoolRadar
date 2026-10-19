@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "project": "WoolRadar",
+  "task": "W1/R2-006 verified notification revocation",
+  "test_date": "2026-10-19",
+  "executor": "codex-woolradar",
+  "environment": "Windows PowerShell; Python 3.14.5; project-writable TEMP/TMP/TMPDIR; isolated ZIP extraction",
+  "base_pr": 23,
+  "base_commit": "34380339b96026ef99032e4ae2c67c8f59d015e5",
+  "candidate_pr": 80,
+  "candidate_commit_at_test": "df24ac9e12bbb3146cb2fed2279dea1144121530",
+  "modified_blob": {
+    "path": "core/notify.py",
+    "git_blob_sha1": "8c149800b29487b552bd87f6c86b16214e43e161"
+  },
+  "added_test_blob": {
+    "path": "tests/test_verified_send_revocation.py",
+    "git_blob_sha1": "74b2cdda6154cca38a1fcb9e45894c1b41845315"
+  },
+  "archive_identity": {
+    "baseline_zip_sha256": "1afc0ef1764870b06b2bb34fafde2e020e072b8fb90a23d60b318e82651bc5df",
+    "archived_files_compared": 294,
+    "missing": 0,
+    "different_existing_files": [
+      "core/notify.py"
+    ]
+  },
+  "tests": [
+    {
+      "command": "python -B -X utf8 -m unittest tests.test_verified_send_revocation -v",
+      "total": 1,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "log_sha256": "70449EADC375660BF88BB0B5194A8FEC8D94D90DE845C07DD74F6EC3778C6A8B"
+    },
+    {
+      "command": "python -B -X utf8 -m unittest discover -s tests -p test_*.py -v",
+      "total": 353,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "log_sha256": "1FF774372B81BE2500D41674F7BA6B18BFA2DD41304B2C2F7E567D88344784BE"
+    },
+    {
+      "command": "python -B -X utf8 independent-quality/delivery-bridge-20261016/run_combined_tests.py",
+      "total": 456,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "log_sha256": "763B7BBA029E0EC0CBC6AA8488BDBDDBFC4B786B08CA77CD968F4A2D8BD92A79"
+    }
+  ],
+  "prior_run_environment_failure": "Original combined attempt failed on Windows sandbox TEMP with WinError 5; subsequent fresh isolated run with project-writable TEMP passed. Original failure retained locally; not counted as a passing run.",
+  "retained_logs": "Local _outbox/pr80-verified-20261019/{focused2,root2,combined2}.log; full logs and source-only archive are local, not uploaded.",
+  "safety": "All verification uses disposable SQLite and synthetic sender; no real Telegram, user database, credentials, reports or personal data transmitted.",
+  "open_gates": [
+    "Revocation after final validation during external in-flight transport; Telegram at-least-once semantics",
+    "CI tzdata and real upstream provider dependency for strict no-skip gates",
+    "P06/fresh independent blind holdout and Windows five-source field acceptance",
+    "09:30 trusted consumer delivery OUTPUT_NOT_CONNECTED",
+    "W1-W7 family acceptance and three post-core independent rounds"
+  ]
+}

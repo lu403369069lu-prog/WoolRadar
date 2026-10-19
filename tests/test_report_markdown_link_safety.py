@@ -1,6 +1,7 @@
 """Synthetic report rendering regressions; no external accounts or network."""
 import tempfile
 import unittest
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 from core.db import Database
@@ -41,7 +42,8 @@ class ReportMarkdownLinkSafetyTests(unittest.TestCase):
             title = 'Free](https://phishing.example/claim) [Official'
             db.upsert_candidate(Candidate('synthetic', 'fixture', title,
                                           'https://official.example/offer'))
-            report = ReportGenerator(db, root / 'reports').generate('2026-10-19')
+            report_date = datetime.now(timezone(timedelta(hours=8))).date().isoformat()
+            report = ReportGenerator(db, root / 'reports').generate(report_date)
             text = report.markdown.read_text(encoding='utf-8')
             self.assertIn(r'Free\]', text)
             self.assertIn(r'\[Official', text)

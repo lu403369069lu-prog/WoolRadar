@@ -72,6 +72,16 @@ class VerificationEngine:
             if fresh_zero:
                 return VerificationResult(Status.OFFICIAL_VERIFIED, '近期官方证据显示剩余名额为0，尚无可领取库存',
                                           len(provenance), unknown_capacity=False)
+        # A current public application can still require a chargeable card
+        # or renew into a paid subscription. This user-facing digest must not
+        # promote explicit payment risks as a ready-to-claim free benefit.
+        # Keep the official proof visible for manual eligibility review.
+        if any(item.claims.get('card_required') is True or
+               item.claims.get('auto_renew') is True for item in official):
+            return VerificationResult(
+                Status.OFFICIAL_VERIFIED,
+                '官方条款包含绑卡或自动续费条件，须人工确认费用与资格',
+                len(provenance), unknown_capacity=unknown_capacity)
         for item in official:
             try:
                 checked = datetime.fromisoformat(item.checked_at.replace('Z', '+00:00'))

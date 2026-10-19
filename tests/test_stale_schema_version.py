@@ -14,6 +14,23 @@ from core.db import Database
 
 
 class StaleSchemaVersionTests(unittest.TestCase):
+    def test_stale_connection_does_not_change_future_journal_mode(self):
+        """Even rejected writes must not alter a newer schema's journal mode."""
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / 'isolated.db'
+            stale = Database(path)
+            with closing(sqlite3.connect(path)) as migration:
+                self.assertEqual(migration.execute('PRAGMA journal_mode').fetchone()[0], 'wal')
+                self.assertEqual(migration.execute('PRAGMA journal_mode=DELETE').fetchone()[0], 'delete')
+                migration.execute('PRAGMA user_version=2')
+                migration.commit()
+            with self.assertRaisesRegex(RuntimeError, 'UNSUPPORTED_DATABASE_SCHEMA_VERSION'):
+                stale.record_node_run('synthetic', 'SUCCESS', 1)
+            with closing(sqlite3.connect(path)) as inspection:
+                self.assertEqual(inspection.execute('PRAGMA user_version').fetchone()[0], 2)
+                self.assertEqual(inspection.execute('PRAGMA journal_mode').fetchone()[0], 'delete')
+                self.assertEqual(inspection.execute('SELECT COUNT(*) FROM node_runs').fetchone()[0], 0)
+
     def test_external_process_migration_wins_writer_lock(self):
         """The stale writer must recheck after a separate process commits v2."""
         with tempfile.TemporaryDirectory() as folder:

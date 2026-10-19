@@ -54,6 +54,13 @@ def prepare(root: Path, verify_only: bool = False) -> Path:
         if actual != pinned:
             raise RuntimeError('UPSTREAM_PIN_MISMATCH')
 
+    # A matching commit alone does not attest to the executed source bytes:
+    # tracked edits and imported untracked modules can override that commit.
+    # Ignore only this checkout's disposable virtual environment.
+    if run('git', '-C', str(checkout), 'status', '--porcelain=v1',
+           '--untracked-files=all', '--', '.', ':(exclude).venv', env=env):
+        raise RuntimeError('UPSTREAM_WORKTREE_DIRTY')
+
     venv = checkout / '.venv'
     interpreter = venv / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
     if not interpreter.is_file():

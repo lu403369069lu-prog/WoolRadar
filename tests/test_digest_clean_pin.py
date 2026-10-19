@@ -55,7 +55,8 @@ class DigestCleanPinnedCheckoutTests(unittest.TestCase):
                 return real(*args, env=env)
             if not verify_only and args[1:4] == ("-m", "pip", "install"):
                 return ""
-            if args[0] == str(self.python) and args[1] == "-c":
+            if len(args) >= 2 and args[1] == "-c":
+                self.assertEqual(Path(args[0]).resolve(), self.python.resolve())
                 return ""
             raise AssertionError(f"unexpected side effect: {args}")
         with patch.object(mod, "run", side_effect=controlled):

@@ -62,11 +62,20 @@ class ReportGenerator:
         md_path = self.report_dir / f'{date}-daily.md'
         json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
 
+        def official_payment_risks(event):
+            return [risk for risk in ('card_required', 'auto_renew')
+                    if any(evidence['kind'] == 'official' and
+                           evidence['claims'].get(risk) is True
+                           for evidence in event['evidence'])]
+
+        payment_risk_events = [event for event in events if official_payment_risks(event)]
         sections = [
             ('今日新发现', today_events),
             ('官方已核实、正在开放的福利', [e for e in events if e['status'] == 'CLAIMABLE']),
             ('限时高价值活动', [e for e in events if json.loads(e['metadata_json']).get('high_value')]),
-            ('官方来源已找到、开放与条件待核验', [e for e in events if e['status'] == 'OFFICIAL_VERIFIED']),
+            ('绑卡或自动续费风险：待人工核验', payment_risk_events),
+            ('官方来源已找到、开放与条件待核验', [e for e in events if e['status'] == 'OFFICIAL_VERIFIED'
+                and not official_payment_risks(e)]),
             ('需要账号核验的活动', [e for e in events if json.loads(e['metadata_json']).get('account_required') is True
                 or any(item['claims'].get('account_required') is True for item in e['evidence'])]),
             ('已结束或存在风险的活动', [e for e in events if e['status'] in ('EXPIRED', 'CONFLICTED', 'FAILED')]),
@@ -83,6 +92,12 @@ class ReportGenerator:
                     f"  - 状态：{row['status']}；范围：{row['claim_scope']}；来源：{row['source']}；节点：{row['node']}",
                     f"  - 原帖发布时间：{row['published_at'] or '未知'}；发现时间：{row['first_seen']}",
                 ])
+                risk_flags = official_payment_risks(row)
+                if risk_flags:
+                    labels = [label for field, label in (('card_required', '绑卡'),
+                        ('auto_renew', '自动续费')) if field in risk_flags]
+                    lines.append('  - 费用风险：官方证据包含' + '、'.join(labels) +
+                                 '要求，须人工核验；不得视为无条件免费领取。')
                 for evidence in row['evidence']:
                     if evidence['claims']:
                         lines.append(f"  - 核验时间：{evidence['checked_at']}；证据：{evidence['url']}")

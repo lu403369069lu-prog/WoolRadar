@@ -59,7 +59,14 @@ class OfficialPaymentGateTests(unittest.TestCase):
             output = queue.flush({}, local_dir=root / 'outbox')
             self.assertEqual(output['local'], 0)
             self.assertFalse(list((root / 'outbox').glob('notification-*.json')))
-            self.assertEqual(ReportGenerator(db, root / 'reports').generate('2026-10-19').json.exists(), True)
+            paths = ReportGenerator(db, root / 'reports').generate('2026-10-19')
+            self.assertTrue(paths.json.exists())
+            markdown = paths.markdown.read_text(encoding='utf-8')
+            payment_risk = markdown.split('## 绑卡或自动续费风险：待人工核验\n')[1].split('## ')[0]
+            self.assertIn('Free starter credits', payment_risk)
+            self.assertIn('绑卡', payment_risk)
+            claimable_section = markdown.split('## 官方已核实、正在开放的福利\n')[1].split('## ')[0]
+            self.assertNotIn('Free starter credits', claimable_section)
             self.assertEqual(db.get_event(event)['status'], Status.OFFICIAL_VERIFIED.value)
             self.assertEqual(db.get_event(event)['claim_scope'], 'NONE')
 

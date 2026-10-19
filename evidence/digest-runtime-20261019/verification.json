@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "purpose": "Isolated Windows verification of PR83 portable pinned Digest runtime",
+  "target_base_pr23_sha": "34380339b96026ef99032e4ae2c67c8f59d015e5",
+  "verified_code_sha": "c1fd7ec5683c08f4a5316d8f9512d9a4f4f098e7",
+  "exact_remote_changed_blobs": {
+    "core/collector.py": "999b8dec1b3f9b50f795aca96c69dd48fd172d44",
+    "tests/test_digest_runtime.py": "a805fd03c78a8d9bf4f7671a0ca69311e8ed546f",
+    "scripts/prepare_digest_upstream.py": "5d60b9867ecb5b094b05e056b3d04eb3e35cdaa7"
+  },
+  "test_environment": "Windows isolated W2 schema composition snapshot; all three PR83 changed files replaced byte-for-byte from GitHub and git hash-object checked",
+  "runner": "python -B -X utf8",
+  "tests": [
+    {
+      "command": "python -B -X utf8 -m unittest discover -s tests -q",
+      "passed": 358,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "command": "python -B -X utf8 independent-quality/delivery-bridge-20261016/run_combined_tests.py",
+      "passed": 461,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0
+    }
+  ],
+  "runtime": "WOOLRADAR_DIGEST_TEST_PYTHON overrode checkout path with existing host-installed upstream Python; test uses MockTransport, no external source request",
+  "remote_ci": "No workflow runs or commit statuses were returned for exact PR83 code SHA at time checked; fresh CI install not verified",
+  "limitations": [
+    "Three changed files byte-identical with remote; remaining snapshot files include isolated W1/W2 work and are not claimed as exact PR83 source tree",
+    "Installed host upstream repository Git HEAD not inspected; no claim of verified pinned checkout from host",
+    "Upstream install preparer has not completed an actual fresh download/install in CI",
+    "P06 independent fresh holdout and outbound 09:30 delivery remain unaccepted"
+  ],
+  "safety": "No production DB/tasks/credentials or external notification was changed; no raw reports or logs uploaded"
+}

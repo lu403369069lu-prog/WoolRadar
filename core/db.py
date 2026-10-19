@@ -36,9 +36,11 @@ class Database:
             return
         conn = sqlite3.connect(self.path, timeout=30)
         conn.row_factory = sqlite3.Row
-        conn.execute('PRAGMA journal_mode=WAL')
-        conn.execute('PRAGMA foreign_keys=ON')
         try:
+            # A caller can hold this Database after another process upgrades
+            # the file. Changing journal mode here would mutate a future
+            # schema *before* write_transaction() can reject that version.
+            conn.execute('PRAGMA foreign_keys=ON')
             yield conn
             conn.commit()
         except Exception:
@@ -46,6 +48,20 @@ class Database:
             raise
         finally:
             conn.close()
+
+    @contextmanager
+    def write_transaction(self):
+        """Reserve a writer slot and reject incompatible migrations atomically.
+
+        All application writes must enter through this boundary. Reusing an
+        existing candidate transaction retains its original writer fence.
+        """
+        with self.connect() as conn:
+            if not conn.in_transaction:
+                conn.execute('BEGIN IMMEDIATE')
+            if conn.execute('PRAGMA user_version').fetchone()[0] > 1:
+                raise RuntimeError('UNSUPPORTED_DATABASE_SCHEMA_VERSION')
+            yield conn
 
     @contextmanager
     def candidate_transaction(self):
@@ -57,8 +73,9 @@ class Database:
         """
         if getattr(self._transaction_state, 'connection', None) is not None:
             raise RuntimeError('CANDIDATE_TRANSACTION_ALREADY_ACTIVE')
-        with self.connect() as conn:
-            conn.execute('BEGIN IMMEDIATE')
+        with self.write_transaction() as conn:
+            if not conn.in_transaction:
+                conn.execute('BEGIN IMMEDIATE')
             self._transaction_state.connection = conn
             try:
                 yield
@@ -69,17 +86,24 @@ class Database:
         # Reject a future version before calling connect(), which otherwise
         # switches SQLite into WAL and may execute DDL against an unknown file.
         # The inspection URI is read-only and leaves the DB untouched.
-        if self.path.is_file():
+        new_file = not self.path.is_file()
+        if not new_file:
             uri = self.path.resolve().as_uri() + '?mode=ro'
             with closing(sqlite3.connect(uri, uri=True)) as inspection:
                 version = inspection.execute('PRAGMA user_version').fetchone()[0]
             if version > 1:
                 raise RuntimeError('UNSUPPORTED_DATABASE_SCHEMA_VERSION')
-        with self.connect() as conn:
+        if new_file:
+            # Establish WAL only when initializing a new file. Existing files
+            # may belong to a newer application and must retain their mode.
+            with self.connect() as conn:
+                conn.execute('PRAGMA journal_mode=WAL')
+        with self.write_transaction() as conn:
             # Recheck after the writer reservation: another version may have
             # committed since the read-only preflight. Never use executescript
             # here: its implicit COMMIT would release this migration fence.
-            conn.execute('BEGIN IMMEDIATE')
+            if not conn.in_transaction:
+                conn.execute('BEGIN IMMEDIATE')
             if conn.execute('PRAGMA user_version').fetchone()[0] > 1:
                 raise RuntimeError('UNSUPPORTED_DATABASE_SCHEMA_VERSION')
             schema = '''
@@ -177,7 +201,7 @@ class Database:
             conn.execute('PRAGMA user_version=1')
 
     def upsert_candidate(self, candidate: Candidate) -> UpsertResult:
-        with self.connect() as conn:
+        with self.write_transaction() as conn:
             # Prevent review/reindex from committing between the campaign lookup
             # and event insertion: both operations use BEGIN IMMEDIATE.
             if not conn.in_transaction:
@@ -208,7 +232,7 @@ class Database:
         return UpsertResult(int(event_id), notify)
 
     def add_evidence(self, event_id: int, evidence: Evidence) -> None:
-        with self.connect() as conn:
+        with self.write_transaction() as conn:
             conn.execute(
                 '''INSERT INTO evidence(event_id,kind,url,provenance_key,checked_at,excerpt,claims_json)
                    VALUES(?,?,?,?,?,?,?) ON CONFLICT(event_id,url,provenance_key) DO UPDATE SET
@@ -218,7 +242,7 @@ class Database:
                  evidence.excerpt, json.dumps(evidence.claims, ensure_ascii=False)))
 
     def set_status(self, event_id: int, status: Status, reason: str, claim_scope: str = 'NONE') -> None:
-        with self.connect() as conn:
+        with self.write_transaction() as conn:
             # Lock before reading the previous status so history cannot record
             # another worker's state while this transaction is waiting to write.
             if not conn.in_transaction:
@@ -234,7 +258,7 @@ class Database:
 
     def record_node_run(self, node: str, status: str, items: int = 0, error_code: str = '', detail: str = '') -> None:
         now = utc_now()
-        with self.connect() as conn:
+        with self.write_transaction() as conn:
             conn.execute(
                 'INSERT INTO node_runs(node,started_at,finished_at,status,items,error_code,detail) VALUES(?,?,?,?,?,?,?)',
                 (node, now, now, status, items, error_code, detail))
@@ -340,8 +364,9 @@ class Database:
             utc_now().replace(':', '').replace('-', '') + '-' + uuid4().hex[:12] + '.db')
         if backup.exists():
             raise FileExistsError(backup)
-        with self.connect() as conn:
-            conn.execute('BEGIN IMMEDIATE')
+        with self.write_transaction() as conn:
+            if not conn.in_transaction:
+                conn.execute('BEGIN IMMEDIATE')
             if campaign_review is not None:
                 # review_campaign() checks these preconditions before calling
                 # reindex(), but another reviewer can commit a conflicting

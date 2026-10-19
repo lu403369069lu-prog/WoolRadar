@@ -55,7 +55,7 @@ class NotificationQueue:
         self.db = db
 
     def enqueue(self, event_id: int, batch_id: str, channel: str, payload: str) -> bool:
-        with self.db.connect() as conn:
+        with self.db.write_transaction() as conn:
             cursor = conn.execute('''INSERT OR IGNORE INTO notifications
                 (event_id,batch_id,channel,created_at,result,payload) VALUES(?,?,?,?,?,?)''',
                 (event_id, batch_id, channel, utc_now(), 'PENDING', payload))
@@ -76,8 +76,9 @@ class NotificationQueue:
         if status == 'SKIPPED':
             return False  # No request means no evidence of recovery.
         fingerprint = 'OK' if status == 'OK' else ('ISSUE:' + error_code if error_code else status + ':')
-        with self.db.connect() as conn:
-            conn.execute('BEGIN IMMEDIATE')
+        with self.db.write_transaction() as conn:
+            if not conn.in_transaction:
+                conn.execute('BEGIN IMMEDIATE')
             previous = conn.execute('SELECT fingerprint FROM node_health WHERE node=?', (node,)).fetchone()
             previous_fingerprint = previous['fingerprint'] if previous else ''
             if previous_fingerprint.partition(':')[0] in ('PARTIAL', 'PAUSED', 'FAILED'):
@@ -128,12 +129,12 @@ class NotificationQueue:
                         validation = VerificationEngine().evaluate(Candidate(event['node'], event['source'],
                             event['title'], event['primary_url']), self.db.get_evidence(event['id']))
                     if validation is None or validation.status.value != 'CLAIMABLE':
-                        with self.db.connect() as conn:
+                        with self.db.write_transaction() as conn:
                             conn.execute("UPDATE notifications SET result='STALE' WHERE id=? "
                                 "AND result IN ('PENDING','RETRY','CLAIMED','UNCERTAIN') AND next_attempt<=?", (item['id'], now))
                         continue
                 claim_deadline = now + 300
-                with self.db.connect() as conn:
+                with self.db.write_transaction() as conn:
                     claimed = conn.execute("""UPDATE notifications SET result='CLAIMED',
                         next_attempt=?,attempts=attempts+1 WHERE id=? AND next_attempt<=?
                         AND result IN ('PENDING','RETRY','CLAIMED','UNCERTAIN')
@@ -171,7 +172,7 @@ class NotificationQueue:
                         # A worker can lose ownership during the file write.
                         # Serialize the final claim check, atomic rename, and
                         # SENT transition with the same SQLite writer lock.
-                        with self.db.connect() as conn:
+                        with self.db.write_transaction() as conn:
                             if not conn.in_transaction:
                                 conn.execute('BEGIN IMMEDIATE')
                             owned = conn.execute("""SELECT 1 FROM notifications
@@ -225,7 +226,7 @@ class NotificationQueue:
                 # Keep the ambiguity durable instead of claiming a definite fail.
                 result = 'UNCERTAIN' if not local else 'FAILED'
             success = result == 'SENT'
-            with self.db.connect() as conn:
+            with self.db.write_transaction() as conn:
                 # Do not mark a recycled ID as SENT after network/file I/O.
                 confirmed = conn.execute('''UPDATE notifications SET result=?,next_attempt=? WHERE id=?
                     AND result='CLAIMED' AND attempts=? AND next_attempt=?

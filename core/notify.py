@@ -49,6 +49,20 @@ def _retry_after(header=None, body=None, now=None) -> float:
     return max(delays)
 
 
+def _verified_offer_claimable(db, event_id: int) -> bool:
+    """Reject an explicit terminal decision even if older positive proof remains."""
+    try:
+        event = db.get_event(event_id)
+    except KeyError:
+        return False
+    if event['status'] in ('EXPIRED', 'CONFLICTED', 'FAILED', 'REDEEMED'):
+        return False
+    assessment = VerificationEngine().evaluate(
+        Candidate(event['node'], event['source'], event['title'], event['primary_url']),
+        db.get_evidence(event['id']))
+    return assessment.status.value == 'CLAIMABLE'
+
+
 class NotificationQueue:
     """Durable outbox. Delivery is at-least-once after ambiguous network failures."""
     def __init__(self, db):
@@ -96,9 +110,49 @@ class NotificationQueue:
                 'VALUES(NULL,?,?,?,?,?)', (node, 'local-health', utc_now(), 'PENDING', message))
             return True
 
+    @staticmethod
+    def _reclaim_reindexed_local_claim(conn, item: dict, deadline: float) -> dict | None:
+        """Reclaim only a local receipt whose exact claim moved during reindex.
+
+        The old writer has not published a receipt. Never reclaim Telegram:
+        its external delivery may have succeeded without a durable ACK.
+        A collision with a separate active claim is left alone.
+        """
+        if not item['channel'].startswith('local') or item['event_id'] is None:
+            return None
+        if conn.execute('SELECT 1 FROM events WHERE id=?',
+                        (item['event_id'],)).fetchone() is not None:
+            return None
+        migrated = conn.execute('''SELECT * FROM notifications
+            WHERE id=? AND event_id<>? AND batch_id=? AND channel=?
+            AND created_at=? AND payload=? AND result='CLAIMED'
+            AND attempts=? AND next_attempt=? LIMIT 2''',
+            (item['id'], item['event_id'], item['batch_id'], item['channel'],
+             item['created_at'], item['payload'], item['attempts'] + 1,
+             deadline)).fetchall()
+        if len(migrated) != 1:
+            return None
+        row = migrated[0]
+        if conn.execute('''UPDATE notifications SET next_attempt=0
+            WHERE id=? AND event_id=? AND batch_id=? AND channel=?
+            AND created_at=? AND payload=? AND result='CLAIMED'
+            AND attempts=? AND next_attempt=?''',
+            (row['id'], row['event_id'], row['batch_id'], row['channel'],
+             row['created_at'], row['payload'], row['attempts'], deadline)
+        ).rowcount != 1:
+            return None
+        recovered = dict(row)
+        recovered['next_attempt'] = 0
+        return recovered
+
     def flush(self, policy: dict, sender=None, retry_seconds: int = 300, local_dir: Path | None = None) -> dict:
         summary = {'sent': 0, 'retry': 0, 'local': 0}
-        for item in self.pending():
+        # One bounded replay is allowed when a local claim moves to a
+        # different event ID while retaining its ID during campaign review. The original writer has
+        # not published its temp receipt, so no external duplicate is possible.
+        items = self.pending()
+        recovered_ids = set()
+        for item in items:
             local = item['channel'].startswith('local')
             if local and local_dir is None:
                 continue
@@ -121,14 +175,7 @@ class NotificationQueue:
                 if live is None or any(live[field] != item[field] for field in identity):
                     continue
                 if item['channel'].endswith('-verified'):
-                    try:
-                        event = self.db.get_event(item['event_id'])
-                    except KeyError:
-                        validation = None  # The snapshot refers to a merged event.
-                    else:
-                        validation = VerificationEngine().evaluate(Candidate(event['node'], event['source'],
-                            event['title'], event['primary_url']), self.db.get_evidence(event['id']))
-                    if validation is None or validation.status.value != 'CLAIMABLE':
+                    if not _verified_offer_claimable(self.db, item['event_id']):
                         with self.db.write_transaction() as conn:
                             conn.execute("UPDATE notifications SET result='STALE' WHERE id=? "
                                 "AND result IN ('PENDING','RETRY','CLAIMED','UNCERTAIN') AND next_attempt<=?", (item['id'], now))
@@ -166,17 +213,9 @@ class NotificationQueue:
                             ('event_id', 'batch_id', 'channel', 'created_at', 'payload'))
                     )
                     still_eligible = False
+                    recovered = None
                     if still_owned:
-                        try:
-                            current_event = self.db.get_event(item['event_id'])
-                        except KeyError:
-                            pass
-                        else:
-                            current_result = VerificationEngine().evaluate(
-                                Candidate(current_event['node'], current_event['source'],
-                                          current_event['title'], current_event['primary_url']),
-                                self.db.get_evidence(current_event['id']))
-                            still_eligible = current_result.status.value == 'CLAIMABLE'
+                        still_eligible = _verified_offer_claimable(self.db, item['event_id'])
                         if not still_eligible:
                             with self.db.connect() as conn:
                                 conn.execute(
@@ -184,7 +223,15 @@ class NotificationQueue:
                                     "WHERE id=? AND result='CLAIMED' AND attempts=? "
                                     "AND next_attempt=?",
                                     (item['id'], item['attempts'] + 1, claim_deadline))
+                    elif item['id'] not in recovered_ids:
+                        with self.db.connect() as conn:
+                            recovered = self._reclaim_reindexed_local_claim(
+                                conn, item, claim_deadline)
                 if not still_eligible:
+                    if recovered is not None:
+                        recovered_ids.add(item['id'])
+                        items.append(recovered)
+                        continue
                     if not still_owned:
                         summary['uncertain'] = summary.get('uncertain', 0) + 1
                     continue
@@ -226,22 +273,21 @@ class NotificationQueue:
                                  item['batch_id'], item['channel'], item['created_at'],
                                  item['payload'])).fetchone()
                             if owned is None:
-                                summary['uncertain'] = summary.get('uncertain', 0) + 1
+                                recovered = None
+                                if item['id'] not in recovered_ids:
+                                    recovered = self._reclaim_reindexed_local_claim(
+                                        conn, item, claim_deadline)
+                                if recovered is not None:
+                                    recovered_ids.add(item['id'])
+                                    items.append(recovered)
+                                else:
+                                    summary['uncertain'] = summary.get('uncertain', 0) + 1
                                 continue  # Never rename files belonging to a new owner.
                             # File preparation runs outside the writer lock.
                             # Recheck eligibility under the final writer lock,
                             # before making a verified local receipt visible.
                             if item['channel'].endswith('-verified'):
-                                try:
-                                    current_event = self.db.get_event(item['event_id'])
-                                except KeyError:
-                                    still_eligible = False
-                                else:
-                                    assessment = VerificationEngine().evaluate(
-                                        Candidate(current_event['node'], current_event['source'],
-                                                  current_event['title'], current_event['primary_url']),
-                                        self.db.get_evidence(current_event['id']))
-                                    still_eligible = assessment.status.value == 'CLAIMABLE'
+                                still_eligible = _verified_offer_claimable(self.db, item['event_id'])
                                 if not still_eligible:
                                     conn.execute("""UPDATE notifications SET result='STALE',
                                         next_attempt=0 WHERE id=? AND result='CLAIMED'

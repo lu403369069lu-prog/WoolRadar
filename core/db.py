@@ -479,12 +479,24 @@ class Database:
                             'UPDATE notifications SET result=?,attempts=max(attempts,?),'
                             'next_attempt=max(next_attempt,?) WHERE id=?',
                             (state, notice['attempts'], notice['next_attempt'], survivor['id']))
-                for table, columns in (
-                    ('sightings', 'node,source,url,discovered_at'),
-                    ('notifications', 'batch_id,channel,created_at,result,payload,attempts,next_attempt')):
-                    conn.execute(f'INSERT OR IGNORE INTO {table}(event_id,{columns}) '
-                        f'SELECT ?,{columns} FROM {table} WHERE event_id=?', (keep, old))
-                    conn.execute(f'DELETE FROM {table} WHERE event_id=?', (old,))
+                conn.execute('INSERT OR IGNORE INTO sightings(event_id,node,source,url,discovered_at) '
+                    'SELECT ?,node,source,url,discovered_at FROM sightings WHERE event_id=?',
+                    (keep, old))
+                conn.execute('DELETE FROM sightings WHERE event_id=?', (old,))
+                # Preserve the outbox ID and its claim fence when the survivor
+                # has no notice of this channel. The old worker will reject the
+                # changed event ID and may safely reclaim a *local* receipt.
+                # On a collision the survivor already has a distinct owner;
+                # never let the losing worker reclaim that owner's notice.
+                for notice in conn.execute('SELECT id,batch_id,channel FROM notifications '
+                                           'WHERE event_id=?', (old,)).fetchall():
+                    survivor = conn.execute('SELECT 1 FROM notifications '
+                        'WHERE event_id=? AND batch_id=? AND channel=?',
+                        (keep, notice['batch_id'], notice['channel'])).fetchone()
+                    if survivor is None:
+                        conn.execute('UPDATE notifications SET event_id=? WHERE id=?',
+                                     (keep, notice['id']))
+                conn.execute('DELETE FROM notifications WHERE event_id=?', (old,))
                 conn.execute('UPDATE status_history SET event_id=? WHERE event_id=?', (keep, old))
                 conn.execute('UPDATE events SET first_seen=min(first_seen,?),last_seen=max(last_seen,?) WHERE id=?',
                     (row['first_seen'], row['last_seen'], keep))

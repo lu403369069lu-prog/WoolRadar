@@ -17,6 +17,67 @@ TEMP = Path(__file__).parents[1] / '.test-tmp'
 
 
 class VerifiedSendRevocationTests(TestCase):
+    def test_terminal_event_status_blocks_verified_telegram_even_with_old_positive_evidence(self):
+        with TemporaryDirectory(dir=TEMP) as temp:
+            db = Database(Path(temp) / 'terminal-status.sqlite')
+            event = db.upsert_candidate(Candidate(
+                'n', 'rss', 'Synthetic grant',
+                'https://publisher.example/terminal-status-2026',
+            )).event_id
+            db.add_evidence(event, Evidence(
+                'official', 'https://official.example/terminal-status', 'old-positive',
+                claims={'open': True, 'public': True},
+            ))
+            queue = NotificationQueue(db)
+            self.assertTrue(queue.enqueue(event, 'b1', 'telegram-verified', 'synthetic'))
+            with db.connect() as conn:
+                conn.execute("UPDATE events SET status='EXPIRED' WHERE id=?", (event,))
+
+            deliveries = []
+            result = queue.flush({'telegram_send_enabled': True},
+                                 sender=lambda payload: deliveries.append(payload) or 'SENT')
+            self.assertEqual(deliveries, [])
+            self.assertEqual(result['sent'], 0)
+            with db.connect() as conn:
+                self.assertEqual(conn.execute(
+                    'SELECT result FROM notifications WHERE event_id=?', (event,),
+                ).fetchone()['result'], 'STALE')
+
+    def test_status_revocation_during_verified_local_file_write_prevents_receipt(self):
+        with TemporaryDirectory(dir=TEMP) as temp:
+            db = Database(Path(temp) / 'status-file-revoke.sqlite')
+            event = db.upsert_candidate(Candidate(
+                'n', 'rss', 'Synthetic grant',
+                'https://publisher.example/status-file-revoke-2026',
+            )).event_id
+            db.add_evidence(event, Evidence(
+                'official', 'https://official.example/status-file-revoke', 'old-positive',
+                claims={'open': True, 'public': True},
+            ))
+            queue = NotificationQueue(db)
+            self.assertTrue(queue.enqueue(event, 'b1', 'local-verified', 'synthetic'))
+            output = Path(temp) / 'receipts'
+            original_write = Path.write_text
+            revoked = []
+
+            def revoke_on_temp_write(path, content, *args, **kwargs):
+                written = original_write(path, content, *args, **kwargs)
+                if path.suffix == '.tmp' and not revoked:
+                    revoked.append(True)
+                    with db.connect() as conn:
+                        conn.execute("UPDATE events SET status='EXPIRED' WHERE id=?", (event,))
+                return written
+
+            with mock.patch.object(Path, 'write_text', new=revoke_on_temp_write):
+                result = queue.flush({}, local_dir=output)
+            self.assertEqual(revoked, [True])
+            self.assertEqual(result['local'], 0)
+            self.assertEqual(list(output.glob('notification-*.json')), [])
+            with db.connect() as conn:
+                self.assertEqual(conn.execute(
+                    'SELECT result FROM notifications WHERE event_id=?', (event,),
+                ).fetchone()['result'], 'STALE')
+
     @classmethod
     def setUpClass(cls):
         TEMP.mkdir(exist_ok=True)

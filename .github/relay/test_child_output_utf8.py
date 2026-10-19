@@ -18,7 +18,7 @@ SPEC.loader.exec_module(worker)
 class ChildOutputByteIntegrityTests(unittest.TestCase):
     def exercise(self, stdout, stderr=b""):
         with tempfile.TemporaryDirectory(prefix="relay-byte-contract-") as temp:
-            root = Path(temp)
+            root = Path(temp).resolve()
             (root / "tests").mkdir()
             argv = ["python", "-m", "unittest", "discover", "-s", "tests",
                     "-p", "test_notifications.py"]

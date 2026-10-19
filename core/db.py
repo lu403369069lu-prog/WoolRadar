@@ -36,9 +36,9 @@ class Database:
             return
         conn = sqlite3.connect(self.path, timeout=30)
         conn.row_factory = sqlite3.Row
-        conn.execute('PRAGMA journal_mode=WAL')
-        conn.execute('PRAGMA foreign_keys=ON')
         try:
+            conn.execute('PRAGMA journal_mode=WAL')
+            conn.execute('PRAGMA foreign_keys=ON')
             yield conn
             conn.commit()
         except Exception:
@@ -46,6 +46,20 @@ class Database:
             raise
         finally:
             conn.close()
+
+    @contextmanager
+    def write_transaction(self):
+        """Reserve a writer slot and reject incompatible migrations atomically.
+
+        All application writes must enter through this boundary. Reusing an
+        existing candidate transaction retains its original writer fence.
+        """
+        with self.connect() as conn:
+            if not conn.in_transaction:
+                conn.execute('BEGIN IMMEDIATE')
+            if conn.execute('PRAGMA user_version').fetchone()[0] > 1:
+                raise RuntimeError('UNSUPPORTED_DATABASE_SCHEMA_VERSION')
+            yield conn
 
     @contextmanager
     def candidate_transaction(self):
@@ -57,8 +71,9 @@ class Database:
         """
         if getattr(self._transaction_state, 'connection', None) is not None:
             raise RuntimeError('CANDIDATE_TRANSACTION_ALREADY_ACTIVE')
-        with self.connect() as conn:
-            conn.execute('BEGIN IMMEDIATE')
+        with self.write_transaction() as conn:
+            if not conn.in_transaction:
+                conn.execute('BEGIN IMMEDIATE')
             self._transaction_state.connection = conn
             try:
                 yield
@@ -75,11 +90,12 @@ class Database:
                 version = inspection.execute('PRAGMA user_version').fetchone()[0]
             if version > 1:
                 raise RuntimeError('UNSUPPORTED_DATABASE_SCHEMA_VERSION')
-        with self.connect() as conn:
+        with self.write_transaction() as conn:
             # Recheck after the writer reservation: another version may have
             # committed since the read-only preflight. Never use executescript
             # here: its implicit COMMIT would release this migration fence.
-            conn.execute('BEGIN IMMEDIATE')
+            if not conn.in_transaction:
+                conn.execute('BEGIN IMMEDIATE')
             if conn.execute('PRAGMA user_version').fetchone()[0] > 1:
                 raise RuntimeError('UNSUPPORTED_DATABASE_SCHEMA_VERSION')
             schema = '''
@@ -177,7 +193,7 @@ class Database:
             conn.execute('PRAGMA user_version=1')
 
     def upsert_candidate(self, candidate: Candidate) -> UpsertResult:
-        with self.connect() as conn:
+        with self.write_transaction() as conn:
             # Prevent review/reindex from committing between the campaign lookup
             # and event insertion: both operations use BEGIN IMMEDIATE.
             if not conn.in_transaction:
@@ -208,7 +224,7 @@ class Database:
         return UpsertResult(int(event_id), notify)
 
     def add_evidence(self, event_id: int, evidence: Evidence) -> None:
-        with self.connect() as conn:
+        with self.write_transaction() as conn:
             conn.execute(
                 '''INSERT INTO evidence(event_id,kind,url,provenance_key,checked_at,excerpt,claims_json)
                    VALUES(?,?,?,?,?,?,?) ON CONFLICT(event_id,url,provenance_key) DO UPDATE SET
@@ -218,7 +234,7 @@ class Database:
                  evidence.excerpt, json.dumps(evidence.claims, ensure_ascii=False)))
 
     def set_status(self, event_id: int, status: Status, reason: str, claim_scope: str = 'NONE') -> None:
-        with self.connect() as conn:
+        with self.write_transaction() as conn:
             # Lock before reading the previous status so history cannot record
             # another worker's state while this transaction is waiting to write.
             if not conn.in_transaction:
@@ -234,7 +250,7 @@ class Database:
 
     def record_node_run(self, node: str, status: str, items: int = 0, error_code: str = '', detail: str = '') -> None:
         now = utc_now()
-        with self.connect() as conn:
+        with self.write_transaction() as conn:
             conn.execute(
                 'INSERT INTO node_runs(node,started_at,finished_at,status,items,error_code,detail) VALUES(?,?,?,?,?,?,?)',
                 (node, now, now, status, items, error_code, detail))
@@ -340,8 +356,9 @@ class Database:
             utc_now().replace(':', '').replace('-', '') + '-' + uuid4().hex[:12] + '.db')
         if backup.exists():
             raise FileExistsError(backup)
-        with self.connect() as conn:
-            conn.execute('BEGIN IMMEDIATE')
+        with self.write_transaction() as conn:
+            if not conn.in_transaction:
+                conn.execute('BEGIN IMMEDIATE')
             if campaign_review is not None:
                 # review_campaign() checks these preconditions before calling
                 # reindex(), but another reviewer can commit a conflicting
@@ -357,160 +374,202 @@ class Database:
                 if not members <= seen:
                     raise ValueError('CAMPAIGN_MEMBER_NOT_IN_DATABASE')
                 for url in members:
-                    previous = conn.execute(
-                        'SELECT review_json FROM campaign_links WHERE url=?', (url,)).fetchone()
-                    if previous and json.loads(previous[0]).get('campaign_url') != campaign_review.get('campaign_url'):
-                        raise ValueError('CAMPAIGN_REVIEW_CONFLICT')
-            # Stage and validate the snapshot before exposing a final .db file.
-            # sqlite backup failures can otherwise leave a partially written .db
-            # that looks like a usable recovery point. Same-directory rename is
-            # atomic, including on Windows after all SQLite handles are closed.
-            staging = backup.with_suffix('.tmp')
-            try:
-                with closing(sqlite3.connect(self.path)) as reader, closing(sqlite3.connect(staging)) as target:
-                    reader.backup(target)  # Include committed WAL contents.
-                    if target.execute('PRAGMA integrity_check').fetchone()[0] != 'ok':
-                        raise sqlite3.DatabaseError('REINDEX_BACKUP_INTEGRITY_FAILED')
-                staging.replace(backup)
-            finally:
-                staging.unlink(missing_ok=True)
-            if campaign_review is not None:
-                for url in campaign_review['member_urls']:
-                    conn.execute('INSERT OR REPLACE INTO campaign_links VALUES(?,?)', (normalize_url(url), json.dumps(campaign_review, ensure_ascii=False)))
-                    members = conn.execute('SELECT id,primary_url FROM events UNION SELECT event_id,url FROM sightings UNION SELECT event_id,url FROM evidence').fetchall()
-                    for member in members:
-                        if normalize_url(member[1]) != normalize_url(url):
-                            continue
-                        conn.execute('''INSERT INTO evidence(event_id,kind,url,provenance_key,checked_at,excerpt,claims_json)
-                            VALUES(?,?,?,?,?,?,?) ON CONFLICT(event_id,url,provenance_key) DO UPDATE SET
-                            checked_at=excluded.checked_at''', (member[0], 'community_repost', member[1],
-                            'reviewed-campaign:' + campaign_review['campaign_url'], utc_now(),
-                            'Public article embeds the same reviewed campaign identity; no independent qualification proof.',
-                            json.dumps({'campaign_identity': campaign_review['campaign_url'], 'method': 'normal_browser_read'})))
-            rows = [dict(r) for r in conn.execute('SELECT * FROM events ORDER BY id')]
-            for row in rows:
-                conn.execute('UPDATE events SET canonical_key=? WHERE id=?',
-                    ('migration:' + str(row['id']), row['id']))
-            groups = {}
-            merged = 0
-            merged_survivors = set()
-            for row in rows:
-                metadata = json.loads(row['metadata_json'])
-                link = conn.execute('SELECT review_json FROM campaign_links WHERE url=?', (normalize_url(row['primary_url']),)).fetchone()
-                if link:
-                    metadata['campaign_review'] = json.loads(link[0])
-                    conn.execute('UPDATE events SET metadata_json=? WHERE id=?', (json.dumps(metadata, ensure_ascii=False), row['id']))
-                candidate = Candidate(row['node'], row['source'], row['title'], row['primary_url'],
-                    published_at=row['published_at'] or '', batch_id=row['batch_id'],
-                    metadata=metadata)
-                key = canonical_key(candidate)
-                identity = (key, row['batch_id'])
-                if identity not in groups:
-                    groups[identity] = row['id']
-                    conn.execute('UPDATE events SET canonical_key=? WHERE id=?', (key, row['id']))
-                    continue
-                keep, old = groups[identity], row['id']
-                merged_survivors.add(keep)
-                self._merge_evidence(conn, keep, old)
-                # A duplicate channel key can exist on both campaign members.
-                # Plain INSERT OR IGNORE would discard a confirmed SENT notice
-                # from the losing event and leave the survivor PENDING, so the
-                # same grant could be announced twice after this merge.
-                # Preserve historical delivery and in-flight claims before the
-                # loser rows are deleted. Never upgrade a status to SENT unless
-                # a sender actually recorded SENT on one of the two events.
-                old_notices = conn.execute(
-                    "SELECT batch_id,channel,result,payload,attempts,next_attempt "
-                    "FROM notifications WHERE event_id=? AND result IN ('SENT','CLAIMED','RETRY','UNCERTAIN')",
-                    (old,)).fetchall()
-                for notice in old_notices:
-                    survivor = conn.execute(
-                        'SELECT id,result FROM notifications '
-                        'WHERE event_id=? AND batch_id=? AND channel=?',
-                        (keep, notice['batch_id'], notice['channel'])).fetchone()
-                    if survivor is None or survivor['result'] == 'SENT':
-                        continue  # A unique-key-free notice is copied below.
-                    if notice['result'] == 'SENT':
-                        conn.execute(
-                            "UPDATE notifications SET result='SENT',payload=?,"
-                            "attempts=max(attempts,?),next_attempt=0 WHERE id=?",
-                            (notice['payload'], notice['attempts'], survivor['id']))
-                    elif notice['result'] == 'CLAIMED':
-                        # Both rows can be in flight. Preserve the longest lease
-                        # and attempts even when the survivor is also CLAIMED.
-                        conn.execute(
-                            "UPDATE notifications SET result='CLAIMED',payload=?,"
-                            "attempts=max(attempts,?),next_attempt=max(next_attempt,?) WHERE id=?",
-                            (notice['payload'], notice['attempts'],
-                             notice['next_attempt'], survivor['id']))
-                    elif notice['result'] in ('RETRY', 'UNCERTAIN'):
-                        # Identity reindex must not shorten a server cooldown or
-                        # erase an ambiguous accepted-send history. Keep an
-                        # active claim; changing its fence invalidates stale ACKs.
-                        state = ('CLAIMED' if survivor['result'] == 'CLAIMED' else
-                                 'UNCERTAIN' if 'UNCERTAIN' in (survivor['result'], notice['result']) else
-                                 'RETRY')
-                        conn.execute(
-                            'UPDATE notifications SET result=?,attempts=max(attempts,?),'
-                            'next_attempt=max(next_attempt,?) WHERE id=?',
-                            (state, notice['attempts'], notice['next_attempt'], survivor['id']))
-                for table, columns in (
-                    ('sightings', 'node,source,url,discovered_at'),
-                    ('notifications', 'batch_id,channel,created_at,result,payload,attempts,next_attempt')):
-                    conn.execute(f'INSERT OR IGNORE INTO {table}(event_id,{columns}) '
-                        f'SELECT ?,{columns} FROM {table} WHERE event_id=?', (keep, old))
-                    conn.execute(f'DELETE FROM {table} WHERE event_id=?', (old,))
-                conn.execute('UPDATE status_history SET event_id=? WHERE event_id=?', (keep, old))
-                conn.execute('UPDATE events SET first_seen=min(first_seen,?),last_seen=max(last_seen,?) WHERE id=?',
-                    (row['first_seen'], row['last_seen'], keep))
-                conn.execute('DELETE FROM events WHERE id=?', (old,))
-                merged += 1
-            # Recompute only merged survivors in this transaction: opening a
-            # second Database connection here would miss uncommitted evidence.
-            from .verifier import VerificationEngine
-            for event_id in sorted(merged_survivors):
-                current = dict(conn.execute('SELECT * FROM events WHERE id=?', (event_id,)).fetchone())
-                evidence = [Evidence(kind=item['kind'], url=item['url'],
-                    provenance_key=item['provenance_key'], checked_at=item['checked_at'],
-                    excerpt=item['excerpt'] or '', claims=json.loads(item['claims_json'] or '{}'))
-                    for item in conn.execute('SELECT * FROM evidence WHERE event_id=? ORDER BY id', (event_id,))]
-                candidate = Candidate(current['node'], current['source'], current['title'], current['primary_url'],
-                    published_at=current['published_at'] or '', batch_id=current['batch_id'],
-                    metadata=json.loads(current['metadata_json']))
-                result = VerificationEngine().evaluate(candidate, evidence)
-                if (current['status'], current['claim_scope']) != (result.status.value, result.claim_scope):
-                    conn.execute('UPDATE events SET status=?,claim_scope=? WHERE id=?',
-                        (result.status.value, result.claim_scope, event_id))
-                    conn.execute('INSERT INTO status_history(event_id,old_status,new_status,reason,changed_at) VALUES(?,?,?,?,?)',
-                        (event_id, current['status'], result.status.value, '证据归组后重新核验：' + result.reason, utc_now()))
-        return {'backup': str(backup), 'merged': merged, 'remaining': len(rows) - merged}
+                    previous…3797 tokens truncated…def pending(self) -> list[dict]:
+        with self.db.connect() as conn:
+            return [dict(row) for row in conn.execute(
+                "SELECT * FROM notifications WHERE result IN ('PENDING','RETRY','CLAIMED','UNCERTAIN') ORDER BY id")]
 
-    def _merge_evidence(self, conn, keep, old):
-        columns = ('kind', 'url', 'provenance_key', 'checked_at', 'excerpt', 'claims_json')
-        for incoming in [dict(row) for row in conn.execute('SELECT * FROM evidence WHERE event_id=?', (old,))]:
-            prior = conn.execute('SELECT * FROM evidence WHERE event_id=? AND url=? AND provenance_key=?', (keep, incoming['url'], incoming['provenance_key'])).fetchone()
-            if prior is None:
-                conn.execute('INSERT INTO evidence(event_id,kind,url,provenance_key,checked_at,excerpt,claims_json) VALUES(?,?,?,?,?,?,?)', (keep, *(incoming[key] for key in columns)))
+    def record_health(self, node: str, status: str, error_code: str) -> bool:
+        if status == 'SKIPPED':
+            return False  # No request means no evidence of recovery.
+        fingerprint = 'OK' if status == 'OK' else ('ISSUE:' + error_code if error_code else status + ':')
+        with self.db.write_transaction() as conn:
+            if not conn.in_transaction:
+                conn.execute('BEGIN IMMEDIATE')
+            previous = conn.execute('SELECT fingerprint FROM node_health WHERE node=?', (node,)).fetchone()
+            previous_fingerprint = previous['fingerprint'] if previous else ''
+            if previous_fingerprint.partition(':')[0] in ('PARTIAL', 'PAUSED', 'FAILED'):
+                old_error = previous_fingerprint.partition(':')[2]
+                if old_error:
+                    previous_fingerprint = 'ISSUE:' + old_error
+            if previous and previous_fingerprint == fingerprint:
+                return False
+            conn.execute('INSERT INTO node_health VALUES(?,?,?) ON CONFLICT(node) DO UPDATE SET '
+                'fingerprint=excluded.fingerprint,checked_at=excluded.checked_at', (node, fingerprint, utc_now()))
+            if not previous and status == 'OK':
+                return False
+            message = f'【节点恢复】{node}' if status == 'OK' else f'【节点故障或受限】{node}\n状态：{status}\n原因：{error_code}'
+            conn.execute('INSERT INTO notifications(event_id,batch_id,channel,created_at,result,payload) '
+                'VALUES(NULL,?,?,?,?,?)', (node, 'local-health', utc_now(), 'PENDING', message))
+            return True
+
+    def flush(self, policy: dict, sender=None, retry_seconds: int = 300, local_dir: Path | None = None) -> dict:
+        summary = {'sent': 0, 'retry': 0, 'local': 0}
+        for item in self.pending():
+            local = item['channel'].startswith('local')
+            if local and local_dir is None:
                 continue
-            prior = dict(prior)
-            for version in (prior, incoming):
-                conn.execute('INSERT INTO migration_evidence_archive(original_event_id,merged_into,migrated_at,payload_json) VALUES(?,?,?,?)',
-                             (version['event_id'], keep, utc_now(), json.dumps(version, ensure_ascii=False)))
+            if not local and not policy.get('telegram_send_enabled', False):
+                continue
+            now = time.time()
+            # pending() is a snapshot. A campaign reindex may merge away its
+            # event before this worker claims the notice. Hold the same SQLite
+            # writer reservation used by ingestion/reindex across *both* the
+            # event/evidence validation and the outbox claim. Network delivery
+            # and local file writes happen strictly after the lock is released.
+            with self.db.candidate_transaction():
+                # pending() is an unlocked snapshot. SQLite INTEGER PRIMARY KEY
+                # may recycle a deleted notice ID after campaign reindex.
+                with self.db.connect() as conn:
+                    live = conn.execute('SELECT * FROM notifications WHERE id=?',
+                                        (item['id'],)).fetchone()
+                identity = ('event_id', 'batch_id', 'channel', 'created_at',
+                            'payload', 'attempts', 'next_attempt', 'result')
+                if live is None or any(live[field] != item[field] for field in identity):
+                    continue
+                if item['channel'].endswith('-verified'):
+                    try:
+                        event = self.db.get_event(item['event_id'])
+                    except KeyError:
+                        validation = None  # The snapshot refers to a merged event.
+                    else:
+                        validation = VerificationEngine().evaluate(Candidate(event['node'], event['source'],
+                            event['title'], event['primary_url']), self.db.get_evidence(event['id']))
+                    if validation is None or validation.status.value != 'CLAIMABLE':
+                        with self.db.write_transaction() as conn:
+                            conn.execute("UPDATE notifications SET result='STALE' WHERE id=? "
+                                "AND result IN ('PENDING','RETRY','CLAIMED','UNCERTAIN') AND next_attempt<=?", (item['id'], now))
+                        continue
+                claim_deadline = now + 300
+                with self.db.write_transaction() as conn:
+                    claimed = conn.execute("""UPDATE notifications SET result='CLAIMED',
+                        next_attempt=?,attempts=attempts+1 WHERE id=? AND next_attempt<=?
+                        AND result IN ('PENDING','RETRY','CLAIMED','UNCERTAIN')
+                        AND event_id IS ? AND batch_id=? AND channel=? AND created_at=?
+                        AND payload=? AND attempts=? AND next_attempt=?""",
+                        (claim_deadline, item['id'], now, item['event_id'], item['batch_id'],
+                         item['channel'], item['created_at'], item['payload'],
+                         item['attempts'], item['next_attempt'])).rowcount
+            if not claimed:
+                continue
+            retry_delay = max(0, retry_seconds)
             try:
-                before = datetime.fromisoformat(prior['checked_at'].replace('Z', '+00:00'))
-                after = datetime.fromisoformat(incoming['checked_at'].replace('Z', '+00:00'))
-                if before.tzinfo is None or after.tzinfo is None:
-                    raise ValueError('EVIDENCE_TIMEZONE_REQUIRED')
-                order = (after > before) - (after < before)
-            except (ValueError, TypeError, AttributeError):
-                order = 0
-            if incoming['kind'] == prior['kind'] and order > 0:
-                conn.execute('UPDATE evidence SET kind=?,checked_at=?,excerpt=?,claims_json=? WHERE id=?',
-                             (incoming['kind'], incoming['checked_at'], incoming['excerpt'], incoming['claims_json'], prior['id']))
-            elif incoming['kind'] != prior['kind'] or (order == 0 and incoming['claims_json'] != prior['claims_json']):
-                # Unordered/conflicting versions stay visible; the shared URL
-                # keeps them in one provenance group, never two independent votes.
-                version_key = incoming['provenance_key'] + ':migration:' + hashlib.sha256(json.dumps({key: incoming[key] for key in columns}, sort_keys=True).encode()).hexdigest()[:16]
-                conn.execute('INSERT OR IGNORE INTO evidence(event_id,kind,url,provenance_key,checked_at,excerpt,claims_json) VALUES(?,?,?,?,?,?,?)',
-                             (keep, incoming['kind'], incoming['url'], version_key, incoming['checked_at'], incoming['excerpt'], incoming['claims_json']))
-        conn.execute('DELETE FROM evidence WHERE event_id=?', (old,))
+                if local:
+                    output = Path(local_dir)
+                    output.mkdir(parents=True, exist_ok=True)
+                    # SQLite can recycle an integer ID after campaign reindex. Use a
+                    # stable fingerprint of the full notification identity so a
+                    # later unrelated notice never overwrites the first receipt.
+                    identity_bytes = json.dumps([
+                        item['id'], item['event_id'], item['batch_id'],
+                        item['channel'], item['created_at'], item['payload']
+                    ], ensure_ascii=False, separators=(',', ':')).encode('utf-8')
+                    receipt_id = hashlib.sha256(identity_bytes).hexdigest()[:20]
+                    destination = output / f"notification-{item['id']}-{receipt_id}.json"
+                    # The claim attempt and a random nonce isolate files from
+                    # another worker that reclaimed the same durable outbox row.
+                    attempt = item['attempts'] + 1
+                    temporary = destination.with_name(
+                        f".{destination.name}.attempt-{attempt}-{os.urandom(8).hex()}.tmp")
+                    try:
+                        temporary.write_text(json.dumps({
+                            'event_id': item['event_id'], 'batch_id': item['batch_id'],
+                            'created_at': item['created_at'], 'message': item['payload']
+                        }, ensure_ascii=False, indent=2), encoding='utf-8')
+                        # A worker can lose ownership during the file write.
+                        # Serialize the final claim check, atomic rename, and
+                        # SENT transition with the same SQLite writer lock.
+                        with self.db.write_transaction() as conn:
+                            if not conn.in_transaction:
+                                conn.execute('BEGIN IMMEDIATE')
+                            owned = conn.execute("""SELECT 1 FROM notifications
+                                WHERE id=? AND result='CLAIMED' AND attempts=?
+                                AND next_attempt=? AND event_id IS ? AND batch_id=?
+                                AND channel=? AND created_at=? AND payload=?""",
+                                (item['id'], attempt, claim_deadline, item['event_id'],
+                                 item['batch_id'], item['channel'], item['created_at'],
+                                 item['payload'])).fetchone()
+                            if owned is None:
+                                summary['uncertain'] = summary.get('uncertain', 0) + 1
+                                continue  # Never rename files belonging to a new owner.
+                            try:
+                                identical_receipt = destination.read_bytes() == temporary.read_bytes()
+                            except FileNotFoundError:
+                                identical_receipt = False
+                            if not identical_receipt:
+                                temporary.replace(destination)
+                            updated = conn.execute("""UPDATE notifications
+                                SET result='SENT',next_attempt=0
+                                WHERE id=? AND result='CLAIMED' AND attempts=?""",
+                                (item['id'], attempt)).rowcount
+                            if updated != 1:
+                                raise RuntimeError('LOCAL_DELIVERY_CLAIM_LOST')
+                        summary['local'] += 1
+                        continue  # Local SENT was already committed under fencing.
+                    finally:
+                        temporary.unlink(missing_ok=True)
+                else:
+                    result = (sender or TelegramNotifier(policy).send)(item['payload'])
+            except TelegramRateLimited as exc:
+                retry_delay = max(retry_delay, exc.retry_after)
+                result = 'RATE_LIMITED'
+            except urllib.error.HTTPError as exc:
+                # A server-declared 429 cooldown is a definite throttling
+                # response, not confirmation of a sent message. Do not store
+                # exception text (the request URL can contain a bot token).
+                if not local and exc.code == 429:
+                    header = exc.headers.get('Retry-After') if exc.headers else None
+                    try:
+                        body = json.loads(exc.read(8192))
+                    except (ValueError, TypeError, OSError):
+                        body = None
+                    retry_delay = max(retry_delay, _retry_after(header, body, now))
+                    result = 'RATE_LIMITED'
+                else:
+                    result = 'UNCERTAIN' if not local else 'FAILED'
+            except Exception:
+                # Exceptions can contain a bot token in a request URL. Never persist them.
+                # Network timeouts may occur after Telegram accepted the send.
+                # Keep the ambiguity durable instead of claiming a definite fail.
+                result = 'UNCERTAIN' if not local else 'FAILED'
+            success = result == 'SENT'
+            with self.db.write_transaction() as conn:
+                # Do not mark a recycled ID as SENT after network/file I/O.
+                confirmed = conn.execute('''UPDATE notifications SET result=?,next_attempt=? WHERE id=?
+                    AND result='CLAIMED' AND attempts=? AND next_attempt=?
+                    AND event_id IS ? AND batch_id=? AND channel=? AND created_at=? AND payload=?''',
+                    ('SENT' if success else 'UNCERTAIN' if result == 'UNCERTAIN' else 'RETRY',
+                     0 if success else now + retry_delay,
+                     item['id'], item['attempts'] + 1, claim_deadline, item['event_id'],
+                     item['batch_id'], item['channel'], item['created_at'], item['payload'])).rowcount
+            if confirmed != 1:
+                # An external send may have happened, but migration/recycling
+                # invalidated the durable outbox claim. Never count an
+                # uncommitted delivery as confirmed. At-least-once remains.
+                summary['uncertain'] = summary.get('uncertain', 0) + 1
+            else:
+                if result == 'UNCERTAIN':
+                    summary['uncertain'] = summary.get('uncertain', 0) + 1
+                else:
+                    summary['local' if local and success else 'sent' if success else 'retry'] += 1
+        return summary
+
+
+class TelegramNotifier:
+    def __init__(self, policy: dict):
+        self.policy = policy
+
+    def send(self, text: str) -> str:
+        if not self.policy.get('telegram_send_enabled', False):
+            return 'DISABLED'
+        token = os.getenv('WOOLRADAR_TELEGRAM_BOT_TOKEN', '')
+        chat_id = os.getenv('WOOLRADAR_TELEGRAM_CHAT_ID', '')
+        if not token or not chat_id:
+            return 'MISSING_CREDENTIALS'
+        payload = urllib.parse.urlencode({'chat_id': chat_id, 'text': text, 'disable_web_page_preview': 'true'}).encode()
+        request = urllib.request.Request(f'https://api.telegram.org/bot{token}/sendMessage', data=payload, method='POST')
+        with urllib.request.urlopen(request, timeout=15) as response:
+            result = json.loads(response.read())
+        if isinstance(result, dict) and result.get('ok') is False and result.get('error_code') == 429:
+            raise TelegramRateLimited(_retry_after(body=result))
+        return 'SENT' if isinstance(result, dict) and result.get('ok') is True else 'FAILED'

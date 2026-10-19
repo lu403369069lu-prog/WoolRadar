@@ -1,0 +1,54 @@
+{
+  "status": "CANDIDATE_TESTED_NOT_MERGED",
+  "base_pr": 23,
+  "base_sha": "34380339b96026ef99032e4ae2c67c8f59d015e5",
+  "platform": "Windows",
+  "python": "3.14.5",
+  "issue": "W2 schema version changed after Database initialization",
+  "red": {
+    "tests": 2,
+    "exit_code": 1,
+    "errors": 0,
+    "detail": "stale Database.record_node_run accepted v2 write; new instance refused v2",
+    "failures": 1
+  },
+  "green": [
+    {
+      "exit_code": 0,
+      "command": "python -B -X utf8 -m unittest tests.test_stale_schema_version -v",
+      "total": 3,
+      "skipped": 0,
+      "passed": 3
+    },
+    {
+      "exit_code": 0,
+      "command": "python -B -X utf8 -m unittest discover -s tests -q",
+      "total": 355,
+      "skipped": 0,
+      "passed": 355,
+      "local_log_sha256": "6bbe08fd06610a5536e568a49cccacd467e2e27abe033543cfa804a503e496cf"
+    },
+    {
+      "exit_code": 0,
+      "command": "python -B -X utf8 independent-quality/delivery-bridge-20261016/run_combined_tests.py",
+      "total": 458,
+      "skipped": 0,
+      "passed": 458,
+      "local_log_sha256": "12d6a544d21983c12a552abef6e3385b47e27bdeec22deefefb1c6611dd4b082"
+    }
+  ],
+  "risk": "Other code using the raw Database.connect() to write without write_transaction() is outside this candidate write-boundary guarantee",
+  "constraints": [
+    "synthetic SQLite only",
+    "no production change",
+    "no raw report/SQLite uploaded",
+    "independent review pending",
+    "OUTPUT_NOT_CONNECTED",
+    "W1-W7/P06/holdout still open"
+  ],
+  "changed": [
+    "core/db.py",
+    "core/notify.py",
+    "tests/test_stale_schema_version.py"
+  ]
+}

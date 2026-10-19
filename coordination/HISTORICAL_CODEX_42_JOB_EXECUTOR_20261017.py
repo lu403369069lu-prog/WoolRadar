@@ -89,13 +89,19 @@ def run_commands(commands: list[dict], mapping: list[dict], repo_head: str,
         try:
             done = subprocess.run(item['argv'], cwd=item['cwd'], shell=False,
                                   stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                  text=True, errors='replace', timeout=1800, check=False)
-            code, log = done.returncode, done.stdout
+                                  timeout=1800, check=False)
+            code, logbytes = done.returncode, done.stdout
         except (OSError, subprocess.TimeoutExpired) as exc:
-            code, log = 125, repr(exc)
-        logbytes = log.encode('utf-8')
+            code, logbytes = 125, repr(exc).encode('utf-8')
+        try:
+            log = logbytes.decode('utf-8', errors='strict')
+        except UnicodeDecodeError:
+            # An unverifiable text summary must never be accepted as PASS.
+            log = ''
         (output / (key[:16]+'.log')).write_bytes(logbytes)
         verdict, counts = contract.evaluate_run('HISTORY-TEST',code,log)
+        if code == 0 and not log:
+            verdict = 126
         by_key[key] = {'command':item['command'], 'exit_code':verdict,
                        'observed_exit_code':code, 'counts':counts,
                        'log_sha256':hashlib.sha256(logbytes).hexdigest(),

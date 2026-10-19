@@ -144,6 +144,49 @@ class NotificationQueue:
                          item['attempts'], item['next_attempt'])).rowcount
             if not claimed:
                 continue
+            # Narrow the revocation/dispatch gap: the original evidence check
+            # preceded committing CLAIMED. Other SQLite writers can revoke a
+            # campaign after that commit, while this worker prepares transport.
+            # Recheck both the claim owner and current official evidence at the
+            # last local boundary before I/O. Never hold a write lock during
+            # network delivery; later revocations remain an in-flight concern.
+            if item['channel'].endswith('-verified'):
+                with self.db.candidate_transaction():
+                    with self.db.connect() as conn:
+                        latest = conn.execute(
+                            'SELECT * FROM notifications WHERE id=?', (item['id'],)
+                        ).fetchone()
+                    still_owned = (
+                        latest is not None and
+                        latest['result'] == 'CLAIMED' and
+                        latest['attempts'] == item['attempts'] + 1 and
+                        latest['next_attempt'] == claim_deadline and
+                        all(latest[key] == item[key] for key in
+                            ('event_id', 'batch_id', 'channel', 'created_at', 'payload'))
+                    )
+                    still_eligible = False
+                    if still_owned:
+                        try:
+                            current_event = self.db.get_event(item['event_id'])
+                        except KeyError:
+                            pass
+                        else:
+                            current_result = VerificationEngine().evaluate(
+                                Candidate(current_event['node'], current_event['source'],
+                                          current_event['title'], current_event['primary_url']),
+                                self.db.get_evidence(current_event['id']))
+                            still_eligible = current_result.status.value == 'CLAIMABLE'
+                        if not still_eligible:
+                            with self.db.connect() as conn:
+                                conn.execute(
+                                    "UPDATE notifications SET result='STALE',next_attempt=0 "
+                                    "WHERE id=? AND result='CLAIMED' AND attempts=? "
+                                    "AND next_attempt=?",
+                                    (item['id'], item['attempts'] + 1, claim_deadline))
+                if not still_eligible:
+                    if not still_owned:
+                        summary['uncertain'] = summary.get('uncertain', 0) + 1
+                    continue
             retry_delay = max(0, retry_seconds)
             try:
                 if local:

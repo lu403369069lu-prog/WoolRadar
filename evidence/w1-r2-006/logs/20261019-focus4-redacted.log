@@ -1,0 +1,9 @@
+test_evidence_revoked_after_claim_never_reaches_sender (tests.test_verified_send_revocation.VerifiedSendRevocationTests.test_evidence_revoked_after_claim_never_reaches_sender) ... ok
+test_inflight_revocation_cannot_undo_confirmed_send (tests.test_verified_send_revocation.VerifiedSendRevocationTests.test_inflight_revocation_cannot_undo_confirmed_send) ... ok
+test_inflight_timeout_after_revocation_remains_uncertain (tests.test_verified_send_revocation.VerifiedSendRevocationTests.test_inflight_timeout_after_revocation_remains_uncertain) ... ok
+test_local_verified_revoked_during_file_write_cannot_publish_receipt (tests.test_verified_send_revocation.VerifiedSendRevocationTests.test_local_verified_revoked_during_file_write_cannot_publish_receipt) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.326s
+
+OK

@@ -23,10 +23,6 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install pinned IANA time zone database for Windows
-        run: |
-          python -m pip install --disable-pip-version-check tzdata==2026.2
-          python -c "from importlib.metadata import version; from zoneinfo import ZoneInfo; assert ZoneInfo('Asia/Shanghai').key == 'Asia/Shanghai'; print('tzdata='+version('tzdata'))"
       - name: Read reviewed immutable queue pin
         id: pin
         run: |

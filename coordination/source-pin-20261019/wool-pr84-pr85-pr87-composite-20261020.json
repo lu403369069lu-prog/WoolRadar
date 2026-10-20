@@ -1,0 +1,75 @@
+{
+  "schema": 1,
+  "kind": "independent_multi_pr_overlay_contract_conflict_and_minimal_reconciliation",
+  "date": "2026-10-20",
+  "executor": "codex-coordinator",
+  "versions": {
+    "main_pr84": "1cbf1eab6dc5b1032b28d493a4439e51ef51e45f",
+    "git_tree": "c5ecd2fc90c49678c0a28d69c0db5c462bbed714",
+    "verified_base_blobs": 308,
+    "pr85": "e373cfe6da1a5081974fb8b01f10f5500ecb0598",
+    "pr87": "44918d0e85c50216656576ee310ac34790ce23c0"
+  },
+  "overlays": {
+    "scripts/prepare_digest_upstream.py": "4616b1963b4417a6e38174730128e21e13158526",
+    "tests/test_digest_clean_pin.py": "b3b6b7f98778cfb2aecd41bdf36aaaa7453b2636",
+    ".github/workflows/digest-clean-pin-review.yml": "e8c53cd187cfd904eea42a9448549e238246217c",
+    "core/dedup.py": "759ae72d3d28ccb8963c5fec1c8e64a65d8a0efe",
+    "tests/test_generic_year_offer_identity.py": "08b7de10fba0337ff343976f100f539349d3b48f"
+  },
+  "unaltered_contract_failure": {
+    "command": "python -B -X utf8 -m unittest discover -s tests -p test_*.py -v",
+    "exit_code": 1,
+    "tests": 400,
+    "failures": 2,
+    "errors": 0,
+    "skipped": 0,
+    "log_sha256": "246529a6d54201bb1ed31fac2d2aa3a7dcb434fbfd38c9d987dba0011ef029b7",
+    "tests_failed": [
+      "test_generic_identity_extension.ExtendedGenericIdentityTests.test_specific_year_batch_retains_cross_post_identity",
+      "test_generic_quantity_identity.GenericQuantityIdentityTests.test_year_batch_remains_cross_post_identity"
+    ],
+    "reason": "Two legacy tests expect different unknown forums advertising identically named generic year+resource offers to merge, whereas PR87 conservatively retains URL identity to avoid cross-vendor false merging."
+  },
+  "minimal_contract_reconciliation": {
+    "changes": "Only two old assertions changed to assertNotEqual and renamed for explicit unverified cross-post separation; one new verified-browser same-campaign positive added. No business-code edits.",
+    "patch_git_blob": "a0752519ee2bd9c5acfe4654e0419e415a919f30",
+    "patch_sha256": "5673e44c0d6947b6ba2e0d7d5626862e1dcfae9509ec60a5e90fbc2ae738586a",
+    "patch_commit": "d4acbc73ad08c53bd43da6b395bfabe453158056",
+    "git_apply_check": 0,
+    "git_apply": 0
+  },
+  "rerun": {
+    "environment": "Windows Python 3.14.5; isolated TEMP; verified existing pinned Digest interpreter (read-only)",
+    "focused": {
+      "command": "python -B -X utf8 -m unittest discover -s tests -p 'test_generic*identity*.py' -v",
+      "exit_code": 0,
+      "tests": 37,
+      "skipped": 0,
+      "log_sha256": "1273e47bd3bf207091a6f7e619d7c5553dee86af678f03cc7971c38edab6a7be"
+    },
+    "root": {
+      "command": "python -B -X utf8 -m unittest discover -s tests -p test_*.py -v",
+      "exit_code": 0,
+      "tests": 401,
+      "failed": 0,
+      "skipped": 0,
+      "log_sha256": "9f0a13b77423f726f5fe574456bbc7f2207077a327a694eeebae51e4d489dc2d"
+    },
+    "combined": {
+      "command": "python -B -X utf8 independent-quality/delivery-bridge-20261016/run_combined_tests.py",
+      "exit_code": 0,
+      "tests": 504,
+      "failed": 0,
+      "skipped": 0,
+      "log_sha256": "2fb656335ffca1ec9fe19c9ba925b8b7d90650f0d29811ab69197b30de015f49"
+    }
+  },
+  "limits": [
+    "Current PR84 and PR87 unmodified upstream contracts remain incompatible: cannot claim merged green before owner reviews and integrates patch or equivalent semantics.",
+    "Test reconciliation is an isolated proposal, not a change to another agent's business branch.",
+    "Potential recall trade-off: an unbranded same-title crosspost can only merge when a shared campaign identity is independently verified.",
+    "Not verified with fresh pinned upstream install, hosted Actions, live P06 holdout, or actual 09:30 report receipt."
+  ],
+  "next": "codex-woolradar owner to adjudicate false-merge versus recall semantic rule, selectively integrate safe PR85/PR87 and reviewed contract patch, push new full HEAD then independently retest."
+}

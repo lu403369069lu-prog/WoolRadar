@@ -1,0 +1,45 @@
+{
+  "kind": "codex-coordinator-independent-wool-pr84-ea4ec-plus-pr85",
+  "date": "2026-10-20",
+  "platform": "Windows PowerShell; Python 3.14.5; isolated, no production mutation",
+  "pr84_head": "ea4ec528608177f82e7a4ad1d4604941f6797975",
+  "pr84_original_verified_tree": "c5ecd2fc90c49678c0a28d69c0db5c462bbed714",
+  "pr84_original_verified_files": 308,
+  "pr84_changed_blob_sha": {
+    "core/dedup.py": "09ab88e64c6a9e000ad821f0f477c711a9dc50a4",
+    "tests/test_generic_identity_extension.py": "9353ade7048768ac698cd1b03c3807ea08475ac1",
+    "tests/test_generic_quantity_identity.py": "0b07f13fab30d2451bfca24129331d8f493d91c7",
+    "tests/test_generic_year_offer_identity.py": "08b7de10fba0337ff343976f100f539349d3b48f",
+    "evidence/pipeline-integration-20261016/oct20/GENERIC_YEAR_IDENTITY_REVIEW.md": "f3788b48e653d0a5b4495316f1305382b3f2b25e"
+  },
+  "pr85_head": "e373cfe6da1a5081974fb8b01f10f5500ecb0598",
+  "pr85_overlay_blob_sha": {
+    "scripts/prepare_digest_upstream.py": "4616b1963b4417a6e38174730128e21e13158526",
+    "tests/test_digest_clean_pin.py": "b3b6b7f98778cfb2aecd41bdf36aaaa7453b2636",
+    ".github/workflows/digest-clean-pin-review.yml": "e8c53cd187cfd904eea42a9448549e238246217c"
+  },
+  "composite_unique_files": 312,
+  "test_result": {
+    "root": {
+      "command": "python -B -X utf8 -m unittest discover -s tests -p test_*.py -v",
+      "exit_code": 0,
+      "tests": 401,
+      "skipped": 0,
+      "sha256": "ff5933b1e5e8c194b684709152be14b627d3a2739c5bfcf471722178971e0076"
+    },
+    "combined": {
+      "command": "python -B -X utf8 independent-quality/delivery-bridge-20261016/run_combined_tests.py",
+      "exit_code": 0,
+      "tests": 504,
+      "skipped": 0,
+      "sha256": "b0110b136ec83f54316da3d5b3a0673fc7a6e6ec0018207440914f5ec03fb4d4"
+    }
+  },
+  "result": "ISOLATED_COMPOSITE_PASS; PR85_NOT_INTEGRATED",
+  "limits": [
+    "Actual primary PR84 does not contain PR85 safety gate",
+    "No new frozen blind corpus, authorized live daily input, 09:30 same-SHA ACK, CI runner proof or final three-pass acceptance",
+    "No V3 claim/heartbeat/owner simulation"
+  ],
+  "machine_report_sha256": "b343fd922171f46613cfbeccf2dd1c45f1b511aaf3206daa2ff8c493c68893ea"
+}

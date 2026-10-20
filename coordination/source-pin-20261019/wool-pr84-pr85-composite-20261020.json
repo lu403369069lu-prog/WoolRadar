@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "kind": "independent_exact_git_tree_overlay_windows_validation",
+  "evaluated_at": "2026-10-20",
+  "executor": "codex-coordinator",
+  "baseline": {
+    "pr": 84,
+    "head_sha": "1cbf1eab6dc5b1032b28d493a4439e51ef51e45f",
+    "git_tree": "c5ecd2fc90c49678c0a28d69c0db5c462bbed714",
+    "verified_git_blobs": 308
+  },
+  "overlay": {
+    "pr": 85,
+    "head_sha": "e373cfe6da1a5081974fb8b01f10f5500ecb0598",
+    "files": {
+      "scripts/prepare_digest_upstream.py": "4616b1963b4417a6e38174730128e21e13158526",
+      "tests/test_digest_clean_pin.py": "b3b6b7f98778cfb2aecd41bdf36aaaa7453b2636",
+      ".github/workflows/digest-clean-pin-review.yml": "e8c53cd187cfd904eea42a9448549e238246217c"
+    }
+  },
+  "environment": "Windows, Python 3.14.5, Git 2.53.0.windows.3, isolated TEMP, existing read-only pinned Digest upstream Python. Original PR84 Git tree materialized from index blobs; no production writes.",
+  "failed_first_attempt": {
+    "status": "ENV_FIXTURE_ERROR",
+    "root_exit_code": 1,
+    "root_total": 396,
+    "root_errors": 2,
+    "root_skipped": 1,
+    "log_sha256": "8187c3275277f38ba993949a49710c1b6b29d3d2c3ffb4308a830f0edae23bd1",
+    "diagnosis": "TEMP pointed into .test-tmp which earlier tests deleted. Corrected to independent temp directory and explicit existing pinned interpreter; source code unchanged."
+  },
+  "verified": [
+    {
+      "scope": "root",
+      "command": "python -B -X utf8 -m unittest discover -s tests -p test_*.py -v",
+      "exit_code": 0,
+      "passed": 396,
+      "failed": 0,
+      "skipped": 0,
+      "log_sha256": "f5345072f9acf3b864fbf7cded4126781295c8714257670aff66dfb24540231f",
+      "seconds": 34.92
+    },
+    {
+      "scope": "combined",
+      "command": "python -B -X utf8 independent-quality/delivery-bridge-20261016/run_combined_tests.py",
+      "exit_code": 0,
+      "passed": 499,
+      "failed": 0,
+      "skipped": 0,
+      "log_sha256": "704a006d18639008e0f6f0186c2b5a906f57aa8f7f871305873a8e47b132845f",
+      "seconds": 36.4
+    }
+  ],
+  "local_artifacts": {
+    "runner_sha256": "04a1f028c6b759d5d907fcf2976b90b1b0f24e9ab3228b3598cd05ac02d3e459",
+    "report_sha256": "cbd6e46da40e7565384325d5a21319e6d23dcab35b008ee00adf4477e597741e",
+    "root": "_outbox/coordination-20261019/pr84-pr85-composite-r2-20261020",
+    "report": "_outbox/coordination-20261019/wool-pr84-pr85-composite-report-r2-20261020.json"
+  },
+  "limitations": [
+    "This is an isolated composite, not the new PR84 head or GitHub hosted CI success.",
+    "Pinned upstream runtime reused read-only; fresh install remains unverified.",
+    "WoolRadar actual approved daily digest -> ChatGPT 09:30 same-SHA ACK remains OUTPUT_NOT_CONNECTED.",
+    "V3 state revision 360 not advanced; no formal V3 claim or ACK was made.",
+    "PR85 remains unintegrated and both PRs Draft."
+  ],
+  "next_action": "codex-woolradar selectively integrate PR85 into its authorized main candidate; pin resulting new full HEAD and run root+combined, then independent verification; coordinate official daily-output end-to-end gate."
+}

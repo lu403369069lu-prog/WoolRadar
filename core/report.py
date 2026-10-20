@@ -12,6 +12,13 @@ from .models import Candidate
 from .verifier import VerificationEngine, mainland_eligibility_restricted
 
 
+def _safe_markdown_field(value: object) -> str:
+    """Keep harvested inline fields from starting Markdown blocks or links."""
+    text = re.sub(r'[\x00-\x1f\x7f]', ' ', str(value))
+    text = text.replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;')
+    return re.sub(r'([\\`*_{}\[\]()|])', r'\\\1', text)
+
+
 def _safe_markdown_link(title: str, url: str) -> str:
     """Make untrusted harvested titles and destinations inert in Markdown."""
     label = re.sub(r'[\x00-\x1f\x7f]', ' ', str(title))
@@ -129,8 +136,8 @@ class ReportGenerator:
             for row in rows:
                 lines.extend([
                     '- ' + _safe_markdown_link(row['title'], row['primary_url']),
-                    f"  - 状态：{row['status']}；范围：{row['claim_scope']}；来源：{row['source']}；节点：{row['node']}",
-                    f"  - 原帖发布时间：{row['published_at'] or '未知'}；发现时间：{row['first_seen']}",
+                    f"  - 状态：{_safe_markdown_field(row['status'])}；范围：{_safe_markdown_field(row['claim_scope'])}；来源：{_safe_markdown_field(row['source'])}；节点：{_safe_markdown_field(row['node'])}",
+                    f"  - 原帖发布时间：{_safe_markdown_field(row['published_at'] or '未知')}；发现时间：{_safe_markdown_field(row['first_seen'])}",
                 ])
                 risk_flags = official_payment_risks(row)
                 if risk_flags:
@@ -142,8 +149,8 @@ class ReportGenerator:
                     lines.append('  - 地域资格：官方结构化条款限制中国大陆申请；仅供线索追踪，须人工复核。')
                 for evidence in row['evidence']:
                     if evidence['claims']:
-                        lines.append(f"  - 核验时间：{evidence['checked_at']}；证据：{evidence['url']}")
-                        lines.append('  - 条件与未知项：' + json.dumps(evidence['claims'], ensure_ascii=False))
+                        lines.append(f"  - 核验时间：{_safe_markdown_field(evidence['checked_at'])}；证据：{_safe_markdown_link('查看证据', evidence['url'])}")
+                        lines.append('  - 条件与未知项：' + _safe_markdown_field(json.dumps(evidence['claims'], ensure_ascii=False)))
         if self.noise_audit is not None:
             lines.extend(['## 历史噪声审计（原事件与证据保留）', ''])
             if not excluded:
@@ -151,15 +158,15 @@ class ReportGenerator:
             for row in excluded:
                 audit = row['report_audit']
                 lines.append('- ' + _safe_markdown_link(row['title'], row['primary_url']) + f"：仅排除报告正文，事件 #{row['id']}")
-                lines.append('  - 审核人：' + json.dumps(audit['reviewer'], ensure_ascii=False) +
-                             '；时间：' + audit['reviewed_at'] +
-                             '；原因：' + json.dumps(audit['reason'], ensure_ascii=False))
+                lines.append('  - 审核人：' + _safe_markdown_field(json.dumps(audit['reviewer'], ensure_ascii=False)) +
+                             '；时间：' + _safe_markdown_field(audit['reviewed_at']) +
+                             '；原因：' + _safe_markdown_field(json.dumps(audit['reason'], ensure_ascii=False)))
             lines.append('')
         lines.extend(['## 采集节点故障与漏报情况', ''])
         if not runs:
             lines.append('- 尚无节点运行记录')
         for run in runs:
-            lines.append(f"- {run['node']}: {run['status']}，采集 {run['items']} 条，错误 {run['error_code'] or '无'}")
+            lines.append(f"- {_safe_markdown_field(run['node'])}: {_safe_markdown_field(run['status'])}，采集 {run['items']} 条，错误 {_safe_markdown_field(run['error_code'] or '无')}")
         lines.extend(['', '## 安全边界', '', '- 本系统默认只读；未执行领取、授权、支付、发帖、点赞或账号创建。', ''])
         md_path.write_text('\n'.join(lines), encoding='utf-8')
         return ReportPaths(md_path, json_path)

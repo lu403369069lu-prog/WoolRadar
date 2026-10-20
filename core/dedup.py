@@ -20,6 +20,7 @@ STOP_TOKENS = {
 GENERIC_OFFER_TOKENS = {
     'api', 'credit', 'credits', 'cloud', 'vps', 'server', 'servers', 'hosting',
     'developer', 'developers', 'perk', 'perks', 'offer', 'offers', 'trial', 'plan', 'ai',
+    'get', 'token', 'tokens',
     '额度', '赠金', '服务器', '优惠',
 }
 

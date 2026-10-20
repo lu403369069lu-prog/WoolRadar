@@ -37,10 +37,13 @@ class Database:
         conn = sqlite3.connect(self.path, timeout=30)
         conn.row_factory = sqlite3.Row
         try:
-            # A caller can hold this Database after another process upgrades
-            # the file. Changing journal mode here would mutate a future
-            # schema *before* write_transaction() can reject that version.
+            # Read-only callers must not reserve SQLite's writer slot: doing
+            # so blocks concurrent review and notification revalidation.
+            # Application mutations use write_transaction(), which checks
+            # the version after acquiring its writer reservation.
             conn.execute('PRAGMA foreign_keys=ON')
+            if conn.execute('PRAGMA user_version').fetchone()[0] > 1:
+                raise RuntimeError('UNSUPPORTED_DATABASE_SCHEMA_VERSION')
             yield conn
             conn.commit()
         except Exception:
@@ -96,7 +99,9 @@ class Database:
         if new_file:
             # Establish WAL only when initializing a new file. Existing files
             # may belong to a newer application and must retain their mode.
-            with self.connect() as conn:
+            # journal_mode cannot be changed within BEGIN IMMEDIATE; the
+            # subsequent guarded schema transaction checks the version again.
+            with closing(sqlite3.connect(self.path, timeout=30)) as conn:
                 conn.execute('PRAGMA journal_mode=WAL')
         with self.write_transaction() as conn:
             # Recheck after the writer reservation: another version may have

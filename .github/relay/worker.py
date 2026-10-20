@@ -122,6 +122,9 @@ def parse_test_summary(output, exit_code):
         complete = (
             len(python_totals) == 1 and len(ok_markers) == 1
             and ok_markers[0] in ("OK", "OK (skipped=0)")
+            and re.search(
+                r"(?m)^Ran \d+ tests? in \d+(?:[.]\d+)?s\r?\n"
+                r"\s*OK(?: [(]skipped=0[)])?\s*\Z", output) is not None
         )
         ok = exit_code == 0 and total > 0 and skipped == 0 and complete
         passed = total if ok else None

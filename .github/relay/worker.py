@@ -82,8 +82,13 @@ def verify_reviewed_test_files(argv, cwd, src):
         selected = [p for p in root.rglob(argv[7]) if p.is_file() or p.is_symlink()]
         if not selected:
             raise ValueError("no reviewed test files selected")
-        # unittest adds the discovery directory to sys.path. Helper modules
-        # there can change assertions without changing any test_*.py file.
+        # unittest adds the discovery directory to sys.path. Importable code
+        # includes sourceless .pyc, native extension modules and zip archives,
+        # not just .py helpers. Fail closed on pre-existing untracked caches:
+        # the child uses -B and cannot create new caches.
+        # No checkout content is removed as part of verification.
+        importable = {".py", ".pyc", ".pyo", ".pyd", ".so", ".zip",
+                      ".egg", ".whl", ".pth", ".dll"}
         directory = root.relative_to(src).as_posix()
         tree = subprocess.run(
             ["git", "-C", str(src), "ls-tree", "-r", "-z", "--name-only",
@@ -92,8 +97,15 @@ def verify_reviewed_test_files(argv, cwd, src):
         if tree.returncode != 0:
             raise ValueError("cannot read reviewed source tree")
         tracked = [src / name.decode("utf-8") for name in tree.stdout.split(b"\x00")
-                   if name and name.endswith(b".py")]
-        files = list(dict.fromkeys([*root.rglob("*.py"), *tracked]))
+                   if name and Path(name.decode("utf-8")).suffix.lower() in importable]
+        # Directory symlinks can point at executable code outside the scanned
+        # tree; reject them explicitly rather than relying on rglob traversal.
+        children = list(root.rglob("*"))
+        if any(p.is_symlink() and p.is_dir() for p in children):
+            raise ValueError("symlink directory in formal discovery root")
+        files = list(dict.fromkeys([
+            *(p for p in children if p.suffix.lower() in importable
+              and (p.is_file() or p.is_symlink())), *tracked]))
     else:
         files = [cwd / path for path in argv[4:]]
     if not files:
@@ -202,11 +214,13 @@ def test(argv, cwd, src):
     except (ValueError, OSError, subprocess.SubprocessError):
         return {"status": "BLOCKED", "error_kind": "UNREVIEWED_TEST_SOURCE"}
     # -I disables user site and usercustomize.py, and ignores PYTHON* startup
-    # variables. Clearing PYTHONPATH alone is insufficient: PYTHONUSERBASE can
+    # variables, including PYTHONDONTWRITEBYTECODE. Explicit -B prevents the
+    # child from generating its own unreviewed caches during validation.
+    # Clearing PYTHONPATH alone is insufficient: PYTHONUSERBASE can
     # load a separate usercustomize.py that changes unittest assertions.
     # Isolated mode ignores PYTHONIOENCODING too; force UTF-8 explicitly so
     # Windows non-ASCII tracebacks do not turn normal FAIL into decode blocks.
-    cmd = ([sys.executable, "-I", "-X", "utf8"] + argv[1:]
+    cmd = ([sys.executable, "-I", "-B", "-X", "utf8"] + argv[1:]
            if argv[0] == "python" else argv)
     env = dict(os.environ)
     for k in ("GITHUB_TOKEN", "GH_TOKEN", "COPILOT_GITHUB_TOKEN", "OPENAI_API_KEY"):

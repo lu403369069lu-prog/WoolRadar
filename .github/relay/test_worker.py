@@ -246,6 +246,67 @@ class RelaySafetyTests(unittest.TestCase):
             self.assertEqual(untracked["status"], "BLOCKED")
             self.assertEqual(untracked.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
 
+    def test_untracked_sourceless_bytecode_cannot_forge_pinned_pass(self):
+        """Sourceless helper.pyc is importable despite no .py source file."""
+        import py_compile
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_public_corpus_bytecode.py").write_text(
+                "import unittest\nimport helper\nclass Probe(unittest.TestCase):\n"
+                " def test_value(self): self.assertEqual(helper.value, 17)\n",
+                encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_bytecode.py"],
+                           cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            hidden = tests / "helper.py"
+            hidden.write_text("value = 17\n", encoding="utf-8")
+            py_compile.compile(str(hidden), cfile=str(tests / "helper.pyc"), doraise=True)
+            hidden.unlink()
+            # This previously reported PASS=1 although source HEAD contained
+            # no helper module; the compiled bytecode supplied the assertion.
+            result = worker.test(check, root, root)
+            self.assertEqual(result.get("status"), "BLOCKED", result)
+            self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE", result)
+
+    def test_untracked_bytecode_cache_cannot_override_reviewed_helper(self):
+        """Unchecked-hash cache bytes must not supersede a pinned .py helper."""
+        import py_compile
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_public_corpus_cache.py").write_text(
+                "import unittest\nimport helper\nclass Probe(unittest.TestCase):\n"
+                " def test_value(self): self.assertEqual(helper.value, 17)\n",
+                encoding="utf-8")
+            helper = tests / "helper.py"
+            helper.write_text("value = 0\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_cache.py", "tests/helper.py"],
+                           cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            self.assertEqual(worker.test(check, root, root)["status"], "FAIL")
+            # Python may execute this bytecode in preference to helper.py even
+            # while the checked-in source bytes still match HEAD.
+            injected = root / "poison.py"
+            injected.write_text("value = 17\n", encoding="utf-8")
+            cached = tests / "__pycache__" / ("helper." + sys.implementation.cache_tag + ".pyc")
+            cached.parent.mkdir()
+            py_compile.compile(str(injected), cfile=str(cached), doraise=True,
+                               invalidation_mode=py_compile.PycInvalidationMode.UNCHECKED_HASH)
+            result = worker.test(check, root, root)
+            self.assertEqual(result.get("status"), "BLOCKED", result)
+            self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE", result)
+
     def test_inherited_pythonpath_cannot_make_failing_pinned_test_pass(self):
         """External sitecustomize must not alter a formally reviewed test."""
         check = ["python", "-m", "unittest", "discover", "-s", "tests",

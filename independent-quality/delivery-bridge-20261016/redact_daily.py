@@ -50,7 +50,9 @@ def public_url(raw: object) -> str | None:
             if decoded == route:
                 break
             route = decoded
-        if '%' in route or re.search(r'\s|[\\<>]', route) or any(ord(ch) < 32 for ch in route):
+        if ('%' in route or re.search(r'\s|[\\<>]', route)
+            or any(unicodedata.category(ch) in {'Cc', 'Cf', 'Cs', 'Zl', 'Zp'}
+                   for ch in route)):
             return None
         if parts.query or parts.fragment or BAD_TEXT.search(route):
             return None

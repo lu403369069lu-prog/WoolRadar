@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "repo": "WoolRadar",
-  "source_ref": "9da8f67c5645d61002cf3115e34464098f734212",
+  "source_ref": "1cbf1eab6dc5b1032b28d493a4439e51ef51e45f",
   "source_subdir": ".",
-  "source_note": "PR84 9da8 exact Git tree independently reconstructed and Windows root385/combined488 zero skips, exit0 (2026-10-20). Existing read-only Digest venv; fresh hosted installation, blind holdout and end-to-end business acceptance remain unverified.",
+  "source_note": "PR84 1cbf exact 308-file Git tree independently reconstructed and Windows root389/combined492, zero fail/skip, exit0 (2026-10-20). Existing Digest pinned runtime; hosted clean install, holdout and actual 09:30 consumer same-SHA ACK remain unverified.",
   "families": [
     {
       "id": "WR-H01",

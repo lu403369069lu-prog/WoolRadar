@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "executor": "codex-coordinator",
+  "reviewed_pr": 84,
+  "source_sha": "1cbf1eab6dc5b1032b28d493a4439e51ef51e45f",
+  "source_base_sha": "d1f4a02cb1f09a054f7964096d6edf6560fdeaae",
+  "github_tree_sha": "c5ecd2fc90c49678c0a28d69c0db5c462bbed714",
+  "local_staged_tree_sha": "c5ecd2fc90c49678c0a28d69c0db5c462bbed714",
+  "file_count": 308,
+  "checks": [
+    {
+      "label": "root",
+      "command": "python -B -X utf8 -m unittest discover -s tests -p test_*.py -v",
+      "exit_code": 0,
+      "total": 389,
+      "passed": 389,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "duration_seconds": 24.068,
+      "log_file": "wool-1cbf-exact-tree-root-20261020.log",
+      "log_sha256": "9ce193d272f0c226f4ed2eb169b7123ba04edcdafd4487197fae1b72adb50a46"
+    },
+    {
+      "label": "combined",
+      "command": "python -B -X utf8 independent-quality/delivery-bridge-20261016/run_combined_tests.py",
+      "exit_code": 0,
+      "total": 492,
+      "passed": 492,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "duration_seconds": 25.281,
+      "log_file": "wool-1cbf-exact-tree-combined-20261020.log",
+      "log_sha256": "ea8be37b9586878527f8214f17523d4800c44281081b84c79996f2a90641b08f"
+    }
+  ],
+  "verification": "Baseline ZIP contained 305 tracked files, plus 3 new paths; force staged 308 paths. Windows CRLF normalization required for most blobs; FUND_ADJUDICATION.json retains intentional CRLF Git blob, staged without normalizing. All 308 indexed file modes and Git blob SHA-1 matched GitHub recursively fetched tree; git write-tree equals remote tree SHA. Tests executed after tree match on Windows isolated export.",
+  "environment": "Windows, Python 3.14.5; writable isolated TEMP/TMP; WOOLRADAR_DIGEST_TEST_PYTHON read-only existing Digest runtime. The test output verifies pinned upstream commit 3d527f7f7e68e1b3e20df4e2f1e20a5b445f6fcb. Direct git -C production upstream denied; no production changes.",
+  "limits": [
+    "No fresh clean hosted installation or GitHub Actions PASS established",
+    "No official-source fresh blind Gold/P06 field acceptance",
+    "Real 09:30 report to approved read-only consumer and same-SHA ACK remain OUTPUT_NOT_CONNECTED",
+    "Existing sqlite historical false merges require migration or re-ingest verification"
+  ],
+  "business_state": "IN_PROGRESS",
+  "delivery_state": "OUTPUT_NOT_CONNECTED"
+}

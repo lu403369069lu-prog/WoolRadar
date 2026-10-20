@@ -307,6 +307,37 @@ class RelaySafetyTests(unittest.TestCase):
             self.assertEqual(result.get("status"), "BLOCKED", result)
             self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE", result)
 
+    def test_isolated_interpreter_keeps_reviewed_project_imports(self):
+        """Real Wool tests import core.* from the checkout root."""
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests, core = root / "tests", root / "core"
+            tests.mkdir()
+            core.mkdir()
+            (core / "__init__.py").write_text("value = 17\n", encoding="utf-8")
+            (tests / "test_public_corpus_core_import.py").write_text(
+                "import unittest\nfrom core import value\n"
+                "class Probe(unittest.TestCase):\n"
+                " def test_value(self): self.assertEqual(value, 17)\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_core_import.py",
+                            "core/__init__.py"], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            result = worker.test(check, root, root)
+            self.assertEqual((result.get("status"), result.get("total")), ("PASS", 1), result)
+            (core / "__init__.py").write_text("value = 18\n", encoding="utf-8")
+            mutated = worker.test(check, root, root)
+            self.assertEqual(mutated.get("status"), "BLOCKED", mutated)
+            self.assertEqual(mutated.get("error_kind"), "UNREVIEWED_TEST_SOURCE", mutated)
+            (core / "__init__.py").write_text("value = 17\n", encoding="utf-8")
+            (root / "roothelper.py").write_text("value = 123\n", encoding="utf-8")
+            untracked = worker.test(check, root, root)
+            self.assertEqual(untracked.get("status"), "BLOCKED", untracked)
+            self.assertEqual(untracked.get("error_kind"), "UNREVIEWED_TEST_SOURCE", untracked)
+
     def test_inherited_pythonpath_cannot_make_failing_pinned_test_pass(self):
         """External sitecustomize must not alter a formally reviewed test."""
         check = ["python", "-m", "unittest", "discover", "-s", "tests",

@@ -82,29 +82,41 @@ def verify_reviewed_test_files(argv, cwd, src):
         selected = [p for p in root.rglob(argv[7]) if p.is_file() or p.is_symlink()]
         if not selected:
             raise ValueError("no reviewed test files selected")
-        # unittest adds the discovery directory to sys.path. Importable code
-        # includes sourceless .pyc, native extension modules and zip archives,
-        # not just .py helpers. Fail closed on pre-existing untracked caches:
-        # the child uses -B and cannot create new caches.
+        # The isolated child explicitly adds the checkout working directory,
+        # and unittest also adds the discovery directory. Verify importable
+        # code from both locations, including root-level application packages.
+        # Do not walk Git metadata or names that cannot be Python packages.
+        # Fail closed on caches: -B prevents the child creating new ones.
         # No checkout content is removed as part of verification.
         importable = {".py", ".pyc", ".pyo", ".pyd", ".so", ".zip",
                       ".egg", ".whl", ".pth", ".dll"}
-        directory = root.relative_to(src).as_posix()
-        tree = subprocess.run(
-            ["git", "-C", str(src), "ls-tree", "-r", "-z", "--name-only",
-             "HEAD", "--", directory],
-            capture_output=True, timeout=10, check=False)
+        import_root = Path(cwd).resolve()
+        if not import_root.is_relative_to(src):
+            raise ValueError("import root escaped pinned checkout")
+        directory = import_root.relative_to(src).as_posix()
+        tree_args = ["git", "-C", str(src), "ls-tree", "-r", "-z",
+                     "--name-only", "HEAD"]
+        if directory != ".":
+            tree_args.extend(["--", directory])
+        tree = subprocess.run(tree_args, capture_output=True, timeout=10,
+                              check=False)
         if tree.returncode != 0:
             raise ValueError("cannot read reviewed source tree")
+        def importable_path(path):
+            relative = path.relative_to(import_root)
+            return (all(part.isidentifier() for part in relative.parts[:-1])
+                    and path.suffix.lower() in importable)
+
         tracked = [src / name.decode("utf-8") for name in tree.stdout.split(b"\x00")
-                   if name and Path(name.decode("utf-8")).suffix.lower() in importable]
-        # Directory symlinks can point at executable code outside the scanned
-        # tree; reject them explicitly rather than relying on rglob traversal.
-        children = list(root.rglob("*"))
-        if any(p.is_symlink() and p.is_dir() for p in children):
-            raise ValueError("symlink directory in formal discovery root")
+                   if name and importable_path(src / name.decode("utf-8"))]
+        children = list(import_root.rglob("*"))
+        # An importable directory symlink can escape the reviewed checkout.
+        if any(p.is_symlink() and p.is_dir() and
+               all(part.isidentifier() for part in p.relative_to(import_root).parts)
+               for p in children):
+            raise ValueError("symlink directory in formal import root")
         files = list(dict.fromkeys([
-            *(p for p in children if p.suffix.lower() in importable
+            *(p for p in children if importable_path(p)
               and (p.is_file() or p.is_symlink())), *tracked]))
     else:
         files = [cwd / path for path in argv[4:]]
@@ -220,8 +232,17 @@ def test(argv, cwd, src):
     # load a separate usercustomize.py that changes unittest assertions.
     # Isolated mode ignores PYTHONIOENCODING too; force UTF-8 explicitly so
     # Windows non-ASCII tracebacks do not turn normal FAIL into decode blocks.
-    cmd = ([sys.executable, "-I", "-B", "-X", "utf8"] + argv[1:]
-           if argv[0] == "python" else argv)
+    if argv[0] == "python":
+        # Import stdlib unittest before adding the verified project root.
+        # -I excludes external PYTHONPATH and usercustomize; passing the
+        # checkout as a positional arg avoids inherited interpreter startup.
+        bootstrap = ("import sys,unittest;"
+                     "sys.path.insert(0,sys.argv.pop(1));"
+                     "unittest.main(module=None)")
+        cmd = ([sys.executable, "-I", "-B", "-X", "utf8", "-c",
+                bootstrap, str(Path(cwd).resolve()), *argv[3:]])
+    else:
+        cmd = argv
     env = dict(os.environ)
     for k in ("GITHUB_TOKEN", "GH_TOKEN", "COPILOT_GITHUB_TOKEN", "OPENAI_API_KEY"):
         env.pop(k, None)

@@ -68,16 +68,32 @@ def safe(argv):
     return False
 
 def verify_reviewed_test_files(argv, cwd, src):
-    """Require every discovered test to have its exact bytes at source HEAD.
+    """Require discovered Python tests and adjacent helpers to match source HEAD.
 
-    A pinned HEAD alone cannot authenticate newly added or modified tests.
+    An index-based diff trusts assume-unchanged/skip-worktree flags. Compare
+    the actual on-disk bytes to committed blobs instead. Normalize only line
+    endings, since Windows checkouts may legitimately turn LF into CRLF.
     """
     src = Path(src).resolve()
     if argv[:5] == ["python", "-m", "unittest", "discover", "-s"]:
         root = (cwd / argv[5]).resolve()
         if not root.is_dir() or not root.is_relative_to(src):
             raise ValueError("invalid discovery directory")
-        files = [p for p in root.rglob(argv[7]) if p.is_file()]
+        selected = [p for p in root.rglob(argv[7]) if p.is_file() or p.is_symlink()]
+        if not selected:
+            raise ValueError("no reviewed test files selected")
+        # unittest adds the discovery directory to sys.path. Helper modules
+        # there can change assertions without changing any test_*.py file.
+        directory = root.relative_to(src).as_posix()
+        tree = subprocess.run(
+            ["git", "-C", str(src), "ls-tree", "-r", "-z", "--name-only",
+             "HEAD", "--", directory],
+            capture_output=True, timeout=10, check=False)
+        if tree.returncode != 0:
+            raise ValueError("cannot read reviewed source tree")
+        tracked = [src / name.decode("utf-8") for name in tree.stdout.split(b"\x00")
+                   if name and name.endswith(b".py")]
+        files = list(dict.fromkeys([*root.rglob("*.py"), *tracked]))
     else:
         files = [cwd / path for path in argv[4:]]
     if not files:
@@ -94,13 +110,16 @@ def verify_reviewed_test_files(argv, cwd, src):
             capture_output=True, text=True, timeout=10, check=False)
         if committed.returncode != 0:
             raise ValueError("untracked test in formal discovery")
-        # Git's diff applies the repository's text/eol clean filters, unlike
-        # a raw worktree byte hash (Windows checkout may contain CRLF).
-        delta = subprocess.run(
-            ["git", "-C", str(src), "diff", "--quiet", "HEAD", "--", relative],
+        original = subprocess.run(
+            ["git", "-C", str(src), "cat-file", "blob", "HEAD:" + relative],
             capture_output=True, timeout=10, check=False)
-        if delta.returncode != 0:
-            raise ValueError("modified test bytes differ from pinned source HEAD")
+        if original.returncode != 0:
+            raise ValueError("cannot read reviewed test or helper blob")
+        # Python decodes CRLF/LF as equivalent source newlines. Deliberately
+        # do not invoke configurable Git clean filters or trust index flags.
+        normalize = lambda data: data.replace(b"\r\n", b"\n")
+        if normalize(path.read_bytes()) != normalize(original.stdout):
+            raise ValueError("test or helper bytes differ from pinned source HEAD")
 
 
 def choose_recheck(state, families, regular_ids):

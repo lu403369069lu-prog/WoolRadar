@@ -34,7 +34,7 @@ class RelaySafetyTests(unittest.TestCase):
                   else "FORMAL_SUBSET_PASS_NATIVE_PENDING" if checks else "NO_FORMAL_MAPPING_NOT_EXECUTED")
         return {
             "schema_version": 1, "repo": q["repo"], "run_key": run_key,
-            "source_commit": "a" * 40, "source_ref": q["source_ref"],
+            "source_commit": q["source_ref"] if len(q["source_ref"]) == 40 else "a" * 40, "source_ref": q["source_ref"],
             "queue_sha256": worker.queue_digest(q),
             "previous_cursor": cursor, "next_cursor": (cursor + 1) % len(q["families"]),
             "strict_new_acceptances": 0, "generated_utc": "2026-10-18T00:00:00Z",
@@ -43,7 +43,7 @@ class RelaySafetyTests(unittest.TestCase):
                          "business_accepted": False}]
         }
 
-    def run_persist(self, directory, q, receipt, integration_sha="a" * 40, integration_mutator=None, runner_key=None):
+    def run_persist(self, directory, q, receipt, integration_sha="DEFAULT", integration_mutator=None, runner_key=None):
         state = directory / "engine.json"
         if not state.exists():
             worker.save(state, self.initial(q["repo"]))
@@ -58,7 +58,7 @@ class RelaySafetyTests(unittest.TestCase):
             "skipped": 0, "todo": 0, "cancelled": 0, "failed_test_names": []
         }
         if integration_sha is not None:
-            integration["source_commit"] = integration_sha
+            integration["source_commit"] = receipt['source_commit'] if integration_sha == 'DEFAULT' else integration_sha
         integration["run_key"] = receipt["run_key"]
         if integration_mutator is not None:
             integration_mutator(integration)
@@ -125,7 +125,7 @@ class RelaySafetyTests(unittest.TestCase):
             "Ran 1 test in 0.001s\n\nOK\n" if q["repo"] == "WoolRadar"
             else "# tests 1\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n"
         )
-        stub = SimpleNamespace(stdout=sample_output, stderr="", returncode=0)
+        stub = SimpleNamespace(stdout=sample_output.encode("utf-8"), stderr=b"", returncode=0)
         with tempfile.TemporaryDirectory() as tmp:
             target = Path(tmp) / "synthetic-integration.json"
             with patch.object(

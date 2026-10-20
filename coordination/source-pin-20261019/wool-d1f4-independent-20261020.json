@@ -1,0 +1,75 @@
+{
+  "date": "2026-10-20",
+  "executor": "codex-coordinator",
+  "reviewed_source_sha": "d1f4a02cb1f09a054f7964096d6edf6560fdeaae",
+  "previous_pin": "c1524ba21ba7b7bb147a2adf22f4107cf2255678",
+  "tests": [
+    {
+      "command": "python -B -X utf8 -m unittest discover -s tests -p test_*.py -v",
+      "exit_code": 0,
+      "total": 384,
+      "passed": 384,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 24.138,
+      "log": "wool-d1f4-independent-root.log",
+      "log_sha256": "12c18bdcf1104b2258c18e7f8d8b55224a936790cac2d2929a40e141a56fc81d"
+    },
+    {
+      "command": "python -B -X utf8 independent-quality/delivery-bridge-20261016/run_combined_tests.py",
+      "exit_code": 0,
+      "total": 487,
+      "passed": 487,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 28.484,
+      "log": "wool-d1f4-independent-combined.log",
+      "log_sha256": "b316a4ef0115ea19fe965c485c37ec42e9ee41af6ee32fe8460f65719a9fbd23"
+    }
+  ],
+  "test_environment": {
+    "runtime_selection": "WOOLRADAR_DIGEST_TEST_PYTHON explicitly selects existing read-only upstream interpreter; no production writes",
+    "manifest_pinned_upstream_head": "3d527f7f7e68e1b3e20df4e2f1e20a5b445f6fcb",
+    "upstream_git_head_command": "git rev-parse HEAD (existing upstream checkout)",
+    "upstream_git_head_exit_code": 0,
+    "actual_import": "newsbrief from same upstream checkout; httpx 0.28.1",
+    "fresh_ci_install_verified": false
+  },
+  "code_delta_since_previous_business_sha": "44fbe7... -> d1f4 only tests/test_digest_runtime.py independent TemporaryDirectory fixture",
+  "business_accepted": false,
+  "output_status": "OUTPUT_NOT_CONNECTED",
+  "limitations": [
+    "PR85 ignored importable content protection still under business-owner review",
+    "Fresh hosted CI remains startup failure, not source-test FAIL",
+    "No independent source-quality frozen holdout/P06/real09:30 consumer SHA ACK",
+    "A later business SHA invalidates use of this receipt as latest-source acceptance"
+  ],
+  "coordinator_regression": {
+    "tested_coordinator_sha": "d8cae90b1772ae1c8a48a7a81eaee160819d8ec8",
+    "command": "python -B -X utf8 -m unittest discover -s .github/relay -p test_*.py -v",
+    "exit_code": 0,
+    "total": 49,
+    "passed": 49,
+    "failed": 0,
+    "skipped": 0,
+    "log_sha256": "5bd4cda456efbbda013303d3c6b423e30afdb408c46054a7eaa5949cfd8bc972",
+    "note": "This follow-up changes evidence JSON only, no executable byte changes."
+  },
+  "hosted_ci_diagnosis": {
+    "head_sha": "15782f0b33b9db3d2108ceab0cd03b674723d030",
+    "run_id": 39354755020,
+    "attempt": 1,
+    "job_ids": [
+      118406879435,
+      118406879728
+    ],
+    "steps": null,
+    "logs_url": null,
+    "check_runs_available": true,
+    "annotation_count_windows": 1,
+    "annotation_endpoint_result": "GitHub MCP HTTP400 INVALID_ARGUMENT: endpoint not allowed",
+    "classification": "RUNNER_STARTUP_UNVERIFIED",
+    "root_cause": "not determined; no billing, permission or source assertion conclusion",
+    "rerun_requested": false
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "date": "2026-10-20",
+  "executor": "codex-coordinator",
+  "kind": "independent Windows SHA-pinned integration retest",
+  "source_sha": "9da8f67c5645d61002cf3115e34464098f734212",
+  "parent_source_sha": "d1f4a02cb1f09a054f7964096d6edf6560fdeaae",
+  "github_tree_sha": "c61465345aab241bd50c7a193646fed2690a136e",
+  "local_staged_tree_sha": "c61465345aab241bd50c7a193646fed2690a136e",
+  "new_blobs": {
+    "core/report.py": "5a06da9f56c2190f5c8f5f897f10f3781d06293d",
+    "tests/test_report_high_value_gate.py": "e51a4ae502918017efcaf866d4702a3b5270ffa3"
+  },
+  "checks": [
+    {
+      "command": "python -B -X utf8 -m unittest tests.test_report_high_value_gate -v",
+      "exit_code": 0,
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "python -B -X utf8 -m unittest discover -s tests -p test_*.py -v",
+      "exit_code": 0,
+      "total": 385,
+      "passed": 385,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 38.774,
+      "log_file": "wool-9da8-independent-root.log",
+      "log_sha256": "a19044a1d93271f003970f976e73e0ee8e8b45214f124da8d24e6"
+    },
+    {
+      "command": "python -B -X utf8 independent-quality/delivery-bridge-20261016/run_combined_tests.py",
+      "exit_code": 0,
+      "total": 488,
+      "passed": 488,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 35.26,
+      "log_file": "wool-9da8-independent-combined.log",
+      "log_sha256": "4f0d14e2540005160578b7d1da83ee0800f2abc8fdc8b30881d27c5cfc508b58"
+    }
+  ],
+  "environment": "Windows Python 3.14.5, isolated workspace TEMP/TMP/TMPDIR; read-only existing manifest-pinned Digest venv selected through WOOLRADAR_DIGEST_TEST_PYTHON; first attempt with sandbox default TEMP failed permission and was fixed by local writable TEMP",
+  "hosted_actions": {
+    "workflow_runs": [
+      39356396835,
+      39356396803,
+      39356396776
+    ],
+    "conclusion": "failure",
+    "classification": "RUNNER_STARTUP_UNVERIFIED",
+    "source_assertions_executed": false
+  },
+  "limitations": [
+    "Fresh upstream install and pinned upstream original git clean checkout not independently tested in this run",
+    "Official public source new frozen Gold/P06 and real 09:30 consumer same-SHA ACK unverified",
+    "No business-level PASS assertion from local unit tests"
+  ],
+  "status": "LOCAL_FULL_SUITE_GREEN_BUSINESS_IN_PROGRESS_OUTPUT_NOT_CONNECTED"
+}

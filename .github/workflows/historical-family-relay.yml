@@ -28,7 +28,7 @@ jobs:
       - name: Checkout independent source candidate (unprivileged)
         uses: actions/checkout@v4
         with:
-          ref: chatgpt/wr-h07-public-corpus-url-limit-fixture-20261018
+          ref: 1cbf1eab6dc5b1032b28d493a4439e51ef51e45f
           path: candidate
           persist-credentials: false
       - name: Checkout last durable checkpoint (unprivileged)
@@ -40,6 +40,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Install pinned IANA timezone rules for Windows
+        run: |
+          python -m pip install --disable-pip-version-check tzdata==2026.2
+          python -c "from zoneinfo import ZoneInfo; assert ZoneInfo('Asia/Shanghai').key == 'Asia/Shanghai'"
+      - name: Install reviewed pinned Digest upstream before formal checks
+        run: |
+          python -B -X utf8 candidate/scripts/prepare_digest_upstream.py --root candidate
+          python -B -X utf8 candidate/scripts/prepare_digest_upstream.py --root candidate --verify-only
       - name: Verify durable relay replay and fail-closed contracts
         run: python -m unittest discover -s .github/relay -p 'test_*.py' -v
       - uses: actions/setup-node@v4

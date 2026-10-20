@@ -1,0 +1,41 @@
+{
+  "executor": "codex-coordinator",
+  "date": "2026-10-20",
+  "baseline_sha": "3a54e829acce2e6e80ed3669a071d3c5e1abed71",
+  "fix": "Require complete final unittest run line and terminal OK; reject real wrapper cleanup traceback after successful test with exit0",
+  "targeted_command": "python -B -X utf8 -m unittest discover -s .github/relay -p test_python_summary_tail.py -v",
+  "red": {
+    "exit_code": 1,
+    "tests": 3,
+    "failed_subcases": 4
+  },
+  "green": {
+    "exit_code": 0,
+    "tests": 3,
+    "passed": 3
+  },
+  "full_command": "python -B -X utf8 -m unittest discover -s .github/relay -p test_*.py -v",
+  "full": {
+    "exit_code": 0,
+    "tests": 49,
+    "passed": 49,
+    "failed": 0,
+    "skipped": 0
+  },
+  "log_sha256": {
+    "python-summary-tail-red-20261020.log": "8841e148bace5623fc9695c8f06d58f5142c5f89660fc2526611beee8782842a",
+    "python-summary-tail-green-20261020.log": "af1aab2b3a3b5dc77e934708d31b1063268869b014e4671a0a03cd73075877eb",
+    "python-summary-tail-exact49-20261020.log": "54c7f1beeeb130a5462d722bbbbb3e5985511b87b35a754bf0a6f5d15f8decd2"
+  },
+  "git_blobs": {
+    ".github/relay/worker.py": "00c59b2c47971477a6f42e4cda2ef9c9ba7edb4b",
+    ".github/relay/test_python_summary_tail.py": "01155253408556e272f0d6fd7e5cdacd7ea1dc06"
+  },
+  "preparation_failures": "Initial partial MCP snapshot lacked workflow and Git HEAD; supplied exact Git worktree baseline and reran without weakening tests. Earlier failed logs retained locally.",
+  "limits": [
+    "No business family accepted",
+    "Source pin unchanged; latest business HEAD must receive independent native acceptance first",
+    "No hosted CI PASS claimed",
+    "No merge or production changes"
+  ]
+}

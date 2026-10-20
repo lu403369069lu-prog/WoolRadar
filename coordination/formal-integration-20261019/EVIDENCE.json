@@ -1,0 +1,22 @@
+{
+  "logs": [
+    {
+      "path": "formal-red.log",
+      "sha256": "39d888d01495193e072fefc50ae66db2c099b0bf49878b12e750730d4c1e76a9"
+    },
+    {
+      "path": "formal-green.log",
+      "sha256": "d8a183e432fe8a0fc2a752965c9fe64f978735dc55c7ee92fbe121ba7af26104"
+    },
+    {
+      "path": "formal-relay-combined.log",
+      "sha256": "22558de9b0c6774f10bc69b323f727354a99341b438d84a17900e1702fb350a7"
+    }
+  ],
+  "original_tests": 48,
+  "integrity_tests": 4,
+  "current_relay_tests": 24,
+  "exit_code": 0,
+  "skipped": 0,
+  "business_accepted": false
+}

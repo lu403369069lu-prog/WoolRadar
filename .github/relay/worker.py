@@ -26,6 +26,14 @@ def source_sha(path):
         raise ValueError("invalid commit SHA")
     return s
 
+def enforce_source_pin(queue, actual):
+    ref = queue.get('source_ref')
+    if not isinstance(ref, str) or not re.fullmatch(r'[a-f0-9]{40}', ref):
+        raise ValueError('invalid source_ref: expected exact lowercase 40-hex Git SHA')
+    if actual != ref:
+        raise ValueError('pinned source SHA mismatch')
+
+
 def safe(argv):
     if not isinstance(argv, list) or len(argv) < 3 or not all(isinstance(a, str) for a in argv):
         return False
@@ -78,20 +86,25 @@ def choose_recheck(state, families, regular_ids):
 
 def parse_test_summary(output, exit_code):
     """An all-skipped or TODO-only test run is NOT formal evidence."""
-    node_totals = re.findall(r"(?m)^# tests (\d+)\s*$", output)
+    node_totals = re.findall(r"(?m)^(?:#|\u2139) tests (\d+)\s*$", output)
     python_totals = re.findall(r"(?m)^Ran (\d+) tests?", output)
     if node_totals:
         total = int(node_totals[-1])
         def node_count(key):
-            matches = re.findall(r"(?m)^# " + key + r" (\d+)\s*$", output)
-            return int(matches[-1]) if matches else None
+            matches = re.findall(r"(?m)^(?:#|\u2139) " + key + r" (\d+)\s*$", output)
+            return int(matches[0]) if len(matches) == 1 else None
         passed = node_count("pass")
         failed = node_count("fail")
         skipped = node_count("skipped")
         todo = node_count("todo")
         cancelled = node_count("cancelled")
-        # Node 22 reports each category. Missing/truncated summaries fail closed.
-        complete = all(type(x) is int for x in (passed, failed, skipped, todo, cancelled))
+        # TAP uses '#', while current Node spec reporters use the info marker.
+        # One complete reporter summary is required; never select a final PASS
+        # after a conflicting earlier run or mix Python/Node totals.
+        prefixes = set(re.findall(
+            r"(?m)^(#|\u2139) (?:tests|pass|fail|skipped|todo|cancelled) \d+\s*$", output))
+        complete = (len(node_totals) == 1 and not python_totals and len(prefixes) == 1
+                    and all(type(x) is int for x in (passed, failed, skipped, todo, cancelled)))
         ok = (exit_code == 0 and total > 0 and complete and passed == total
               and failed == 0 and skipped == 0 and todo == 0 and cancelled == 0)
     elif python_totals:
@@ -109,6 +122,9 @@ def parse_test_summary(output, exit_code):
         complete = (
             len(python_totals) == 1 and len(ok_markers) == 1
             and ok_markers[0] in ("OK", "OK (skipped=0)")
+            and re.search(
+                r"(?m)^Ran \d+ tests? in \d+(?:[.]\d+)?s\r?\n"
+                r"\s*OK(?: [(]skipped=0[)])?\s*\Z", output) is not None
         )
         ok = exit_code == 0 and total > 0 and skipped == 0 and complete
         passed = total if ok else None
@@ -131,9 +147,19 @@ def test(argv, cwd, src):
     for k in ("GITHUB_TOKEN", "GH_TOKEN", "COPILOT_GITHUB_TOKEN", "OPENAI_API_KEY"):
         env.pop(k, None)
     env["PYTHONDONTWRITEBYTECODE"] = "1"
+    # Preserve the reviewed child-output contract: no lossy decoding of evidence.
+    if argv[0] == "python":
+        env["PYTHONIOENCODING"] = "utf-8"
     try:
-        proc = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, errors="replace", timeout=180, env=env)
-        output = (proc.stdout + "\n" + proc.stderr)[-240000:]
+        proc = subprocess.run(cmd, cwd=cwd, stdout=subprocess.PIPE,
+                              stderr=subprocess.PIPE, timeout=180, env=env)
+        try:
+            output = (proc.stdout + b"\n" + proc.stderr).decode("utf-8", "strict")[-240000:]
+        except UnicodeDecodeError:
+            return {"status": "BLOCKED", "exit_code": proc.returncode,
+                    "error_kind": "NON_UTF8_CHILD_OUTPUT", "total": None,
+                    "passed": None, "failed": None, "skipped": None,
+                    "todo": None, "cancelled": None, "failed_test_names": []}
         summary = parse_test_summary(output, proc.returncode)
         names = []
         if summary["status"] != "PASS":
@@ -163,11 +189,12 @@ def evaluate(a):
     cwd = (src / q["source_subdir"]).resolve()
     if not cwd.is_dir() or not cwd.is_relative_to(src):
         raise ValueError("missing/unsafe source directory")
-    # Repository tests require this ephemeral folder for TemporaryDirectory(dir=...).
+    sha = source_sha(src)
+    enforce_source_pin(q, sha)
+    # Pin verification must occur before any filesystem writes, including test TEMP.
     # This is the disposable Actions checkout, never the Windows production tree.
     if a.repo == "WoolRadar":
         (cwd / ".test-tmp").mkdir(exist_ok=True)
-    sha = source_sha(src)
     n = min(a.limit, len(families))
     regular = [families[(s["cursor"] + i) % len(families)] for i in range(n)]
     priority = choose_recheck(s, families, {x["id"] for x in regular}) if n < 3 else None
@@ -238,6 +265,7 @@ def _persist_locked(a):
             or receipt.get("queue_sha256") != queue_digest(queue)
             or receipt.get("strict_new_acceptances") != 0):
         raise ValueError("receipt does not match trusted queue")
+    enforce_source_pin(queue, receipt['source_commit'])
     families = queue["families"]
     n = receipt.get("regular_count", len(receipt["results"]))
     if type(n) is not int or not 1 <= n <= 3:

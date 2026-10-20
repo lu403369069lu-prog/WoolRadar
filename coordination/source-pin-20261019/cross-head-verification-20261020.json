@@ -1,0 +1,74 @@
+{
+  "schema_version": 1,
+  "report_id": "codex-coordinator-cross-head-20261020",
+  "date": "2026-10-20",
+  "actor": "codex-coordinator",
+  "status": "PARTIAL_VERIFIED",
+  "woolradar_digest": {
+    "pr84_head": "1cbf1eab6dc5b1032b28d493a4439e51ef51e45f",
+    "pr85_head": "e373cfe6da1a5081974fb8b01f10f5500ecb0598",
+    "pr84_script_blob": "4cfb9792f847bae218f613b14d37a998c9a17445",
+    "pr85_script_blob": "4616b1963b4417a6e38174730128e21e13158526",
+    "pr85_new_test_blob": "b3b6b7f98778cfb2aecd41bdf36aaaa7453b2636",
+    "pr84_existing_test_blob": "c93c311ffe13e1c2185999b5d6b3d7bd7fd239ef",
+    "negative": {
+      "command": "python -B -X utf8 -m unittest discover -s tests -p test_digest_clean_pin.py -v",
+      "working_checkout": "PR84 script + PR85 new tests, clean isolated fixture",
+      "exit_code": 1,
+      "test_methods": 7,
+      "failed_subcases": 12,
+      "log_rel": "_outbox/coordination-20261019/pr84-1cbf-vs-pr85-e373-digest-negative-20261020.log",
+      "log_sha256": "589b958785e60d2b5e746e0ade0d6b894953f132609ef78e7d2af78961d432f4"
+    },
+    "positive": {
+      "command": "python -B -X utf8 -m unittest discover -s tests -p test_*digest*.py -v",
+      "working_checkout": "PR85 script + PR85 new tests + PR84 existing tests; .test-tmp fixture created",
+      "exit_code": 0,
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "log_rel": "_outbox/coordination-20261019/pr85-plus-pr84-digest-compatibility-rerun-20261020.log",
+      "log_sha256": "c7a76881c2abeceb1fe3c74b0ab092da5f2649662c71287cc90d5a39b76b160c"
+    },
+    "conclusion": "PR85 fix is not yet present in PR84 script; focused backward compatibility confirmed. Integrate by WoolRadar owner in isolated branch and run full exact HEAD root+combined and hosted CI when runnable. Neither check proves production Digest or business output connected."
+  },
+  "sam_relay": {
+    "pr50_head": "d178d7dabe202efe7ec6ff7ebd2e64b400dbb3b1",
+    "worker_blob": "4897f8679488b4cb9af30eeb2f0a51b599669352",
+    "test_blob": "921a82ecbf4301d8fe0f80987eda4d52b7c65246",
+    "queue_blob": "66c306e81b46bc132d4b8855fe51100b530eade4",
+    "command": "python -B -X utf8 -m unittest discover -s .github/relay -p test_worker.py -v",
+    "cwd": ".github/relay/../.. at PR50 isolated root",
+    "exit_code": 0,
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0,
+    "log_rel": "_outbox/coordination-20261019/sam50-d178-exact-cwd-fixed-20261020.log",
+    "log_sha256": "0506ed2124ed2c4c1c91e1c01f185e589deaf39eae802b3f2cf4367dcfeb9124",
+    "first_error": "When launched from coordination directory without PR root cwd, 10 FileNotFoundErrors reading .github/relay/queue.json; resolved by using exact workflow cwd, not a code defect.",
+    "conclusion": "Focused relay guard PASS only. Formal 61 positive semantic cases, 522 source Gold, release and system CI remain unverified."
+  },
+  "v3": {
+    "remote_revision": 360,
+    "remote_commit": "4d8c0648740f112085e6a33a141286cede1f6e13",
+    "state_blob": "f3cb276cbb7bee30ec7daa334349d72f31341c4d",
+    "state_digest": "a48bcd2ef27bd0da144e6acb19b76b1c230063ce5696046bada56d1ae88cdde5",
+    "coordinator_source_pin": {
+      "owner": null,
+      "lease_until": 0,
+      "status": "ready",
+      "version": 39,
+      "fencing_token": 9,
+      "head_sha": "23d24f229e4df6f9d9859056a73aa405c7ff8c0d"
+    },
+    "pending_361": "expired_not_delivered",
+    "synchronization": "NO_NEW_REMOTE_V3_EVENT; Git transport and API atomic payload transport not independently cleared"
+  },
+  "global": {
+    "status": "IN_PROGRESS",
+    "woolradar_output": "OUTPUT_NOT_CONNECTED",
+    "sam_semantic_and_gold": "UNVERIFIED",
+    "final_three_rounds": "NOT_STARTED",
+    "next": "Wool owner import PR85 safety gate, independent exact head suite; SAM owner keep 61/522/release work; coordinator improve V3 transport only after guarded atomic remote roundtrip is provable."
+  }
+}

@@ -6,7 +6,7 @@ on:
         description: Reviewed coordination branch or exact commit
         type: string
         required: true
-        default: codex/relay-return-20261015
+        default: codex/coordinator-formal-integration-20261019
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
     paths:
@@ -27,35 +27,55 @@ concurrency:
   cancel-in-progress: true
 jobs:
   formal:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
     timeout-minutes: 20
     permissions:
       contents: read
     steps:
       - name: Checkout exact candidate without persisted Git credentials
         uses: actions/checkout@v4
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: core.autocrlf
+          GIT_CONFIG_VALUE_0: 'false'
         with:
-          ref: ${{ github.event.pull_request.head.sha || inputs.candidate_ref || 'codex/relay-return-20261015' }}
+          ref: ${{ github.event.pull_request.head.sha || inputs.candidate_ref || github.sha }}
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Use canonical isolated temporary directory
+        run: |
+          python -c "import os; from pathlib import Path; p=(Path.cwd()/'.coord-test-temp').resolve(); p.mkdir(exist_ok=True); f=open(os.environ['GITHUB_ENV'],'a',encoding='utf-8'); f.write('TEMP='+str(p)+'\nTMP='+str(p)+'\n'); f.close()"
       - name: Fail closed if expected original tests are absent
         run: |
           set -euo pipefail
-          for file in tests/test_github_webhook.py tests/test_dispatcher.py tests/test_relay.py tests/test_relay_faults.py tests/test_relay_git.py tests/test_return_sync.py; do
+          for file in coordination/original-tests/test_github_webhook.py coordination/original-tests/test_dispatcher.py coordination/original-tests/test_relay.py coordination/original-tests/test_relay_faults.py coordination/original-tests/test_relay_git.py coordination/original-tests/test_return_sync.py; do
             test -f "$file"
           done
+          python coordination/verify_original_suite.py
           git rev-parse HEAD
+          python -c "import json,os,subprocess; print(json.dumps({'source_sha':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),'run_id':os.environ['GITHUB_RUN_ID'],'attempt':os.environ['GITHUB_RUN_ATTEMPT'],'business_accepted':False}))"
+      - name: Reject changed or incomplete original-suite evidence
+        run: python -m unittest discover -s coordination -p test_original_suite_integrity.py -v
       - name: COORD-H03 original signed webhook/HMAC tests
-        run: python -m unittest discover -s tests -p test_github_webhook.py -v
+        run: python -m unittest discover -s coordination/original-tests -p test_github_webhook.py -v
       - name: COORD-H04 original dry-run and dispatcher tests
-        run: python -m unittest discover -s tests -p test_dispatcher.py -v
+        run: python -m unittest discover -s coordination/original-tests -p test_dispatcher.py -v
       - name: COORD-H05 V3 V5 replay and fencing tests
-        run: python -m unittest discover -s tests -p test_relay.py -v
+        run: python -m unittest discover -s coordination/original-tests -p test_relay.py -v
       - name: COORD-H05 forced crash and cold recovery tests
-        run: python -m unittest discover -s tests -p test_relay_faults.py -v
+        run: python -m unittest discover -s coordination/original-tests -p test_relay_faults.py -v
       - name: COORD-H06 isolated Git concurrency and return sync tests
         run: |
-          python -m unittest discover -s tests -p test_relay_git.py -v
-          python -m unittest discover -s tests -p test_return_sync.py -v
+          python -m unittest discover -s coordination/original-tests -p test_relay_git.py -v
+          python -m unittest discover -s coordination/original-tests -p test_return_sync.py -v
+      - name: Combined current relay recovery regressions
+        run: python -m unittest discover -s .github/relay -p test_*.py -v

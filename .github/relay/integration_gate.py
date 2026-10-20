@@ -26,6 +26,7 @@ def run(args):
     for key in ("GITHUB_TOKEN", "GH_TOKEN", "COPILOT_GITHUB_TOKEN", "OPENAI_API_KEY"):
         env.pop(key, None)
     env["PYTHONDONTWRITEBYTECODE"] = "1"
+    env["PYTHONIOENCODING"] = "utf-8"
     base = {
         "schema_version": 1, "repo": args.repo,
         "command": cmd, "source_subdir": "." if args.repo == "WoolRadar" else "SAM/snapshot",
@@ -36,8 +37,8 @@ def run(args):
     }
     try:
         proc = subprocess.run(cmd, cwd=cwd, env=env, capture_output=True,
-                              text=True, errors="replace", timeout=600, check=False)
-        output = (proc.stdout + "\n" + proc.stderr)[-400000:]
+                              timeout=600, check=False)
+        output = (proc.stdout + b"\n" + proc.stderr).decode("utf-8", "strict")[-400000:]
         summary = parse_test_summary(output, proc.returncode)
         failure_names = []
         if summary["status"] != "PASS":
@@ -63,7 +64,7 @@ def run(args):
             details.append(active)
         base.update({**summary, "failed_test_names": failure_names[:30],
                      "failure_details": details[:30]})
-    except (OSError, subprocess.TimeoutExpired) as exc:
+    except (OSError, subprocess.TimeoutExpired, UnicodeError) as exc:
         base.update({"status": "BLOCKED", "error_kind": type(exc).__name__})
     dest = Path(args.output)
     dest.parent.mkdir(parents=True, exist_ok=True)

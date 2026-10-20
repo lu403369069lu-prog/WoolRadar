@@ -1,0 +1,64 @@
+test_concurrent_same_cursor_has_one_winner (test_checkpoint_recovery.CheckpointRecoveryTests.test_concurrent_same_cursor_has_one_winner) ... ok
+test_crash_after_engine_commit_repairs_history_once (test_checkpoint_recovery.CheckpointRecoveryTests.test_crash_after_engine_commit_repairs_history_once) ... ok
+test_interrupted_json_save_preserves_last_valid_engine (test_checkpoint_recovery.CheckpointRecoveryTests.test_interrupted_json_save_preserves_last_valid_engine) ... ok
+test_same_run_key_different_content_is_rejected (test_checkpoint_recovery.CheckpointRecoveryTests.test_same_run_key_different_content_is_rejected) ... ok
+test_real_unittest_invalid_byte_output_is_not_pass (test_child_output_native.ActualChildByteIntegrity.test_real_unittest_invalid_byte_output_is_not_pass) ... ok
+test_clean_genuine_unittest_summary_still_passes (test_child_output_utf8.ChildOutputByteIntegrityTests.test_clean_genuine_unittest_summary_still_passes) ... ok
+test_invalid_stderr_with_success_stdout_is_blocked (test_child_output_utf8.ChildOutputByteIntegrityTests.test_invalid_stderr_with_success_stdout_is_blocked) ... ok
+test_invalid_stdout_with_success_trailer_is_blocked (test_child_output_utf8.ChildOutputByteIntegrityTests.test_invalid_stdout_with_success_trailer_is_blocked) ... ok
+test_missing_summary_does_not_pass (test_child_output_utf8.ChildOutputByteIntegrityTests.test_missing_summary_does_not_pass) ... ok
+test_fullsuite_clean_utf8_still_passes (test_integration_output_utf8.IntegrationByteIntegrity.test_fullsuite_clean_utf8_still_passes) ... IDEMPOTENT_REPLAY 123456/1
+IDEMPOTENT_REPLAY 123456/1
+{"persisted_locally": true, "revision": 1, "cursor": 1, "run_key": "123456/1"}
+{"integration": "PASS", "test_count": 1, "pass": 1, "failed": null, "command": ["C:\\Users\\lh\\scoop\\apps\\python\\current\\python.exe", "-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py"]}
+ok
+test_fullsuite_invalid_byte_output_is_blocked (test_integration_output_utf8.IntegrationByteIntegrity.test_fullsuite_invalid_byte_output_is_blocked) ... {"integration": "BLOCKED", "test_count": null, "pass": null, "failed": null, "command": ["C:\\Users\\lh\\scoop\\apps\\python\\current\\python.exe", "-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py"]}
+ok
+test_actual_node_subprocess_reporters (test_node_summary.NodeSummaryContracts.test_actual_node_subprocess_reporters) ... ok
+test_duplicate_or_mixed_summaries_cannot_select_last_pass (test_node_summary.NodeSummaryContracts.test_duplicate_or_mixed_summaries_cannot_select_last_pass) ... ok
+test_spec_incomplete_failed_skipped_todo_and_exit_status (test_node_summary.NodeSummaryContracts.test_spec_incomplete_failed_skipped_todo_and_exit_status) ... ok
+test_spec_reporter_all_categories (test_node_summary.NodeSummaryContracts.test_spec_reporter_all_categories) ... ok
+test_matching_sha_receipt_remains_valid (test_source_identity.PinnedSourceIdentityTests.test_matching_sha_receipt_remains_valid) ... ok
+test_missing_or_malformed_pin_rejected_before_any_test (test_source_identity.PinnedSourceIdentityTests.test_missing_or_malformed_pin_rejected_before_any_test) ... ok
+test_scheduled_checkout_matches_reviewed_queue_pin (test_source_identity.PinnedSourceIdentityTests.test_scheduled_checkout_matches_reviewed_queue_pin) ... ok
+test_self_consistent_wrong_sha_receipt_is_rejected (test_source_identity.PinnedSourceIdentityTests.test_self_consistent_wrong_sha_receipt_is_rejected) ... ok
+test_wrong_checkout_is_rejected_before_any_test (test_source_identity.PinnedSourceIdentityTests.test_wrong_checkout_is_rejected_before_any_test) ... ok
+test_boolean_exit_code_must_fail (test_strict_combined_gate.StrictCombinedGateTest.test_boolean_exit_code_must_fail) ... ok
+test_expected_failure_must_fail (test_strict_combined_gate.StrictCombinedGateTest.test_expected_failure_must_fail) ... ok
+test_missing_or_multiple_summary_must_fail (test_strict_combined_gate.StrictCombinedGateTest.test_missing_or_multiple_summary_must_fail) ... ok
+test_nonzero_exit_must_fail (test_strict_combined_gate.StrictCombinedGateTest.test_nonzero_exit_must_fail) ... ok
+test_real_unittest_success (test_strict_combined_gate.StrictCombinedGateTest.test_real_unittest_success) ... ok
+test_success_exit_with_one_skip_must_fail (test_strict_combined_gate.StrictCombinedGateTest.test_success_exit_with_one_skip_must_fail) ... ok
+test_boolean_exit_code_cannot_pass_formal_subset (test_worker.RelaySafetyTests.test_boolean_exit_code_cannot_pass_formal_subset) ... ok
+test_command_allowlist_denies_shell_and_arbitrary_code (test_worker.RelaySafetyTests.test_command_allowlist_denies_shell_and_arbitrary_code) ... ok
+test_durable_persist_and_duplicate_replay (test_worker.RelaySafetyTests.test_durable_persist_and_duplicate_replay) ... ok
+test_failed_subset_is_prioritized_with_revision_cooldown (test_worker.RelaySafetyTests.test_failed_subset_is_prioritized_with_revision_cooldown) ... ok
+test_forged_pass_receipt_requires_explicit_zero_counters (test_worker.RelaySafetyTests.test_forged_pass_receipt_requires_explicit_zero_counters) ... ok
+test_forged_skipped_receipt_rejected (test_worker.RelaySafetyTests.test_forged_skipped_receipt_rejected) ... ok
+test_full_integration_receipt_must_bind_exact_actions_run_attempt (test_worker.RelaySafetyTests.test_full_integration_receipt_must_bind_exact_actions_run_attempt) ... ok
+test_full_suite_pass_requires_exact_explicit_typed_counters (test_worker.RelaySafetyTests.test_full_suite_pass_requires_exact_explicit_typed_counters) ... ok
+test_integration_report_must_match_exact_tested_source_commit (test_worker.RelaySafetyTests.test_integration_report_must_match_exact_tested_source_commit) ... ok
+test_persist_rejects_mismatched_github_actions_run_context (test_worker.RelaySafetyTests.test_persist_rejects_mismatched_github_actions_run_context) ... ok
+test_python_discovery_source_allowlist_blocks_unreviewed_roots (test_worker.RelaySafetyTests.test_python_discovery_source_allowlist_blocks_unreviewed_roots) ... ok
+test_python_summary_missing_ok_never_passes (test_worker.RelaySafetyTests.test_python_summary_missing_ok_never_passes) ... ok
+test_queue_digest_is_lf_crlf_platform_stable (test_worker.RelaySafetyTests.test_queue_digest_is_lf_crlf_platform_stable) ... ok
+test_real_integration_report_producer_binds_checked_out_git_sha (test_worker.RelaySafetyTests.test_real_integration_report_producer_binds_checked_out_git_sha) ... {"persisted_locally": true, "revision": 1, "cursor": 1, "run_key": "123456/1"}
+{"persisted_locally": true, "revision": 1, "cursor": 1, "run_key": "123456/1"}
+{"persisted_locally": true, "revision": 1, "cursor": 1, "run_key": "123456/1"}
+IDEMPOTENT_REPLAY 123456/1
+{"integration": "PASS", "test_count": 1, "pass": 1, "failed": null, "command": ["C:\\Users\\lh\\scoop\\apps\\python\\current\\python.exe", "-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py"]}
+ok
+test_real_python_expected_failure_cannot_pass_formal_gate (test_worker.RelaySafetyTests.test_real_python_expected_failure_cannot_pass_formal_gate) ... ok
+test_reject_forged_completion_and_stale_cursor (test_worker.RelaySafetyTests.test_reject_forged_completion_and_stale_cursor) ... ok
+test_rotation_two_consecutive_receipts (test_worker.RelaySafetyTests.test_rotation_two_consecutive_receipts) ... ok
+test_skip_todo_cancelled_never_count_as_formal_pass (test_worker.RelaySafetyTests.test_skip_todo_cancelled_never_count_as_formal_pass) ... ok
+test_unrelated_source_tests_do_not_claim_family_formal_pass (test_worker.RelaySafetyTests.test_unrelated_source_tests_do_not_claim_family_formal_pass)
+An unrelated passing test must never masquerade as family evidence. ... ok
+test_wool_runner_rejects_unreviewed_node_test_paths (test_worker.RelaySafetyTests.test_wool_runner_rejects_unreviewed_node_test_paths) ... ok
+
+----------------------------------------------------------------------
+Ran 46 tests in 2.668s
+
+OK
+{"persisted_locally": true, "revision": 1, "cursor": 1, "run_key": "123456/1"}
+{"persisted_locally": true, "revision": 2, "cursor": 2, "run_key": "123457/1"}

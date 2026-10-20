@@ -1,0 +1,88 @@
+name: Pinned Wool source integration (read only)
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - '.github/relay/**'
+      - '.github/workflows/historical-family-relay.yml'
+      - '.github/workflows/source-pin-pr-validation.yml'
+permissions:
+  contents: read
+jobs:
+  source-integration:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install pinned IANA time zone database for Windows
+        run: |
+          python -m pip install --disable-pip-version-check tzdata==2026.2
+          python -c "from importlib.metadata import version; from zoneinfo import ZoneInfo; assert ZoneInfo('Asia/Shanghai').key == 'Asia/Shanghai'; print('tzdata='+version('tzdata'))"
+      - name: Read reviewed immutable queue pin
+        id: pin
+        run: |
+          python -c "import json,re,os; q=json.load(open('.github/relay/queue.json',encoding='utf-8')); s=q['source_ref']; assert re.fullmatch('[0-9a-f]{40}',s); assert q['repo']=='WoolRadar'; open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8').write('sha='+s+'\n')"
+      - uses: actions/checkout@v4
+        id: candidate
+        with:
+          ref: ${{ steps.pin.outputs.sha }}
+          path: candidate
+          persist-credentials: false
+      - name: Canonical isolated temporary directory
+        run: |
+          python -c "import os; from pathlib import Path; p=(Path.cwd()/'.source-test-temp').resolve(); p.mkdir(exist_ok=True); open(os.environ['GITHUB_ENV'],'a',encoding='utf-8').write('TEMP='+str(p)+'\nTMP='+str(p)+'\nPYTHONUTF8=1\n')"
+      - name: Install and verify manifest-pinned Digest upstream (fresh checkout)
+        working-directory: candidate
+        run: |
+          python -B -X utf8 scripts/prepare_digest_upstream.py
+          python -B -X utf8 scripts/prepare_digest_upstream.py --verify-only
+      - name: Verify source identity and relay rejection controls
+        run: |
+          python -c "import json,os,subprocess; q=json.load(open('.github/relay/queue.json',encoding='utf-8')); s=subprocess.check_output(['git','-C','candidate','rev-parse','HEAD'],text=True).strip(); assert s==q['source_ref']; print(json.dumps({'source_sha':s,'run_id':os.environ['GITHUB_RUN_ID'],'attempt':os.environ['GITHUB_RUN_ATTEMPT'],'business_accepted':False}))"
+          python -X utf8 -B -m unittest discover -s .github/relay -p test_*.py -v
+      - name: Formal root integration and immutable receipt
+        if: ${{ matrix.os == 'windows-latest' }}
+        run: |
+          python -X utf8 -B .github/relay/integration_gate.py --repo WoolRadar --source candidate --output .relay-report/integration.json
+          python -c "import json; q=json.load(open('.github/relay/queue.json',encoding='utf-8')); r=json.load(open('.relay-report/integration.json',encoding='utf-8')); print(json.dumps(r)); assert r['source_commit']==q['source_ref']; assert r['status']=='PASS' and r['exit_code']==0 and r['passed']==r['total'] and r['total']>0; print(json.dumps(r))"
+      - name: Combined actual source modules; require zero skipped tests
+        if: ${{ matrix.os == 'windows-latest' && !cancelled() && steps.candidate.outcome == 'success' }}
+        working-directory: candidate
+        run: |
+          python -B -X utf8 ../.github/relay/strict_combined_gate.py --source . --expected-sha "${{ steps.pin.outputs.sha }}" --report ../.relay-report/combined.json
+      - name: Linux pinned upstream runtime contracts (platform-scoped)
+        id: linux_runtime
+        if: ${{ matrix.os == 'ubuntu-latest' && !cancelled() && steps.candidate.outcome == 'success' }}
+        working-directory: candidate
+        run: |
+          python -c "from pathlib import Path; Path('.test-tmp').mkdir(exist_ok=True)"
+          python -B -X utf8 -m unittest discover -s tests -p 'test_digest_runtime.py' -v
+          python -B -X utf8 -m unittest discover -s tests -p 'test_prepare_digest_upstream.py' -v
+      - name: Record Linux runtime scope and immutable result
+        if: ${{ matrix.os == 'ubuntu-latest' && always() }}
+        env:
+          LINUX_TEST_OUTCOME: ${{ steps.linux_runtime.outcome }}
+          SOURCE_SHA: ${{ steps.pin.outputs.sha }}
+        run: |
+          python -c "import json,os,pathlib; p=pathlib.Path('.relay-report/linux-runtime.json'); p.parent.mkdir(exist_ok=True); p.write_text(json.dumps({'schema':1,'scope':'linux-pinned-digest-runtime','source_commit':os.environ['SOURCE_SHA'],'run_id':os.environ['GITHUB_RUN_ID'],'run_attempt':os.environ['GITHUB_RUN_ATTEMPT'],'step_outcome':os.environ['LINUX_TEST_OUTCOME'],'business_accepted':False},sort_keys=True)+'\n',encoding='utf-8')"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pinned-source-${{ matrix.os }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .relay-report/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30

@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "repo": "WoolRadar",
-  "source_ref": "chatgpt/wr-h07-public-corpus-url-limit-fixture-20261018",
+  "source_ref": "1cbf1eab6dc5b1032b28d493a4439e51ef51e45f",
   "source_subdir": ".",
-  "source_note": "Tests cover only selected checks. PASS never means family/business accepted.",
+  "source_note": "PR84 1cbf exact 308-file Git tree independently reconstructed and Windows root389/combined492, zero fail/skip, exit0 (2026-10-20). Existing Digest pinned runtime; hosted clean install, holdout and actual 09:30 consumer same-SHA ACK remain unverified.",
   "families": [
     {
       "id": "WR-H01",

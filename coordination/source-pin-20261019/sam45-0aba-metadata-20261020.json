@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "kind": "sam_independent_exact_head_metadata_test",
+  "tested_at": "2026-10-20",
+  "executor": "codex-coordinator",
+  "repository": "lu403369069lu-prog/YinQieJi",
+  "pr": 45,
+  "head_sha": "0aba32df83124fe672e676dda90ebf81ac3c5a74",
+  "verified_git_blobs": {
+    "SAM/snapshot/tools/review-gap-progress.mjs": "7840b50c8ccc0a9e3b8d09e7996c3ad1f773c4de",
+    "SAM/snapshot/tools/validate-source-claim-batch.mjs": "11069948dae69e851282e0d8aaf91e07a91e11f3",
+    "SAM/snapshot/tools/source-review-status.mjs": "7fe083014195385dd84fca3c32e26f4752e575ef",
+    "SAM/snapshot/tools/report-source-review-gaps.mjs": "9784340d2f6ba3a466f7689fc7af3128eca7a8f2",
+    "SAM/snapshot/test/review-gap-progress.test.mjs": "f22eb0d561174617014cf54d07e0cc72c9d9dcaa",
+    "SAM/snapshot/test/validate-source-claim-batch.test.mjs": "4329279a6b55a6f33edd0495db895ca4076ff107",
+    "SAM/snapshot/test/source-review-status.test.mjs": "41d5f33e5f51e54d905fb817b3c8e7ea071217b9"
+  },
+  "validation": {
+    "environment": "isolated Windows, Node v26.3.0",
+    "cwd": "_outbox/coordination-20261019/sam45-source-status-0aba-exact/SAM/snapshot",
+    "command": "node --test test/source-review-status.test.mjs test/review-gap-progress.test.mjs test/validate-source-claim-batch.test.mjs",
+    "exit_code": 0,
+    "tests": 25,
+    "passed": 25,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "stdout_log": "_outbox/coordination-20261019/sam45-0aba-metadata-native-20261020.log",
+    "stdout_sha256": "9ede8fd238598e93d357d235cb29e771983cd7eca44c06a4ca507768866c4d44"
+  },
+  "scope_limits": [
+    "Only 3 Node metadata contracts independently re-executed. report-source-review-gaps.mjs was exact-byte verified but not executed in this isolated test.",
+    "No full TypeScript build, official full dual MCP 61/19 semantic gate, independent 522-source Gold, Windows symlink permission or release pair installation/rollback gate.",
+    "PR50 Python relay worker remains a separate Draft candidate; no integration claim.",
+    "Source-qualified static answers are not independent semantic Gold."
+  ]
+}

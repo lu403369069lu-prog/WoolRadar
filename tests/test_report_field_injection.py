@@ -2,6 +2,7 @@
 
 import tempfile
 import unittest
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from core.db import Database
@@ -25,7 +26,12 @@ class MarkdownFieldInjectionTests(unittest.TestCase):
                 "community", "https://forum.example/post\n## FORGED_EVIDENCE_HEADING",
                 "community-reference", claims={"source": "community"},
             ))
-            paths = ReportGenerator(db, root / "reports").generate("2026-10-20")
+            # Freeze the report day to this stored event, not the test run date.
+            first_seen = db.get_event(event)["first_seen"]
+            report_day = datetime.fromisoformat(first_seen.replace("Z", "+00:00")).astimezone(
+                timezone(timedelta(hours=8))
+            ).date().isoformat()
+            paths = ReportGenerator(db, root / "reports").generate(report_day)
             markdown = paths.markdown.read_text(encoding="utf-8")
             for forged in (
                 "\n## FORGED_NODE_HEADING",

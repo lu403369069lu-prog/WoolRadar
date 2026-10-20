@@ -98,10 +98,19 @@ class ReportGenerator:
                        for item in event['evidence'])
 
         region_risk_events = [event for event in events if official_mainland_restriction(event)]
+        def safe_high_value_candidate(event):
+            # High-value is a discovery tag, never an override of later
+            # terminal status or explicit official payment/region conditions.
+            return (json.loads(event['metadata_json']).get('high_value') is True
+                    and event['status'] not in
+                    ('EXPIRED', 'CONFLICTED', 'FAILED', 'REDEEMED')
+                    and not official_payment_risks(event)
+                    and not official_mainland_restriction(event))
+
         sections = [
             ('今日新发现', today_events),
             ('官方已核实、正在开放的福利', [e for e in events if e['status'] == 'CLAIMABLE']),
-            ('限时高价值活动', [e for e in events if json.loads(e['metadata_json']).get('high_value')]),
+            ('限时高价值活动', [e for e in events if safe_high_value_candidate(e)]),
             ('绑卡或自动续费风险：待人工核验', payment_risk_events),
             ('中国大陆地域资格限制：待人工核验', region_risk_events),
             ('官方来源已找到、开放与条件待核验', [e for e in events if e['status'] == 'OFFICIAL_VERIFIED'
@@ -112,6 +121,7 @@ class ReportGenerator:
         ]
         lines = [f'# WoolRadar 中文简报 — {date}', '', '> 领取资格结论仅以已保存证据为准；公开可申请不等于个人账号符合资格。',
                  '> 今日新发现指本地首次发现，不表示今天发布或重新开放；历史 RSS 条目可能已结束。', '']
+        lines.insert(4, '> 高价值标记仅供线索筛选，不能代替官方开放、费用、地域及账号资格核验。')
         for title, rows in sections:
             lines.extend([f'## {title}', ''])
             if not rows:

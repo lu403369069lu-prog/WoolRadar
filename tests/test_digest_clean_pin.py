@@ -81,6 +81,26 @@ class DigestCleanPinnedCheckoutTests(unittest.TestCase):
                 with self.assertRaisesRegex(RuntimeError, "UPSTREAM_WORKTREE_DIRTY"):
                     self.prepare_with_fake_import(verify_only)
 
+    def test_assume_unchanged_tracked_source_tamper_rejected(self):
+        self.git("update-index", "--assume-unchanged", "newsbrief/sources/rss.py")
+        self.source.write_text("AUTHENTIC = False\\n", encoding="utf-8")
+        self.assertEqual(self.git("status", "--porcelain=v1", "--untracked-files=all",
+                                  "--", ".", ":(exclude).venv"), "")
+        for verify_only in (True, False):
+            with self.subTest(verify_only=verify_only):
+                with self.assertRaisesRegex(RuntimeError, "UPSTREAM_WORKTREE_DIRTY"):
+                    self.prepare_with_fake_import(verify_only)
+
+    def test_skip_worktree_tracked_source_tamper_rejected(self):
+        self.git("update-index", "--skip-worktree", "newsbrief/sources/rss.py")
+        self.source.write_text("AUTHENTIC = False\\n", encoding="utf-8")
+        self.assertEqual(self.git("status", "--porcelain=v1", "--untracked-files=all",
+                                  "--", ".", ":(exclude).venv"), "")
+        for verify_only in (True, False):
+            with self.subTest(verify_only=verify_only):
+                with self.assertRaisesRegex(RuntimeError, "UPSTREAM_WORKTREE_DIRTY"):
+                    self.prepare_with_fake_import(verify_only)
+
     def test_untracked_importable_python_module_rejected(self):
         (self.checkout / "newsbrief" / "sources" / "hijack.py").write_text(
             "SHOULD_NOT_LOAD = True\n", encoding="utf-8")

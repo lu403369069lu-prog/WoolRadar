@@ -57,6 +57,15 @@ def prepare(root: Path, verify_only: bool = False) -> Path:
     # A matching commit alone does not attest to the executed source bytes:
     # tracked edits and imported untracked modules can override that commit.
     # Ignore only this checkout's disposable virtual environment.
+    # Git's porcelain status trusts index flags. A tracked source modified
+    # under --assume-unchanged or --skip-worktree can evade status entirely.
+    # `ls-files -v` marks assume-unchanged entries with lowercase tags and
+    # skip-worktree entries with S; reject both before any pip/import.
+    tracked = run('git', '-C', str(checkout), 'ls-files', '-v', '-z', '--',
+                  '.', ':(exclude).venv', env=env)
+    if any(entry and (entry[0].islower() or entry[0] == 'S')
+           for entry in tracked.split('\0')):
+        raise RuntimeError('UPSTREAM_WORKTREE_DIRTY')
     if run('git', '-C', str(checkout), 'status', '--porcelain=v1',
            '--untracked-files=all', '--', '.', ':(exclude).venv', env=env):
         raise RuntimeError('UPSTREAM_WORKTREE_DIRTY')

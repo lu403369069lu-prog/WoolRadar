@@ -33,6 +33,27 @@ def _safe_markdown_link(title: str, url: str) -> str:
     return f'[{label}]({destination})'
 
 
+def _safe_markdown_link(title: str, url: str) -> str:
+    """Make untrusted harvested titles and destinations inert in Markdown."""
+    label = re.sub(r'[\x00-\x1f\x7f]', ' ', str(title))
+    label = label.replace('&', '&amp;').replace('<', '&lt;')
+    label = re.sub(r'([\\*_{}\[\]()#+\-.!|>])', r'\\\1', label)
+    label = label.replace(chr(96), '\\' + chr(96))
+    destination = str(url)
+    if any(ord(ch) < 33 or ord(ch) == 127 for ch in destination):
+        return label
+    try:
+        parsed = urlsplit(destination)
+        if parsed.scheme.lower() not in ('https', 'http') or not parsed.hostname or parsed.username is not None:
+            return label
+    except ValueError:
+        return label
+    for char, encoded in (('\\', '%5C'), ('(', '%28'), (')', '%29'),
+                          ('[', '%5B'), (']', '%5D'), ('<', '%3C'), ('>', '%3E')):
+        destination = destination.replace(char, encoded)
+    return f'[{label}]({destination})'
+
+
 @dataclass(slots=True)
 class ReportPaths:
     markdown: Path

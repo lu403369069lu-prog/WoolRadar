@@ -90,7 +90,10 @@ class ReportGenerator:
                                      'events_preserved': len(all_events), 'ledger_sha256': audit_snapshot.digest}
         json_path = self.report_dir / f'{date}-daily.json'
         md_path = self.report_dir / f'{date}-daily.md'
-        json_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding='utf-8')
+        # Finish all potentially failing classification and Markdown rendering
+        # before publishing either report. The JSON is the consumer input;
+        # a malformed event must not replace it while Markdown stays stale.
+        json_text = json.dumps(payload, ensure_ascii=False, indent=2)
 
         def official_payment_risks(event):
             return [risk for risk in ('card_required', 'auto_renew')
@@ -168,5 +171,7 @@ class ReportGenerator:
         for run in runs:
             lines.append(f"- {_safe_markdown_field(run['node'])}: {_safe_markdown_field(run['status'])}，采集 {run['items']} 条，错误 {_safe_markdown_field(run['error_code'] or '无')}")
         lines.extend(['', '## 安全边界', '', '- 本系统默认只读；未执行领取、授权、支付、发帖、点赞或账号创建。', ''])
-        md_path.write_text('\n'.join(lines), encoding='utf-8')
+        md_text = '\n'.join(lines)
+        md_path.write_text(md_text, encoding='utf-8')
+        json_path.write_text(json_text, encoding='utf-8')
         return ReportPaths(md_path, json_path)

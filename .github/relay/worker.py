@@ -67,6 +67,42 @@ def safe(argv):
         return False
     return False
 
+def verify_reviewed_test_files(argv, cwd, src):
+    """Require every discovered test to have its exact bytes at source HEAD.
+
+    A pinned HEAD alone cannot authenticate newly added or modified tests.
+    """
+    src = Path(src).resolve()
+    if argv[:5] == ["python", "-m", "unittest", "discover", "-s"]:
+        root = (cwd / argv[5]).resolve()
+        if not root.is_dir() or not root.is_relative_to(src):
+            raise ValueError("invalid discovery directory")
+        files = [p for p in root.rglob(argv[7]) if p.is_file()]
+    else:
+        files = [cwd / path for path in argv[4:]]
+    if not files:
+        raise ValueError("no reviewed test files selected")
+    for candidate in files:
+        if candidate.is_symlink() or not candidate.is_file():
+            raise ValueError("test source is missing or symlinked")
+        path = candidate.resolve()
+        if not path.is_relative_to(src):
+            raise ValueError("test file escaped pinned source checkout")
+        relative = path.relative_to(src).as_posix()
+        committed = subprocess.run(
+            ["git", "-C", str(src), "rev-parse", "--verify", "HEAD:" + relative],
+            capture_output=True, text=True, timeout=10, check=False)
+        if committed.returncode != 0:
+            raise ValueError("untracked test in formal discovery")
+        # Git's diff applies the repository's text/eol clean filters, unlike
+        # a raw worktree byte hash (Windows checkout may contain CRLF).
+        delta = subprocess.run(
+            ["git", "-C", str(src), "diff", "--quiet", "HEAD", "--", relative],
+            capture_output=True, timeout=10, check=False)
+        if delta.returncode != 0:
+            raise ValueError("modified test bytes differ from pinned source HEAD")
+
+
 def choose_recheck(state, families, regular_ids):
     """Prefer oldest independently failed subset, at most once per two revisions."""
     candidates = []
@@ -142,6 +178,10 @@ def test(argv, cwd, src):
     paths = [argv[5]] if argv[:5] == ["python", "-m", "unittest", "discover", "-s"] else [a for a in argv if a.endswith((".test.ts", ".test.mjs"))]
     if any(not (cwd / a).resolve().is_relative_to(src) for a in paths):
         raise ValueError("test path escapes candidate")
+    try:
+        verify_reviewed_test_files(argv, cwd, src)
+    except (ValueError, OSError, subprocess.SubprocessError):
+        return {"status": "BLOCKED", "error_kind": "UNREVIEWED_TEST_SOURCE"}
     cmd = [sys.executable] + argv[1:] if argv[0] == "python" else argv
     env = dict(os.environ)
     for k in ("GITHUB_TOKEN", "GH_TOKEN", "COPILOT_GITHUB_TOKEN", "OPENAI_API_KEY"):
@@ -153,6 +193,12 @@ def test(argv, cwd, src):
     try:
         proc = subprocess.run(cmd, cwd=cwd, stdout=subprocess.PIPE,
                               stderr=subprocess.PIPE, timeout=180, env=env)
+        # Detect modifications created during the test run, too.
+        try:
+            verify_reviewed_test_files(argv, cwd, src)
+        except (ValueError, OSError, subprocess.SubprocessError):
+            return {"status": "BLOCKED", "exit_code": proc.returncode,
+                    "error_kind": "UNREVIEWED_TEST_SOURCE"}
         try:
             output = (proc.stdout + b"\n" + proc.stderr).decode("utf-8", "strict")[-240000:]
         except UnicodeDecodeError:

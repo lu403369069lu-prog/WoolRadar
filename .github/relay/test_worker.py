@@ -109,6 +109,71 @@ class RelaySafetyTests(unittest.TestCase):
         self.assertEqual(
             worker.parse_test_summary("Ran 1 test in 0.001s\n", 0)["status"], "FAIL")
 
+    def test_glob_discovery_rejects_untracked_and_modified_test_bytes(self):
+        """Exact HEAD is insufficient when the discovered worktree changes."""
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        self.assertTrue(worker.safe(check))
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            verified = tests / "test_public_corpus_verified.py"
+            original = ("import unittest\nclass Probe(unittest.TestCase):\n"
+                        "    def test_verified(self): self.assertTrue(True)\n")
+            verified.write_text(original, encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_verified.py"],
+                           cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester",
+                            "-c", "user.email=test@example.invalid", "commit",
+                            "-qm", "pin test"], cwd=root, check=True)
+            pinned_sha = worker.source_sha(root)
+            clean = worker.test(check, root, root)
+            self.assertEqual((clean["status"], clean["total"]), ("PASS", 1))
+
+            untracked = tests / "test_public_corpus_untracked.py"
+            untracked.write_text(original.replace("verified", "extra"),
+                                 encoding="utf-8")
+            blocked = worker.test(check, root, root)
+            self.assertEqual(blocked.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
+            self.assertEqual(blocked["status"], "BLOCKED")
+            self.assertEqual(worker.source_sha(root), pinned_sha)
+
+            untracked.unlink()
+            verified.write_text(original.replace("True", "False"), encoding="utf-8")
+            modified = worker.test(check, root, root)
+            self.assertEqual(modified.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
+            self.assertEqual(modified["status"], "BLOCKED")
+            self.assertEqual(worker.source_sha(root), pinned_sha)
+
+    def test_glob_discovery_rejects_test_files_created_during_run(self):
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            verified = tests / "test_public_corpus_writer.py"
+            verified.write_text(
+                "import unittest\nfrom pathlib import Path\n"
+                "class Probe(unittest.TestCase):\n"
+                "    def test_write(self):\n"
+                "        Path('tests/test_public_corpus_injected.py').write_text("
+                "'import unittest\\nclass New(unittest.TestCase):\\n"
+                " def test_ok(self): self.assertTrue(True)\\n')\n",
+                encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_writer.py"],
+                           cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester",
+                            "-c", "user.email=test@example.invalid", "commit",
+                            "-qm", "pin test"], cwd=root, check=True)
+            result = worker.test(check, root, root)
+            self.assertEqual(result["status"], "BLOCKED")
+            self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
+            self.assertTrue((tests / "test_public_corpus_injected.py").exists())
+
     def test_real_integration_report_producer_binds_checked_out_git_sha(self):
         # Execute the original producer using the real checkout Git identity,
         # but substitute the external full test process with a synthetic TAP

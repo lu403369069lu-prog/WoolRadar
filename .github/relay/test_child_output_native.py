@@ -1,5 +1,6 @@
 """Native subprocess must not turn invalid child bytes into test evidence."""
 from pathlib import Path
+import subprocess
 import tempfile
 import unittest
 from worker import test as run_test
@@ -15,6 +16,12 @@ class ActualChildByteIntegrity(unittest.TestCase):
                 "class Evidence(unittest.TestCase):\n"
                 " def test_one(self): os.write(1,bytes([255])); self.assertTrue(True)\n",
                 encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_notifications.py"],
+                           cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester",
+                            "-c", "user.email=test@example.invalid", "commit",
+                            "-qm", "pin fixture"], cwd=root, check=True)
             argv = ["python", "-m", "unittest", "discover", "-s", "tests",
                     "-p", "test_notifications.py"]
             result = run_test(argv, root, root)

@@ -208,6 +208,11 @@ def test(argv, cwd, src):
     env["PYTHONDONTWRITEBYTECODE"] = "1"
     # Preserve the reviewed child-output contract: no lossy decoding of evidence.
     if argv[0] == "python":
+        # The formal test command must not inherit a caller-controlled import
+        # path: PYTHONPATH can load an external sitecustomize.py that forges PASS.
+        # PYTHONHOME can similarly redirect interpreter startup libraries.
+        for key in ("PYTHONPATH", "PYTHONHOME"):
+            env.pop(key, None)
         env["PYTHONIOENCODING"] = "utf-8"
     try:
         proc = subprocess.run(cmd, cwd=cwd, stdout=subprocess.PIPE,

@@ -424,6 +424,11 @@ class Database:
             groups = {}
             merged = 0
             merged_survivors = set()
+            # Manual/terminal decisions outrank an evidence-only fresh recheck.
+            # A losing row can carry the only terminal decision for a campaign;
+            # remember it before deleting that row and its original event ID.
+            terminal_statuses = {'REDEEMED', 'EXPIRED', 'FAILED', 'CONFLICTED'}
+            merged_terminals = {}
             for row in rows:
                 metadata = json.loads(row['metadata_json'])
                 link = conn.execute('SELECT review_json FROM campaign_links WHERE url=?', (normalize_url(row['primary_url']),)).fetchone()
@@ -437,10 +442,20 @@ class Database:
                 identity = (key, row['batch_id'])
                 if identity not in groups:
                     groups[identity] = row['id']
+                    if row['status'] in terminal_statuses:
+                        merged_terminals[row['id']] = row['status']
                     conn.execute('UPDATE events SET canonical_key=? WHERE id=?', (key, row['id']))
                     continue
                 keep, old = groups[identity], row['id']
                 merged_survivors.add(keep)
+                incoming_terminal = row['status'] if row['status'] in terminal_statuses else None
+                existing_terminal = merged_terminals.get(keep)
+                if incoming_terminal and existing_terminal and incoming_terminal != existing_terminal:
+                    # Two incompatible historical final decisions require a
+                    # human review, not an automatic public-claimable promotion.
+                    merged_terminals[keep] = 'CONFLICTED'
+                elif incoming_terminal:
+                    merged_terminals[keep] = incoming_terminal
                 self._merge_evidence(conn, keep, old)
                 # A duplicate channel key can exist on both campaign members.
                 # Plain INSERT OR IGNORE would discard a confirmed SENT notice
@@ -512,6 +527,15 @@ class Database:
             from .verifier import VerificationEngine
             for event_id in sorted(merged_survivors):
                 current = dict(conn.execute('SELECT * FROM events WHERE id=?', (event_id,)).fetchone())
+                terminal = merged_terminals.get(event_id)
+                if terminal:
+                    if (current['status'], current['claim_scope']) != (terminal, 'NONE'):
+                        conn.execute("UPDATE events SET status=?,claim_scope='NONE' WHERE id=?",
+                                     (terminal, event_id))
+                        conn.execute('INSERT INTO status_history(event_id,old_status,new_status,reason,changed_at) VALUES(?,?,?,?,?)',
+                                     (event_id, current['status'], terminal,
+                                      '归组保留历史终结状态；重新开放须人工核验', utc_now()))
+                    continue
                 evidence = [Evidence(kind=item['kind'], url=item['url'],
                     provenance_key=item['provenance_key'], checked_at=item['checked_at'],
                     excerpt=item['excerpt'] or '', claims=json.loads(item['claims_json'] or '{}'))

@@ -30,6 +30,16 @@ class Contract(unittest.TestCase):
                               'notifications':[{'payload':'PRIVATE_NOTIFICATION'}],
                               'node_runs':[{'detail':'PRIVATE_PATH'}]}, 'a'*64, NOW)
 
+    def test_invisible_direction_controls_are_not_exported_as_offer_titles(self):
+        # Public snippets can contain bidirectional overrides and non-ASCII
+        # control characters that change how the final brief appears.
+        for marker in ('\u202e', '\u2066', '\u200b', '\u0085', '\u2028'):
+            with self.subTest(marker=repr(marker)):
+                poisoned = 'Free cloud ' + marker + 'benefit'
+                self.assertIsNone(public_title(poisoned))
+                self.assertEqual(self.preview([row(title=poisoned)])['events'], [])
+        self.assertEqual(public_title('免费云资源 ☁️'), '免费云资源 ☁️')
+
     def test_whitelist_only_and_no_eligibility_promotion(self):
         p=self.preview([row()]); item=p['events'][0]
         self.assertEqual(item['publication_lane'], 'independent_official_recheck_required')
@@ -39,6 +49,20 @@ class Contract(unittest.TestCase):
         text=json.dumps(p)
         for secret in ('SECRET', 'PRIVATE_NOTIFICATION','PRIVATE_PATH','user@example.org','PERSONAL_ACCOUNT','private_account','"id": 55'):
             self.assertNotIn(secret,text)
+
+    def test_unicode_controls_in_urls_and_encoded_routes_rejected(self):
+        poison = (
+            'https://example.org/benefit\u202eoffer',
+            'https://example.org/benefit%E2%80%AEoffer',
+            'https://example.org/benefit\u200boffer',
+            'https://example.org/benefit%E2%80%8Boffer',
+        )
+        for url in poison:
+            with self.subTest(url=repr(url)):
+                self.assertIsNone(public_url(url))
+                self.assertEqual(self.preview([row(primary_url=url)])['events'], [])
+        self.assertEqual(public_url('https://example.org/normal%E4%B8%AD%E6%96%87'),
+                         'https://example.org/normal%E4%B8%AD%E6%96%87')
 
     def test_query_credentials_and_account_routes_denied(self):
         for url in ['http://example.org/promo','https://me:pass@example.org/a','https://localhost/a',

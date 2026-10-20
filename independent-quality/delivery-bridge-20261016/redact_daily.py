@@ -13,6 +13,7 @@ import json
 import math
 import os
 import re
+import unicodedata
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import unquote, urlsplit, urlunsplit
@@ -49,7 +50,9 @@ def public_url(raw: object) -> str | None:
             if decoded == route:
                 break
             route = decoded
-        if '%' in route or re.search(r'\s|[\\<>]', route) or any(ord(ch) < 32 for ch in route):
+        if ('%' in route or re.search(r'\s|[\\<>]', route)
+            or any(unicodedata.category(ch) in {'Cc', 'Cf', 'Cs', 'Zl', 'Zp'}
+                   for ch in route)):
             return None
         if parts.query or parts.fragment or BAD_TEXT.search(route):
             return None
@@ -65,7 +68,12 @@ def public_url(raw: object) -> str | None:
 def public_title(raw: object) -> str | None:
     if not isinstance(raw, str) or len(raw) < 3 or len(raw) > 160:
         return None
-    if any(ord(ch) < 32 or 0xD800 <= ord(ch) <= 0xDFFF for ch in raw) or BAD_TEXT.search(raw) or '://' in raw or re.search(r'(?i)(?:[a-z]:[\\/]|\\\\|/(?:home|Users|private|tmp)/)', raw):
+    # Unicode format controls (including bidi overrides/isolates and zero-width
+    # characters), C1 controls and Unicode line/paragraph separators can
+    # visually forge the final brief without containing ASCII newlines.
+    if (any(unicodedata.category(ch) in {'Cc', 'Cf', 'Cs', 'Zl', 'Zp'} for ch in raw)
+        or BAD_TEXT.search(raw) or '://' in raw
+        or re.search(r'(?i)(?:[a-z]:[\\/]|\\\\|/(?:home|Users|private|tmp)/)', raw)):
         return None
     return raw
 

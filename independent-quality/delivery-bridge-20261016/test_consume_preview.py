@@ -28,6 +28,20 @@ def check(p, digest=None, now=NOW):
 
 
 class PreviewGuard(unittest.TestCase):
+    def test_rejects_invisible_bidirectional_title_even_with_approved_digest(self):
+        for marker in ('\u202e', '\u2066', '\u200b', '\u0085', '\u2028'):
+            with self.subTest(marker=repr(marker)):
+                with self.assertRaises(UnsafePreview):
+                    check(payload(dict(ROW, title='Free cloud ' + marker + 'benefit')))
+
+    def test_rejects_invisible_unicode_in_public_urls_even_with_digest(self):
+        for url in ('https://example.org/benefit\u202eoffer',
+                    'https://example.org/benefit%E2%80%AEoffer',
+                    'https://example.org/benefit%E2%80%8Boffer'):
+            with self.subTest(url=repr(url)):
+                with self.assertRaises(UnsafePreview):
+                    check(payload(dict(ROW, public_url=url)))
+
     def test_baseline_not_new(self):
         self.assertEqual(review_delta(check(payload(ROW)))['candidate_keys'],[])
 

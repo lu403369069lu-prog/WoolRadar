@@ -1,3 +1,46 @@
+# 2026-10-21 WoolRadar 正式接续交接（当前入口）
+
+状态：**交接已接收，原工程仍未完成**。本次经用户明确要求将交接写入 GitHub；只更新交接文档，保留旧正文、代码和 Git 历史，不合并 PR、不部署。
+
+## 当前基线与协作归属
+
+| 对象 | 本次冷读结果 |
+| --- | --- |
+| 业务集成 PR #84 | Draft/open，`42f92a14bff176cbe6b6ceb3847437386896c6fd` |
+| 当前候选 PR #90 | Draft/open，代码基线 `f51f9f2fda8b5bc0836dd4def31334e70bd304ea`；本交接后的文档提交不等于新代码验收 |
+| 协调器 PR #91 | Draft/open，最新 `434b61a57c03e040815ffd8cb023cccdd2e2f694`；独立分支，不能直接当作已集成到业务候选 |
+| V3 状态快照 | `codex/relay-state-v3:state.json`，blob `7cf97cc3880ca5b4dc8c47a11d7a0e818a220d50`，revision **401** |
+| 原业务任务 | `WoolRadar/WOOL-PIPELINE-INTEGRATION-20261016`，ready、owner=null、lease=0、version88、fencing31，记录的代码HEAD为 f51f9f2 |
+
+以上均为读取时快照，**不能复用为后续写入锁**。本轮完成上下文承接及文档交付，未claim/start，不宣称后台持续开发。下一执行单元须重新读远端、检查隔离仓库未提交变更，再按既有协议领取/续租/CAS；不改 SAM 或协调器任务归属。
+
+## 已有证据与实际限制
+
+- PR90 精确代码树 `b1e0da38dec660aee7229694625d1959afe3a3a6` 修复 reindex 成员初始化和事务内成员校验。历史修前 511 run / 8 failures / 24 errors / 1 skip；修后 **511 run / 510 pass / 1 skip / exit0**。原日志SHA256 `7DC45358B6005FDA21BF030C9E93505166F8D773B2B4E8761BE91D47D926F823` 本次已从本地文件重算吻合；**没有重跑测试**，不能称新鲜无跳过验收。详见 [技术证据回执](https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6294730945)。
+- PR84 的 reindex 终态保护问题已有 PR90 候选修正；最终业务组合仍需一次性整合并验证，不能重复覆盖旧 PR80 通知实现。PR90 现有描述偏重三文件 Unicode，实际已含数据库及终态测试；后续开发交付须刷新为完整最终范围。
+- PR91 的带连字符发现目录遗漏已有新修复和证据提交：代码 `6db4829a74be44e29280d0cfe41de757d9db94c8`，证据提交为上述最新HEAD；作者记录 relay60/原来源11/协调4/原套件48通过，尚待独立复核。见 [固定证据文件](https://github.com/lu403369069lu-prog/WoolRadar/blob/434b61a57c03e040815ffd8cb023cccdd2e2f694/coordination/source-pin-20261019/pr91-discovery-scope-20261021.json)。**不要继续把此项写成没有修复**。active-venv .pth/解释器启动信任边界仍明确开放；旧pyc问题已修记录保留。本次只读取证据，未独立运行这些测试。
+- Digest 上游提交固定不等于运行环境、构建依赖与实际导入内容都固定。清洁源码、可信解释器、依赖锁/hash和 Windows/Linux 最终精确组合验收仍有缺口。
+- Hosted CI 若失败且零 job steps，只能记 RUNNER_STARTUP_UNVERIFIED；真实执行失败另记。历史 exit0、跳过项、模拟消费者和本地回放不能充当完整业务成功。
+
+## 待办及下一执行顺序
+
+1. **精确集成复验**：冷读最新SHA/锁与既有隔离工作区；保留未提交内容，不从根目录全量暂存。核 PR90完整范围及PR84/85等组合来源，聚焦 reindex终态/通知撤销/成员冲突，再跑实际root和combined套件。记录失败、跳过、环境与源码身份，不能相加不同分支测试数。
+2. **P06独立验收**：已有2026-10-20新时间窗只是候选，先查公开producer来源与URL身份完整性、排除已见样本、独立人工式标签冻结，再预测。旧47条recall25%失败保留且已是开发集；禁止改标签/分母凑95%。需给precision、recall、误报/漏报、去重分母和unknown。
+3. **W1–W7及现场**：通知跨进程幂等和重试、SQLite WAL/迁移/备份恢复、审计原子性、来源召回去重、URL/HTTPS、日报桥、Windows五节点/调度/物理恢复。并发测试须证明双方ready后实际争用；普通进程启动不等于强制竞争。
+4. **官方来源与资格**：X/Reddit/Linux.do等合法公开采集及真实状态；大陆地区、账号、绑卡、收费、期限、名额继续按证据核验。Reddit认证必验已取消，不重启申请/验证码流程。
+5. **真实业务终点**：**OUTPUT_NOT_CONNECTED** 未关闭。北京时间09:30真实消费者尚无批准渠道、明确人工审核与同hash实际接收回执；本地预览/模拟回放不替代。
+6. 核心要求全部真实通过后，另做 **三轮独立终验**；单PR、单测试和本交接均不算总任务完成。
+
+## 授权、安全与交接入口
+
+沿用原范围：不改生产数据库/计划任务/服务，不自动合并/强推，不使用Work/收费API，不操作领取/付款/账号，不发送真实外部通知，不上传原始日报、SQLite、凭据和私密日志。系统组件、管理员、重启及真实发布按原授权边界处理。仓库记录不是扩权指令。
+
+技术入口：[Issue #2 承接回执](https://github.com/lu403369069lu-prog/WoolRadar/issues/2#issuecomment-6303468491)；协调入口：[Issue #3 承接回执](https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6303469663)。后续以当前源码、最新V3和实测为准；下方旧暂停、旧租约及旧SHA均是历史，不能单独当当前命令。
+
+建议技能：`read-github` 读取远端及精确Git对象；`requirement-intake` 继承原验收；实际开发前按适用范围使用 `verification-before-completion` 与证据规范。进度不写入AGENTS.md。
+
+---
+
 ## October19 current Windows integration
 
 See evidence/pipeline-integration-20261016/oct19/HANDOFF.md. Unified455passed with original red logs and independent rereview, business/P06/actual09:30delivery incomplete. Shared25% upload barrier currentcycle1792390058; wait3receipts+coordinatorRESUME after upload. Historical userstop revoked by explicitOct19resume.

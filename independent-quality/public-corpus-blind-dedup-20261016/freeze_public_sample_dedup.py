@@ -20,6 +20,21 @@ MAX_OUTPUT = 4_000_000
 SOURCE_ID = re.compile(r"[A-Za-z0-9_-]{1,64}\Z")
 
 
+def _sensitive_public_route(route: str) -> bool:
+    """Reject legacy sampled routes which could still contain credentials."""
+    decoded = route
+    for _ in range(4):
+        latest = unquote_plus(decoded)
+        if (re.search(r'(?i)(?:@|\d{13,}|token|secret|bearer|password|session)', latest)
+                or re.search(r'(?i)(?:^|/)(?:reset|activate|magic-link|credential|api[_-]?key)(?:/|$)', latest)
+                or re.search(r'(?i)(?:^|/)[a-f0-9]{24,}(?:/|$)', latest)):
+            return True
+        if latest == decoded:
+            return False
+        decoded = latest
+    return '%' in decoded
+
+
 def canonical_public_url(raw: object) -> str | None:
     if not isinstance(raw, str) or len(raw) > 2048 or not raw:
         return None
@@ -36,6 +51,9 @@ def canonical_public_url(raw: object) -> str | None:
         # can represent a genuinely different grant/VPS campaign.
         p.query.encode('utf-8')
         p.fragment.encode('utf-8')
+        if (_sensitive_public_route(p.path)
+                or _sensitive_public_route(p.fragment.partition('?')[0])):
+            return None
         retained = []
         for part in p.query.split('&'):
             key = unquote_plus(part.split('=', 1)[0]).lower()
@@ -61,10 +79,23 @@ def canonical_public_url(raw: object) -> str | None:
         return None
 
 
-def freeze_public_sources(sources: list[tuple[dict, str]], limit: int = 8) -> dict:
+def freeze_public_sources(sources: list[tuple[dict, str]], limit: int = 8,
+                          excluded_urls: set[str] | None = None,
+                          prior_sha256: list[str] | None = None) -> dict:
     """Uses public, unlabelled source samples only; hash order never reads collector accepted labels."""
     if type(limit) is not int or not (1 <= limit <= 50) or not (1 <= len(sources) <= MAX_SOURCES):
         raise ValueError('invalid source count or cap')
+    prior = set()
+    for old_url in excluded_urls or ():
+        url = canonical_public_url(old_url)
+        if url is None:
+            raise ValueError('invalid previous review URL')
+        prior.add(url)
+    prior_hashes = prior_sha256 or []
+    if (len(prior_hashes) > MAX_SOURCES or
+            any(not isinstance(x, str) or not re.fullmatch('[a-f0-9]{64}', x)
+                for x in prior_hashes)):
+        raise ValueError('invalid previous review fingerprints')
     seen_ids = set()
     source_data = []
     for source, raw_sha in sources:
@@ -87,7 +118,7 @@ def freeze_public_sources(sources: list[tuple[dict, str]], limit: int = 8) -> di
     for ident, rows, sha in sorted(source_data):
         in_source = set()
         candidates = []
-        duplicate_within = duplicate_between = invalid = upstream_identity_loss = 0
+        duplicate_within = duplicate_between = invalid = upstream_identity_loss = excluded_prior = 0
         for row in rows:
             # core/public_corpus.py schema v1 removed ALL query/fragment
             # bytes before sampling. No downstream algorithm can restore a
@@ -109,6 +140,9 @@ def freeze_public_sources(sources: list[tuple[dict, str]], limit: int = 8) -> di
             if url in globally_seen:
                 duplicate_between += 1
                 continue
+            if url in prior:
+                excluded_prior += 1
+                continue
             candidates.append((url, row))
         # Cross-source identities are claimed for ALL URLs, not just sampled rows;
         # otherwise duplicate URLs can reappear in a later source's batch.
@@ -122,17 +156,19 @@ def freeze_public_sources(sources: list[tuple[dict, str]], limit: int = 8) -> di
         audits.append({'source_id': ident, 'raw_sha256': sha, 'input_rows': len(rows),
                        'candidate_unique_urls': len(candidates), 'duplicate_within_source': duplicate_within,
                        'duplicate_across_source': duplicate_between, 'invalid_rows': invalid,
+                       'excluded_prior_url': excluded_prior,
                        'upstream_url_identity_lost': upstream_identity_loss,
                        'selected_rows': len([r for r in picked if r['source_id'] == ident])})
     return {'schema_version': 1, 'purpose': 'LOCAL_ONLY_REVIEW_CANDIDATES_HOLDOUT_UNVERIFIED',
             'no_truth_labels': True, 'not_independent_if_used_for_tuning': True,
+            'prior_url_exclusions': len(prior), 'prior_sha256': sorted(prior_hashes),
             'exact_url_dedup_only': True,
             'upstream_identity_fully_preserved': all(a['upstream_url_identity_lost'] == 0 for a in audits),
             'sources': audits, 'rows': picked,
             'limits': 'Public title/snippet may contain private text; manually review before sharing. Different URLs may be the same campaign. No availability or eligibility claims.'}
 
 
-def parse_source_json(raw: bytes) -> dict:
+def parse_strict_json(raw: bytes) -> object:
     def strict_object(pairs):
         result = {}
         for key, value in pairs:
@@ -149,10 +185,14 @@ def parse_source_json(raw: bytes) -> dict:
         raise ValueError('non-JSON number')
     try:
         decoded = raw.decode('utf-8', errors='strict')
-        source = json.loads(decoded, object_pairs_hook=strict_object,
-                            parse_float=finite_float, parse_constant=reject_constant)
+        return json.loads(decoded, object_pairs_hook=strict_object,
+                          parse_float=finite_float, parse_constant=reject_constant)
     except (ValueError, UnicodeError, RecursionError) as exc:
         raise ValueError('invalid public-corpus JSON') from exc
+
+
+def parse_source_json(raw: bytes) -> dict:
+    source = parse_strict_json(raw)
     if not isinstance(source, dict):
         raise ValueError('public-corpus root must be an object')
     if 'stored_count' in source and (type(source['stored_count']) is not int or
@@ -161,11 +201,30 @@ def parse_source_json(raw: bytes) -> dict:
     return source
 
 
+def parse_prior_review_urls(raw: bytes) -> set[str]:
+    """Read only URL identities from past review samples, never labels/verdicts."""
+    document = parse_strict_json(raw)
+    rows = document.get('rows') if isinstance(document, dict) else document
+    if not isinstance(rows, list) or len(rows) > MAX_ROWS * MAX_SOURCES:
+        raise ValueError('invalid previous review rows')
+    result = set()
+    for row in rows:
+        if not isinstance(row, dict):
+            raise ValueError('invalid previous review row')
+        url = canonical_public_url(row.get('url'))
+        if url is None:
+            raise ValueError('invalid previous review URL')
+        result.add(url)
+    return result
+
+
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--input', action='append', required=True, type=Path)
     parser.add_argument('--output', required=True, type=Path)
     parser.add_argument('--per-source', type=int, default=8)
+    parser.add_argument('--exclude-prior', action='append', default=[], type=Path,
+                        help='previous blind review JSON; URL identities only, never truth labels')
     args = parser.parse_args(argv)
     if args.output.exists() or args.output.is_symlink():
         parser.error('output must be a new local path')
@@ -176,7 +235,17 @@ def main(argv=None) -> int:
         raw = path.read_bytes()
         source = parse_source_json(raw)
         sources.append((source, hashlib.sha256(raw).hexdigest()))
-    result = freeze_public_sources(sources, args.per_source)
+    excluded, prior_hashes = set(), []
+    if len(args.exclude_prior) > MAX_SOURCES:
+        parser.error('too many previous reviews')
+    for path in args.exclude_prior:
+        if not path.is_file() or path.stat().st_size > MAX_INPUT:
+            parser.error('invalid previous review file')
+        raw = path.read_bytes()
+        excluded.update(parse_prior_review_urls(raw))
+        prior_hashes.append(hashlib.sha256(raw).hexdigest())
+    result = freeze_public_sources(sources, args.per_source,
+                                   excluded_urls=excluded, prior_sha256=prior_hashes)
     bytes_out = (json.dumps(result, ensure_ascii=False, indent=2, allow_nan=False)+'\n').encode('utf-8')
     if len(bytes_out) > MAX_OUTPUT:
         raise ValueError('local sample too large')

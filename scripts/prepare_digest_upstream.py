@@ -1,0 +1,85 @@
+"""Install the real, pinned digest RSS upstream in this isolated checkout.
+
+Run once before strict source-integration tests on Windows or Ubuntu:
+    python -B -X utf8 scripts/prepare_digest_upstream.py
+
+No source files, credentials, or virtualenv contents belong in a Git commit.
+The upstream commit comes from the reviewed UPSTREAMS.json manifest.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+
+def run(*args: str, env: dict[str, str] | None = None) -> str:
+    result = subprocess.run(args, check=True, capture_output=True, text=True,
+                            encoding='utf-8', env=env)
+    return result.stdout.strip()
+
+
+def prepare(root: Path, verify_only: bool = False) -> Path:
+    root = root.resolve()
+    entries = json.loads((root / 'UPSTREAMS.json').read_text(encoding='utf-8'))
+    digest = next(item for item in entries if item['node'] == 'digest-ai-agent')
+    remote, pinned = digest['repository'], digest['commit']
+    if not remote.startswith('https://github.com/') or len(pinned) != 40 or any(
+        c not in '0123456789abcdef' for c in pinned):
+        raise RuntimeError('INVALID_UPSTREAM_PIN')
+
+    checkout = root / 'nodes' / 'digest-ai-agent' / 'upstream'
+    env = os.environ.copy()
+    env['GIT_TERMINAL_PROMPT'] = '0'
+    env['PIP_NO_INPUT'] = '1'
+    if not checkout.exists():
+        if verify_only:
+            raise RuntimeError('UPSTREAM_NOT_INSTALLED')
+        checkout.parent.mkdir(parents=True, exist_ok=True)
+        run('git', 'clone', '--no-checkout', remote, str(checkout), env=env)
+        run('git', '-C', str(checkout), 'checkout', '--detach', pinned, env=env)
+    actual = run('git', '-C', str(checkout), 'rev-parse', 'HEAD', env=env)
+    if actual != pinned:
+        if verify_only:
+            raise RuntimeError('UPSTREAM_PIN_MISMATCH')
+        # A previous clone may have stopped before the detached pin checkout.
+        # Git refuses to overwrite dirty files without --force; leave such
+        # checkouts for manual review rather than deleting or resetting them.
+        run('git', '-C', str(checkout), 'checkout', '--detach', pinned, env=env)
+        actual = run('git', '-C', str(checkout), 'rev-parse', 'HEAD', env=env)
+        if actual != pinned:
+            raise RuntimeError('UPSTREAM_PIN_MISMATCH')
+
+    venv = checkout / '.venv'
+    interpreter = venv / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
+    if not interpreter.is_file():
+        if verify_only:
+            raise RuntimeError('UPSTREAM_VENV_NOT_INSTALLED')
+        run(sys.executable, '-m', 'venv', str(venv), env=env)
+    if not verify_only:
+        # Editable installation uses real pinned sources and their declared
+        # dependencies, not an artificial stand-in for RSSProvider.
+        run(str(interpreter), '-m', 'pip', 'install', '-e', str(checkout), env=env)
+
+    run(str(interpreter), '-c',
+        'import httpx, newsbrief; from newsbrief.sources.rss import RSSProvider; '
+        'assert RSSProvider is not None', env=env)
+    print(f'UPSTREAM_VERIFIED commit={actual} python={interpreter.name}')
+    return interpreter
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--root', type=Path, default=Path(__file__).resolve().parents[1])
+    parser.add_argument('--verify-only', action='store_true')
+    options = parser.parse_args()
+    try:
+        prepare(options.root, verify_only=options.verify_only)
+    except (OSError, ValueError, KeyError, StopIteration, subprocess.CalledProcessError,
+            RuntimeError) as exc:
+        print(f'UPSTREAM_SETUP_FAILED {type(exc).__name__}: {exc}', file=sys.stderr)
+        raise SystemExit(1) from None

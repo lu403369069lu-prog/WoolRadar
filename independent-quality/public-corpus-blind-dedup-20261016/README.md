@@ -19,6 +19,14 @@ Neither source/label file nor previously frozen output is modified.
 
 `freeze_public_sample_dedup.py` accepts only explicitly named, public-only
 JSON source files following the `core/public_corpus.py` schema.
+To prevent an apparently new batch from reusing earlier development/review
+URLs, supply each prior blinded review JSON with `--exclude-prior PATH`.
+Both legacy top-level row arrays and `{"rows": [...]}` review envelopes are
+supported. Only URL identities are read; previous labels, scores and collector
+`accepted` flags never influence selection. Previous review SHA256 fingerprints
+are written to the output, while previous raw URLs are not. Exclusions apply
+before per-source sampling limits. Malformed or credential-bearing prior URLs
+fail closed instead of silently reducing the exclusion set.
 It verifies source identity and raw file SHA, checks UTF-8/JSON syntax
 strictly (duplicate object keys, nonfinite numbers, unexpected encoding and
 reported row-count inconsistency fail closed), and reads up to 500 public
@@ -48,6 +56,7 @@ required before any 95% business-quality claim.
 ```sh
 python -B independent-quality/public-corpus-blind-dedup-20261016/freeze_public_sample_dedup.py \
   --input APPROVED_PUBLIC_CORPUS_1.json --input APPROVED_PUBLIC_CORPUS_2.json \
+  --exclude-prior PREVIOUS_BLINDED_REVIEW.json \
   --per-source 8 --output NEW_LOCAL_REVIEW_CANDIDATES.json
 python -B -m unittest discover \
   -s independent-quality/public-corpus-blind-dedup-20261016 -p 'test_*.py' -v

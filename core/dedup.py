@@ -20,6 +20,7 @@ STOP_TOKENS = {
 GENERIC_OFFER_TOKENS = {
     'api', 'credit', 'credits', 'cloud', 'vps', 'server', 'servers', 'hosting',
     'developer', 'developers', 'perk', 'perks', 'offer', 'offers', 'trial', 'plan', 'ai',
+    'get', 'token', 'tokens',
     '额度', '赠金', '服务器', '优惠',
 }
 
@@ -65,11 +66,9 @@ def _generic_resource_title(tokens: set[str]) -> bool:
             expanded.add(token)
     if not expanded & GENERIC_OFFER_TOKENS:
         return False
-    # Generic numeric credits and resource quantities are not campaign
-    # identities either. Keep 4-digit year/batch headlines title-based.
+    # Generic numeric benefits and years cannot establish vendor identity.
+    # Preserve the year in the offer title while also scoping by source URL.
     if not any(token.isdigit() or token in GENERIC_RESOURCE_UNITS for token in expanded):
-        return False
-    if any(token.isdigit() and 1900 <= int(token) <= 2100 for token in expanded):
         return False
     return all(token in GENERIC_OFFER_TOKENS or token in GENERIC_RESOURCE_UNITS
                or token.isdigit() for token in expanded)

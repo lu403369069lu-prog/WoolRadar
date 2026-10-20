@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "kind": "W1_W2_digest_integration_windows_exact_tree_evidence",
+  "run_date": "2026-10-19",
+  "tested_commit": "0f21f8ddd77ee12be5f58e7eb488a49714513130",
+  "git_tree_sha": "085e26d310589b36c78ada2f04bf4599387cea0b",
+  "verified_remote_blob_count": 299,
+  "tree_identity": "Isolated Windows copy re-normalized to exact remote raw blobs and full tree verified",
+  "inputs": {
+    "pr23": "34380339b96026ef99032e4ae2c67c8f59d015e5",
+    "pr80": "29962ed49a1b9c4f9e3a5ee6b20cc2d3358fc2b2",
+    "pr82": "8fa677a4ba186498d937a98077f10fc50b0231d1",
+    "pr83": "1c2f0a88f1c16e8f21e5d17783ff4f7ba291d0cb"
+  },
+  "tests": [
+    {
+      "command": "python -B -X utf8 -m unittest discover -s tests -q",
+      "count": 362,
+      "passed": 362,
+      "failed": 0,
+      "error": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "elapsed_seconds": 22.189
+    },
+    {
+      "command": "python -B -X utf8 independent-quality/delivery-bridge-20261016/run_combined_tests.py",
+      "count": 465,
+      "passed": 465,
+      "failed": 0,
+      "error": 0,
+      "skipped": 0,
+      "exit_code": 0,
+      "elapsed_seconds": 23.849
+    }
+  ],
+  "environment": {
+    "os": "Windows",
+    "working_copy": "isolated nonproduction copy",
+    "digest_upstream": "existing host pinned runtime, read-only; fresh CI checkout/install pending",
+    "network": "provider RSS tests mocked; actual external source reachability not proven"
+  },
+  "security": {
+    "production_modified": false,
+    "raw_database_or_reports_uploaded": false,
+    "no_notifications_sent": true,
+    "pr_draft": true
+  },
+  "acceptance": {
+    "full_project": false,
+    "ci_fresh_upstream": false,
+    "independent_new_holdout": false,
+    "live_0930_delivery": false,
+    "status": "OUTPUT_NOT_CONNECTED"
+  },
+  "note": "Verification counts apply only to tested code/tree at 0f21f8; evidence-only commit is not claimed as a rerun."
+}

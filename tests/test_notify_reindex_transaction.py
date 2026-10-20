@@ -33,6 +33,71 @@ class VerifiedOutboxReindexTests(unittest.TestCase):
         self.assertTrue(queue.enqueue(two, '', 'local-verified', 'synthetic verified grant'))
         return db, queue, one, two
 
+    def test_reindex_after_verified_local_claim_recovers_same_flush(self):
+        """A transferred local claim must not wait five minutes for a dead owner."""
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            db, queue, survivor, obsolete = self.seed(root)
+            original_write = Path.write_text
+            merges = []
+
+            def merge_after_preparing_receipt(path, text, *args, **kwargs):
+                result = original_write(path, text, *args, **kwargs)
+                if path.suffix == '.tmp' and not merges:
+                    merges.append(db.review_campaign(REVIEW))
+                return result
+
+            with mock.patch.object(Path, 'write_text', new=merge_after_preparing_receipt):
+                summary = queue.flush({}, local_dir=root / 'out')
+            self.assertEqual(len(merges), 1)
+            self.assertEqual(merges[0]['merged'], 1)
+            self.assertEqual(summary['local'], 1)
+            files = list((root / 'out').glob('notification-*.json'))
+            self.assertEqual(len(files), 1)
+            with db.connect() as conn:
+                row = conn.execute('SELECT event_id,result FROM notifications').fetchone()
+                self.assertEqual((row['event_id'], row['result']), (survivor, 'SENT'))
+                self.assertEqual(conn.execute('PRAGMA foreign_key_check').fetchall(), [])
+            self.assertFalse(queue.pending())
+
+    def test_reindex_collision_never_reclaims_another_active_local_owner(self):
+        """Matching payload/time/deadline do not confer ownership of a survivor."""
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            db, queue, survivor, obsolete = self.seed(root)
+            with db.connect() as conn:
+                original = conn.execute('SELECT * FROM notifications WHERE event_id=?',
+                                        (obsolete,)).fetchone()
+                # Deliberately identical payload, creation time and claim fence:
+                # only the distinct notification ID identifies the real owner.
+                conn.execute('''INSERT INTO notifications(event_id,batch_id,channel,
+                    created_at,result,payload,attempts,next_attempt)
+                    VALUES(?,?,?,?,?,?,?,?)''',
+                    (survivor, original['batch_id'], original['channel'],
+                     original['created_at'], 'CLAIMED', original['payload'],
+                     1, 1300.0))
+            original_write = Path.write_text
+            merges = []
+
+            def merge_during_staging(path, content, *args, **kwargs):
+                result = original_write(path, content, *args, **kwargs)
+                if path.suffix == '.tmp' and not merges:
+                    merges.append(db.review_campaign(REVIEW))
+                return result
+
+            with mock.patch('core.notify.time.time', return_value=1000.0), \
+                 mock.patch.object(Path, 'write_text', new=merge_during_staging):
+                result = queue.flush({}, local_dir=root / 'out')
+            self.assertEqual([m['merged'] for m in merges], [1])
+            self.assertEqual(result['local'], 0)
+            self.assertEqual(list((root / 'out').glob('notification-*.json')), [])
+            with db.connect() as conn:
+                rows = conn.execute('SELECT id,event_id,result,next_attempt FROM notifications').fetchall()
+                self.assertEqual(len(rows), 1)
+                self.assertEqual((rows[0]['event_id'], rows[0]['result'],
+                                  rows[0]['next_attempt']), (survivor, 'CLAIMED', 1300.0))
+                self.assertEqual(conn.execute('PRAGMA foreign_key_check').fetchall(), [])
+
     def test_old_pending_snapshot_after_merge_does_not_abort_outbox(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)

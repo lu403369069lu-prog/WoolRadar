@@ -52,6 +52,16 @@ class CleanSample(unittest.TestCase):
         for key in ('email','phone'):
             with self.subTest(key=key):
                 self.assertIsNone(canonical_public_url('https://example.org/join?'+key+'=PRIVATE_CANARY'))
+    def test_legacy_public_urls_with_credentials_in_routes_are_rejected(self):
+        for url in ('https://example.org/reset/token/PRIVATE_CANARY',
+                    'https://example.org/reset/%74oken/PRIVATE_CANARY',
+                    'https://example.org/apply/%2574oken/PRIVATE_CANARY',
+                    'https://example.org/#/reset/token/PRIVATE_CANARY'):
+            with self.subTest(url=url):
+                self.assertIsNone(canonical_public_url(url))
+                result=freeze_public_sources([sample('alpha',[url])])
+                self.assertEqual(result['rows'],[])
+                self.assertEqual(result['sources'][0]['invalid_rows'],1)
     def test_upstream_query_loss_makes_blind_identity_unverified(self):
         a=sample('alpha',['https://example.org/claim'])
         a[0]['rows'][0]['url_sanitized']=True
@@ -116,5 +126,36 @@ class CleanSample(unittest.TestCase):
             self.assertTrue(dest.exists()); self.assertIn('NOT PUBLISHED',out.getvalue())
             if os.name=='posix': self.assertEqual(dest.stat().st_mode&0o777,0o600)
             with self.assertRaises(SystemExit):main(['--input',str(source),'--output',str(dest)])
+
+    def test_prior_review_exclusion_happens_before_source_cap(self):
+        a=sample('alpha',['https://example.org/seen?utm_source=old',
+                          'https://example.org/new'])
+        result=freeze_public_sources([a],limit=1,
+                 excluded_urls={'https://example.org/seen'})
+        self.assertEqual([r['url'] for r in result['rows']], ['https://example.org/new'])
+        self.assertEqual(result['sources'][0]['excluded_prior_url'],1)
+        self.assertEqual(result['prior_url_exclusions'],1)
+
+    def test_cli_excludes_legacy_and_new_prior_blind_samples_without_truth_labels(self):
+        with tempfile.TemporaryDirectory() as d:
+            directory=Path(d)
+            source=directory/'source.json'
+            legacy=directory/'legacy.json'
+            prior=directory/'prior.json'
+            output=directory/'new.json'
+            source.write_text(json.dumps(sample('alpha',[
+                'https://example.org/seen?utm_source=old',
+                'https://example.org/seen2',
+                'https://example.org/new'])[0]),encoding='utf-8')
+            legacy.write_text(json.dumps([{'url':'https://example.org/seen'}]),encoding='utf-8')
+            prior.write_text(json.dumps({'rows':[{'url':'https://example.org/seen2'}]}),encoding='utf-8')
+            with contextlib.redirect_stdout(io.StringIO()):
+                status=main(['--input',str(source),'--output',str(output),
+                             '--exclude-prior',str(legacy),'--exclude-prior',str(prior)])
+            self.assertEqual(status,0)
+            selected=json.loads(output.read_text(encoding='utf-8'))
+            self.assertEqual([r['url'] for r in selected['rows']],['https://example.org/new'])
+            self.assertEqual(len(selected['prior_sha256']),2)
+            self.assertNotIn('accepted',json.dumps(selected))
 
 if __name__=='__main__':unittest.main()

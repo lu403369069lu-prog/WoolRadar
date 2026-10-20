@@ -5,6 +5,29 @@ import re
 from .models import Candidate, Evidence, Status, VerificationResult
 
 
+def mainland_eligibility_restricted(claims: dict) -> bool:
+    """Only explicit official country restrictions can exclude CN.
+
+    Region prose and unstructured eligibility text are not country evidence.
+    Empty or malformed country lists never prove a geographical restriction.
+    """
+    region = claims.get('region')
+    if isinstance(region, str) and re.fullmatch(r'[A-Z]{2}', region) and region != 'CN':
+        return True
+    constraints = claims.get('eligibility_constraints')
+    if not isinstance(constraints, dict):
+        return False
+    excluded = constraints.get('excluded_countries')
+    if isinstance(excluded, list) and 'CN' in excluded:
+        return True
+    allowed = constraints.get('eligible_countries')
+    if (isinstance(allowed, list) and bool(allowed) and
+            all(isinstance(value, str) and re.fullmatch(r'[A-Z]{2}', value)
+                for value in allowed) and 'CN' not in allowed):
+        return True
+    return False
+
+
 class VerificationEngine:
     def evaluate(self, candidate: Candidate, evidence: list[Evidence]) -> VerificationResult:
         groups: list[set[str]] = []
@@ -72,6 +95,21 @@ class VerificationEngine:
             if fresh_zero:
                 return VerificationResult(Status.OFFICIAL_VERIFIED, '近期官方证据显示剩余名额为0，尚无可领取库存',
                                           len(provenance), unknown_capacity=False)
+        # A current public application can still require a chargeable card
+        # or renew into a paid subscription. This user-facing digest must not
+        # promote explicit payment risks as a ready-to-claim free benefit.
+        # Keep the official proof visible for manual eligibility review.
+        if any(item.claims.get('card_required') is True or
+               item.claims.get('auto_renew') is True for item in official):
+            return VerificationResult(
+                Status.OFFICIAL_VERIFIED,
+                '官方条款包含绑卡或自动续费条件，须人工确认费用与资格',
+                len(provenance), unknown_capacity=unknown_capacity)
+        if any(mainland_eligibility_restricted(item.claims) for item in official):
+            return VerificationResult(
+                Status.OFFICIAL_VERIFIED,
+                '官方地域条件明确限制中国大陆申请，须人工核验地域资格',
+                len(provenance), unknown_capacity=unknown_capacity)
         for item in official:
             try:
                 checked = datetime.fromisoformat(item.checked_at.replace('Z', '+00:00'))

@@ -1,0 +1,47 @@
+{
+  "schema": 1,
+  "description": "PR80+PR82+PR83 Windows isolated composition; not full exact-head checkout of all surrounding files",
+  "baseline_snapshot": "w2-schema-20261019 isolated copy (W2 PR82 exact source files); not production",
+  "upstream_prs": {
+    "pr23": "34380339b96026ef99032e4ae2c67c8f59d015e5",
+    "pr80": "29962ed49a1b9c4f9e3a5ee6b20cc2d3358fc2b2",
+    "pr82": "8fa677a4ba186498d937a98077f10fc50b0231d1",
+    "pr83_code": "c1fd7ec5683c08f4a5316d8f9512d9a4f4f098e7"
+  },
+  "precise_files": {
+    "core/db.py": "d05b9f9c48a74ab5ad5c005adda430c2481e31b7",
+    "tests/test_stale_schema_version.py": "6c32a8200c0e19adc05578eececeace998b48d32",
+    "tests/test_verified_send_revocation.py": "bcc54a413fe4dd09813bed0a0159392af9d19b05",
+    "core/collector.py": "999b8dec1b3f9b50f795aca96c69dd48fd172d44",
+    "tests/test_digest_runtime.py": "a805fd03c78a8d9bf4f7671a0ca69311e8ed546f",
+    "scripts/prepare_digest_upstream.py": "5d60b9867ecb5b094b05e056b3d04eb3e35cdaa7"
+  },
+  "notify_merge": {
+    "w2_exact_input_blob": "1804f51c962a03384b91656e10fcbfe2541579f0",
+    "w1_patch_source": "PR80 core/notify.py exact GitHub patch",
+    "patch_check_exit": 0,
+    "patch_apply_exit": 0,
+    "composed_blob": "c9384d448f9eee8aaf9bb40da8e4c2649ec0c3ab",
+    "git_diff_check_exit": 0
+  },
+  "commands": [
+    {
+      "command": "python -B -X utf8 -m unittest discover -s tests -q",
+      "passed": 362,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0
+    },
+    {
+      "command": "python -B -X utf8 independent-quality/delivery-bridge-20261016/run_combined_tests.py",
+      "passed": 465,
+      "failed": 0,
+      "errors": 0,
+      "skipped": 0,
+      "exit_code": 0
+    }
+  ],
+  "environment": "Windows, isolated .test-tmp, PYTHONDONTWRITEBYTECODE=1; digest MockTransport; existing host upstream interpreter via WOOLRADAR_DIGEST_TEST_PYTHON; no live external data",
+  "residual": "Full source tree at one remote composite commit and Linux fresh pinned bootstrap CI still require independent verification; production and real 09:30 delivery untouched"
+}

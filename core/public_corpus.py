@@ -53,6 +53,21 @@ def _semantic_query(query: str) -> tuple[str, bool]:
             kept[key] = value
     return urlencode(sorted(kept.items())), preserved
 
+def _public_path_safe(path: str) -> bool:
+    """Reject public sample paths that could contain credentials or reset links."""
+    decoded = path
+    for _ in range(4):
+        latest = unquote_plus(decoded)
+        if (_PRIVATE_VALUE.search(latest) or '@' in latest
+                or re.search(r'(?i)(?:^|/)(?:reset|activate|magic-link|credential|api[_-]?key)(?:/|$)', latest)
+                or re.search(r'(?i)(?:^|/)[a-f0-9]{24,}(?:/|$)', latest)):
+            return False
+        if latest == decoded:
+            return True
+        decoded = latest
+    return '%' not in decoded
+
+
 def _clean_url_identity(value: str) -> tuple[str, bool]:
     try:
         parsed = urlsplit(value)
@@ -61,11 +76,18 @@ def _clean_url_identity(value: str) -> tuple[str, bool]:
         # Port access validates malformed ports without making a network request.
         parsed.port
         query, preserved = _semantic_query(parsed.query)
+        path = parsed.path
+        if not _public_path_safe(path):
+            path = '/[redacted]'
+            preserved = False
         if parsed.username is not None or parsed.password is not None:
             preserved = False
         fragment = ''
         if parsed.fragment:
             route, separator, fragment_query = parsed.fragment.partition('?')
+            if not _public_path_safe(route):
+                route = ''
+                preserved = False
             if re.fullmatch(r'(?:/|!/)[A-Za-z0-9/_~.\-]*', route):
                 clean_query, route_preserved = _semantic_query(fragment_query)
                 if route_preserved:
@@ -74,7 +96,7 @@ def _clean_url_identity(value: str) -> tuple[str, bool]:
                     preserved = False
             else:
                 preserved = False
-        return urlunsplit((parsed.scheme, parsed.netloc.rsplit('@',1)[-1], parsed.path, query, fragment)), preserved
+        return urlunsplit((parsed.scheme, parsed.netloc.rsplit('@',1)[-1], path, query, fragment)), preserved
     except (ValueError, UnicodeError):
         return '[invalid URL redacted]', False
 

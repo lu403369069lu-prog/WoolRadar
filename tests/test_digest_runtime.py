@@ -37,7 +37,9 @@ with patch('httpx.Client',LocalClient):
  module['main']()
 print('transport_count='+str(len(calls)))
 '''
-        with tempfile.TemporaryDirectory(dir=ROOT / '.test-tmp') as td:
+        # An independent disposable root avoids relying on .test-tmp, which
+        # other full-suite tests may remove between test collection and use.
+        with tempfile.TemporaryDirectory(prefix='wool-digest-budget-') as td:
             result = subprocess.run([str(PYTHON), '-X', 'utf8', '-c', code, 'https://rss.example/feed', td, str(script)], capture_output=True, text=True, encoding='utf-8')
             self.assertEqual(result.returncode, 0, result.stderr)
             lines = result.stdout.splitlines()

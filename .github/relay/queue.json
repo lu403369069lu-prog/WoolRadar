@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "repo": "WoolRadar",
-  "source_ref": "d1f4a02cb1f09a054f7964096d6edf6560fdeaae",
+  "source_ref": "9da8f67c5645d61002cf3115e34464098f734212",
   "source_subdir": ".",
-  "source_note": "PR84 d1f4: independent Windows root384/combined487 zero skips, exit0, 2026-10-20; existing manifest-pinned upstream interpreter read-only. Fresh hosted installation and business end-to-end acceptance remain unverified.",
+  "source_note": "PR84 9da8 exact Git tree independently reconstructed and Windows root385/combined488 zero skips, exit0 (2026-10-20). Existing read-only Digest venv; fresh hosted installation, blind holdout and end-to-end business acceptance remain unverified.",
   "families": [
     {
       "id": "WR-H01",

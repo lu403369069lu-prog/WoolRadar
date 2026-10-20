@@ -28,7 +28,7 @@ jobs:
       - name: Checkout independent source candidate (unprivileged)
         uses: actions/checkout@v4
         with:
-          ref: d1f4a02cb1f09a054f7964096d6edf6560fdeaae
+          ref: 9da8f67c5645d61002cf3115e34464098f734212
           path: candidate
           persist-credentials: false
       - name: Checkout last durable checkpoint (unprivileged)

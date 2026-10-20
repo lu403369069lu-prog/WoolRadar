@@ -1,0 +1,36 @@
+--- a/tests/test_generic_identity_extension.py
++++ b/tests/test_generic_identity_extension.py
+@@ -32,9 +32,17 @@
+         self.assertEqual(canonical_key(make('https://forum-one.example/a', 'RackNerd Free VPS 1 GB')),
+                          canonical_key(make('https://forum-two.example/b', 'RackNerd Free VPS 1 GB')))
+ 
+-    def test_specific_year_batch_retains_cross_post_identity(self):
+-        self.assertEqual(canonical_key(make('https://forum-one.example/a', 'Free VPS 2026 GB')),
+-                         canonical_key(make('https://forum-two.example/b', 'Free VPS 2026 GB')))
++    def test_unbranded_year_batch_does_not_merge_unverified_cross_posts(self):
++        # Different forum URLs do not establish common campaign ownership.
++        self.assertNotEqual(canonical_key(make('https://forum-one.example/a', 'Free VPS 2026 GB')),
++                            canonical_key(make('https://forum-two.example/b', 'Free VPS 2026 GB')))
++
++    def test_browser_verified_year_campaign_may_merge_cross_posts(self):
++        a, b, title = ('https://forum-one.example/a', 'https://forum-two.example/b', 'Free VPS 2026 GB')
++        review = dict(method='normal_browser_read', campaign_url='https://gleam.io/Ab123',
++                      member_urls=[a, b], member_titles={a: title, b: title})
++        self.assertEqual(canonical_key(make(a, title, metadata={'campaign_review': review})),
++                         canonical_key(make(b, title, metadata={'campaign_review': review})))
+ 
+     def test_existing_generic_url_only_key_is_preserved(self):
+         self.assertEqual(canonical_key(make('https://vendor.example/api', 'Free API credits')),
+--- a/tests/test_generic_quantity_identity.py
++++ b/tests/test_generic_quantity_identity.py
+@@ -43,8 +43,8 @@
+             canonical_key(candidate("https://forum-b.example/post", "RackNerd Free VPS 1GB")),
+         )
+ 
+-    def test_year_batch_remains_cross_post_identity(self):
+-        self.assertEqual(
++    def test_unverified_year_batch_cross_posts_remain_separate(self):
++        self.assertNotEqual(
+             canonical_key(candidate("https://forum-a.example/post", "Free VPS 2026 GB")),
+             canonical_key(candidate("https://forum-b.example/post", "Free VPS 2026 GB")),
+         )

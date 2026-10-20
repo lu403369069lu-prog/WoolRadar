@@ -83,7 +83,7 @@ class DigestCleanPinnedCheckoutTests(unittest.TestCase):
 
     def test_assume_unchanged_tracked_source_tamper_rejected(self):
         self.git("update-index", "--assume-unchanged", "newsbrief/sources/rss.py")
-        self.source.write_text("AUTHENTIC = False\\n", encoding="utf-8")
+        self.source.write_text("AUTHENTIC = False\n", encoding="utf-8")
         self.assertEqual(self.git("status", "--porcelain=v1", "--untracked-files=all",
                                   "--", ".", ":(exclude).venv"), "")
         for verify_only in (True, False):
@@ -93,7 +93,7 @@ class DigestCleanPinnedCheckoutTests(unittest.TestCase):
 
     def test_skip_worktree_tracked_source_tamper_rejected(self):
         self.git("update-index", "--skip-worktree", "newsbrief/sources/rss.py")
-        self.source.write_text("AUTHENTIC = False\\n", encoding="utf-8")
+        self.source.write_text("AUTHENTIC = False\n", encoding="utf-8")
         self.assertEqual(self.git("status", "--porcelain=v1", "--untracked-files=all",
                                   "--", ".", ":(exclude).venv"), "")
         for verify_only in (True, False):

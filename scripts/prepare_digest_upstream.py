@@ -65,7 +65,12 @@ def prepare(root: Path, verify_only: bool = False) -> Path:
     ignored = run('git', '-C', str(checkout), 'ls-files', '-z', '--others',
                   '--ignored', '--exclude-standard', '--', '.',
                   ':(exclude).venv', env=env)
-    if any(path.casefold().endswith(('.py', '.pyi', '.so', '.pyd', '.pth', '.dll'))
+    # A sourceless .pyc and a ZIP/EGG/WHEEL/PYZ on sys.path can execute
+    # unreviewed Python without introducing a .py or altering git status.
+    # Refuse ignored importable code and archives before pip or runtime import.
+    importable = ('.py', '.pyi', '.pyc', '.pyo', '.so', '.pyd', '.pth', '.dll',
+                  '.zip', '.egg', '.whl', '.pyz', '.pyzw')
+    if any(path.casefold().endswith(importable)
            for path in ignored.split('\0') if path):
         raise RuntimeError('UPSTREAM_IGNORED_EXECUTABLE_SOURCE')
 

@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import json
+import os
 import re
+import tempfile
 from urllib.parse import urlsplit
 from datetime import datetime, timezone, timedelta
 from dataclasses import dataclass
@@ -44,6 +46,28 @@ def _safe_markdown_link(title: str, url: str) -> str:
 class ReportPaths:
     markdown: Path
     json: Path
+
+
+def _publish_text_atomically(path: Path, content: str) -> None:
+    """Replace a report only after its complete bytes are on the same volume.
+
+    A failed write or Windows replace leaves the previous destination intact.
+    This is per-file atomicity, not a transaction across Markdown and JSON.
+    """
+    staged = None
+    try:
+        with tempfile.NamedTemporaryFile(
+            mode='w', encoding='utf-8', newline='\n', dir=path.parent,
+            prefix=f'.{path.name}.', suffix='.tmp', delete=False,
+        ) as stream:
+            staged = Path(stream.name)
+            stream.write(content)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(staged, path)
+    finally:
+        if staged is not None:
+            staged.unlink(missing_ok=True)
 
 
 class ReportGenerator:
@@ -172,6 +196,8 @@ class ReportGenerator:
             lines.append(f"- {_safe_markdown_field(run['node'])}: {_safe_markdown_field(run['status'])}，采集 {run['items']} 条，错误 {_safe_markdown_field(run['error_code'] or '无')}")
         lines.extend(['', '## 安全边界', '', '- 本系统默认只读；未执行领取、授权、支付、发帖、点赞或账号创建。', ''])
         md_text = '\n'.join(lines)
-        md_path.write_text(md_text, encoding='utf-8')
-        json_path.write_text(json_text, encoding='utf-8')
+        # Publish the human-readable view first and the JSON consumer gate last.
+        # An interrupted write cannot truncate the previous complete JSON.
+        _publish_text_atomically(md_path, md_text)
+        _publish_text_atomically(json_path, json_text)
         return ReportPaths(md_path, json_path)

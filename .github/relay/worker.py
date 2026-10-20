@@ -201,7 +201,13 @@ def test(argv, cwd, src):
         verify_reviewed_test_files(argv, cwd, src)
     except (ValueError, OSError, subprocess.SubprocessError):
         return {"status": "BLOCKED", "error_kind": "UNREVIEWED_TEST_SOURCE"}
-    cmd = [sys.executable] + argv[1:] if argv[0] == "python" else argv
+    # -I disables user site and usercustomize.py, and ignores PYTHON* startup
+    # variables. Clearing PYTHONPATH alone is insufficient: PYTHONUSERBASE can
+    # load a separate usercustomize.py that changes unittest assertions.
+    # Isolated mode ignores PYTHONIOENCODING too; force UTF-8 explicitly so
+    # Windows non-ASCII tracebacks do not turn normal FAIL into decode blocks.
+    cmd = ([sys.executable, "-I", "-X", "utf8"] + argv[1:]
+           if argv[0] == "python" else argv)
     env = dict(os.environ)
     for k in ("GITHUB_TOKEN", "GH_TOKEN", "COPILOT_GITHUB_TOKEN", "OPENAI_API_KEY"):
         env.pop(k, None)

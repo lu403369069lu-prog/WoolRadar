@@ -261,13 +261,48 @@ class RelaySafetyTests(unittest.TestCase):
             subprocess.run(["git", "add", "tests/test_public_corpus_env.py"], cwd=root, check=True)
             subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
                             "commit", "-qm", "pin"], cwd=root, check=True)
-            self.assertEqual(worker.test(check, root, root)["status"], "FAIL")
+            baseline = worker.test(check, root, root)
+            self.assertEqual(baseline["status"], "FAIL", baseline)
             external = root / "external-site"
             external.mkdir()
             (external / "sitecustomize.py").write_text(
                 "import unittest\nunittest.TestCase.assertTrue = lambda self, expr, msg=None: None\n",
                 encoding="utf-8")
             with patch.dict(os.environ, {"PYTHONPATH": str(external)}):
+                result = worker.test(check, root, root)
+            self.assertEqual(result["status"], "FAIL", result)
+
+    def test_python_user_site_cannot_make_failing_pinned_test_pass(self):
+        """An external usercustomize.py must not forge a reviewed test result."""
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_public_corpus_user_site.py").write_text(
+                "import unittest\nclass Probe(unittest.TestCase):\n"
+                " def test_truth(self): self.assertTrue(False)\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_user_site.py"],
+                           cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            baseline = worker.test(check, root, root)
+            self.assertEqual(baseline["status"], "FAIL", baseline)
+            external = root / "external-user-site"
+            env = {**os.environ, "PYTHONUSERBASE": str(external)}
+            user_site = subprocess.run(
+                [sys.executable, "-X", "utf8", "-c",
+                 "import site;print(site.getusersitepackages())"],
+                text=True, encoding="utf-8", capture_output=True,
+                check=True, env=env).stdout.strip()
+            site_dir = Path(user_site)
+            site_dir.mkdir(parents=True)
+            (site_dir / "usercustomize.py").write_text(
+                "import unittest\nunittest.TestCase.assertTrue = lambda self, expr, msg=None: None\n",
+                encoding="utf-8")
+            with patch.dict(os.environ, {"PYTHONUSERBASE": str(external)}):
                 result = worker.test(check, root, root)
             self.assertEqual(result["status"], "FAIL", result)
 

@@ -2,7 +2,10 @@
 import importlib.util
 import json
 import os
+import py_compile
 import subprocess
+import sys
+from zipfile import ZipFile
 import tempfile
 import unittest
 from pathlib import Path
@@ -27,7 +30,9 @@ class DigestCleanPinnedCheckoutTests(unittest.TestCase):
         (self.checkout / "newsbrief" / "sources").mkdir(parents=True)
         self.source = self.checkout / "newsbrief" / "sources" / "rss.py"
         self.source.write_text("AUTHENTIC = True\n", encoding="utf-8")
-        (self.checkout / ".gitignore").write_text("newsbrief/sources/hidden_plugin.py\n", encoding="utf-8")
+        (self.checkout / ".gitignore").write_text(
+            "newsbrief/sources/hidden_plugin.py\nnewsbrief/sources/hidden.pyc\n"
+            "newsbrief/sources/hidden.zip\nnewsbrief/sources/hidden.egg\n", encoding="utf-8")
         self.git("add", "newsbrief/sources/rss.py", ".gitignore")
         self.git("-c", "user.name=Test", "-c", "user.email=test@example.invalid",
                  "commit", "-qm", "frozen source")
@@ -103,6 +108,52 @@ class DigestCleanPinnedCheckoutTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "UPSTREAM_WORKTREE_DIRTY"):
                 mod.prepare(self.root, verify_only=False)
         self.assertFalse(any(c[0] != "git" for c in calls))
+
+
+    def test_gitignored_sourceless_bytecode_rejected_before_any_import_or_pip(self):
+        src = self.checkout / "newsbrief" / "sources" / "hidden.py"
+        bytecode = src.with_suffix(".pyc")
+        src.write_text("EVIDENCE = 'BYTECODE_EXECUTED'\n", encoding="utf-8")
+        py_compile.compile(str(src), cfile=str(bytecode), doraise=True)
+        src.unlink()
+        self.assertEqual(self.git("status", "--porcelain=v1",
+                                  "--untracked-files=all", "--", ".", ":(exclude).venv"), "")
+        result = subprocess.run(
+            [sys.executable, "-B", "-X", "utf8", "-c",
+             "import sys; sys.path.insert(0, sys.argv[1]); "
+             "import hidden; assert hidden.EVIDENCE == 'BYTECODE_EXECUTED'",
+             str(bytecode.parent)],
+            capture_output=True, text=True, encoding="utf-8")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        for verify_only in (True, False):
+            with self.subTest(verify_only=verify_only):
+                with self.assertRaisesRegex(RuntimeError,
+                                            "UPSTREAM_IGNORED_EXECUTABLE_SOURCE"):
+                    self.prepare_with_fake_import(verify_only)
+
+    def test_gitignored_importable_zip_and_egg_rejected_before_execution(self):
+        for extension in ("zip", "egg"):
+            with self.subTest(extension=extension):
+                archive = self.checkout / "newsbrief" / "sources" / ("hidden." + extension)
+                with ZipFile(archive, "w") as zf:
+                    zf.writestr("untrusted_in_zip.py", "EVIDENCE = 'ARCHIVE_EXECUTED'\n")
+                self.assertEqual(self.git("status", "--porcelain=v1",
+                                          "--untracked-files=all", "--",
+                                          ".", ":(exclude).venv"), "")
+                result = subprocess.run(
+                    [sys.executable, "-B", "-X", "utf8", "-c",
+                     "import sys; sys.path.insert(0, sys.argv[1]); "
+                     "import untrusted_in_zip; "
+                     "assert untrusted_in_zip.EVIDENCE == 'ARCHIVE_EXECUTED'",
+                     str(archive)],
+                    capture_output=True, text=True, encoding="utf-8")
+                self.assertEqual(result.returncode, 0, result.stderr)
+                for verify_only in (True, False):
+                    with self.subTest(verify_only=verify_only):
+                        with self.assertRaisesRegex(RuntimeError,
+                                                    "UPSTREAM_IGNORED_EXECUTABLE_SOURCE"):
+                            self.prepare_with_fake_import(verify_only)
+                archive.unlink()
 
 
 if __name__ == "__main__":

@@ -54,6 +54,26 @@ def prepare(root: Path, verify_only: bool = False) -> Path:
         if actual != pinned:
             raise RuntimeError('UPSTREAM_PIN_MISMATCH')
 
+    # A matching commit alone does not attest to the executed source bytes:
+    # tracked edits and imported untracked modules can override that commit.
+    # Ignore only this checkout's disposable virtual environment.
+    if run('git', '-C', str(checkout), 'status', '--porcelain=v1',
+           '--untracked-files=all', '--', '.', ':(exclude).venv', env=env):
+        raise RuntimeError('UPSTREAM_WORKTREE_DIRTY')
+    # git status hides paths intentionally ignored by upstream .gitignore.
+    # Importable .py/native modules in those paths still affect runtime bytes.
+    ignored = run('git', '-C', str(checkout), 'ls-files', '-z', '--others',
+                  '--ignored', '--exclude-standard', '--', '.',
+                  ':(exclude).venv', env=env)
+    # A sourceless .pyc and a ZIP/EGG/WHEEL/PYZ on sys.path can execute
+    # unreviewed Python without introducing a .py or altering git status.
+    # Refuse ignored importable code and archives before pip or runtime import.
+    importable = ('.py', '.pyi', '.pyc', '.pyo', '.so', '.pyd', '.pth', '.dll',
+                  '.zip', '.egg', '.whl', '.pyz', '.pyzw')
+    if any(path.casefold().endswith(importable)
+           for path in ignored.split('\0') if path):
+        raise RuntimeError('UPSTREAM_IGNORED_EXECUTABLE_SOURCE')
+
     venv = checkout / '.venv'
     interpreter = venv / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
     if not interpreter.is_file():

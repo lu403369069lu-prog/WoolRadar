@@ -20,6 +20,21 @@ MAX_OUTPUT = 4_000_000
 SOURCE_ID = re.compile(r"[A-Za-z0-9_-]{1,64}\Z")
 
 
+def _sensitive_public_route(route: str) -> bool:
+    """Reject legacy sampled routes which could still contain credentials."""
+    decoded = route
+    for _ in range(4):
+        latest = unquote_plus(decoded)
+        if (re.search(r'(?i)(?:@|\d{13,}|token|secret|bearer|password|session)', latest)
+                or re.search(r'(?i)(?:^|/)(?:reset|activate|magic-link|credential|api[_-]?key)(?:/|$)', latest)
+                or re.search(r'(?i)(?:^|/)[a-f0-9]{24,}(?:/|$)', latest)):
+            return True
+        if latest == decoded:
+            return False
+        decoded = latest
+    return '%' in decoded
+
+
 def canonical_public_url(raw: object) -> str | None:
     if not isinstance(raw, str) or len(raw) > 2048 or not raw:
         return None
@@ -36,6 +51,9 @@ def canonical_public_url(raw: object) -> str | None:
         # can represent a genuinely different grant/VPS campaign.
         p.query.encode('utf-8')
         p.fragment.encode('utf-8')
+        if (_sensitive_public_route(p.path)
+                or _sensitive_public_route(p.fragment.partition('?')[0])):
+            return None
         retained = []
         for part in p.query.split('&'):
             key = unquote_plus(part.split('=', 1)[0]).lower()

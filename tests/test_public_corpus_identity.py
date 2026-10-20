@@ -103,3 +103,27 @@ class PublicCorpusIdentityTests(unittest.TestCase):
         data=produce(['https://example.org/view?batch=1&batch=2'])
         self.assertFalse(data['rows'][0].get('url_identity_preserved',True))
         self.assertEqual(freeze_public_sources([(data,'a'*64)])['rows'],[])
+
+    def test_credential_segments_in_path_and_spa_route_are_never_persisted(self):
+        synthetic_secret='SYNTHETIC_PATH_SECRET_VALUE'
+        for url in (
+            'https://example.org/reset/token/'+synthetic_secret,
+            'https://example.org/reset/%74oken/'+synthetic_secret,
+            'https://example.org/apply/%2574oken/'+synthetic_secret,
+            'https://example.org/#/reset/token/'+synthetic_secret,
+        ):
+            with self.subTest(url_kind=url.split('#')[0].split('/')[3]):
+                with tempfile.TemporaryDirectory() as d:
+                    row={'title':'Read '+url,'url':url,'summary':'Public guide: '+url}
+                    path=record_public_sample(Path(d),'synthetic',PUBLIC,[row],[False])
+                    serialized=path.read_text(encoding='utf-8')
+                    data=json.loads(serialized)
+                self.assertNotIn(synthetic_secret,serialized)
+                self.assertFalse(data['rows'][0]['url_identity_preserved'])
+                self.assertEqual(freeze_public_sources([(data,'a'*64)])['rows'],[])
+
+    def test_benign_path_and_spa_route_remain_reviewable(self):
+        data=produce(['https://example.org/offers/dev-grant-2026',
+                      'https://example.org/#/offers?batch=2026'])
+        self.assertEqual(len(freeze_public_sources([(data,'a'*64)])['rows']),2)
+        self.assertTrue(all(row['url_identity_preserved'] for row in data['rows']))

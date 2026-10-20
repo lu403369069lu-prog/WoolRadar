@@ -52,6 +52,16 @@ class CleanSample(unittest.TestCase):
         for key in ('email','phone'):
             with self.subTest(key=key):
                 self.assertIsNone(canonical_public_url('https://example.org/join?'+key+'=PRIVATE_CANARY'))
+    def test_legacy_public_urls_with_credentials_in_routes_are_rejected(self):
+        for url in ('https://example.org/reset/token/PRIVATE_CANARY',
+                    'https://example.org/reset/%74oken/PRIVATE_CANARY',
+                    'https://example.org/apply/%2574oken/PRIVATE_CANARY',
+                    'https://example.org/#/reset/token/PRIVATE_CANARY'):
+            with self.subTest(url=url):
+                self.assertIsNone(canonical_public_url(url))
+                result=freeze_public_sources([sample('alpha',[url])])
+                self.assertEqual(result['rows'],[])
+                self.assertEqual(result['sources'][0]['invalid_rows'],1)
     def test_upstream_query_loss_makes_blind_identity_unverified(self):
         a=sample('alpha',['https://example.org/claim'])
         a[0]['rows'][0]['url_sanitized']=True

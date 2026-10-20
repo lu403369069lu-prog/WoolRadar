@@ -34,6 +34,14 @@ class PreviewGuard(unittest.TestCase):
                 with self.assertRaises(UnsafePreview):
                     check(payload(dict(ROW, title='Free cloud ' + marker + 'benefit')))
 
+    def test_rejects_invisible_unicode_in_public_urls_even_with_digest(self):
+        for url in ('https://example.org/benefit\u202eoffer',
+                    'https://example.org/benefit%E2%80%AEoffer',
+                    'https://example.org/benefit%E2%80%8Boffer'):
+            with self.subTest(url=repr(url)):
+                with self.assertRaises(UnsafePreview):
+                    check(payload(dict(ROW, public_url=url)))
+
     def test_baseline_not_new(self):
         self.assertEqual(review_delta(check(payload(ROW)))['candidate_keys'],[])
 

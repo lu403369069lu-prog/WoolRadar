@@ -32,9 +32,18 @@ class ExtendedGenericIdentityTests(unittest.TestCase):
         self.assertEqual(canonical_key(make('https://forum-one.example/a', 'RackNerd Free VPS 1 GB')),
                          canonical_key(make('https://forum-two.example/b', 'RackNerd Free VPS 1 GB')))
 
-    def test_specific_year_batch_retains_cross_post_identity(self):
-        self.assertEqual(canonical_key(make('https://forum-one.example/a', 'Free VPS 2026 GB')),
-                         canonical_key(make('https://forum-two.example/b', 'Free VPS 2026 GB')))
+    def test_unbranded_year_batch_does_not_merge_unaudited_posts(self):
+        self.assertNotEqual(canonical_key(make('https://forum-one.example/a', 'Free VPS 2026 GB')),
+                            canonical_key(make('https://forum-two.example/b', 'Free VPS 2026 GB')))
+
+    def test_reviewed_year_batch_can_merge_verified_campaign_members(self):
+        a = 'https://forum-one.example/a'
+        b = 'https://forum-two.example/b'
+        title = 'Free VPS 2026 GB'
+        review = dict(method='normal_browser_read', campaign_url='https://gleam.io/Ab123',
+                      member_urls=[a,b], member_titles={a:title,b:title})
+        self.assertEqual(canonical_key(make(a,title,metadata={'campaign_review':review})),
+                         canonical_key(make(b,title,metadata={'campaign_review':review})))
 
     def test_existing_generic_url_only_key_is_preserved(self):
         self.assertEqual(canonical_key(make('https://vendor.example/api', 'Free API credits')),

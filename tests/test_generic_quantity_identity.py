@@ -43,8 +43,8 @@ class GenericQuantityIdentityTests(unittest.TestCase):
             canonical_key(candidate("https://forum-b.example/post", "RackNerd Free VPS 1GB")),
         )
 
-    def test_year_batch_remains_cross_post_identity(self):
-        self.assertEqual(
+    def test_unbranded_year_batch_is_not_proof_of_shared_vendor(self):
+        self.assertNotEqual(
             canonical_key(candidate("https://forum-a.example/post", "Free VPS 2026 GB")),
             canonical_key(candidate("https://forum-b.example/post", "Free VPS 2026 GB")),
         )

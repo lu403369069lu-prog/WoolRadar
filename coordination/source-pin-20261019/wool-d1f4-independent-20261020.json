@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-20",
+  "executor": "codex-coordinator",
+  "reviewed_source_sha": "d1f4a02cb1f09a054f7964096d6edf6560fdeaae",
+  "previous_pin": "c1524ba21ba7b7bb147a2adf22f4107cf2255678",
+  "tests": [
+    {
+      "command": "python -B -X utf8 -m unittest discover -s tests -p test_*.py -v",
+      "exit_code": 0,
+      "total": 384,
+      "passed": 384,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 24.138,
+      "log": "wool-d1f4-independent-root.log",
+      "log_sha256": "12c18bdcf1104b2258c18e7f8d8b55224a936790cac2d2929a40e141a56fc81d"
+    },
+    {
+      "command": "python -B -X utf8 independent-quality/delivery-bridge-20261016/run_combined_tests.py",
+      "exit_code": 0,
+      "total": 487,
+      "passed": 487,
+      "failed": 0,
+      "skipped": 0,
+      "duration_seconds": 28.484,
+      "log": "wool-d1f4-independent-combined.log",
+      "log_sha256": "b316a4ef0115ea19fe965c485c37ec42e9ee41af6ee32fe8460f65719a9fbd23"
+    }
+  ],
+  "test_environment": {
+    "runtime_selection": "WOOLRADAR_DIGEST_TEST_PYTHON explicitly selects existing read-only upstream interpreter; no production writes",
+    "manifest_pinned_upstream_head": "3d527f7f7e68e1b3e20df4e2f1e20a5b445f6fcb",
+    "upstream_git_head_command": "git rev-parse HEAD (existing upstream checkout)",
+    "upstream_git_head_exit_code": 0,
+    "actual_import": "newsbrief from same upstream checkout; httpx 0.28.1",
+    "fresh_ci_install_verified": false
+  },
+  "code_delta_since_previous_business_sha": "44fbe7... -> d1f4 only tests/test_digest_runtime.py independent TemporaryDirectory fixture",
+  "business_accepted": false,
+  "output_status": "OUTPUT_NOT_CONNECTED",
+  "limitations": [
+    "PR85 ignored importable content protection still under business-owner review",
+    "Fresh hosted CI remains startup failure, not source-test FAIL",
+    "No independent source-quality frozen holdout/P06/real09:30 consumer SHA ACK",
+    "A later business SHA invalidates use of this receipt as latest-source acceptance"
+  ]
+}

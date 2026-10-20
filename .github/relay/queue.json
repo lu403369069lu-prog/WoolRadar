@@ -1,9 +1,9 @@
 {
   "schema_version": 1,
   "repo": "WoolRadar",
-  "source_ref": "c1524ba21ba7b7bb147a2adf22f4107cf2255678",
+  "source_ref": "d1f4a02cb1f09a054f7964096d6edf6560fdeaae",
   "source_subdir": ".",
-  "source_note": "Immutable PR84 notification reindex and explicit terminal eligibility candidate, independently Windows-tested at this source SHA; fresh pinned upstream native CI required. Local exact-tree root368/combined471 is not clean-host or business acceptance.",
+  "source_note": "PR84 d1f4: independent Windows root384/combined487 zero skips, exit0, 2026-10-20; existing manifest-pinned upstream interpreter read-only. Fresh hosted installation and business end-to-end acceptance remain unverified.",
   "families": [
     {
       "id": "WR-H01",

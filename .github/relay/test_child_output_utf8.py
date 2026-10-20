@@ -23,7 +23,10 @@ class ChildOutputByteIntegrityTests(unittest.TestCase):
             argv = ["python", "-m", "unittest", "discover", "-s", "tests",
                     "-p", "test_notifications.py"]
             done = SimpleNamespace(returncode=0, stdout=stdout, stderr=stderr)
-            with patch.object(worker.subprocess, "run", return_value=done) as mocked:
+            # This unit test isolates byte decoding; source identity has a
+            # separate real-Git fixture and is deliberately stubbed here.
+            with patch.object(worker, "verify_reviewed_test_files"), \
+                 patch.object(worker.subprocess, "run", return_value=done) as mocked:
                 result = worker.test(argv, root, root)
             kwargs = mocked.call_args.kwargs
             self.assertNotIn("errors", kwargs)

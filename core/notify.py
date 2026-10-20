@@ -217,14 +217,14 @@ class NotificationQueue:
                     if still_owned:
                         still_eligible = _verified_offer_claimable(self.db, item['event_id'])
                         if not still_eligible:
-                            with self.db.connect() as conn:
+                            with self.db.write_transaction() as conn:
                                 conn.execute(
                                     "UPDATE notifications SET result='STALE',next_attempt=0 "
                                     "WHERE id=? AND result='CLAIMED' AND attempts=? "
                                     "AND next_attempt=?",
                                     (item['id'], item['attempts'] + 1, claim_deadline))
                     elif item['id'] not in recovered_ids:
-                        with self.db.connect() as conn:
+                        with self.db.write_transaction() as conn:
                             recovered = self._reclaim_reindexed_local_claim(
                                 conn, item, claim_deadline)
                 if not still_eligible:

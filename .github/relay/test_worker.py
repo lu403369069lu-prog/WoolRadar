@@ -174,6 +174,41 @@ class RelaySafetyTests(unittest.TestCase):
             self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
             self.assertTrue((tests / "test_public_corpus_injected.py").exists())
 
+    def test_hyphenated_discovery_checks_selected_tests_and_helpers(self):
+        """Discovery adds its own directory, regardless of package-name syntax."""
+        check = ["python", "-m", "unittest", "discover", "-s",
+                 "independent-quality/public-corpus-blind-dedup-20261016",
+                 "-p", "test_*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / check[5]
+            tests.mkdir(parents=True)
+            target = tests / "test_selected.py"
+            original = ("import unittest\nimport helper\nclass Probe(unittest.TestCase):\n"
+                        " def test_truth(self): self.assertEqual(helper.value, 17)\n")
+            target.write_text(original, encoding="utf-8")
+            helper = tests / "helper.py"
+            helper.write_text("value = 17\n", encoding="utf-8")
+            # A valid unrelated import path must not hide omitted selected tests.
+            (root / "unrelated.py").write_text("value = 1\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            self.assertEqual(worker.test(check, root, root)["status"], "PASS")
+            for changed in (target, helper):
+                with self.subTest(changed=changed.name):
+                    old = changed.read_text(encoding="utf-8")
+                    changed.write_text(old.replace("17", "18"), encoding="utf-8")
+                    result = worker.test(check, root, root)
+                    self.assertEqual(result.get("status"), "BLOCKED", result)
+                    self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE", result)
+                    changed.write_text(old, encoding="utf-8")
+            helper.unlink()
+            deleted = worker.test(check, root, root)
+            self.assertEqual(deleted.get("status"), "BLOCKED", deleted)
+            self.assertEqual(deleted.get("error_kind"), "UNREVIEWED_TEST_SOURCE", deleted)
+
     def test_assume_unchanged_index_flag_cannot_hide_modified_test(self):
         check = ["python", "-m", "unittest", "discover", "-s", "tests",
                  "-p", "test_public_corpus*.py"]

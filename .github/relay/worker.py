@@ -102,9 +102,17 @@ def verify_reviewed_test_files(argv, cwd, src):
                               check=False)
         if tree.returncode != 0:
             raise ValueError("cannot read reviewed source tree")
+        # unittest adds the discovery directory to sys.path even when its
+        # ancestors are not valid package names (e.g. independent-quality/).
+        # Authenticate helpers relative to both actual import roots.
+        import_roots = (import_root, root)
+        def importable_directory(path):
+            return any(path.is_relative_to(base) and
+                       all(part.isidentifier() for part in path.relative_to(base).parts)
+                       for base in import_roots)
+
         def importable_path(path):
-            relative = path.relative_to(import_root)
-            return (all(part.isidentifier() for part in relative.parts[:-1])
+            return (importable_directory(path.parent)
                     and path.suffix.lower() in importable)
 
         tracked = [src / name.decode("utf-8") for name in tree.stdout.split(b"\x00")
@@ -112,10 +120,11 @@ def verify_reviewed_test_files(argv, cwd, src):
         children = list(import_root.rglob("*"))
         # An importable directory symlink can escape the reviewed checkout.
         if any(p.is_symlink() and p.is_dir() and
-               all(part.isidentifier() for part in p.relative_to(import_root).parts)
+               importable_directory(p)
                for p in children):
             raise ValueError("symlink directory in formal import root")
         files = list(dict.fromkeys([
+            *selected,
             *(p for p in children if importable_path(p)
               and (p.is_file() or p.is_symlink())), *tracked]))
     else:

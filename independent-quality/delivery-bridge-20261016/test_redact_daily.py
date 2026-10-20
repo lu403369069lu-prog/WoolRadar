@@ -30,6 +30,16 @@ class Contract(unittest.TestCase):
                               'notifications':[{'payload':'PRIVATE_NOTIFICATION'}],
                               'node_runs':[{'detail':'PRIVATE_PATH'}]}, 'a'*64, NOW)
 
+    def test_invisible_direction_controls_are_not_exported_as_offer_titles(self):
+        # Public snippets can contain bidirectional overrides and non-ASCII
+        # control characters that change how the final brief appears.
+        for marker in ('\u202e', '\u2066', '\u200b', '\u0085', '\u2028'):
+            with self.subTest(marker=repr(marker)):
+                poisoned = 'Free cloud ' + marker + 'benefit'
+                self.assertIsNone(public_title(poisoned))
+                self.assertEqual(self.preview([row(title=poisoned)])['events'], [])
+        self.assertEqual(public_title('免费云资源 ☁️'), '免费云资源 ☁️')
+
     def test_whitelist_only_and_no_eligibility_promotion(self):
         p=self.preview([row()]); item=p['events'][0]
         self.assertEqual(item['publication_lane'], 'independent_official_recheck_required')

@@ -50,6 +50,20 @@ class Contract(unittest.TestCase):
         for secret in ('SECRET', 'PRIVATE_NOTIFICATION','PRIVATE_PATH','user@example.org','PERSONAL_ACCOUNT','private_account','"id": 55'):
             self.assertNotIn(secret,text)
 
+    def test_unicode_controls_in_urls_and_encoded_routes_rejected(self):
+        poison = (
+            'https://example.org/benefit\u202eoffer',
+            'https://example.org/benefit%E2%80%AEoffer',
+            'https://example.org/benefit\u200boffer',
+            'https://example.org/benefit%E2%80%8Boffer',
+        )
+        for url in poison:
+            with self.subTest(url=repr(url)):
+                self.assertIsNone(public_url(url))
+                self.assertEqual(self.preview([row(primary_url=url)])['events'], [])
+        self.assertEqual(public_url('https://example.org/normal%E4%B8%AD%E6%96%87'),
+                         'https://example.org/normal%E4%B8%AD%E6%96%87')
+
     def test_query_credentials_and_account_routes_denied(self):
         for url in ['http://example.org/promo','https://me:pass@example.org/a','https://localhost/a',
                     'https://example.org/a?access_token=s','https://example.org/account/reset',

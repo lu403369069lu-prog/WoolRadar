@@ -71,8 +71,9 @@ def verify_reviewed_test_files(argv, cwd, src):
     """Require discovered Python tests and adjacent helpers to match source HEAD.
 
     An index-based diff trusts assume-unchanged/skip-worktree flags. Compare
-    the actual on-disk bytes to committed blobs instead. Normalize only line
-    endings, since Windows checkouts may legitimately turn LF into CRLF.
+    the actual on-disk bytes to committed blobs instead. Normalize only text
+    line endings, since Windows checkouts may legitimately turn LF into CRLF.
+    Binary fixtures must match the exact committed bytes.
     """
     src = Path(src).resolve()
     if argv[:5] == ["python", "-m", "unittest", "discover", "-s"]:
@@ -90,7 +91,7 @@ def verify_reviewed_test_files(argv, cwd, src):
         # directory selection would miss executable helper bytes.
         # Fail closed on caches: -B prevents the child creating new ones.
         # No checkout content is removed as part of verification.
-        importable = {".py", ".pyc", ".pyo", ".pyd", ".so", ".zip",
+        importable = {".py", ".pyc", ".pyo", ".pyd", ".so", ".zip", ".pyz",
                       ".egg", ".whl", ".pth", ".dll"}
         # Tests also consume data fixtures. Pin their actual bytes to HEAD;
         # otherwise a dirty, untracked or substituted JSON/CSV fixture can
@@ -156,10 +157,18 @@ def verify_reviewed_test_files(argv, cwd, src):
             capture_output=True, timeout=10, check=False)
         if original.returncode != 0:
             raise ValueError("cannot read reviewed test or helper blob")
-        # Python decodes CRLF/LF as equivalent source newlines. Deliberately
-        # do not invoke configurable Git clean filters or trust index flags.
-        normalize = lambda data: data.replace(b"\r\n", b"\n")
-        if normalize(path.read_bytes()) != normalize(original.stdout):
+        # Python treats CRLF/LF as equivalent in source. Some checked data
+        # formats have the same text-line semantics on Windows; binary fixture
+        # contents do not. Never normalize bytes for an unknown extension.
+        text_suffixes = {".py", ".json", ".jsonl", ".ndjson", ".yaml", ".yml",
+                         ".toml", ".ini", ".cfg", ".csv", ".tsv", ".txt",
+                         ".md", ".xml", ".sql", ".pth"}
+        actual_bytes = path.read_bytes()
+        committed_bytes = original.stdout
+        if path.suffix.lower() in text_suffixes:
+            actual_bytes = actual_bytes.replace(b"\r\n", b"\n")
+            committed_bytes = committed_bytes.replace(b"\r\n", b"\n")
+        if actual_bytes != committed_bytes:
             raise ValueError("test or helper bytes differ from pinned source HEAD")
 
 

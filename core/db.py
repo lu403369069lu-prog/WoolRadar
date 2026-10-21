@@ -319,7 +319,7 @@ class Database:
             if not members <= seen:
                 raise ValueError('CAMPAIGN_MEMBER_NOT_IN_DATABASE')
             prior = {row[0]: json.loads(row[1]) for row in conn.execute('SELECT url,review_json FROM campaign_links') if row[0] in members}
-            if any(item.get('campaign_url') != review.get('campaign_url') for item in prior.values()):
+            if any(item != review for item in prior.values()):
                 raise ValueError('CAMPAIGN_REVIEW_CONFLICT')
             if set(prior) == members:
                 return {'unchanged': True, 'merged': 0}
@@ -399,7 +399,7 @@ class Database:
                 for url in members:
                     previous = conn.execute(
                         'SELECT review_json FROM campaign_links WHERE url=?', (url,)).fetchone()
-                    if previous and json.loads(previous[0]).get('campaign_url') != campaign_review.get('campaign_url'):
+                    if previous and json.loads(previous[0]) != campaign_review:
                         raise ValueError('CAMPAIGN_REVIEW_CONFLICT')
             # Stage and validate the snapshot before exposing a final .db file.
             # sqlite backup failures can otherwise leave a partially written .db

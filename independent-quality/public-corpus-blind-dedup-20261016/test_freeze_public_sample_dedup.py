@@ -59,6 +59,19 @@ class CleanSample(unittest.TestCase):
                 self.assertIsNone(canonical_public_url('https://example.org/join?'+query))
         self.assertEqual(canonical_public_url('https://example.org/claim?batch=october'),
                          'https://example.org/claim?batch=october')
+    def test_nested_encoded_spa_fragment_credentials_are_dropped(self):
+        for fragment in ('/claim?%2574oken=PRIVATE_CANARY',
+                         '/claim?%252574oken=PRIVATE_CANARY',
+                         '/claim?batch=2026&%2563ode=PRIVATE_CANARY',
+                         '/claim?batch%26%2574oken=PRIVATE_CANARY'):
+            with self.subTest(fragment=fragment):
+                url = 'https://example.org/#' + fragment
+                self.assertIsNone(canonical_public_url(url))
+                frozen = freeze_public_sources([sample('alpha', [url])])
+                self.assertEqual(frozen['rows'], [])
+                self.assertEqual(frozen['sources'][0]['invalid_rows'], 1)
+        self.assertEqual(canonical_public_url('https://example.org/#/claim?batch=2026'),
+                         'https://example.org/#/claim?batch=2026')
     def test_contact_identifiers_are_not_preserved_in_public_review(self):
         for key in ('email','phone'):
             with self.subTest(key=key):

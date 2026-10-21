@@ -110,9 +110,14 @@ def verify_reviewed_test_files(argv, cwd, src):
         # ancestors are not valid package names (e.g. independent-quality/).
         # Authenticate helpers relative to both actual import roots.
         import_roots = (import_root, root)
+        git_metadata = src / ".git"
+        def reviewable_path(path):
+            # In a linked worktree .git is a *file* containing the gitdir
+            # pointer. It is never a reviewed source blob at HEAD:.git.
+            return path != git_metadata and not path.is_relative_to(git_metadata)
         def importable_directory(path):
             return (any(path.is_relative_to(base) for base in import_roots)
-                    and not path.is_relative_to(src / ".git"))
+                    and reviewable_path(path))
 
         tracked = [src / name.decode("utf-8") for name in tree.stdout.split(b"\x00")
                    if name and importable_directory((src / name.decode("utf-8")).parent)]
@@ -124,7 +129,7 @@ def verify_reviewed_test_files(argv, cwd, src):
             raise ValueError("symlink directory in formal import root")
         files = list(dict.fromkeys([
             *selected,
-            *(p for p in children if importable_directory(p.parent)
+            *(p for p in children if reviewable_path(p) and importable_directory(p.parent)
               and (p.is_file() or p.is_symlink())), *tracked]))
     else:
         files = [cwd / path for path in argv[4:]]

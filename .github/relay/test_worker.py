@@ -19,6 +19,33 @@ worker = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(worker)
 
 class RelaySafetyTests(unittest.TestCase):
+    def test_git_linked_worktree_dotgit_metadata_is_not_reviewed_test_input(self):
+        """A linked worktree uses a .git file, not a tracked source blob."""
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            main = Path(tmp) / "main"
+            linked = Path(tmp) / "linked"
+            tests = main / "tests"
+            tests.mkdir(parents=True)
+            (tests / "test_public_corpus_ok.py").write_text(
+                "import unittest\n"
+                "class TestPublicCorpus(unittest.TestCase):\n"
+                "    def test_ok(self): self.assertTrue(True)\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q", str(main)], check=True)
+            subprocess.run(["git", "-C", str(main), "add", "tests"], check=True)
+            subprocess.run(["git", "-C", str(main), "-c", "user.name=Test",
+                            "-c", "user.email=test@example.invalid", "commit", "-qm", "pin"], check=True)
+            baseline = worker.test(check, main, main)
+            self.assertEqual((baseline["status"], baseline.get("total")), ("PASS", 1), baseline)
+            subprocess.run(["git", "-C", str(main), "worktree", "add", "-q",
+                            "--detach", str(linked), "HEAD"], check=True)
+            self.assertTrue((linked / ".git").is_file())
+            self.assertEqual(subprocess.run(["git", "-C", str(linked), "status", "--porcelain"],
+                                            capture_output=True, text=True, check=True).stdout, "")
+            result = worker.test(check, linked, linked)
+            self.assertEqual((result["status"], result.get("total")), ("PASS", 1), result)
+
     def queue(self):
         return json.loads((HERE / "queue.json").read_text(encoding="utf-8"))
 

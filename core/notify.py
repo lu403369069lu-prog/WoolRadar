@@ -64,7 +64,13 @@ def _verified_offer_claimable(db, event_id: int) -> bool:
 
 
 class NotificationQueue:
-    """Durable outbox. Delivery is at-least-once after ambiguous network failures."""
+    """Durable outbox with safe Telegram ambiguity quarantine by default.
+
+    Telegram sendMessage has no provider idempotency key. Quarantine prevents
+    automatic duplicates after uncertain outcomes and expired claims, at the
+    cost of delivery liveness pending human reconciliation. This is neither
+    delivery confirmation nor a guarantee of end-to-end exactly-once.
+    """
     def __init__(self, db):
         self.db = db
 
@@ -158,6 +164,14 @@ class NotificationQueue:
                 continue
             if not local and not policy.get('telegram_send_enabled', False):
                 continue
+            # A worker can die after Telegram accepts a send but before an
+            # acknowledgement reaches SQLite. An expired lease is ambiguous.
+            # At-least-once automatic replay must be explicitly requested.
+            strict_delivery = not local and policy.get(
+                'telegram_delivery_mode', 'quarantine') != 'at_least_once'
+            if strict_delivery and item['result'] in ('CLAIMED', 'UNCERTAIN'):
+                summary['held'] = summary.get('held', 0) + 1
+                continue
             now = time.time()
             # pending() is a snapshot. A campaign reindex may merge away its
             # event before this worker claims the notice. Hold the same SQLite
@@ -181,10 +195,12 @@ class NotificationQueue:
                                 "AND result IN ('PENDING','RETRY','CLAIMED','UNCERTAIN') AND next_attempt<=?", (item['id'], now))
                         continue
                 claim_deadline = now + 300
+                claimable = ("('PENDING','RETRY')" if strict_delivery else
+                             "('PENDING','RETRY','CLAIMED','UNCERTAIN')")
                 with self.db.write_transaction() as conn:
-                    claimed = conn.execute("""UPDATE notifications SET result='CLAIMED',
+                    claimed = conn.execute(f"""UPDATE notifications SET result='CLAIMED',
                         next_attempt=?,attempts=attempts+1 WHERE id=? AND next_attempt<=?
-                        AND result IN ('PENDING','RETRY','CLAIMED','UNCERTAIN')
+                        AND result IN {claimable}
                         AND event_id IS ? AND batch_id=? AND channel=? AND created_at=?
                         AND payload=? AND attempts=? AND next_attempt=?""",
                         (claim_deadline, item['id'], now, item['event_id'], item['batch_id'],
@@ -339,13 +355,16 @@ class NotificationQueue:
                 # Keep the ambiguity durable instead of claiming a definite fail.
                 result = 'UNCERTAIN' if not local else 'FAILED'
             success = result == 'SENT'
+            ambiguous = (result == 'UNCERTAIN' or
+                         (strict_delivery and not success and
+                          result not in ('RATE_LIMITED', 'MISSING_CREDENTIALS', 'DISABLED')))
             with self.db.write_transaction() as conn:
                 # Do not mark a recycled ID as SENT after network/file I/O.
                 confirmed = conn.execute('''UPDATE notifications SET result=?,next_attempt=? WHERE id=?
                     AND result='CLAIMED' AND attempts=? AND next_attempt=?
                     AND event_id IS ? AND batch_id=? AND channel=? AND created_at=? AND payload=?''',
-                    ('SENT' if success else 'UNCERTAIN' if result == 'UNCERTAIN' else 'RETRY',
-                     0 if success else now + retry_delay,
+                    ('SENT' if success else 'UNCERTAIN' if ambiguous else 'RETRY',
+                     0 if success or (strict_delivery and ambiguous) else now + retry_delay,
                      item['id'], item['attempts'] + 1, claim_deadline, item['event_id'],
                      item['batch_id'], item['channel'], item['created_at'], item['payload'])).rowcount
             if confirmed != 1:
@@ -354,7 +373,7 @@ class NotificationQueue:
                 # uncommitted delivery as confirmed. At-least-once remains.
                 summary['uncertain'] = summary.get('uncertain', 0) + 1
             else:
-                if result == 'UNCERTAIN':
+                if ambiguous:
                     summary['uncertain'] = summary.get('uncertain', 0) + 1
                 else:
                     summary['local' if local and success else 'sent' if success else 'retry'] += 1

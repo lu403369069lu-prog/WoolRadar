@@ -24,7 +24,7 @@ class RestartRetryTests(unittest.TestCase):
             self.assertTrue(first.enqueue(event, "batch-a", "telegram", "synthetic message"))
             sent_messages = []
             with patch("core.notify.time.time", return_value=10000.0):
-                report = first.flush({"telegram_send_enabled": True},
+                report = first.flush({"telegram_send_enabled": True, "telegram_delivery_mode": "at_least_once"},
                                      sender=lambda s: sent_messages.append(s) or "FAILED",
                                      retry_seconds=60)
             self.assertEqual(report["retry"], 1)
@@ -39,12 +39,12 @@ class RestartRetryTests(unittest.TestCase):
             fresh = NotificationQueue(Database(path))
             suppressed = []
             with patch("core.notify.time.time", return_value=10059.0):
-                report = fresh.flush({"telegram_send_enabled": True},
+                report = fresh.flush({"telegram_send_enabled": True, "telegram_delivery_mode": "at_least_once"},
                                      sender=lambda s: suppressed.append(s) or "SENT")
             self.assertEqual(report, {"sent": 0, "retry": 0, "local": 0})
             self.assertEqual(suppressed, [])
             with patch("core.notify.time.time", return_value=10061.0):
-                report = fresh.flush({"telegram_send_enabled": True},
+                report = fresh.flush({"telegram_send_enabled": True, "telegram_delivery_mode": "at_least_once"},
                                      sender=lambda s: "SENT")
             self.assertEqual(report["sent"], 1)
             with Database(path).connect() as conn:

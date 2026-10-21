@@ -35,6 +35,12 @@ class PreviewGuard(unittest.TestCase):
             with self.subTest(path=path), self.assertRaises(UnsafePreview):
                 check(payload(dict(ROW, public_url='https://example.org' + path)))
 
+    def test_numeric_ipv4_aliases_rejected_with_approved_digest(self):
+        for host in ('127.1', '127.0.1', '0177.0.0.1',
+                     '0x7f.0.0.1', '1.2.3.256'):
+            with self.subTest(host=host), self.assertRaises(UnsafePreview):
+                check(payload(dict(ROW, public_url=f'https://{host}/free-offer')))
+
     def test_rejects_invisible_bidirectional_title_even_with_approved_digest(self):
         for marker in ('\u202e', '\u2066', '\u200b', '\u0085', '\u2028'):
             with self.subTest(marker=repr(marker)):

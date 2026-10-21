@@ -28,6 +28,10 @@ BAD_PRIVATE_COLLECTION = frozenset({
     'tokens', 'secrets', 'sessions', 'accounts', 'users', 'credentials',
     'passwords', 'api-keys', 'api_keys', 'apikeys',
 })
+# Browser URL parsers accept legacy shortened, octal and hexadecimal IPv4
+# addresses that Python's ipaddress module rejects. Fail closed on a hostname
+# made entirely of numeric IPv4-style components, even when malformed.
+NUMERIC_IPV4_COMPONENT = re.compile(r'(?:[0-9]+|0x[0-9a-f]+)\Z')
 ALLOWED_STATUS = {'DISCOVERED', 'CROSS_CHECKED', 'OFFICIAL_VERIFIED', 'CLAIMABLE', 'UNKNOWN', 'CONFLICTED', 'EXPIRED', 'FAILED', 'REDEEMED'}
 BOOL_FIELDS = ('public', 'open', 'card_required', 'account_required', 'auto_renew')
 REGIONS = {'CN', 'US', 'EU', 'GLOBAL', 'MAINLAND_CHINA', 'UNKNOWN'}
@@ -43,6 +47,8 @@ def public_url(raw: object) -> str | None:
             return None
         host = parts.hostname.lower().rstrip('.')
         if host in ('localhost', 'local') or '.' not in host or BAD_TEXT.search(host):
+            return None
+        if all(NUMERIC_IPV4_COMPONENT.fullmatch(piece) for piece in host.split('.')):
             return None
         try:
             ipaddress.ip_address(host)

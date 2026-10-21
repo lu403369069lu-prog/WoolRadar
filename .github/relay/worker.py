@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import zipfile
 from checkpoint_store import save, persist_lock, recover_history, verify_replay
 
 def load(path):
@@ -91,7 +92,7 @@ def verify_reviewed_test_files(argv, cwd, src):
         # Fail closed on caches: -B prevents the child creating new ones.
         # No checkout content is removed as part of verification.
         importable = {".py", ".pyc", ".pyo", ".pyd", ".so", ".zip",
-                      ".egg", ".whl", ".pth", ".dll"}
+                      ".egg", ".whl", ".pyz", ".pyzw", ".pth", ".dll"}
         # Tests also consume data fixtures. Pin their actual bytes to HEAD;
         # otherwise a dirty, untracked or substituted JSON/CSV fixture can
         # turn a genuinely failing reviewed test into a false formal PASS.
@@ -121,7 +122,11 @@ def verify_reviewed_test_files(argv, cwd, src):
 
         def importable_path(path):
             return (importable_directory(path.parent)
-                    and path.suffix.lower() in importable | fixtures)
+                    and (path.suffix.lower() in importable | fixtures
+                         or path.is_symlink()
+                         # zipimport accepts archive bytes under any filename
+                         # suffix, including .pyz and misleading data suffixes.
+                         or (path.is_file() and zipfile.is_zipfile(path))))
 
         tracked = [src / name.decode("utf-8") for name in tree.stdout.split(b"\x00")
                    if name and importable_path(src / name.decode("utf-8"))]

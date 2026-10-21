@@ -93,6 +93,34 @@ class PublicCorpusIdentityTests(unittest.TestCase):
         self.assertEqual(len(selected['rows']),1)
         self.assertEqual(selected['sources'][0]['upstream_url_identity_lost'],1)
 
+    def test_encoded_functional_value_does_not_claim_duplicate_blind_identity(self):
+        for suffix in ('view?batch=%31', '#/offers?batch=%31'):
+            with self.subTest(suffix=suffix):
+                plain = suffix.replace('%31', '1')
+                data = produce(['https://example.org/' + suffix,
+                                'https://example.org/' + plain])
+                if suffix.startswith('view?'):
+                    self.assertEqual(data['rows'][0]['url'], data['rows'][1]['url'])
+                else:
+                    # Ambiguous SPA query drops the entire route; the producer
+                    # must still mark it ineligible for blind selection.
+                    self.assertEqual(data['rows'][0]['url'], 'https://example.org/')
+                self.assertFalse(data['rows'][0]['url_identity_preserved'])
+                self.assertTrue(data['rows'][1]['url_identity_preserved'])
+                selected = freeze_public_sources([(data, 'a'*64)], limit=8)
+                self.assertEqual(len(selected['rows']), 1)
+                self.assertEqual(selected['sources'][0]['upstream_url_identity_lost'], 1)
+
+    def test_reordered_functional_selectors_do_not_claim_blind_identity(self):
+        data = produce(['https://example.org/view?offer=2&batch=1',
+                        'https://example.org/view?batch=1&offer=2'])
+        self.assertEqual(data['rows'][0]['url'], data['rows'][1]['url'])
+        self.assertFalse(data['rows'][0]['url_identity_preserved'])
+        self.assertTrue(data['rows'][1]['url_identity_preserved'])
+        selected = freeze_public_sources([(data, 'a'*64)], limit=8)
+        self.assertEqual(len(selected['rows']), 1)
+        self.assertEqual(selected['sources'][0]['upstream_url_identity_lost'], 1)
+
     def test_encoded_tracking_key_can_still_be_safely_removed(self):
         data=produce(['https://example.org/view?batch=beta&u%74m_source=alerts'])
         self.assertEqual(data['rows'][0]['url'],'https://example.org/view?batch=beta')

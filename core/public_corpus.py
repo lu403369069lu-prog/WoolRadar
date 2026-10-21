@@ -25,11 +25,17 @@ _PRIVATE_VALUE = re.compile(r'(?i)(?:@|\d{13,}|token|secret|bearer|password|sess
 def _semantic_query(query: str) -> tuple[str, bool]:
     kept = {}
     preserved = True
+    retained_raw = []
     # Raw encoded key spellings may be interpreted differently by an origin.
     # Do not certify identical campaign identity after decoding a selector.
     # Encoded names of discarded marketing trackers remain safe to discard.
     for part in query.split('&'):
         raw_key = part.partition('=')[0]
+        # Excluding marketing trackers is safe for this bounded sample, but
+        # changing the spelling or order of an application selector is not
+        # proof that the origin routes both URLs to the same resource.
+        if part and unquote_plus(raw_key).lower() not in _TRACKING_QUERY:
+            retained_raw.append(part)
         if (('%' in raw_key or '+' in raw_key)
                 and unquote_plus(raw_key).lower() not in _TRACKING_QUERY):
             preserved = False
@@ -51,7 +57,10 @@ def _semantic_query(query: str) -> tuple[str, bool]:
             preserved = False
         else:
             kept[key] = value
-    return urlencode(sorted(kept.items())), preserved
+    normalized = urlencode(sorted(kept.items()))
+    if '&'.join(retained_raw) != normalized:
+        preserved = False
+    return normalized, preserved
 
 def _public_path_safe(path: str) -> bool:
     """Reject public sample paths that could contain credentials or reset links."""

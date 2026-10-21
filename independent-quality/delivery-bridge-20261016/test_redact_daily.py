@@ -96,6 +96,17 @@ class Contract(unittest.TestCase):
         self.assertEqual(public_url('https://123.example.org/free-offer'),
                          'https://123.example.org/free-offer')
 
+    def test_local_domain_suffixes_never_leave_preview(self):
+        # Public URLs must not resolve into the reviewer's loopback/mDNS/LAN namespace.
+        for host in ('service.localhost', 'device.local', 'router.home.arpa',
+                     'service.localdomain', 'box.lan', 'host.internal'):
+            with self.subTest(host=host):
+                url = f'https://{host}/free-offer'
+                self.assertIsNone(public_url(url))
+                self.assertEqual(self.preview([row(primary_url=url)])['events'], [])
+        self.assertEqual(public_url('https://offers.example.org/free-offer'),
+                         'https://offers.example.org/free-offer')
+
     def test_titles_secrets_denied(self):
         for title in ['Reach bob@example.org today', 'my token secret', 'credit 1234567890123456', '123456789012345678']:
             self.assertIsNone(public_title(title))

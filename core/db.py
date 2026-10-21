@@ -246,7 +246,14 @@ class Database:
                 (event_id, evidence.kind, evidence.url, evidence.provenance_key, evidence.checked_at,
                  evidence.excerpt, json.dumps(evidence.claims, ensure_ascii=False)))
 
-    def set_status(self, event_id: int, status: Status, reason: str, claim_scope: str = 'NONE') -> None:
+    def set_status(self, event_id: int, status: Status, reason: str, claim_scope: str = 'NONE',
+                   *, automatic: bool = False) -> Status:
+        """Record a transition, unless automated processing encounters a terminal.
+
+        Explicit callers may reopen a terminal for review. Automated callers
+        must not silently overwrite a terminal or fabricate status history.
+        The check and any update share the SQLite writer reservation.
+        """
         with self.write_transaction() as conn:
             # Lock before reading the previous status so history cannot record
             # another worker's state while this transaction is waiting to write.
@@ -256,10 +263,13 @@ class Database:
             if row is None:
                 raise KeyError(event_id)
             old = row['status']
+            if automatic and old in ('REDEEMED', 'EXPIRED', 'FAILED', 'CONFLICTED'):
+                return Status(old)
             conn.execute('UPDATE events SET status=?, claim_scope=? WHERE id=?', (status.value, claim_scope, event_id))
             conn.execute(
                 'INSERT INTO status_history(event_id,old_status,new_status,reason,changed_at) VALUES(?,?,?,?,?)',
                 (event_id, old, status.value, reason, utc_now()))
+            return status
 
     def record_node_run(self, node: str, status: str, items: int = 0, error_code: str = '', detail: str = '') -> None:
         now = utc_now()

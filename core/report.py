@@ -89,8 +89,10 @@ class ReportGenerator:
                     result = VerificationEngine().evaluate(Candidate(event['node'], event['source'],
                         event['title'], event['primary_url']), self.db.get_evidence(event['id']))
                     if result.status.value != event['status'] or result.claim_scope != event['claim_scope']:
-                        self.db.set_status(event['id'], result.status, result.reason, result.claim_scope)
-                        event['status'], event['claim_scope'] = result.status.value, result.claim_scope
+                        effective = self.db.set_status(event['id'], result.status, result.reason,
+                                                       result.claim_scope, automatic=True)
+                        event['status'] = effective.value
+                        event['claim_scope'] = self.db.get_event(event['id'])['claim_scope']
                 event['evidence'] = [
                     {'kind': item.kind, 'url': item.url, 'checked_at': item.checked_at,
                      'excerpt': item.excerpt, 'claims': item.claims, 'provenance_key': item.provenance_key}

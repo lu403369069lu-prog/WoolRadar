@@ -61,8 +61,9 @@ class Pipeline:
                     candidate.source_kind, candidate.url, provenance, excerpt=candidate.summary[:1000], claims=claims))
                 evidence = self.db.get_evidence(stored.event_id)
                 result = self.verifier.evaluate(candidate, evidence)
-                self.db.set_status(stored.event_id, result.status, result.reason, result.claim_scope)
-                self.queue_verified(stored.event_id, result.status.value)
+                effective = self.db.set_status(stored.event_id, result.status, result.reason,
+                                               result.claim_scope, automatic=True)
+                self.queue_verified(stored.event_id, effective.value)
                 if candidate.source_kind == 'official':
                     official_snapshot = self.db.get_event(stored.event_id)
             if stored.notify:
@@ -131,13 +132,15 @@ class Pipeline:
                 batch_id=event['batch_id'] or '',
             )
             result = self.verifier.evaluate(candidate, self.db.get_evidence(event_id))
-            self.db.set_status(event_id, result.status, result.reason, result.claim_scope)
-            self.queue_verified(event_id, result.status.value)
+            effective = self.db.set_status(event_id, result.status, result.reason,
+                                           result.claim_scope, automatic=True)
+            self.queue_verified(event_id, effective.value)
+            retained = effective != result.status
             return {
                 'event_id': event_id,
-                'status': result.status.value,
-                'reason': result.reason,
-                'claim_scope': result.claim_scope,
+                'status': effective.value,
+                'reason': '终态已锁定，自动证据只记录、不变更状态' if retained else result.reason,
+                'claim_scope': self.db.get_event(event_id)['claim_scope'],
                 'independent_evidence_count': result.independent_evidence_count,
                 'unknown_capacity': result.unknown_capacity,
             }

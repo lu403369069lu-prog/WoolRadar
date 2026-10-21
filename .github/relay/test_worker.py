@@ -9,6 +9,8 @@ import unittest
 import subprocess
 import sys
 import os
+import threading
+import time
 import venv
 import zipfile
 from unittest.mock import patch
@@ -19,6 +21,76 @@ worker = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(worker)
 
 class RelaySafetyTests(unittest.TestCase):
+    def test_transient_midrun_fixture_edit_cannot_forge_pinned_pass(self):
+        """Mutate only the shared original while the reviewed test is running."""
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp) / "repo"
+            root.mkdir()
+            signals = Path(tmp) / "signals"
+            signals.mkdir()
+            tests = root / "tests"
+            tests.mkdir()
+            fixture = tests / "source.blob"
+            fixture.write_bytes(b"FAIL\n")
+            (tests / "test_public_corpus_toctou.py").write_text(
+                "import os,time,unittest\nfrom pathlib import Path\n"
+                "signal=Path(os.environ['TOCTOU_SIGNAL_DIR'])\n"
+                "def wait(name):\n"
+                " deadline=time.monotonic()+12\n"
+                " while not (signal/name).exists():\n"
+                "  if time.monotonic()>deadline: raise TimeoutError(name)\n"
+                "  time.sleep(.02)\n"
+                "class Probe(unittest.TestCase):\n"
+                " def test_fixture(self):\n"
+                "  (signal/'ready').write_text('1')\n"
+                "  wait('go')\n"
+                "  value=Path('tests/source.blob').read_bytes()\n"
+                "  (signal/'read').write_text('1')\n"
+                "  wait('release')\n"
+                "  self.assertEqual(value,b'PASS\\n')\n",
+                encoding="utf-8", newline="\n")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests"], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester",
+                            "-c", "user.email=test@example.invalid", "commit",
+                            "-qm", "pin failing fixture"], cwd=root, check=True)
+            sha = worker.source_sha(root)
+            result = {}
+            def run_worker():
+                result["receipt"] = worker.test(check, root, root)
+            original_env = os.environ.get("TOCTOU_SIGNAL_DIR")
+            os.environ["TOCTOU_SIGNAL_DIR"] = str(signals)
+            thread = threading.Thread(target=run_worker, daemon=True)
+            try:
+                thread.start()
+                for name in ("ready", "read"):
+                    deadline = time.monotonic() + 15
+                    while not (signals / name).exists():
+                        self.assertTrue(thread.is_alive(), f"worker ended before {name}: {result}")
+                        self.assertLess(time.monotonic(), deadline, f"no {name}")
+                        time.sleep(.02)
+                    if name == "ready":
+                        fixture.write_bytes(b"PASS\n")
+                        (signals / "go").write_text("1")
+                    else:
+                        fixture.write_bytes(b"FAIL\n")
+                        (signals / "release").write_text("1")
+                thread.join(15)
+                self.assertFalse(thread.is_alive(), "worker did not finish")
+            finally:
+                if original_env is None:
+                    os.environ.pop("TOCTOU_SIGNAL_DIR", None)
+                else:
+                    os.environ["TOCTOU_SIGNAL_DIR"] = original_env
+            self.assertEqual(result["receipt"]["status"], "FAIL", result)
+            self.assertEqual(worker.source_sha(root), sha)
+            self.assertEqual(fixture.read_bytes(), b"FAIL\n")
+            self.assertEqual(subprocess.run(["git", "status", "--porcelain"],
+                            cwd=root, capture_output=True, text=True,
+                            check=True).stdout, "")
+
     def test_crlf_changed_text_fixture_cannot_forge_byte_assertion(self):
         check = ["python", "-m", "unittest", "discover", "-s", "tests",
                  "-p", "test_public_corpus*.py"]
@@ -259,7 +331,8 @@ class RelaySafetyTests(unittest.TestCase):
             result = worker.test(check, root, root)
             self.assertEqual(result["status"], "BLOCKED")
             self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
-            self.assertTrue((tests / "test_public_corpus_injected.py").exists())
+            # Discovery ran in the pinned checkout, leaving the source intact.
+            self.assertFalse((tests / "test_public_corpus_injected.py").exists())
 
     def test_modified_json_fixture_cannot_forge_pinned_pass(self):
         check = ["python", "-m", "unittest", "discover", "-s", "tests",

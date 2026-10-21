@@ -56,7 +56,17 @@ def canonical_public_url(raw: object) -> str | None:
             return None
         retained = []
         for part in p.query.split('&'):
-            key = unquote_plus(part.split('=', 1)[0]).lower()
+            # Repeatedly decode only the query key: a nested-encoded secret
+            # key or delimiter must never reach an output review URL.
+            key = part.split('=', 1)[0]
+            for _ in range(5):
+                decoded = unquote_plus(key)
+                if decoded == key:
+                    break
+                key = decoded
+            if '%' in key or any(delimiter in key for delimiter in '=&;#?'):
+                return None
+            key = key.lower()
             if key in {'access_token', 'refresh_token', 'id_token', 'api_key',
                        'apikey', 'client_secret', 'password', 'session',
                        'session_id', 'authorization', 'oauth_token', 'jwt',

@@ -41,6 +41,12 @@ class PreviewGuard(unittest.TestCase):
             with self.subTest(host=host), self.assertRaises(UnsafePreview):
                 check(payload(dict(ROW, public_url=f'https://{host}/free-offer')))
 
+    def test_local_domain_suffixes_rejected_with_approved_digest(self):
+        for host in ('service.localhost', 'device.local', 'router.home.arpa',
+                     'service.localdomain', 'box.lan', 'host.internal'):
+            with self.subTest(host=host), self.assertRaises(UnsafePreview):
+                check(payload(dict(ROW, public_url=f'https://{host}/free-offer')))
+
     def test_rejects_invisible_bidirectional_title_even_with_approved_digest(self):
         for marker in ('\u202e', '\u2066', '\u200b', '\u0085', '\u2028'):
             with self.subTest(marker=repr(marker)):

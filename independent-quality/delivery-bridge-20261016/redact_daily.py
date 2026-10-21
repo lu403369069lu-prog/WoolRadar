@@ -32,6 +32,9 @@ BAD_PRIVATE_COLLECTION = frozenset({
 # addresses that Python's ipaddress module rejects. Fail closed on a hostname
 # made entirely of numeric IPv4-style components, even when malformed.
 NUMERIC_IPV4_COMPONENT = re.compile(r'(?:[0-9]+|0x[0-9a-f]+)\Z')
+# Domains intended for loopback, multicast DNS or local name resolution are
+# not safe public offer destinations, including deeper subdomains.
+LOCAL_HOST_SUFFIXES = ('localhost', 'local', 'home.arpa', 'localdomain', 'lan', 'internal')
 ALLOWED_STATUS = {'DISCOVERED', 'CROSS_CHECKED', 'OFFICIAL_VERIFIED', 'CLAIMABLE', 'UNKNOWN', 'CONFLICTED', 'EXPIRED', 'FAILED', 'REDEEMED'}
 BOOL_FIELDS = ('public', 'open', 'card_required', 'account_required', 'auto_renew')
 REGIONS = {'CN', 'US', 'EU', 'GLOBAL', 'MAINLAND_CHINA', 'UNKNOWN'}
@@ -46,7 +49,8 @@ def public_url(raw: object) -> str | None:
         if parts.scheme != 'https' or not parts.hostname or parts.username or parts.password or parts.port not in (None, 443):
             return None
         host = parts.hostname.lower().rstrip('.')
-        if host in ('localhost', 'local') or '.' not in host or BAD_TEXT.search(host):
+        if ('.' not in host or BAD_TEXT.search(host)
+            or any(host == suffix or host.endswith('.' + suffix) for suffix in LOCAL_HOST_SUFFIXES)):
             return None
         if all(NUMERIC_IPV4_COMPONENT.fullmatch(piece) for piece in host.split('.')):
             return None

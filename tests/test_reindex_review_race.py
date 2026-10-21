@@ -37,6 +37,63 @@ class ConcurrentCampaignReviewTests(unittest.TestCase):
         winner.upsert_candidate(Candidate('node-two', 'synthetic', TITLES[SECOND], SECOND))
         return winner, challenger
 
+    def test_same_campaign_url_with_different_review_contents_is_conflict(self):
+        with TemporaryDirectory() as temporary:
+            db, _ = self.seed(Path(temporary) / 'review.db')
+            accepted = review('Ab123')
+            db.review_campaign(accepted)
+            conflicting = review('Ab123')
+            conflicting['member_titles'] = {**TITLES, FIRST: 'Altered campaign identity assertion'}
+            with self.assertRaisesRegex(ValueError, '^CAMPAIGN_REVIEW_CONFLICT$'):
+                db.review_campaign(conflicting)
+            with db.connect() as conn:
+                saved = [json.loads(item[0]) for item in conn.execute('SELECT review_json FROM campaign_links')]
+            self.assertEqual(len(saved), 2)
+            self.assertTrue(all(item == accepted for item in saved))
+            self.assertEqual(len(list(Path(temporary).glob('review-before-reindex-*.db'))), 1)
+
+    def test_same_campaign_url_different_review_cannot_replace_after_precheck(self):
+        with TemporaryDirectory() as temporary:
+            winner, challenger = self.seed(Path(temporary) / 'review.db')
+            accepted = review('Ab123')
+            conflicting = review('Ab123')
+            conflicting['member_titles'] = {**TITLES, FIRST: 'Altered campaign identity assertion'}
+            reached, release = threading.Event(), threading.Event()
+            outcome = {}
+            original = challenger.reindex
+
+            def paused_reindex(*args, **kwargs):
+                reached.set()
+                if not release.wait(10):
+                    raise TimeoutError('competing review not released')
+                return original(*args, **kwargs)
+
+            def competing_review():
+                try:
+                    outcome['result'] = challenger.review_campaign(conflicting)
+                except BaseException as exc:
+                    outcome['error'] = exc
+
+            with mock.patch.object(challenger, 'reindex', side_effect=paused_reindex):
+                thread = threading.Thread(target=competing_review)
+                thread.start()
+                try:
+                    self.assertTrue(reached.wait(10), 'challenger precheck did not complete')
+                    winner.review_campaign(accepted)
+                finally:
+                    release.set()
+                    thread.join(20)
+
+            self.assertFalse(thread.is_alive())
+            self.assertNotIn('result', outcome)
+            self.assertIsInstance(outcome.get('error'), ValueError)
+            self.assertEqual(str(outcome['error']), 'CAMPAIGN_REVIEW_CONFLICT')
+            with winner.connect() as conn:
+                saved = [json.loads(item[0]) for item in conn.execute('SELECT review_json FROM campaign_links')]
+            self.assertEqual(len(saved), 2)
+            self.assertTrue(all(item == accepted for item in saved))
+            self.assertEqual(len(list(Path(temporary).glob('review-before-reindex-*.db'))), 1)
+
     def test_conflicting_review_cannot_replace_commit_after_precheck(self):
         with TemporaryDirectory() as temporary:
             path = Path(temporary) / 'review.db'

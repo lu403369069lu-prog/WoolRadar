@@ -71,9 +71,11 @@ def verify_reviewed_test_files(argv, cwd, src):
     """Require discovered Python tests and adjacent helpers to match source HEAD.
 
     An index-based diff trusts assume-unchanged/skip-worktree flags. Compare
-    the actual on-disk bytes to committed blobs instead. Normalize only text
-    line endings, since Windows checkouts may legitimately turn LF into CRLF.
-    Binary fixtures must match the exact committed bytes.
+    the actual on-disk bytes to committed blobs instead. Both source files and
+    fixtures must match the exact committed bytes: even a text file may be read
+    with read_bytes(), making a CRLF change observable to a test assertion.
+    A checkout that rewrites line endings must be reproduced with byte-stable
+    Git settings before its formal test result can be trusted.
     """
     src = Path(src).resolve()
     if argv[:5] == ["python", "-m", "unittest", "discover", "-s"]:
@@ -152,18 +154,10 @@ def verify_reviewed_test_files(argv, cwd, src):
             capture_output=True, timeout=10, check=False)
         if original.returncode != 0:
             raise ValueError("cannot read reviewed test or helper blob")
-        # Python treats CRLF/LF as equivalent in source. Some checked data
-        # formats have the same text-line semantics on Windows; binary fixture
-        # contents do not. Never normalize bytes for an unknown extension.
-        text_suffixes = {".py", ".json", ".jsonl", ".ndjson", ".yaml", ".yml",
-                         ".toml", ".ini", ".cfg", ".csv", ".tsv", ".txt",
-                         ".md", ".xml", ".sql", ".pth"}
-        actual_bytes = path.read_bytes()
-        committed_bytes = original.stdout
-        if path.suffix.lower() in text_suffixes or path.name in {".gitattributes", ".gitignore"}:
-            actual_bytes = actual_bytes.replace(b"\r\n", b"\n")
-            committed_bytes = committed_bytes.replace(b"\r\n", b"\n")
-        if actual_bytes != committed_bytes:
+        # The executed test can inspect its own .py bytes and fixture bytes.
+        # Text normalization would permit a failing HEAD to become a false
+        # PASS without a new source commit.
+        if path.read_bytes() != original.stdout:
             raise ValueError("test or helper bytes differ from pinned source HEAD: " + relative)
 
 

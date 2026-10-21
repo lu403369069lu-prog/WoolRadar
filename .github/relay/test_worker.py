@@ -19,6 +19,64 @@ worker = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(worker)
 
 class RelaySafetyTests(unittest.TestCase):
+    def test_crlf_changed_text_fixture_cannot_forge_byte_assertion(self):
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_public_corpus_bytes.py").write_text(
+                "import unittest\nfrom pathlib import Path\n"
+                "class Probe(unittest.TestCase):\n"
+                " def test_fixture_bytes(self):\n"
+                "  self.assertEqual(Path('tests/fixture.txt').read_bytes(), b'PASS\\r\\n')\n",
+                encoding="utf-8")
+            (root / ".gitattributes").write_text(
+                "tests/fixture.txt -text\n", encoding="utf-8")
+            fixture = tests / "fixture.txt"
+            fixture.write_bytes(b"PASS\n")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", ".gitattributes", "tests"], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester",
+                            "-c", "user.email=test@example.invalid", "commit",
+                            "-qm", "pin"], cwd=root, check=True)
+            sha = worker.source_sha(root)
+            self.assertEqual(worker.test(check, root, root)["status"], "FAIL")
+            fixture.write_bytes(b"PASS\r\n")
+            self.assertEqual(worker.source_sha(root), sha)
+            changed = worker.test(check, root, root)
+            self.assertEqual(changed.get("status"), "BLOCKED", changed)
+            self.assertEqual(changed.get("error_kind"), "UNREVIEWED_TEST_SOURCE", changed)
+
+    def test_crlf_changed_python_source_cannot_forge_byte_assertion(self):
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            source = ("import unittest\nfrom pathlib import Path\n"
+                      "class Probe(unittest.TestCase):\n"
+                      " def test_source_bytes(self):\n"
+                      "  self.assertIn(b'\\r\\n', Path(__file__).read_bytes())\n")
+            target = tests / "test_public_corpus_bytes.py"
+            target.write_bytes(source.encode("utf-8"))
+            (root / ".gitattributes").write_text(
+                "tests/test_public_corpus_bytes.py -text\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", ".gitattributes", "tests"], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester",
+                            "-c", "user.email=test@example.invalid", "commit",
+                            "-qm", "pin"], cwd=root, check=True)
+            sha = worker.source_sha(root)
+            self.assertEqual(worker.test(check, root, root)["status"], "FAIL")
+            target.write_bytes(source.replace("\n", "\r\n").encode("utf-8"))
+            self.assertEqual(worker.source_sha(root), sha)
+            changed = worker.test(check, root, root)
+            self.assertEqual(changed.get("status"), "BLOCKED", changed)
+            self.assertEqual(changed.get("error_kind"), "UNREVIEWED_TEST_SOURCE", changed)
+
     def test_git_linked_worktree_dotgit_metadata_is_not_reviewed_test_input(self):
         """A linked worktree uses a .git file, not a tracked source blob."""
         check = ["python", "-m", "unittest", "discover", "-s", "tests",

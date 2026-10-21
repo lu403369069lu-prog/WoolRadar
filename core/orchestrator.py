@@ -41,7 +41,8 @@ def run_all(root: Path, force: bool = False, timeout: int = 180) -> list[NodeExe
             result = NodeExecution(node, 127, '', 'PROCESS_START_FAILED')
         results.append(result)
         if result.exit_code not in (0, 2):
-            pipeline.db.record_node_run(node, 'FAILED', error_code='PROCESS_FAILED', detail=result.stderr[:1000])
-            pipeline.notifications.record_health(node, 'FAILED', 'PROCESS_FAILED')
+            with pipeline.db.candidate_transaction():
+                pipeline.db.record_node_run(node, 'FAILED', error_code='PROCESS_FAILED', detail=result.stderr[:1000])
+                pipeline.notifications.record_health(node, 'FAILED', 'PROCESS_FAILED')
             pipeline.notifications.flush(pipeline.notification_policy(), local_dir=root / 'reports' / 'notifications')
     return results

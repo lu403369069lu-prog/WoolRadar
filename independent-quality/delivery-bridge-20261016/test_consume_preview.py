@@ -28,6 +28,13 @@ def check(p, digest=None, now=NOW):
 
 
 class PreviewGuard(unittest.TestCase):
+    def test_plural_credential_containers_rejected_even_with_valid_digest(self):
+        for path in ('/api/tokens/PRIVATE_CANARY', '/accounts/PRIVATE_CANARY',
+                     '/sessions/PRIVATE_CANARY', '/credentials/PRIVATE_CANARY',
+                     '/users/PRIVATE_CANARY', '/api-keys/PRIVATE_CANARY'):
+            with self.subTest(path=path), self.assertRaises(UnsafePreview):
+                check(payload(dict(ROW, public_url='https://example.org' + path)))
+
     def test_rejects_invisible_bidirectional_title_even_with_approved_digest(self):
         for marker in ('\u202e', '\u2066', '\u200b', '\u0085', '\u2028'):
             with self.subTest(marker=repr(marker)):

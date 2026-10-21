@@ -71,6 +71,19 @@ class Contract(unittest.TestCase):
             self.assertIsNone(public_url(url),url)
         self.assertEqual(self.preview([row(primary_url='https://example.org/checkout')])['count']['exported_events'],0)
 
+    def test_plural_credential_containers_never_export_raw_identity(self):
+        for path in ('/api/tokens/PRIVATE_CANARY', '/accounts/PRIVATE_CANARY',
+                     '/sessions/PRIVATE_CANARY', '/credentials/PRIVATE_CANARY',
+                     '/users/PRIVATE_CANARY', '/api-keys/PRIVATE_CANARY'):
+            with self.subTest(path=path):
+                url = 'https://example.org' + path
+                self.assertIsNone(public_url(url))
+                exported = self.preview([row(primary_url=url)])
+                self.assertEqual(exported['events'], [])
+                self.assertNotIn('PRIVATE_CANARY', json.dumps(exported))
+        self.assertEqual(public_url('https://example.org/offers/free-plan'),
+                         'https://example.org/offers/free-plan')
+
     def test_titles_secrets_denied(self):
         for title in ['Reach bob@example.org today', 'my token secret', 'credit 1234567890123456', '123456789012345678']:
             self.assertIsNone(public_title(title))

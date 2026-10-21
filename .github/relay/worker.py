@@ -9,6 +9,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+import tempfile
 from checkpoint_store import save, persist_lock, recover_history, verify_replay
 
 def load(path):
@@ -232,7 +233,36 @@ def parse_test_summary(output, exit_code):
             "skipped": skipped, "todo": todo, "cancelled": cancelled}
 
 
-def test(argv, cwd, src):
+def pinned_python_snapshot(src, target):
+    """Materialize exactly HEAD into an isolated checkout, with no source writes.
+
+    Sharing immutable Git objects through `alternates` avoids `git clone`
+    transport helpers (which may be unavailable in a restricted runner), and
+    does not share the mutable source checkout or its index.
+    """
+    pinned = source_sha(src)
+    objects = subprocess.run(
+        ["git", "-C", str(src), "rev-parse", "--path-format=absolute",
+         "--git-path", "objects"], capture_output=True, text=True, timeout=10,
+        check=True).stdout.strip()
+    if not objects or not Path(objects).is_dir():
+        raise ValueError("source object directory not available")
+    target.mkdir()
+    subprocess.run(["git", "init", "-q", str(target)],
+                   capture_output=True, check=True, timeout=20)
+    # Git expects UTF-8 paths in the alternates file. ASCII corrupts Windows
+    # checkout roots containing non-ASCII directory names.
+    info = target / ".git" / "objects" / "info" / "alternates"
+    info.write_text(str(Path(objects).resolve()).replace("\\", "/") + "\n",
+                    encoding="utf-8", newline="\n")
+    subprocess.run(["git", "-C", str(target), "-c", "core.autocrlf=false",
+                    "checkout", "--detach", "--quiet", pinned],
+                   capture_output=True, check=True, timeout=90)
+    if source_sha(target) != pinned:
+        raise ValueError("snapshot source SHA mismatch")
+
+
+def test(argv, cwd, src, *, _pinned_snapshot=False):
     paths = [argv[5]] if argv[:5] == ["python", "-m", "unittest", "discover", "-s"] else [a for a in argv if a.endswith((".test.ts", ".test.mjs"))]
     if any(not (cwd / a).resolve().is_relative_to(src) for a in paths):
         raise ValueError("test path escapes candidate")
@@ -240,6 +270,25 @@ def test(argv, cwd, src):
         verify_reviewed_test_files(argv, cwd, src)
     except (ValueError, OSError, subprocess.SubprocessError):
         return {"status": "BLOCKED", "error_kind": "UNREVIEWED_TEST_SOURCE"}
+    if argv[0] == "python" and not _pinned_snapshot:
+        # A mutable shared checkout can be changed only while unittest runs
+        # and restored before the post-run verifier. Run against an independent
+        # HEAD checkout so even a transient original-tree edit cannot forge PASS.
+        # Node dependency provisioning is separate and retains its old path.
+        try:
+            with tempfile.TemporaryDirectory(prefix="relay-pinned-tests-") as tmp:
+                snapshot = Path(tmp) / "source"
+                pinned_python_snapshot(src, snapshot)
+                shadow_cwd = snapshot / cwd.resolve().relative_to(src.resolve())
+                if not shadow_cwd.is_dir():
+                    raise ValueError("pinned snapshot lacks discovery root")
+                result = test(argv, shadow_cwd, snapshot, _pinned_snapshot=True)
+            # A visible mutation of the source is still a hard block. Briefly
+            # restored bytes will not affect the already-isolated test result.
+            verify_reviewed_test_files(argv, cwd, src)
+            return result
+        except (ValueError, OSError, subprocess.SubprocessError):
+            return {"status": "BLOCKED", "error_kind": "REVIEWED_SNAPSHOT_UNAVAILABLE"}
     # -I disables user site and usercustomize.py, and ignores PYTHON* startup
     # variables. -S also disables active-venv/system site initialization and
     # executable .pth hooks, which could otherwise change unittest assertions

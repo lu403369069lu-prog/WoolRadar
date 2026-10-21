@@ -1,5 +1,19 @@
 # WoolRadar public-corpus selection for an independently reviewed *future* sample
 
+## 2026-10-21 producer identity proof requirement
+
+The sampler now accepts a source row into a **future blind review candidate**
+only when the producer explicitly emits `url_identity_preserved: true`.
+Legacy rows without the field are excluded under `upstream_url_identity_lost`,
+even when `url_sanitized` is false. That old flag alone does not prove that
+query parameters or SPA route identity survived an earlier producer.
+This is a conservative sampling rule, not a finding that legacy items are
+ineligible offers. Keep already-labeled 2026-10-16/17 batches as development
+evidence; run a new source collection and independent labeling to claim a fresh
+business-quality denominator. Current `core/public_corpus.py` emits the
+explicit flag and preserves known functional selectors while redacting risky
+ones; private titles/snippets still require manual review before publication.
+
 **Base**: Main integration PR #23 exact SHA `e3b31af746776bf976aba7418fce06ff2ae2ccde`.
 **Scope**: offline isolated review helper only; no change to production sampler,
 sources, filters, scheduling, SQLite, GitHub uploads or user accounts.

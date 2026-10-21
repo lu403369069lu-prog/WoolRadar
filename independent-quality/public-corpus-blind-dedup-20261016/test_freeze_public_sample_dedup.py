@@ -9,7 +9,8 @@ from freeze_public_sample_dedup import freeze_public_sources, canonical_public_u
 
 D='a'*64
 def row(url, **kwargs):
-    return {'url':url,'title':'Public project','summary':'Public summary','accepted':True,**kwargs}
+    return {'url':url,'title':'Public project','summary':'Public summary','accepted':True,
+            'url_identity_preserved':True,**kwargs}
 def sample(name, urls):
     return ({'schema_version':1,'public_only':True,'source_id':name,'rows':[row(u) for u in urls]},D)
 
@@ -64,11 +65,22 @@ class CleanSample(unittest.TestCase):
                 self.assertEqual(result['sources'][0]['invalid_rows'],1)
     def test_upstream_query_loss_makes_blind_identity_unverified(self):
         a=sample('alpha',['https://example.org/claim'])
+        a[0]['rows'][0].pop('url_identity_preserved')
         a[0]['rows'][0]['url_sanitized']=True
         result=freeze_public_sources([a])
         self.assertEqual(result['rows'],[])
         self.assertEqual(result['sources'][0]['upstream_url_identity_lost'],1)
         self.assertFalse(result['upstream_identity_fully_preserved'])
+    def test_legacy_unmarked_identity_cannot_enter_fresh_blind_denominator(self):
+        for legacy in ({}, {'url_sanitized':False}, {'url_sanitized':True}):
+            with self.subTest(legacy=legacy):
+                a=sample('alpha',['https://example.org/claim'])
+                a[0]['rows'][0].pop('url_identity_preserved')
+                a[0]['rows'][0].update(legacy)
+                result=freeze_public_sources([a])
+                self.assertEqual(result['rows'],[])
+                self.assertEqual(result['sources'][0]['upstream_url_identity_lost'],1)
+                self.assertFalse(result['upstream_identity_fully_preserved'])
     def test_duplicate_cross_sources_and_order_independent(self):
         a=sample('alpha',['https://example.org/campaign'])
         b=sample('beta',['https://example.org/campaign','https://example.org/new'])

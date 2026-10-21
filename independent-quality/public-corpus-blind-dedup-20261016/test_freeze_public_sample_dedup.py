@@ -49,6 +49,16 @@ class CleanSample(unittest.TestCase):
         for key in ('token','secret','auth','code','signature','sig','sessionid','api-key'):
             with self.subTest(key=key):
                 self.assertIsNone(canonical_public_url('https://example.org/join?'+key+'=PRIVATE_CANARY'))
+    def test_nested_encoded_query_credentials_are_dropped(self):
+        for query in ('%2574oken=PRIVATE_CANARY',
+                      '%252574oken=PRIVATE_CANARY',
+                      'access%255ftoken=PRIVATE_CANARY',
+                      'token%3DPRIVATE_CANARY',
+                      'batch%26token=PRIVATE_CANARY'):
+            with self.subTest(query=query):
+                self.assertIsNone(canonical_public_url('https://example.org/join?'+query))
+        self.assertEqual(canonical_public_url('https://example.org/claim?batch=october'),
+                         'https://example.org/claim?batch=october')
     def test_contact_identifiers_are_not_preserved_in_public_review(self):
         for key in ('email','phone'):
             with self.subTest(key=key):

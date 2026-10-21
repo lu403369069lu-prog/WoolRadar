@@ -120,12 +120,11 @@ def freeze_public_sources(sources: list[tuple[dict, str]], limit: int = 8,
         candidates = []
         duplicate_within = duplicate_between = invalid = upstream_identity_loss = excluded_prior = 0
         for row in rows:
-            # core/public_corpus.py schema v1 removed ALL query/fragment
-            # bytes before sampling. No downstream algorithm can restore a
-            # lost batch/offer identity. Exclude these rows from any new blind
-            # corpus rather than counting potentially merged offers as unique.
-            if (row.get('url_identity_preserved') is False
-                    or (row.get('url_sanitized') is True and row.get('url_identity_preserved') is not True)):
+            # Old schema-v1 producers did not attest to URL identity. Even
+            # url_sanitized=False cannot prove that query or SPA route identity
+            # was preserved upstream. A fresh blind denominator requires an
+            # explicit positive claim from the current public-corpus producer.
+            if row.get('url_identity_preserved') is not True:
                 upstream_identity_loss += 1
                 continue
             url = canonical_public_url(row.get('url'))

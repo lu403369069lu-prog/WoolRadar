@@ -35,6 +35,33 @@ def _sensitive_public_route(route: str) -> bool:
     return '%' in decoded
 
 
+def _safe_public_query_parts(query: str) -> list[str] | None:
+    """Validate query keys, including nested encodings, for URL and SPA fragments."""
+    retained = []
+    for part in query.split('&'):
+        key = part.split('=', 1)[0]
+        for _ in range(5):
+            decoded = unquote_plus(key)
+            if decoded == key:
+                break
+            key = decoded
+        if '%' in key or any(delimiter in key for delimiter in '=&;#?'):
+            return None
+        key = key.lower()
+        if key in {'access_token', 'refresh_token', 'id_token', 'api_key',
+                   'apikey', 'client_secret', 'password', 'session',
+                   'session_id', 'authorization', 'oauth_token', 'jwt',
+                   'token', 'secret', 'auth', 'code', 'signature', 'sig',
+                   'sessionid', 'api-key', 'email', 'phone'}:
+            return None
+        if key in {'utm_source', 'utm_medium', 'utm_term', 'utm_content',
+                   'fbclid', 'gclid', 'msclkid', 'mc_cid', 'mc_eid'}:
+            continue
+        if part:
+            retained.append(part)
+    return retained
+
+
 def canonical_public_url(raw: object) -> str | None:
     if not isinstance(raw, str) or len(raw) > 2048 or not raw:
         return None
@@ -54,30 +81,14 @@ def canonical_public_url(raw: object) -> str | None:
         if (_sensitive_public_route(p.path)
                 or _sensitive_public_route(p.fragment.partition('?')[0])):
             return None
-        retained = []
-        for part in p.query.split('&'):
-            # Repeatedly decode only the query key: a nested-encoded secret
-            # key or delimiter must never reach an output review URL.
-            key = part.split('=', 1)[0]
-            for _ in range(5):
-                decoded = unquote_plus(key)
-                if decoded == key:
-                    break
-                key = decoded
-            if '%' in key or any(delimiter in key for delimiter in '=&;#?'):
-                return None
-            key = key.lower()
-            if key in {'access_token', 'refresh_token', 'id_token', 'api_key',
-                       'apikey', 'client_secret', 'password', 'session',
-                       'session_id', 'authorization', 'oauth_token', 'jwt',
-                       'token', 'secret', 'auth', 'code', 'signature', 'sig',
-                       'sessionid', 'api-key', 'email', 'phone'}:
-                return None
-            if key in {'utm_source', 'utm_medium', 'utm_term', 'utm_content',
-                       'fbclid', 'gclid', 'msclkid', 'mc_cid', 'mc_eid'}:
-                continue
-            if part:
-                retained.append(part)
+        # The SPA fragment is a second independent query namespace. Validate
+        # its keys too; previously nested-encoded credentials survived here.
+        retained = _safe_public_query_parts(p.query)
+        if retained is None:
+            return None
+        _, separator, fragment_query = p.fragment.partition('?')
+        if separator and _safe_public_query_parts(fragment_query) is None:
+            return None
         fragment = p.fragment if p.fragment.startswith(('/', '!/')) else ''
         if re.search(r'(?i)(?:access_token|refresh_token|id_token|password|session|api_key|token|secret|auth|code|signature|sig|email|phone)=',
                      fragment):

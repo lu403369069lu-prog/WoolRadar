@@ -9,6 +9,7 @@ import unittest
 import subprocess
 import sys
 import os
+import venv
 from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
@@ -378,7 +379,9 @@ class RelaySafetyTests(unittest.TestCase):
         check = ["python", "-m", "unittest", "discover", "-s", "tests",
                  "-p", "test_public_corpus*.py"]
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            sandbox = Path(tmp)
+            root = sandbox / "source"
+            root.mkdir()
             tests = root / "tests"
             tests.mkdir()
             (tests / "test_public_corpus_env.py").write_text(
@@ -390,7 +393,7 @@ class RelaySafetyTests(unittest.TestCase):
                             "commit", "-qm", "pin"], cwd=root, check=True)
             baseline = worker.test(check, root, root)
             self.assertEqual(baseline["status"], "FAIL", baseline)
-            external = root / "external-site"
+            external = sandbox / "external-site"
             external.mkdir()
             (external / "sitecustomize.py").write_text(
                 "import unittest\nunittest.TestCase.assertTrue = lambda self, expr, msg=None: None\n",
@@ -404,7 +407,9 @@ class RelaySafetyTests(unittest.TestCase):
         check = ["python", "-m", "unittest", "discover", "-s", "tests",
                  "-p", "test_public_corpus*.py"]
         with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
+            sandbox = Path(tmp)
+            root = sandbox / "source"
+            root.mkdir()
             tests = root / "tests"
             tests.mkdir()
             (tests / "test_public_corpus_user_site.py").write_text(
@@ -417,7 +422,7 @@ class RelaySafetyTests(unittest.TestCase):
                             "commit", "-qm", "pin"], cwd=root, check=True)
             baseline = worker.test(check, root, root)
             self.assertEqual(baseline["status"], "FAIL", baseline)
-            external = root / "external-user-site"
+            external = sandbox / "external-user-site"
             env = {**os.environ, "PYTHONUSERBASE": str(external)}
             user_site = subprocess.run(
                 [sys.executable, "-X", "utf8", "-c",
@@ -432,6 +437,68 @@ class RelaySafetyTests(unittest.TestCase):
             with patch.dict(os.environ, {"PYTHONUSERBASE": str(external)}):
                 result = worker.test(check, root, root)
             self.assertEqual(result["status"], "FAIL", result)
+
+    def test_active_virtualenv_pth_cannot_forge_failing_reviewed_test(self):
+        """Interpreter startup hooks outside the checkout must not forge PASS."""
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            sandbox = Path(tmp)
+            root = sandbox / "source"
+            tests = root / "tests"
+            tests.mkdir(parents=True)
+            (tests / "test_public_corpus_pth.py").write_text(
+                "import unittest\nclass Probe(unittest.TestCase):\n"
+                " def test_truth(self): self.assertTrue(False)\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_pth.py"],
+                           cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            environment = sandbox / "active-venv"
+            venv.EnvBuilder(with_pip=False).create(environment)
+            executable = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+            site_run = subprocess.run(
+                [str(executable), "-I", "-B", "-X", "utf8", "-c",
+                 "import site;print(site.getsitepackages()[0])"],
+                capture_output=True, text=True, encoding="utf-8", check=True)
+            site_dir = Path(site_run.stdout.strip())
+            self.assertTrue(site_dir.is_dir())
+            with patch.object(worker.sys, "executable", str(executable)):
+                baseline = worker.test(check, root, root)
+                self.assertEqual(baseline["status"], "FAIL", baseline)
+                (site_dir / "forge.pth").write_text(
+                    "import unittest; unittest.TestCase.assertTrue = lambda self, value, msg=None: None\n",
+                    encoding="utf-8")
+                forged = worker.test(check, root, root)
+            self.assertEqual(forged["status"], "FAIL", forged)
+            self.assertEqual(subprocess.run(["git", "status", "--porcelain"], cwd=root,
+                                            capture_output=True, check=True).stdout, b"")
+
+    def test_nonidentifier_dynamic_import_helper_is_authenticated(self):
+        """Importlib loads hyphenated module paths that source guards must pin."""
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            helper = tests / "nonidentifier-dir" / "helper.py"
+            helper.parent.mkdir(parents=True)
+            helper.write_text("value = 17\n", encoding="utf-8")
+            (tests / "test_public_corpus_dynamic.py").write_text(
+                "import importlib,unittest\nclass Probe(unittest.TestCase):\n"
+                " def test_truth(self): self.assertEqual("
+                "importlib.import_module('nonidentifier-dir.helper').value,18)\n",
+                encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests"], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            self.assertEqual(worker.test(check, root, root)["status"], "FAIL")
+            helper.write_text("value = 18\n", encoding="utf-8")
+            result = worker.test(check, root, root)
+            self.assertEqual(result.get("status"), "BLOCKED", result)
+            self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE", result)
 
     def test_real_integration_report_producer_binds_checked_out_git_sha(self):
         # Execute the original producer using the real checkout Git identity,

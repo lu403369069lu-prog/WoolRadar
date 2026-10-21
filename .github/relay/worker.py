@@ -85,7 +85,9 @@ def verify_reviewed_test_files(argv, cwd, src):
         # The isolated child explicitly adds the checkout working directory,
         # and unittest also adds the discovery directory. Verify importable
         # code from both locations, including root-level application packages.
-        # Do not walk Git metadata or names that cannot be Python packages.
+        # Do not authenticate Git metadata as Python modules. Importlib can
+        # dynamically import hyphenated path components, so identifier-only
+        # directory selection would miss executable helper bytes.
         # Fail closed on caches: -B prevents the child creating new ones.
         # No checkout content is removed as part of verification.
         importable = {".py", ".pyc", ".pyo", ".pyd", ".so", ".zip",
@@ -107,9 +109,8 @@ def verify_reviewed_test_files(argv, cwd, src):
         # Authenticate helpers relative to both actual import roots.
         import_roots = (import_root, root)
         def importable_directory(path):
-            return any(path.is_relative_to(base) and
-                       all(part.isidentifier() for part in path.relative_to(base).parts)
-                       for base in import_roots)
+            return (any(path.is_relative_to(base) for base in import_roots)
+                    and not path.is_relative_to(src / ".git"))
 
         def importable_path(path):
             return (importable_directory(path.parent)
@@ -235,20 +236,22 @@ def test(argv, cwd, src):
     except (ValueError, OSError, subprocess.SubprocessError):
         return {"status": "BLOCKED", "error_kind": "UNREVIEWED_TEST_SOURCE"}
     # -I disables user site and usercustomize.py, and ignores PYTHON* startup
-    # variables, including PYTHONDONTWRITEBYTECODE. Explicit -B prevents the
-    # child from generating its own unreviewed caches during validation.
+    # variables. -S also disables active-venv/system site initialization and
+    # executable .pth hooks, which could otherwise change unittest assertions
+    # before the reviewed test starts. Explicit -B prevents generated caches.
     # Clearing PYTHONPATH alone is insufficient: PYTHONUSERBASE can
     # load a separate usercustomize.py that changes unittest assertions.
     # Isolated mode ignores PYTHONIOENCODING too; force UTF-8 explicitly so
     # Windows non-ASCII tracebacks do not turn normal FAIL into decode blocks.
     if argv[0] == "python":
         # Import stdlib unittest before adding the verified project root.
-        # -I excludes external PYTHONPATH and usercustomize; passing the
-        # checkout as a positional arg avoids inherited interpreter startup.
+        # -I excludes external PYTHONPATH; -S prevents trusted-interpreter
+        # site-packages .pth hooks from running. The checkout is a positional
+        # arg so it is only added after importing the standard library.
         bootstrap = ("import sys,unittest;"
                      "sys.path.insert(0,sys.argv.pop(1));"
                      "unittest.main(module=None)")
-        cmd = ([sys.executable, "-I", "-B", "-X", "utf8", "-c",
+        cmd = ([sys.executable, "-I", "-S", "-B", "-X", "utf8", "-c",
                 bootstrap, str(Path(cwd).resolve()), *argv[3:]])
     else:
         cmd = argv

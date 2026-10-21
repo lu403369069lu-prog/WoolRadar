@@ -538,6 +538,43 @@ class RelaySafetyTests(unittest.TestCase):
             self.assertEqual(result.get("status"), "BLOCKED", result)
             self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE", result)
 
+    def test_untracked_zip_import_archive_with_any_extension_is_blocked(self):
+        """A zipimport archive can execute helper.py with any filename suffix."""
+        import zipfile
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_public_corpus_archive.py").write_text(
+                "import sys,unittest\nfrom pathlib import Path\n"
+                "archive=next(Path(__file__).parent.glob('plugin.*'),None)\n"
+                "if archive: sys.path.insert(0,str(archive))\n"
+                "import helper\n"
+                "class Probe(unittest.TestCase):\n"
+                " def test_helper(self): self.assertEqual(helper.value,17)\n",
+                encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_archive.py"],
+                           cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester",
+                            "-c", "user.email=test@example.invalid", "commit",
+                            "-qm", "pin test"], cwd=root, check=True)
+            pinned = worker.source_sha(root)
+            baseline = worker.test(check, root, root)
+            self.assertEqual(baseline["status"], "FAIL", baseline)
+            for extension in ("pyz", "payload"):
+                with self.subTest(extension=extension):
+                    archive = tests / ("plugin." + extension)
+                    with zipfile.ZipFile(archive, "w") as z:
+                        z.writestr("helper.py", "value = 17\n")
+                    attacked = worker.test(check, root, root)
+                    self.assertEqual(attacked.get("status"), "BLOCKED", attacked)
+                    self.assertEqual(attacked.get("error_kind"), "UNREVIEWED_TEST_SOURCE", attacked)
+                    self.assertEqual(worker.source_sha(root), pinned)
+                    archive.unlink()
+
     def test_real_integration_report_producer_binds_checked_out_git_sha(self):
         # Execute the original producer using the real checkout Git identity,
         # but substitute the external full test process with a synthetic TAP

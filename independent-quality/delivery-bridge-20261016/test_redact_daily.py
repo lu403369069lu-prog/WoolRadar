@@ -84,6 +84,18 @@ class Contract(unittest.TestCase):
         self.assertEqual(public_url('https://example.org/offers/free-plan'),
                          'https://example.org/offers/free-plan')
 
+    def test_obfuscated_numeric_ipv4_hosts_never_leave_local_preview(self):
+        # WHATWG-style legacy IPv4 syntaxes may resolve to loopback even though
+        # ipaddress.ip_address rejects them as non-canonical IPv4 literals.
+        for host in ('127.1', '127.0.1', '0177.0.0.1',
+                     '0x7f.0.0.1', '1.2.3.256'):
+            with self.subTest(host=host):
+                url = f'https://{host}/free-offer'
+                self.assertIsNone(public_url(url))
+                self.assertEqual(self.preview([row(primary_url=url)])['events'], [])
+        self.assertEqual(public_url('https://123.example.org/free-offer'),
+                         'https://123.example.org/free-offer')
+
     def test_titles_secrets_denied(self):
         for title in ['Reach bob@example.org today', 'my token secret', 'credit 1234567890123456', '123456789012345678']:
             self.assertIsNone(public_title(title))

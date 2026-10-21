@@ -179,9 +179,9 @@ class NotificationTests(unittest.TestCase):
             event = db.upsert_candidate(Candidate('n', 'rss', 'Free API', 'https://vendor.example/api')).event_id
             queue = NotificationQueue(db)
             queue.enqueue(event, '', 'telegram', 'notice')
-            queue.flush({'telegram_send_enabled': True}, sender=lambda text: 'FAILED', retry_seconds=0)
+            queue.flush({'telegram_send_enabled': True, 'telegram_delivery_mode': 'at_least_once'}, sender=lambda text: 'FAILED', retry_seconds=0)
             self.assertEqual(len(queue.pending()), 1)
-            queue.flush({'telegram_send_enabled': True}, sender=lambda text: 'SENT', retry_seconds=0)
+            queue.flush({'telegram_send_enabled': True, 'telegram_delivery_mode': 'at_least_once'}, sender=lambda text: 'SENT', retry_seconds=0)
             self.assertEqual(len(queue.pending()), 0)
             self.assertFalse(queue.enqueue(event, '', 'telegram', 'duplicate'))
 
@@ -193,7 +193,7 @@ class NotificationTests(unittest.TestCase):
             queue.enqueue(event, '', 'telegram', 'notice')
             def sender(text):
                 raise RuntimeError('https://api.telegram.org/botSECRET/sendMessage')
-            queue.flush({'telegram_send_enabled': True}, sender=sender)
+            queue.flush({'telegram_send_enabled': True, 'telegram_delivery_mode': 'at_least_once'}, sender=sender)
             with db.connect() as conn:
                 record = dict(conn.execute('SELECT * FROM notifications').fetchone())
             self.assertNotIn('SECRET', json.dumps(record))
@@ -218,5 +218,5 @@ class NotificationTests(unittest.TestCase):
             queue = NotificationQueue(db)
             queue.enqueue(event, '', 'telegram-verified', 'old current-open claim')
             calls = []
-            queue.flush({'telegram_send_enabled': True}, sender=lambda text: calls.append(text))
+            queue.flush({'telegram_send_enabled': True, 'telegram_delivery_mode': 'at_least_once'}, sender=lambda text: calls.append(text))
             self.assertEqual(calls, [])

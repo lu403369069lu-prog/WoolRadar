@@ -23,7 +23,7 @@ class UnknownDeliveryTests(unittest.TestCase):
             q = NotificationQueue(db)
             self.assertTrue(q.enqueue(event, "", "telegram", "synthetic body"))
             with patch("core.notify.time.time", return_value=20000.0):
-                report = q.flush({"telegram_send_enabled": True},
+                report = q.flush({"telegram_send_enabled": True, "telegram_delivery_mode": "at_least_once"},
                     sender=lambda _text: (_ for _ in ()).throw(
                         TimeoutError("synthetic_time_out__never_store_me")),
                     retry_seconds=60)
@@ -41,11 +41,11 @@ class UnknownDeliveryTests(unittest.TestCase):
             self.assertEqual(len(restarted.pending()), 1)
             sends = []
             with patch("core.notify.time.time", return_value=20059.0):
-                restarted.flush({"telegram_send_enabled": True},
+                restarted.flush({"telegram_send_enabled": True, "telegram_delivery_mode": "at_least_once"},
                     sender=lambda message: sends.append(message) or "SENT")
             self.assertEqual(sends, [])
             with patch("core.notify.time.time", return_value=20061.0):
-                result = restarted.flush({"telegram_send_enabled": True},
+                result = restarted.flush({"telegram_send_enabled": True, "telegram_delivery_mode": "at_least_once"},
                     sender=lambda message: sends.append(message) or "SENT")
             self.assertEqual(sends, ["synthetic body"])
             self.assertEqual(result["sent"], 1)

@@ -68,16 +68,74 @@ def safe(argv):
     return False
 
 def verify_reviewed_test_files(argv, cwd, src):
-    """Require every discovered test to have its exact bytes at source HEAD.
+    """Require discovered Python tests and adjacent helpers to match source HEAD.
 
-    A pinned HEAD alone cannot authenticate newly added or modified tests.
+    An index-based diff trusts assume-unchanged/skip-worktree flags. Compare
+    the actual on-disk bytes to committed blobs instead. Normalize only text
+    line endings, since Windows checkouts may legitimately turn LF into CRLF.
+    Binary fixtures must match the exact committed bytes.
     """
     src = Path(src).resolve()
     if argv[:5] == ["python", "-m", "unittest", "discover", "-s"]:
         root = (cwd / argv[5]).resolve()
         if not root.is_dir() or not root.is_relative_to(src):
             raise ValueError("invalid discovery directory")
-        files = [p for p in root.rglob(argv[7]) if p.is_file()]
+        selected = [p for p in root.rglob(argv[7]) if p.is_file() or p.is_symlink()]
+        if not selected:
+            raise ValueError("no reviewed test files selected")
+        # The isolated child explicitly adds the checkout working directory,
+        # and unittest also adds the discovery directory. Verify importable
+        # code from both locations, including root-level application packages.
+        # Do not authenticate Git metadata as Python modules. Importlib can
+        # dynamically import hyphenated path components, so identifier-only
+        # directory selection would miss executable helper bytes.
+        # Fail closed on caches: -B prevents the child creating new ones.
+        # No checkout content is removed as part of verification.
+        importable = {".py", ".pyc", ".pyo", ".pyd", ".so", ".zip", ".pyz",
+                      ".egg", ".whl", ".pth", ".dll"}
+        # Tests also consume data fixtures. Pin their actual bytes to HEAD;
+        # otherwise a dirty, untracked or substituted JSON/CSV fixture can
+        # turn a genuinely failing reviewed test into a false formal PASS.
+        fixtures = {".json", ".jsonl", ".ndjson", ".yaml", ".yml",
+                    ".toml", ".ini", ".cfg", ".csv", ".tsv", ".txt",
+                    ".md", ".xml", ".sql", ".db", ".sqlite", ".sqlite3",
+                    ".parquet"}
+        import_root = Path(cwd).resolve()
+        if not import_root.is_relative_to(src):
+            raise ValueError("import root escaped pinned checkout")
+        directory = import_root.relative_to(src).as_posix()
+        tree_args = ["git", "-C", str(src), "ls-tree", "-r", "-z",
+                     "--name-only", "HEAD"]
+        if directory != ".":
+            tree_args.extend(["--", directory])
+        tree = subprocess.run(tree_args, capture_output=True, timeout=10,
+                              check=False)
+        if tree.returncode != 0:
+            raise ValueError("cannot read reviewed source tree")
+        # unittest adds the discovery directory to sys.path even when its
+        # ancestors are not valid package names (e.g. independent-quality/).
+        # Authenticate helpers relative to both actual import roots.
+        import_roots = (import_root, root)
+        def importable_directory(path):
+            return (any(path.is_relative_to(base) for base in import_roots)
+                    and not path.is_relative_to(src / ".git"))
+
+        def importable_path(path):
+            return (importable_directory(path.parent)
+                    and path.suffix.lower() in importable | fixtures)
+
+        tracked = [src / name.decode("utf-8") for name in tree.stdout.split(b"\x00")
+                   if name and importable_path(src / name.decode("utf-8"))]
+        children = list(import_root.rglob("*"))
+        # An importable directory symlink can escape the reviewed checkout.
+        if any(p.is_symlink() and p.is_dir() and
+               importable_directory(p)
+               for p in children):
+            raise ValueError("symlink directory in formal import root")
+        files = list(dict.fromkeys([
+            *selected,
+            *(p for p in children if importable_path(p)
+              and (p.is_file() or p.is_symlink())), *tracked]))
     else:
         files = [cwd / path for path in argv[4:]]
     if not files:
@@ -94,13 +152,24 @@ def verify_reviewed_test_files(argv, cwd, src):
             capture_output=True, text=True, timeout=10, check=False)
         if committed.returncode != 0:
             raise ValueError("untracked test in formal discovery")
-        # Git's diff applies the repository's text/eol clean filters, unlike
-        # a raw worktree byte hash (Windows checkout may contain CRLF).
-        delta = subprocess.run(
-            ["git", "-C", str(src), "diff", "--quiet", "HEAD", "--", relative],
+        original = subprocess.run(
+            ["git", "-C", str(src), "cat-file", "blob", "HEAD:" + relative],
             capture_output=True, timeout=10, check=False)
-        if delta.returncode != 0:
-            raise ValueError("modified test bytes differ from pinned source HEAD")
+        if original.returncode != 0:
+            raise ValueError("cannot read reviewed test or helper blob")
+        # Python treats CRLF/LF as equivalent in source. Some checked data
+        # formats have the same text-line semantics on Windows; binary fixture
+        # contents do not. Never normalize bytes for an unknown extension.
+        text_suffixes = {".py", ".json", ".jsonl", ".ndjson", ".yaml", ".yml",
+                         ".toml", ".ini", ".cfg", ".csv", ".tsv", ".txt",
+                         ".md", ".xml", ".sql", ".pth"}
+        actual_bytes = path.read_bytes()
+        committed_bytes = original.stdout
+        if path.suffix.lower() in text_suffixes:
+            actual_bytes = actual_bytes.replace(b"\r\n", b"\n")
+            committed_bytes = committed_bytes.replace(b"\r\n", b"\n")
+        if actual_bytes != committed_bytes:
+            raise ValueError("test or helper bytes differ from pinned source HEAD")
 
 
 def choose_recheck(state, families, regular_ids):
@@ -182,13 +251,37 @@ def test(argv, cwd, src):
         verify_reviewed_test_files(argv, cwd, src)
     except (ValueError, OSError, subprocess.SubprocessError):
         return {"status": "BLOCKED", "error_kind": "UNREVIEWED_TEST_SOURCE"}
-    cmd = [sys.executable] + argv[1:] if argv[0] == "python" else argv
+    # -I disables user site and usercustomize.py, and ignores PYTHON* startup
+    # variables. -S also disables active-venv/system site initialization and
+    # executable .pth hooks, which could otherwise change unittest assertions
+    # before the reviewed test starts. Explicit -B prevents generated caches.
+    # Clearing PYTHONPATH alone is insufficient: PYTHONUSERBASE can
+    # load a separate usercustomize.py that changes unittest assertions.
+    # Isolated mode ignores PYTHONIOENCODING too; force UTF-8 explicitly so
+    # Windows non-ASCII tracebacks do not turn normal FAIL into decode blocks.
+    if argv[0] == "python":
+        # Import stdlib unittest before adding the verified project root.
+        # -I excludes external PYTHONPATH; -S prevents trusted-interpreter
+        # site-packages .pth hooks from running. The checkout is a positional
+        # arg so it is only added after importing the standard library.
+        bootstrap = ("import sys,unittest;"
+                     "sys.path.insert(0,sys.argv.pop(1));"
+                     "unittest.main(module=None)")
+        cmd = ([sys.executable, "-I", "-S", "-B", "-X", "utf8", "-c",
+                bootstrap, str(Path(cwd).resolve()), *argv[3:]])
+    else:
+        cmd = argv
     env = dict(os.environ)
     for k in ("GITHUB_TOKEN", "GH_TOKEN", "COPILOT_GITHUB_TOKEN", "OPENAI_API_KEY"):
         env.pop(k, None)
     env["PYTHONDONTWRITEBYTECODE"] = "1"
     # Preserve the reviewed child-output contract: no lossy decoding of evidence.
     if argv[0] == "python":
+        # The formal test command must not inherit a caller-controlled import
+        # path: PYTHONPATH can load an external sitecustomize.py that forges PASS.
+        # PYTHONHOME can similarly redirect interpreter startup libraries.
+        for key in ("PYTHONPATH", "PYTHONHOME"):
+            env.pop(key, None)
         env["PYTHONIOENCODING"] = "utf-8"
     try:
         proc = subprocess.run(cmd, cwd=cwd, stdout=subprocess.PIPE,

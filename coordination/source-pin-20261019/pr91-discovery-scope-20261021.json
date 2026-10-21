@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-21",
+  "executor": "codex-coordinator",
+  "environment": {
+    "os": "Windows",
+    "python": "3.14.5"
+  },
+  "tested_code_sha": "6db4829a74be44e29280d0cfe41de757d9db94c8",
+  "tested_git_tree": "5760c400703fee1a6195696157427919dd31b9c0",
+  "base_sha": "4357ffcc3348e59cebdeb10202e9ad2d52401203",
+  "blobs": {
+    "worker.py": "233a2f4ad254df2734b160748dbac8e5d6ac5ba7",
+    "test_worker.py": "655013637e50dfb8c7daaed94134d1a1a5c4b975"
+  },
+  "result": "FIXED_SELECTED_DISCOVERY_SCOPE_PENDING_INDEPENDENT_REVIEW",
+  "review_addressed": 5586898044,
+  "change": "Unconditionally authenticate selected tests; verify helpers relative to both checkout and actual discovery import root, including tracked deletions and symlink directories.",
+  "checks": [
+    {
+      "command": "python -B -X utf8 -m unittest test_worker.RelaySafetyTests.test_hyphenated_discovery_checks_selected_tests_and_helpers -v",
+      "phase": "red",
+      "exit_code": 1,
+      "total": 1,
+      "failed_subtests_or_assertions": 3
+    },
+    {
+      "command": "python -B -X utf8 -m unittest test_worker.RelaySafetyTests.test_hyphenated_discovery_checks_selected_tests_and_helpers -v",
+      "phase": "green",
+      "exit_code": 0,
+      "total": 1,
+      "passed": 1,
+      "skipped": 0
+    },
+    {
+      "command": "python -B -X utf8 -m unittest discover -s .github/relay -p test_*.py -v",
+      "exit_code": 0,
+      "total": 60,
+      "passed": 60,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "python -B -X utf8 coordination/verify_original_suite.py",
+      "exit_code": 0,
+      "verified_files": 11
+    },
+    {
+      "command": "python -B -X utf8 -m unittest discover -s coordination -p test_*.py -v",
+      "exit_code": 0,
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0
+    },
+    {
+      "command": "python -B -X utf8 -m unittest discover -s coordination/original-tests -p test_*.py -v",
+      "phase": "restricted initial",
+      "exit_code": 1,
+      "total": 48,
+      "errors": 5,
+      "error_kind": "LOCAL_GIT_REMOTE_0"
+    },
+    {
+      "command": "python -B -X utf8 -m unittest discover -s coordination/original-tests -p test_*.py -v",
+      "phase": "permitted isolated rerun",
+      "exit_code": 0,
+      "total": 48,
+      "passed": 48,
+      "failed": 0,
+      "skipped": 0
+    }
+  ],
+  "logs": {
+    "hyphen-red.log": {
+      "sha256": "7243c999c65ee21e1f474bc7bcdb06251977fcdff53d60f2bd9521fd0f24b6cf",
+      "bytes": 4128
+    },
+    "hyphen-green.log": {
+      "sha256": "b3dfb25b6d03a3831010ca49003a0f8b9f965e0198810d3b107d8ea45b0628ec",
+      "bytes": 331
+    },
+    "relay-green.log": {
+      "sha256": "29146b47a0780659f820ea7f8e5bc021884373811cdbbeeb545c4e4bcee84ab4",
+      "bytes": 10744
+    },
+    "coordination-green.log": {
+      "sha256": "ef5d00de4a3f12b2457851c544d3c4a43219b2a665e72e3bce8fc4a6d0b4bb82",
+      "bytes": 647
+    },
+    "original-suite.log": {
+      "sha256": "38ccee62df27c5443a0262e2e00242c74309b0ed1342f0ea9e24eb44cd2b465b",
+      "bytes": 13434
+    },
+    "original-suite-permitted.log": {
+      "sha256": "29243fd21f3e8c361781639b0c54d91f43d03041a681ab94deea032639887ac1",
+      "bytes": 6429
+    }
+  },
+  "limits": [
+    "Active interpreter/site-packages .pth startup trust review5587354317 remains open.",
+    "Hosted exact-SHA CI not yet verified.",
+    "Only selected-discovery source gate defect fixed; not final business acceptance.",
+    "No merge, production mutation, paid API or device operation."
+  ]
+}

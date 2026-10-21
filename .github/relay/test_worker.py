@@ -9,6 +9,8 @@ import unittest
 import subprocess
 import sys
 import os
+import venv
+import zipfile
 from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
@@ -173,6 +175,430 @@ class RelaySafetyTests(unittest.TestCase):
             self.assertEqual(result["status"], "BLOCKED")
             self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
             self.assertTrue((tests / "test_public_corpus_injected.py").exists())
+
+    def test_modified_json_fixture_cannot_forge_pinned_pass(self):
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        self.assertTrue(worker.safe(check))
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_public_corpus_fixture.py").write_text(
+                "import json, unittest\nfrom pathlib import Path\n"
+                "class FixtureCheck(unittest.TestCase):\n"
+                " def test_valid(self):\n"
+                "  value = json.loads(Path('tests/fixture.json').read_text())\n"
+                "  self.assertTrue(value['valid'])\n", encoding="utf-8")
+            fixture = tests / "fixture.json"
+            fixture.write_text('{"valid": false}\n', encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests"], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester",
+                            "-c", "user.email=test@example.invalid", "commit",
+                            "-qm", "pin"], cwd=root, check=True)
+            pinned_sha = worker.source_sha(root)
+            self.assertEqual(worker.test(check, root, root)["status"], "FAIL")
+            fixture.write_text('{"valid": true}\n', encoding="utf-8")
+            changed = worker.test(check, root, root)
+            self.assertEqual(changed.get("status"), "BLOCKED", changed)
+            self.assertEqual(changed.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
+            self.assertEqual(worker.source_sha(root), pinned_sha)
+
+            fixture.write_text('{"valid": false}\n', encoding="utf-8")
+            rogue = tests / "unreviewed.json"
+            rogue.write_text('{"valid": true}\n', encoding="utf-8")
+            untracked = worker.test(check, root, root)
+            self.assertEqual(untracked.get("status"), "BLOCKED", untracked)
+            self.assertEqual(untracked.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
+            rogue.unlink()
+            self.assertEqual(worker.test(check, root, root)["status"], "FAIL")
+
+    def test_untracked_pyz_archive_cannot_forge_pinned_pass(self):
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_public_corpus_archive.py").write_text(
+                "import sys, unittest\n"
+                "sys.path.insert(0, 'tests/plugin.pyz')\n"
+                "from helper_from_zip import value\n"
+                "class Probe(unittest.TestCase):\n"
+                " def test_valid(self): self.assertEqual(value, 17)\n",
+                encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests"], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester",
+                            "-c", "user.email=test@example.invalid", "commit",
+                            "-qm", "pin"], cwd=root, check=True)
+            pinned_sha = worker.source_sha(root)
+            self.assertEqual(worker.test(check, root, root)["status"], "FAIL")
+            archive = tests / "plugin.pyz"
+            with zipfile.ZipFile(archive, "w") as zf:
+                zf.writestr("helper_from_zip.py", "value = 17\n")
+            forged = worker.test(check, root, root)
+            self.assertEqual(forged["status"], "BLOCKED", forged)
+            self.assertEqual(forged.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
+            self.assertEqual(worker.source_sha(root), pinned_sha)
+
+    def test_binary_fixture_change_must_not_normalize_crlf(self):
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_public_corpus_binary.py").write_text(
+                "import unittest\nfrom pathlib import Path\n"
+                "class Probe(unittest.TestCase):\n"
+                " def test_bytes(self):\n"
+                "  self.assertEqual(Path('tests/fixture.db').read_bytes(), b'A\\nB')\n",
+                encoding="utf-8")
+            fixture = tests / "fixture.db"
+            fixture.write_bytes(b"A\r\nB")
+            # Do not let a developer's global core.autocrlf rewrite this
+            # deliberately binary fixture while staging the pinned blob.
+            (root / ".gitattributes").write_text(
+                "tests/fixture.db -text\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests"], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester",
+                            "-c", "user.email=test@example.invalid", "commit",
+                            "-qm", "pin"], cwd=root, check=True)
+            pinned_sha = worker.source_sha(root)
+            self.assertEqual(worker.test(check, root, root)["status"], "FAIL")
+            fixture.write_bytes(b"A\nB")
+            forged = worker.test(check, root, root)
+            self.assertEqual(forged["status"], "BLOCKED", forged)
+            self.assertEqual(forged.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
+            self.assertEqual(worker.source_sha(root), pinned_sha)
+
+    def test_hyphenated_discovery_checks_selected_tests_and_helpers(self):
+        """Discovery adds its own directory, regardless of package-name syntax."""
+        check = ["python", "-m", "unittest", "discover", "-s",
+                 "independent-quality/public-corpus-blind-dedup-20261016",
+                 "-p", "test_*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / check[5]
+            tests.mkdir(parents=True)
+            target = tests / "test_selected.py"
+            original = ("import unittest\nimport helper\nclass Probe(unittest.TestCase):\n"
+                        " def test_truth(self): self.assertEqual(helper.value, 17)\n")
+            target.write_text(original, encoding="utf-8")
+            helper = tests / "helper.py"
+            helper.write_text("value = 17\n", encoding="utf-8")
+            # A valid unrelated import path must not hide omitted selected tests.
+            (root / "unrelated.py").write_text("value = 1\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "."], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            self.assertEqual(worker.test(check, root, root)["status"], "PASS")
+            for changed in (target, helper):
+                with self.subTest(changed=changed.name):
+                    old = changed.read_text(encoding="utf-8")
+                    changed.write_text(old.replace("17", "18"), encoding="utf-8")
+                    result = worker.test(check, root, root)
+                    self.assertEqual(result.get("status"), "BLOCKED", result)
+                    self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE", result)
+                    changed.write_text(old, encoding="utf-8")
+            helper.unlink()
+            deleted = worker.test(check, root, root)
+            self.assertEqual(deleted.get("status"), "BLOCKED", deleted)
+            self.assertEqual(deleted.get("error_kind"), "UNREVIEWED_TEST_SOURCE", deleted)
+
+    def test_assume_unchanged_index_flag_cannot_hide_modified_test(self):
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            target = tests / "test_public_corpus_pinned.py"
+            original = ("import unittest\nclass Probe(unittest.TestCase):\n"
+                        " def test_truth(self): self.assertTrue(True)\n")
+            target.write_text(original, encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_pinned.py"], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            target.write_text(original.replace("True", "False"), encoding="utf-8")
+            subprocess.run(["git", "update-index", "--assume-unchanged",
+                            "tests/test_public_corpus_pinned.py"], cwd=root, check=True)
+            result = worker.test(check, root, root)
+            self.assertEqual(result["status"], "BLOCKED")
+            self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
+
+    def test_skip_worktree_index_flag_cannot_hide_modified_test(self):
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            target = tests / "test_public_corpus_pinned.py"
+            target.write_text("import unittest\nclass Probe(unittest.TestCase):\n"
+                              " def test_truth(self): self.assertTrue(True)\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_pinned.py"], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            subprocess.run(["git", "update-index", "--skip-worktree",
+                            "tests/test_public_corpus_pinned.py"], cwd=root, check=True)
+            target.write_text("import unittest\nclass Probe(unittest.TestCase):\n"
+                              " def test_truth(self): self.assertTrue(False)\n", encoding="utf-8")
+            result = worker.test(check, root, root)
+            self.assertEqual(result["status"], "BLOCKED")
+            self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
+
+    def test_unreviewed_helper_python_cannot_change_pinned_test_result(self):
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            target = tests / "test_public_corpus_helper.py"
+            target.write_text("import unittest\nimport helper\nclass Probe(unittest.TestCase):\n"
+                              " def test_value(self): self.assertEqual(helper.value, 1)\n", encoding="utf-8")
+            helper = tests / "helper.py"
+            helper.write_text("value = 1\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_helper.py", "tests/helper.py"],
+                           cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            self.assertEqual(worker.test(check, root, root)["status"], "PASS")
+            helper.write_text("value = 2\n", encoding="utf-8")
+            changed = worker.test(check, root, root)
+            self.assertEqual(changed["status"], "BLOCKED")
+            self.assertEqual(changed.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
+            helper.write_text("value = 1\n", encoding="utf-8")
+            helper.unlink()
+            untracked = worker.test(check, root, root)
+            self.assertEqual(untracked["status"], "BLOCKED")
+            self.assertEqual(untracked.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
+
+    def test_untracked_sourceless_bytecode_cannot_forge_pinned_pass(self):
+        """Sourceless helper.pyc is importable despite no .py source file."""
+        import py_compile
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_public_corpus_bytecode.py").write_text(
+                "import unittest\nimport helper\nclass Probe(unittest.TestCase):\n"
+                " def test_value(self): self.assertEqual(helper.value, 17)\n",
+                encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_bytecode.py"],
+                           cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            hidden = tests / "helper.py"
+            hidden.write_text("value = 17\n", encoding="utf-8")
+            py_compile.compile(str(hidden), cfile=str(tests / "helper.pyc"), doraise=True)
+            hidden.unlink()
+            # This previously reported PASS=1 although source HEAD contained
+            # no helper module; the compiled bytecode supplied the assertion.
+            result = worker.test(check, root, root)
+            self.assertEqual(result.get("status"), "BLOCKED", result)
+            self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE", result)
+
+    def test_untracked_bytecode_cache_cannot_override_reviewed_helper(self):
+        """Unchecked-hash cache bytes must not supersede a pinned .py helper."""
+        import py_compile
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_public_corpus_cache.py").write_text(
+                "import unittest\nimport helper\nclass Probe(unittest.TestCase):\n"
+                " def test_value(self): self.assertEqual(helper.value, 17)\n",
+                encoding="utf-8")
+            helper = tests / "helper.py"
+            helper.write_text("value = 0\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_cache.py", "tests/helper.py"],
+                           cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            self.assertEqual(worker.test(check, root, root)["status"], "FAIL")
+            # Python may execute this bytecode in preference to helper.py even
+            # while the checked-in source bytes still match HEAD.
+            injected = root / "poison.py"
+            injected.write_text("value = 17\n", encoding="utf-8")
+            cached = tests / "__pycache__" / ("helper." + sys.implementation.cache_tag + ".pyc")
+            cached.parent.mkdir()
+            py_compile.compile(str(injected), cfile=str(cached), doraise=True,
+                               invalidation_mode=py_compile.PycInvalidationMode.UNCHECKED_HASH)
+            result = worker.test(check, root, root)
+            self.assertEqual(result.get("status"), "BLOCKED", result)
+            self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE", result)
+
+    def test_isolated_interpreter_keeps_reviewed_project_imports(self):
+        """Real Wool tests import core.* from the checkout root."""
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests, core = root / "tests", root / "core"
+            tests.mkdir()
+            core.mkdir()
+            (core / "__init__.py").write_text("value = 17\n", encoding="utf-8")
+            (tests / "test_public_corpus_core_import.py").write_text(
+                "import unittest\nfrom core import value\n"
+                "class Probe(unittest.TestCase):\n"
+                " def test_value(self): self.assertEqual(value, 17)\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_core_import.py",
+                            "core/__init__.py"], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            result = worker.test(check, root, root)
+            self.assertEqual((result.get("status"), result.get("total")), ("PASS", 1), result)
+            (core / "__init__.py").write_text("value = 18\n", encoding="utf-8")
+            mutated = worker.test(check, root, root)
+            self.assertEqual(mutated.get("status"), "BLOCKED", mutated)
+            self.assertEqual(mutated.get("error_kind"), "UNREVIEWED_TEST_SOURCE", mutated)
+            (core / "__init__.py").write_text("value = 17\n", encoding="utf-8")
+            (root / "roothelper.py").write_text("value = 123\n", encoding="utf-8")
+            untracked = worker.test(check, root, root)
+            self.assertEqual(untracked.get("status"), "BLOCKED", untracked)
+            self.assertEqual(untracked.get("error_kind"), "UNREVIEWED_TEST_SOURCE", untracked)
+
+    def test_inherited_pythonpath_cannot_make_failing_pinned_test_pass(self):
+        """External sitecustomize must not alter a formally reviewed test."""
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            sandbox = Path(tmp)
+            root = sandbox / "source"
+            root.mkdir()
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_public_corpus_env.py").write_text(
+                "import unittest\nclass Probe(unittest.TestCase):\n"
+                " def test_truth(self): self.assertTrue(False)\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_env.py"], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            baseline = worker.test(check, root, root)
+            self.assertEqual(baseline["status"], "FAIL", baseline)
+            external = sandbox / "external-site"
+            external.mkdir()
+            (external / "sitecustomize.py").write_text(
+                "import unittest\nunittest.TestCase.assertTrue = lambda self, expr, msg=None: None\n",
+                encoding="utf-8")
+            with patch.dict(os.environ, {"PYTHONPATH": str(external)}):
+                result = worker.test(check, root, root)
+            self.assertEqual(result["status"], "FAIL", result)
+
+    def test_python_user_site_cannot_make_failing_pinned_test_pass(self):
+        """An external usercustomize.py must not forge a reviewed test result."""
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            sandbox = Path(tmp)
+            root = sandbox / "source"
+            root.mkdir()
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_public_corpus_user_site.py").write_text(
+                "import unittest\nclass Probe(unittest.TestCase):\n"
+                " def test_truth(self): self.assertTrue(False)\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_user_site.py"],
+                           cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            baseline = worker.test(check, root, root)
+            self.assertEqual(baseline["status"], "FAIL", baseline)
+            external = sandbox / "external-user-site"
+            env = {**os.environ, "PYTHONUSERBASE": str(external)}
+            user_site = subprocess.run(
+                [sys.executable, "-X", "utf8", "-c",
+                 "import site;print(site.getusersitepackages())"],
+                text=True, encoding="utf-8", capture_output=True,
+                check=True, env=env).stdout.strip()
+            site_dir = Path(user_site)
+            site_dir.mkdir(parents=True)
+            (site_dir / "usercustomize.py").write_text(
+                "import unittest\nunittest.TestCase.assertTrue = lambda self, expr, msg=None: None\n",
+                encoding="utf-8")
+            with patch.dict(os.environ, {"PYTHONUSERBASE": str(external)}):
+                result = worker.test(check, root, root)
+            self.assertEqual(result["status"], "FAIL", result)
+
+    def test_active_virtualenv_pth_cannot_forge_failing_reviewed_test(self):
+        """Interpreter startup hooks outside the checkout must not forge PASS."""
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            sandbox = Path(tmp)
+            root = sandbox / "source"
+            tests = root / "tests"
+            tests.mkdir(parents=True)
+            (tests / "test_public_corpus_pth.py").write_text(
+                "import unittest\nclass Probe(unittest.TestCase):\n"
+                " def test_truth(self): self.assertTrue(False)\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_pth.py"],
+                           cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            environment = sandbox / "active-venv"
+            venv.EnvBuilder(with_pip=False).create(environment)
+            executable = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+            site_run = subprocess.run(
+                [str(executable), "-I", "-B", "-X", "utf8", "-c",
+                 "import site;print(site.getsitepackages()[0])"],
+                capture_output=True, text=True, encoding="utf-8", check=True)
+            site_dir = Path(site_run.stdout.strip())
+            self.assertTrue(site_dir.is_dir())
+            with patch.object(worker.sys, "executable", str(executable)):
+                baseline = worker.test(check, root, root)
+                self.assertEqual(baseline["status"], "FAIL", baseline)
+                (site_dir / "forge.pth").write_text(
+                    "import unittest; unittest.TestCase.assertTrue = lambda self, value, msg=None: None\n",
+                    encoding="utf-8")
+                forged = worker.test(check, root, root)
+            self.assertEqual(forged["status"], "FAIL", forged)
+            self.assertEqual(subprocess.run(["git", "status", "--porcelain"], cwd=root,
+                                            capture_output=True, check=True).stdout, b"")
+
+    def test_nonidentifier_dynamic_import_helper_is_authenticated(self):
+        """Importlib loads hyphenated module paths that source guards must pin."""
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            helper = tests / "nonidentifier-dir" / "helper.py"
+            helper.parent.mkdir(parents=True)
+            helper.write_text("value = 17\n", encoding="utf-8")
+            (tests / "test_public_corpus_dynamic.py").write_text(
+                "import importlib,unittest\nclass Probe(unittest.TestCase):\n"
+                " def test_truth(self): self.assertEqual("
+                "importlib.import_module('nonidentifier-dir.helper').value,18)\n",
+                encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests"], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester", "-c", "user.email=test@example.invalid",
+                            "commit", "-qm", "pin"], cwd=root, check=True)
+            self.assertEqual(worker.test(check, root, root)["status"], "FAIL")
+            helper.write_text("value = 18\n", encoding="utf-8")
+            result = worker.test(check, root, root)
+            self.assertEqual(result.get("status"), "BLOCKED", result)
+            self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE", result)
 
     def test_real_integration_report_producer_binds_checked_out_git_sha(self):
         # Execute the original producer using the real checkout Git identity,

@@ -28,6 +28,15 @@ def check(p, digest=None, now=NOW):
 
 
 class PreviewGuard(unittest.TestCase):
+    def test_encoded_title_secrets_rejected_despite_approved_sha(self):
+        for title in ('Contact bob%40example.org',
+                      'C%3A%5CUsers%5CAlice%5Csecrets.txt',
+                      'free%20token%20bonus',
+                      'Contact bob%2540example.org',
+                      'win path C%253A%255CUsers%255CAlice'):
+            with self.subTest(title=title), self.assertRaises(UnsafePreview):
+                check(payload(dict(ROW, title=title)))
+        check(payload(dict(ROW, title='Public offer 20% off')))
     def test_plural_credential_containers_rejected_even_with_valid_digest(self):
         for path in ('/api/tokens/PRIVATE_CANARY', '/accounts/PRIVATE_CANARY',
                      '/sessions/PRIVATE_CANARY', '/credentials/PRIVATE_CANARY',

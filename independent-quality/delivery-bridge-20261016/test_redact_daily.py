@@ -111,6 +111,18 @@ class Contract(unittest.TestCase):
         for title in ['Reach bob@example.org today', 'my token secret', 'credit 1234567890123456', '123456789012345678']:
             self.assertIsNone(public_title(title))
             self.assertEqual(self.preview([row(title=title)])['count']['exported_events'],0)
+    def test_percent_encoded_title_secrets_never_exported(self):
+        for title in ('Contact bob%40example.org',
+                      'C%3A%5CUsers%5CAlice%5Csecrets.txt',
+                      'free%20token%20bonus',
+                      'Contact bob%2540example.org',
+                      'win path C%253A%255CUsers%255CAlice'):
+            with self.subTest(title=title):
+                self.assertIsNone(public_title(title))
+                result = self.preview([row(title=title)])
+                self.assertEqual(result['events'], [])
+        self.assertEqual(public_title('Public offer 20% off'), 'Public offer 20% off')
+        self.assertEqual(public_title('Save 20%25 on annual plan'), 'Save 20%25 on annual plan')
 
     def test_official_evidence_requires_public_clean_https_url_and_time(self):
         p=self.preview([row(evidence=[{'kind':'official','url':'https://example.org/page?token=x','checked_at':'2026-10-16T01:00:00Z'},

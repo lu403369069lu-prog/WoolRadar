@@ -89,11 +89,24 @@ def public_title(raw: object) -> str | None:
     # Unicode format controls (including bidi overrides/isolates and zero-width
     # characters), C1 controls and Unicode line/paragraph separators can
     # visually forge the final brief without containing ASCII newlines.
-    if (any(unicodedata.category(ch) in {'Cc', 'Cf', 'Cs', 'Zl', 'Zp'} for ch in raw)
-        or BAD_TEXT.search(raw) or '://' in raw
-        or re.search(r'(?i)(?:[a-z]:[\\/]|\\\\|/(?:home|Users|private|tmp)/)', raw)):
-        return None
-    return raw
+    # Titles can contain literal percent-encoded emails, local paths or
+    # credential words. Validate decoded views without rewriting the title.
+    # This closes the same nested-encoding gap already guarded for URL paths.
+    view = raw
+    for _ in range(4):
+        if (any(unicodedata.category(ch) in {'Cc', 'Cf', 'Cs', 'Zl', 'Zp'} for ch in view)
+            or BAD_TEXT.search(view) or '://' in view
+            or re.search(r'(?i)(?:[a-z]:[\\/]|\\\\|/(?:home|Users|private|tmp)/)', view)):
+            return None
+        try:
+            decoded = unquote(view, errors='strict')
+        except UnicodeError:
+            return None
+        if decoded == view:
+            return raw
+        view = decoded
+    # Arbitrarily deep percent escapes cannot be proven harmless.
+    return None if re.search(r'%[0-9a-fA-F]{2}', view) else raw
 
 
 def timestamp(raw: object) -> str | None:

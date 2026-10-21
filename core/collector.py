@@ -430,7 +430,9 @@ def _safe_public_fetch_url(url: str) -> bool:
         if (parsed.scheme != 'https' or not host or parsed.username is not None
                 or parsed.password is not None or '\\' in url or any(ord(ch) < 32 for ch in url)):
             return False
-        if parsed.port is not None and not (1 <= parsed.port <= 65535):
+        # Feeds only need HTTPS on its standard port.  Do not allow arbitrary
+        # TCP destinations through an otherwise public-looking hostname.
+        if parsed.port not in (None, 443):
             return False
         host = host.casefold().rstrip('.')
         if (not host or host == 'localhost' or host.endswith(('.localhost', '.local', '.internal'))
@@ -532,7 +534,15 @@ def budgeted_read(request, budget: RequestBudget | None = None, max_bytes: int =
             destination = urllib.parse.urljoin(url, exc.headers.get('Location', ''))
             exc.close()
             parsed = urllib.parse.urlsplit(destination)
-            if request.data is not None or request.has_header('Authorization'):
+            # urllib stores headers with normalized capitalization in both
+            # regular and unredirected header dictionaries. Check all of them
+            # case-insensitively before following any credentialed request.
+            credential_headers = {
+                'authorization', 'proxy-authorization', 'cookie', 'cookie2',
+                'x-api-key', 'x-auth-token',
+            }
+            if (request.data is not None or any(
+                    name.casefold() in credential_headers for name, _ in request.header_items())):
                 raise SourcePaused('AUTHENTICATED_REDIRECT_REJECTED')
             if (not _safe_public_fetch_url(destination)
                     or re.search(r'/(login|signin|signup|oauth|authorize|checkout|redeem)(/|$)', urllib.parse.unquote(parsed.path), re.I)):

@@ -102,9 +102,13 @@ class Pipeline:
         else:
             run_status = 'OK'
         error_code = ','.join(sorted({item.get('error_code', '') for item in failed + paused if item.get('error_code')}))
-        self.db.record_node_run(node, run_status, len(candidates), error_code,
-                                json.dumps(source_statuses, ensure_ascii=False)[:4000])
-        self.notifications.record_health(node, run_status, error_code)
+        # Commit the run audit, health fingerprint, and pending health notice
+        # as one unit. If a health transition fails, a standalone node_runs
+        # commit would falsely claim that the run was durably accounted for.
+        with self.db.candidate_transaction():
+            self.db.record_node_run(node, run_status, len(candidates), error_code,
+                                    json.dumps(source_statuses, ensure_ascii=False)[:4000])
+            self.notifications.record_health(node, run_status, error_code)
         self.notifications.flush(self.notification_policy(), local_dir=self.root / 'reports' / 'notifications')
         return {'node': node, 'ingested': len(candidates), 'notify': notify_count,
                 'status': run_status, 'error_code': error_code}

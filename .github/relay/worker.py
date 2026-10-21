@@ -9,7 +9,6 @@ from pathlib import Path
 import re
 import subprocess
 import sys
-import zipfile
 from checkpoint_store import save, persist_lock, recover_history, verify_replay
 
 def load(path):
@@ -72,8 +71,9 @@ def verify_reviewed_test_files(argv, cwd, src):
     """Require discovered Python tests and adjacent helpers to match source HEAD.
 
     An index-based diff trusts assume-unchanged/skip-worktree flags. Compare
-    the actual on-disk bytes to committed blobs instead. Normalize only line
-    endings, since Windows checkouts may legitimately turn LF into CRLF.
+    the actual on-disk bytes to committed blobs instead. Normalize only text
+    line endings, since Windows checkouts may legitimately turn LF into CRLF.
+    Binary fixtures must match the exact committed bytes.
     """
     src = Path(src).resolve()
     if argv[:5] == ["python", "-m", "unittest", "discover", "-s"]:
@@ -91,15 +91,9 @@ def verify_reviewed_test_files(argv, cwd, src):
         # directory selection would miss executable helper bytes.
         # Fail closed on caches: -B prevents the child creating new ones.
         # No checkout content is removed as part of verification.
-        importable = {".py", ".pyc", ".pyo", ".pyd", ".so", ".zip",
-                      ".egg", ".whl", ".pyz", ".pyzw", ".pth", ".dll"}
-        # Tests also consume data fixtures. Pin their actual bytes to HEAD;
-        # otherwise a dirty, untracked or substituted JSON/CSV fixture can
-        # turn a genuinely failing reviewed test into a false formal PASS.
-        fixtures = {".json", ".jsonl", ".ndjson", ".yaml", ".yml",
-                    ".toml", ".ini", ".cfg", ".csv", ".tsv", ".txt",
-                    ".md", ".xml", ".sql", ".db", ".sqlite", ".sqlite3",
-                    ".parquet"}
+        # A reviewed test can open data from an arbitrary filename suffix.
+        # Restricting verification to known module/fixture extensions allows a
+        # modified .blob (or an untracked file) to forge a formal PASS.
         import_root = Path(cwd).resolve()
         if not import_root.is_relative_to(src):
             raise ValueError("import root escaped pinned checkout")
@@ -120,16 +114,8 @@ def verify_reviewed_test_files(argv, cwd, src):
             return (any(path.is_relative_to(base) for base in import_roots)
                     and not path.is_relative_to(src / ".git"))
 
-        def importable_path(path):
-            return (importable_directory(path.parent)
-                    and (path.suffix.lower() in importable | fixtures
-                         or path.is_symlink()
-                         # zipimport accepts archive bytes under any filename
-                         # suffix, including .pyz and misleading data suffixes.
-                         or (path.is_file() and zipfile.is_zipfile(path))))
-
         tracked = [src / name.decode("utf-8") for name in tree.stdout.split(b"\x00")
-                   if name and importable_path(src / name.decode("utf-8"))]
+                   if name and importable_directory((src / name.decode("utf-8")).parent)]
         children = list(import_root.rglob("*"))
         # An importable directory symlink can escape the reviewed checkout.
         if any(p.is_symlink() and p.is_dir() and
@@ -138,7 +124,7 @@ def verify_reviewed_test_files(argv, cwd, src):
             raise ValueError("symlink directory in formal import root")
         files = list(dict.fromkeys([
             *selected,
-            *(p for p in children if importable_path(p)
+            *(p for p in children if importable_directory(p.parent)
               and (p.is_file() or p.is_symlink())), *tracked]))
     else:
         files = [cwd / path for path in argv[4:]]
@@ -161,11 +147,19 @@ def verify_reviewed_test_files(argv, cwd, src):
             capture_output=True, timeout=10, check=False)
         if original.returncode != 0:
             raise ValueError("cannot read reviewed test or helper blob")
-        # Python decodes CRLF/LF as equivalent source newlines. Deliberately
-        # do not invoke configurable Git clean filters or trust index flags.
-        normalize = lambda data: data.replace(b"\r\n", b"\n")
-        if normalize(path.read_bytes()) != normalize(original.stdout):
-            raise ValueError("test or helper bytes differ from pinned source HEAD")
+        # Python treats CRLF/LF as equivalent in source. Some checked data
+        # formats have the same text-line semantics on Windows; binary fixture
+        # contents do not. Never normalize bytes for an unknown extension.
+        text_suffixes = {".py", ".json", ".jsonl", ".ndjson", ".yaml", ".yml",
+                         ".toml", ".ini", ".cfg", ".csv", ".tsv", ".txt",
+                         ".md", ".xml", ".sql", ".pth"}
+        actual_bytes = path.read_bytes()
+        committed_bytes = original.stdout
+        if path.suffix.lower() in text_suffixes or path.name in {".gitattributes", ".gitignore"}:
+            actual_bytes = actual_bytes.replace(b"\r\n", b"\n")
+            committed_bytes = committed_bytes.replace(b"\r\n", b"\n")
+        if actual_bytes != committed_bytes:
+            raise ValueError("test or helper bytes differ from pinned source HEAD: " + relative)
 
 
 def choose_recheck(state, families, regular_ids):

@@ -10,6 +10,7 @@ import subprocess
 import sys
 import os
 import venv
+import zipfile
 from unittest.mock import patch
 
 HERE = Path(__file__).resolve().parent
@@ -212,6 +213,67 @@ class RelaySafetyTests(unittest.TestCase):
             self.assertEqual(untracked.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
             rogue.unlink()
             self.assertEqual(worker.test(check, root, root)["status"], "FAIL")
+
+    def test_untracked_pyz_archive_cannot_forge_pinned_pass(self):
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_public_corpus_archive.py").write_text(
+                "import sys, unittest\n"
+                "sys.path.insert(0, 'tests/plugin.pyz')\n"
+                "from helper_from_zip import value\n"
+                "class Probe(unittest.TestCase):\n"
+                " def test_valid(self): self.assertEqual(value, 17)\n",
+                encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests"], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester",
+                            "-c", "user.email=test@example.invalid", "commit",
+                            "-qm", "pin"], cwd=root, check=True)
+            pinned_sha = worker.source_sha(root)
+            self.assertEqual(worker.test(check, root, root)["status"], "FAIL")
+            archive = tests / "plugin.pyz"
+            with zipfile.ZipFile(archive, "w") as zf:
+                zf.writestr("helper_from_zip.py", "value = 17\n")
+            forged = worker.test(check, root, root)
+            self.assertEqual(forged["status"], "BLOCKED", forged)
+            self.assertEqual(forged.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
+            self.assertEqual(worker.source_sha(root), pinned_sha)
+
+    def test_binary_fixture_change_must_not_normalize_crlf(self):
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_public_corpus_binary.py").write_text(
+                "import unittest\nfrom pathlib import Path\n"
+                "class Probe(unittest.TestCase):\n"
+                " def test_bytes(self):\n"
+                "  self.assertEqual(Path('tests/fixture.db').read_bytes(), b'A\\nB')\n",
+                encoding="utf-8")
+            fixture = tests / "fixture.db"
+            fixture.write_bytes(b"A\r\nB")
+            # Do not let a developer's global core.autocrlf rewrite this
+            # deliberately binary fixture while staging the pinned blob.
+            (root / ".gitattributes").write_text(
+                "tests/fixture.db -text\n", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests", ".gitattributes"], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester",
+                            "-c", "user.email=test@example.invalid", "commit",
+                            "-qm", "pin"], cwd=root, check=True)
+            pinned_sha = worker.source_sha(root)
+            self.assertEqual(worker.test(check, root, root)["status"], "FAIL")
+            fixture.write_bytes(b"A\nB")
+            forged = worker.test(check, root, root)
+            self.assertEqual(forged["status"], "BLOCKED", forged)
+            self.assertEqual(forged.get("error_kind"), "UNREVIEWED_TEST_SOURCE")
+            self.assertEqual(worker.source_sha(root), pinned_sha)
 
     def test_hyphenated_discovery_checks_selected_tests_and_helpers(self):
         """Discovery adds its own directory, regardless of package-name syntax."""
@@ -538,9 +600,63 @@ class RelaySafetyTests(unittest.TestCase):
             self.assertEqual(result.get("status"), "BLOCKED", result)
             self.assertEqual(result.get("error_kind"), "UNREVIEWED_TEST_SOURCE", result)
 
+    def test_modified_unknown_suffix_fixture_cannot_forge_pinned_pass(self):
+        """An already-reviewed test can consume a plaintext .blob data file."""
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_public_corpus_data.py").write_text(
+                "import unittest\nfrom pathlib import Path\n"
+                "class Probe(unittest.TestCase):\n"
+                " def test_data(self):\n"
+                "  self.assertEqual(Path('tests/source.blob').read_text(), 'PASS')\n",
+                encoding="utf-8")
+            fixture = tests / "source.blob"
+            fixture.write_text("FAIL", encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests"], cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester",
+                            "-c", "user.email=test@example.invalid", "commit",
+                            "-qm", "pin failing fixture"], cwd=root, check=True)
+            pinned = worker.source_sha(root)
+            self.assertEqual(worker.test(check, root, root)["status"], "FAIL")
+            fixture.write_text("PASS", encoding="utf-8")
+            attacked = worker.test(check, root, root)
+            self.assertEqual(attacked.get("status"), "BLOCKED", attacked)
+            self.assertEqual(worker.source_sha(root), pinned)
+
+    def test_untracked_unknown_suffix_fixture_cannot_forge_pinned_pass(self):
+        check = ["python", "-m", "unittest", "discover", "-s", "tests",
+                 "-p", "test_public_corpus*.py"]
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            tests = root / "tests"
+            tests.mkdir()
+            (tests / "test_public_corpus_data.py").write_text(
+                "import unittest\nfrom pathlib import Path\n"
+                "class Probe(unittest.TestCase):\n"
+                " def test_data(self):\n"
+                "  self.assertEqual(Path('tests/source.blob').read_text(), 'PASS')\n",
+                encoding="utf-8")
+            subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+            subprocess.run(["git", "add", "tests/test_public_corpus_data.py"],
+                           cwd=root, check=True)
+            subprocess.run(["git", "-c", "user.name=Tester",
+                            "-c", "user.email=test@example.invalid", "commit",
+                            "-qm", "pin test"], cwd=root, check=True)
+            pinned = worker.source_sha(root)
+            self.assertNotEqual(worker.test(check, root, root)["status"], "PASS")
+            (tests / "source.blob").write_text("PASS", encoding="utf-8")
+            attacked = worker.test(check, root, root)
+            self.assertEqual(attacked.get("status"), "BLOCKED", attacked)
+            self.assertEqual(attacked.get("error_kind"), "UNREVIEWED_TEST_SOURCE", attacked)
+            self.assertEqual(worker.source_sha(root), pinned)
+
     def test_untracked_zip_import_archive_with_any_extension_is_blocked(self):
         """A zipimport archive can execute helper.py with any filename suffix."""
-        import zipfile
         check = ["python", "-m", "unittest", "discover", "-s", "tests",
                  "-p", "test_public_corpus*.py"]
         with tempfile.TemporaryDirectory() as tmp:

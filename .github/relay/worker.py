@@ -92,6 +92,13 @@ def verify_reviewed_test_files(argv, cwd, src):
         # No checkout content is removed as part of verification.
         importable = {".py", ".pyc", ".pyo", ".pyd", ".so", ".zip",
                       ".egg", ".whl", ".pth", ".dll"}
+        # Tests also consume data fixtures. Pin their actual bytes to HEAD;
+        # otherwise a dirty, untracked or substituted JSON/CSV fixture can
+        # turn a genuinely failing reviewed test into a false formal PASS.
+        fixtures = {".json", ".jsonl", ".ndjson", ".yaml", ".yml",
+                    ".toml", ".ini", ".cfg", ".csv", ".tsv", ".txt",
+                    ".md", ".xml", ".sql", ".db", ".sqlite", ".sqlite3",
+                    ".parquet"}
         import_root = Path(cwd).resolve()
         if not import_root.is_relative_to(src):
             raise ValueError("import root escaped pinned checkout")
@@ -114,7 +121,7 @@ def verify_reviewed_test_files(argv, cwd, src):
 
         def importable_path(path):
             return (importable_directory(path.parent)
-                    and path.suffix.lower() in importable)
+                    and path.suffix.lower() in importable | fixtures)
 
         tracked = [src / name.decode("utf-8") for name in tree.stdout.split(b"\x00")
                    if name and importable_path(src / name.decode("utf-8"))]

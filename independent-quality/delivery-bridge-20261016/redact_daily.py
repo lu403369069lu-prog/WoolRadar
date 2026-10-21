@@ -21,6 +21,13 @@ from urllib.parse import unquote, urlsplit, urlunsplit
 MAX_INPUT = 10 * 1024 * 1024
 BAD_TEXT = re.compile(r"(?i)(?:\b[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}\b|\b(?:bearer|secret|token|password|api[_-]?key|session|cookie)\b|\b\d{13,19}\b|\b1[3-9]\d{9}\b)")
 BAD_SEGMENT = re.compile(r"(?i)(?:^|[-_])(auth|callback|token|secret|reset|password|login|checkout|invoice|payment|session|account)(?:$|[-_])")
+# Public previews must not expose opaque identifiers under credential/account
+# collections. Those routes often put a bearer token or personal ID in the
+# following path segment, even when no query string is present.
+BAD_PRIVATE_COLLECTION = frozenset({
+    'tokens', 'secrets', 'sessions', 'accounts', 'users', 'credentials',
+    'passwords', 'api-keys', 'api_keys', 'apikeys',
+})
 ALLOWED_STATUS = {'DISCOVERED', 'CROSS_CHECKED', 'OFFICIAL_VERIFIED', 'CLAIMABLE', 'UNKNOWN', 'CONFLICTED', 'EXPIRED', 'FAILED', 'REDEEMED'}
 BOOL_FIELDS = ('public', 'open', 'card_required', 'account_required', 'auto_renew')
 REGIONS = {'CN', 'US', 'EU', 'GLOBAL', 'MAINLAND_CHINA', 'UNKNOWN'}
@@ -56,7 +63,8 @@ def public_url(raw: object) -> str | None:
             return None
         if parts.query or parts.fragment or BAD_TEXT.search(route):
             return None
-        if any(BAD_SEGMENT.search(piece) for piece in route.split('/')):
+        if any(BAD_SEGMENT.search(piece) or piece.lower() in BAD_PRIVATE_COLLECTION
+               for piece in route.split('/')):
             return None
         if not re.fullmatch(r'[a-z0-9.-]+', host) or '..' in host:
             return None

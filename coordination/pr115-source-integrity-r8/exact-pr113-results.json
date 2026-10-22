@@ -1,0 +1,29 @@
+{
+  "business_acceptance": false,
+  "checked_utc": "2026-10-22T08:24:47.718234+00:00",
+  "diagnostic_no_isolation": false,
+  "schema_version": 1,
+  "source_head": "396ce94e3510d4f09f951b0a973716c3c343bc93",
+  "status": "PASS",
+  "suites": [
+    {
+      "exit_code": 0,
+      "status": "PASS",
+      "suite": "relay",
+      "total": 72
+    },
+    {
+      "exit_code": 0,
+      "status": "PASS",
+      "suite": "coordination-integrity",
+      "total": 4
+    },
+    {
+      "exit_code": 0,
+      "status": "PASS",
+      "suite": "original-coordination",
+      "total": 48
+    }
+  ],
+  "total": 124
+}

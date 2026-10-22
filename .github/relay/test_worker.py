@@ -21,6 +21,38 @@ worker = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(worker)
 
 class RelaySafetyTests(unittest.TestCase):
+    def test_snapshot_disables_inherited_template_and_config_hooks(self):
+        for mode in ('template', 'config'):
+            with self.subTest(mode=mode), tempfile.TemporaryDirectory() as tmp:
+                root = Path(tmp)
+                src = root / 'src'
+                src.mkdir()
+                def git(*args):
+                    return subprocess.run(['git', '-C', str(src), *args],
+                                          check=True, capture_output=True)
+                git('init', '-q')
+                git('config', 'user.name', 'Fixture')
+                git('config', 'user.email', 'fixture@localhost')
+                (src / 'fixture.txt').write_bytes(b'FAIL\n')
+                git('add', '.')
+                git('commit', '-qm', 'fixture')
+                hooks = root / 'template' / 'hooks'
+                hooks.mkdir(parents=True)
+                marker = root / 'unexpected-hook'
+                hook = hooks / 'post-checkout'
+                hook.write_text('#!/bin/sh\nprintf fired > "' + marker.as_posix() + '"\n',
+                                encoding='utf-8')
+                hook.chmod(0o755)
+                env = ({'GIT_TEMPLATE_DIR': str(hooks.parent)} if mode == 'template'
+                       else {'GIT_CONFIG_COUNT': '1', 'GIT_CONFIG_KEY_0': 'core.hooksPath',
+                             'GIT_CONFIG_VALUE_0': str(hooks)})
+                target = root / 'snapshot'
+                with patch.dict(os.environ, env):
+                    worker.pinned_python_snapshot(src, target)
+                self.assertFalse(marker.exists(), 'unreviewed checkout hook executed')
+                self.assertEqual((target / 'fixture.txt').read_bytes(), b'FAIL\n')
+                self.assertEqual(worker.source_sha(target), worker.source_sha(src))
+
     def test_transient_midrun_fixture_edit_cannot_forge_pinned_pass(self):
         """Mutate only the shared original while the reviewed test is running."""
         check = ["python", "-m", "unittest", "discover", "-s", "tests",

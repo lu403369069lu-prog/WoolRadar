@@ -69,5 +69,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
     result = verify(args.checkout.resolve())
     (HERE / "real-layout-evidence.json").write_text(
-        json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
+        json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(json.dumps(result, ensure_ascii=False, sort_keys=True, indent=2))

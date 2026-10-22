@@ -1,0 +1,130 @@
+{
+  "kind": "isolated-powershell-r30-wrapper-synthetic-stdin",
+  "count": 14,
+  "correct": 14,
+  "cases": [
+    {
+      "case": "active_resume",
+      "expected": "block",
+      "observed": "block",
+      "exit_code": 0,
+      "stderr_empty": true,
+      "correct": true
+    },
+    {
+      "case": "active_pause",
+      "expected": "allow",
+      "observed": "allow",
+      "exit_code": 0,
+      "stderr_empty": true,
+      "correct": true
+    },
+    {
+      "case": "active_indirect_pause",
+      "expected": "allow",
+      "observed": "allow",
+      "exit_code": 0,
+      "stderr_empty": true,
+      "correct": true
+    },
+    {
+      "case": "active_negative_resume",
+      "expected": "allow",
+      "observed": "allow",
+      "exit_code": 0,
+      "stderr_empty": true,
+      "correct": true
+    },
+    {
+      "case": "paused_then_resume",
+      "expected": "block",
+      "observed": "block",
+      "exit_code": 0,
+      "stderr_empty": true,
+      "correct": true
+    },
+    {
+      "case": "paused_stays_paused",
+      "expected": "allow",
+      "observed": "allow",
+      "exit_code": 0,
+      "stderr_empty": true,
+      "correct": true
+    },
+    {
+      "case": "active_conditional_pause",
+      "expected": "block",
+      "observed": "block",
+      "exit_code": 0,
+      "stderr_empty": true,
+      "correct": true
+    },
+    {
+      "case": "question_is_not_pause",
+      "expected": "block",
+      "observed": "block",
+      "exit_code": 0,
+      "stderr_empty": true,
+      "correct": true
+    },
+    {
+      "case": "direct_stage_pause",
+      "expected": "allow",
+      "observed": "allow",
+      "exit_code": 0,
+      "stderr_empty": true,
+      "correct": true
+    },
+    {
+      "case": "prefixed_stage_pause",
+      "expected": "allow",
+      "observed": "allow",
+      "exit_code": 0,
+      "stderr_empty": true,
+      "correct": true
+    },
+    {
+      "case": "now_stage_pause",
+      "expected": "allow",
+      "observed": "allow",
+      "exit_code": 0,
+      "stderr_empty": true,
+      "correct": true
+    },
+    {
+      "case": "stage_pause_with_reason",
+      "expected": "allow",
+      "observed": "allow",
+      "exit_code": 0,
+      "stderr_empty": true,
+      "correct": true
+    },
+    {
+      "case": "conditional_quota_pause",
+      "expected": "block",
+      "observed": "block",
+      "exit_code": 0,
+      "stderr_empty": true,
+      "correct": true
+    },
+    {
+      "case": "stage_pause_question",
+      "expected": "block",
+      "observed": "block",
+      "exit_code": 0,
+      "stderr_empty": true,
+      "correct": true
+    }
+  ],
+  "installed_before": {
+    "stop_verify.ps1": "10d3a25753fe179d73fd1fa6472ada688eeea86239c6c5e916a36b3003fceff7",
+    "stop_verify.py": "a3aa3707c401c227c82a620bf1b1ba21da1445f1b862cb08273d3ee350c092fa"
+  },
+  "installed_after": {
+    "stop_verify.ps1": "10d3a25753fe179d73fd1fa6472ada688eeea86239c6c5e916a36b3003fceff7",
+    "stop_verify.py": "a3aa3707c401c227c82a620bf1b1ba21da1445f1b862cb08273d3ee350c092fa"
+  },
+  "installed_unchanged": true,
+  "real_codex_host_stop_callback": false,
+  "global_candidate_installed": false
+}

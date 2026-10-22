@@ -1,0 +1,122 @@
+{
+  "source_sha256": "3a3faf671d4c7f5f26f724f04571f9a973a11ca434988b407fb9e6c68967af17",
+  "count": 14,
+  "mismatches": 0,
+  "expected_mismatches": 0,
+  "cases": [
+    {
+      "case": "active_resume",
+      "latest_user": "继续干",
+      "state": "active",
+      "expected": "block",
+      "observed": "block",
+      "correct": true
+    },
+    {
+      "case": "active_pause",
+      "latest_user": "暂停",
+      "state": "active",
+      "expected": "allow",
+      "observed": "allow",
+      "correct": true
+    },
+    {
+      "case": "active_indirect_pause",
+      "latest_user": "现在先别干了",
+      "state": "active",
+      "expected": "allow",
+      "observed": "allow",
+      "correct": true
+    },
+    {
+      "case": "active_negative_resume",
+      "latest_user": "先不要继续执行",
+      "state": "active",
+      "expected": "allow",
+      "observed": "allow",
+      "correct": true
+    },
+    {
+      "case": "paused_then_resume",
+      "latest_user": "继续干",
+      "state": "paused",
+      "expected": "block",
+      "observed": "block",
+      "correct": true
+    },
+    {
+      "case": "paused_stays_paused",
+      "latest_user": "先暂停",
+      "state": "paused",
+      "expected": "allow",
+      "observed": "allow",
+      "correct": true
+    },
+    {
+      "case": "active_conditional_pause",
+      "latest_user": "完成后阶段性停止",
+      "state": "active",
+      "expected": "block",
+      "observed": "block",
+      "correct": true
+    },
+    {
+      "case": "question_is_not_pause",
+      "latest_user": "停了？继续干",
+      "state": "active",
+      "expected": "block",
+      "observed": "block",
+      "correct": true
+    },
+    {
+      "case": "direct_stage_pause",
+      "latest_user": "阶段性停止",
+      "state": "active",
+      "expected": "allow",
+      "observed": "allow",
+      "correct": true
+    },
+    {
+      "case": "prefixed_stage_pause",
+      "latest_user": "先阶段性停止",
+      "state": "active",
+      "expected": "allow",
+      "observed": "allow",
+      "correct": true
+    },
+    {
+      "case": "now_stage_pause",
+      "latest_user": "现在阶段性停止",
+      "state": "active",
+      "expected": "allow",
+      "observed": "allow",
+      "correct": true
+    },
+    {
+      "case": "stage_pause_with_reason",
+      "latest_user": "阶段性停止，保留待办",
+      "state": "active",
+      "expected": "allow",
+      "observed": "allow",
+      "correct": true
+    },
+    {
+      "case": "conditional_quota_pause",
+      "latest_user": "5h额度到45%时控制其他对话进入阶段性停止，包括你",
+      "state": "active",
+      "expected": "block",
+      "observed": "block",
+      "correct": true
+    },
+    {
+      "case": "stage_pause_question",
+      "latest_user": "阶段性停止了吗？继续干",
+      "state": "active",
+      "expected": "block",
+      "observed": "block",
+      "correct": true
+    }
+  ],
+  "synthetic_only": true,
+  "global_hook_installed": false
+}

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "phase": "R7",
+  "source": "WoolRadar PR113 frozen SHA",
+  "source_head": "396ce94e3510d4f09f951b0a973716c3c343bc93",
+  "environment": "Windows, Python 3.14.5, scoped TEMP/TMP/TMPDIR and core.autocrlf=false, elevated Git fixture sandbox",
+  "gate_status": "PASS",
+  "gate_exit_code": 0,
+  "tested": 124,
+  "suites": [
+    {
+      "exit_code": 0,
+      "status": "PASS",
+      "suite": "relay",
+      "total": 72
+    },
+    {
+      "exit_code": 0,
+      "status": "PASS",
+      "suite": "coordination-integrity",
+      "total": 4
+    },
+    {
+      "exit_code": 0,
+      "status": "PASS",
+      "suite": "original-coordination",
+      "total": 48
+    }
+  ],
+  "wrong_sha": {
+    "status": "BLOCKED",
+    "error_kind": "SOURCE_SHA_OR_DIRTY_CHECKOUT",
+    "exit_code": 1
+  },
+  "missing_root": {
+    "status": "BLOCKED",
+    "error_kind": "INVALID_SOURCE_ROOT",
+    "exit_code": 1
+  },
+  "source_clean_before_after": true,
+  "artifact_sha256": "064c6a7c871a03509c7a9ade1d4d821be8cc5897a991674dd6c1c66c580cab1b",
+  "business_acceptance": false,
+  "hosted_actions_accepted": false,
+  "cross_executor_C1_C5_accepted": false,
+  "limitations": [
+    "Isolated local test-gate evidence; no live product consumer ACK",
+    "Git fixture integration requires OS permission not available in default sandbox",
+    "Hosted Actions failed before job steps; root cause not established"
+  ]
+}

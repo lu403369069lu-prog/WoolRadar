@@ -1,0 +1,59 @@
+{
+  "kind": "isolated_negative_reproduction",
+  "base_repo": "lu403369069lu-prog/WoolRadar",
+  "base_commit": "e44589104585c4b2a93081d00a145263666f9264",
+  "original_git_blob": "dcb39f1aca78649e8383c40c9ed7a08a1546102e",
+  "original_sha256": "846d047df9cbaaa603e6006725e1525c6ced49baf8c15ba6d77d6fb26f7c4874",
+  "candidate_sha256": "89ee86b2eadeb6b57a92a658b63ddcf6b58370ed149a04d0f0a72c61eb00a427",
+  "python": "3.14.5 (tags/v3.14.5:5607950, May 10 2026, 10:43:50) [MSC v.1944 64 bit (AMD64)]",
+  "tests": {
+    "baseline_real_failure": true,
+    "poisoned_false_pass": true,
+    "candidate_real_failure": true,
+    "original_sam_env_leaked": true,
+    "candidate_sam_env_stripped": true,
+    "sam_original_windows_blocked_or_fails": true,
+    "sam_portable_baseline_failed": true,
+    "sam_portable_inherited_preload_false_pass": true,
+    "sam_candidate_restores_failure": true
+  },
+  "all_expected": true,
+  "actual_original_results": {
+    "baseline": {
+      "status": "FAIL",
+      "exit_code": 1
+    },
+    "poisoned": {
+      "status": "PASS",
+      "exit_code": 0
+    },
+    "candidate": {
+      "status": "FAIL",
+      "exit_code": 1
+    }
+  },
+  "sam_portability_control": "Windows original bare npm returned BLOCKED (WinError 2); portable control changes only npm to npm.cmd; real npm/Node synthetic test",
+  "sam_actual_results": {
+    "original": {
+      "status": "BLOCKED",
+      "exit_code": null
+    },
+    "portable_baseline": {
+      "status": "FAIL",
+      "exit_code": 1
+    },
+    "portable_poisoned": {
+      "status": "PASS",
+      "exit_code": 0
+    },
+    "candidate": {
+      "status": "FAIL",
+      "exit_code": 1
+    }
+  },
+  "constraints": [
+    "Synthetic isolated tests. No original SAM or WoolRadar business test acceptance.",
+    "Env filtering does not itself protect mutable checkouts or user-site startup hooks.",
+    "Candidate has not been integrated into a remote PR or deployed."
+  ]
+}

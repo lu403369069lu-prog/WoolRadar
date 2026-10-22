@@ -248,14 +248,19 @@ def pinned_python_snapshot(src, target):
     if not objects or not Path(objects).is_dir():
         raise ValueError("source object directory not available")
     target.mkdir()
-    subprocess.run(["git", "init", "-q", str(target)],
+    # No caller/global template may install executable checkout hooks.
+    subprocess.run(["git", "init", "--template=", "-q", str(target)],
                    capture_output=True, check=True, timeout=20)
     # Git expects UTF-8 paths in the alternates file. ASCII corrupts Windows
     # checkout roots containing non-ASCII directory names.
     info = target / ".git" / "objects" / "info" / "alternates"
     info.write_text(str(Path(objects).resolve()).replace("\\", "/") + "\n",
                     encoding="utf-8", newline="\n")
+    # Command-scoped override also disables inherited core.hooksPath. A private
+    # nonexistent directory avoids platform-specific /dev/null handling.
+    disabled_hooks = target / ".git" / "relay-disabled-hooks"
     subprocess.run(["git", "-C", str(target), "-c", "core.autocrlf=false",
+                    "-c", "core.hooksPath=" + str(disabled_hooks),
                     "checkout", "--detach", "--quiet", pinned],
                    capture_output=True, check=True, timeout=90)
     if source_sha(target) != pinned:

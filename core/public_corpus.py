@@ -2,9 +2,12 @@
 from __future__ import annotations
 
 import json
+import ipaddress
 import os
 import re
 import tempfile
+from datetime import datetime, timezone
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit, unquote_plus
 
@@ -53,13 +56,44 @@ def _semantic_query(query: str) -> tuple[str, bool]:
             kept[key] = value
     return urlencode(sorted(kept.items())), preserved
 
+def _is_lexical_public_host(host: str) -> bool:
+    """Require an ordinary public DNS hostname, matching sampler scope.
+
+    Lexical check only: DNS resolution, redirects, ownership and the actual
+    claimability of a source need independent review.
+    """
+    canonical = host.lower().rstrip('.')
+    if (not re.fullmatch(r'[a-z0-9.-]+', canonical) or '..' in canonical
+            or canonical.startswith('-') or '.' not in canonical
+            or canonical.rsplit('.', 1)[-1].isdigit()):
+        return False
+    denied = ('localhost', 'local', 'internal', 'home.arpa', 'lan',
+              'onion', 'invalid', 'test', 'example')
+    if any(canonical == suffix or canonical.endswith('.' + suffix)
+           for suffix in denied):
+        return False
+    try:
+        ipaddress.ip_address(canonical)
+    except ValueError:
+        return True
+    return False
+
+
+def _safe_public_text(value: str) -> str:
+    """Neutralize malformed UTF-16 surrogate codepoints from untrusted feeds."""
+    return re.sub(r'[\ud800-\udfff]', '\ufffd', value)
+
+
 def _clean_url_identity(value: str) -> tuple[str, bool]:
     try:
+        value.encode('utf-8')  # reject malformed Unicode before URL identity admission
         parsed = urlsplit(value)
         if parsed.scheme not in {'http', 'https'} or not parsed.hostname:
             return '', False
         # Port access validates malformed ports without making a network request.
         parsed.port
+        if not _is_lexical_public_host(parsed.hostname):
+            return '[non-public host redacted]', False
         query, preserved = _semantic_query(parsed.query)
         if parsed.username is not None or parsed.password is not None:
             preserved = False
@@ -77,6 +111,31 @@ def _clean_url_identity(value: str) -> tuple[str, bool]:
         return urlunsplit((parsed.scheme, parsed.netloc.rsplit('@',1)[-1], parsed.path, query, fragment)), preserved
     except (ValueError, UnicodeError):
         return '[invalid URL redacted]', False
+
+def _clean_published_at(value: object) -> str:
+    """Admit only explicit-zone public ISO-8601 or RFC-2822 dates; render UTC.
+
+    This is untrusted public source metadata, not a scheduling or eligibility
+    authority. Unknown, private-looking or zone-free input is not a date.
+    """
+    if not isinstance(value, str) or not value or len(value) > 80:
+        return ''
+    candidate = value.strip()
+    if not candidate or any(ord(ch) < 32 for ch in candidate):
+        return ''
+    try:
+        if re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})', candidate):
+            stamp = datetime.fromisoformat(candidate.replace('Z', '+00:00'))
+        elif re.fullmatch(r'(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun),? \d{1,2} (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \d{4} \d{2}:\d{2}:\d{2} (?:GMT|UT|[+-]\d{4})', candidate, re.I):
+            stamp = parsedate_to_datetime(candidate)
+        else:
+            return ''
+        if stamp.tzinfo is None or stamp.utcoffset() is None:
+            return ''
+        return stamp.astimezone(timezone.utc).isoformat(timespec='seconds').replace('+00:00', 'Z')
+    except (ValueError, TypeError, OverflowError):
+        return ''
+
 
 def _clean_url(value: str) -> str:
     return _clean_url_identity(value)[0]
@@ -102,15 +161,15 @@ def record_public_sample(root: Path, node: str, source: dict, rows: list[dict], 
         original = str(row.get('url', ''))
         url, identity_preserved = _clean_url_identity(original)
         title, summary = str(row.get('title', '')), str(row.get('summary', ''))
-        clean_title, clean_summary = _clean_text(title), _clean_text(summary)
+        clean_title, clean_summary = _clean_text(_safe_public_text(title)), _clean_text(_safe_public_text(summary))
         sample_rows.append({'index': index, 'title': clean_title[:512], 'url': url[:2048],
-                            'summary': clean_summary[:20000], 'published_at': str(row.get('published_at', ''))[:80],
+                            'summary': clean_summary[:20000], 'published_at': _clean_published_at(row.get('published_at', '')),
                             'accepted': bool(accepted[index]), 'url_sanitized': url[:2048] != original,
                             'url_identity_preserved': identity_preserved and len(url) <= 2048,
                             'text_url_redacted': clean_title != title or clean_summary != summary,
                             'content_truncated': len(clean_title) > 512 or len(clean_summary) > 20000 or len(url) > 2048})
-    payload = {'schema_version': 1, 'sampled_at': utc_now(), 'node': str(node)[:64], 'source_id': source_id,
-               'platform': str(source.get('platform', ''))[:128], 'public_only': True,
+    payload = {'schema_version': 1, 'sampled_at': utc_now(), 'node': _safe_public_text(str(node))[:64], 'source_id': source_id,
+               'platform': _safe_public_text(str(source.get('platform', '')))[:128], 'public_only': True,
                'fetched_count': len(rows), 'stored_count': len(sample_rows), 'rows_truncated': len(rows) > 500,
                'rows': sample_rows, 'max_utf8_bytes': MAX_BYTES,
                'limits': 'Latest bounded public sample only; redactions/truncations marked; not a full platform or time-window denominator'}

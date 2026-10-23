@@ -37,6 +37,127 @@ class ConcurrentCampaignReviewTests(unittest.TestCase):
         winner.upsert_candidate(Candidate('node-two', 'synthetic', TITLES[SECOND], SECOND))
         return winner, challenger
 
+    def test_direct_writer_rejects_unqualified_review_before_backup(self):
+        with TemporaryDirectory() as temporary:
+            db, _ = self.seed(Path(temporary) / 'review.db')
+            base = review('Ab123')
+            invalid = [
+                {**base, 'member_urls': [FIRST]},
+                {**base, 'member_urls': [FIRST, FIRST]},
+                {**base, 'method': 'self_asserted'},
+                {**base, 'member_titles': {FIRST: TITLES[FIRST]}},
+            ]
+            for candidate in invalid:
+                with self.subTest(candidate=candidate):
+                    with self.assertRaises(ValueError):
+                        db.reindex(campaign_review=candidate)
+                    with db.connect() as conn:
+                        self.assertEqual(conn.execute(
+                            'SELECT COUNT(*) FROM campaign_links').fetchone()[0], 0)
+                        self.assertEqual(conn.execute(
+                            'SELECT COUNT(*) FROM evidence WHERE provenance_key LIKE ?',
+                            ('reviewed-campaign:%',)).fetchone()[0], 0)
+                    self.assertEqual(
+                        list(Path(temporary).glob('review-before-reindex-*.db')), [])
+            self.assertEqual(len(db.list_events()), 2)
+
+    def test_direct_writer_refuses_changed_same_url_review_content(self):
+        with TemporaryDirectory() as temporary:
+            db, _ = self.seed(Path(temporary) / 'review.db')
+            accepted = review('Ab123')
+            db.review_campaign(accepted)
+            previous = {}
+            with db.connect() as conn:
+                for name in ('campaign_links', 'evidence'):
+                    previous[name] = [tuple(row) for row in conn.execute(
+                        'SELECT * FROM ' + name + ' ORDER BY 1')]
+            original_backups = list(Path(temporary).glob('review-before-reindex-*.db'))
+            changed = review('Ab123')
+            changed['member_titles'] = {**TITLES, FIRST: 'Altered assertion'}
+            with self.assertRaisesRegex(ValueError, '^CAMPAIGN_REVIEW_CONFLICT$'):
+                db.reindex(campaign_review=changed)
+            with db.connect() as conn:
+                for name in ('campaign_links', 'evidence'):
+                    self.assertEqual([tuple(row) for row in conn.execute(
+                        'SELECT * FROM ' + name + ' ORDER BY 1')], previous[name])
+            self.assertEqual(
+                len(list(Path(temporary).glob('review-before-reindex-*.db'))),
+                len(original_backups))
+
+    def test_valid_direct_writer_still_migrates(self):
+        with TemporaryDirectory() as temporary:
+            db, _ = self.seed(Path(temporary) / 'review.db')
+            outcome = db.reindex(campaign_review=review('Ab123'))
+            self.assertEqual(outcome['merged'], 1)
+            with db.connect() as conn:
+                self.assertEqual(
+                    conn.execute('SELECT COUNT(*) FROM campaign_links').fetchone()[0],
+                    2)
+                self.assertEqual(conn.execute('PRAGMA foreign_key_check').fetchall(), [])
+
+    def test_wrapper_refuses_changed_same_url_review_content(self):
+        with TemporaryDirectory() as temporary:
+            db, _ = self.seed(Path(temporary) / 'review.db')
+            accepted = review('Ab123')
+            db.review_campaign(accepted)
+            changed = review('Ab123')
+            changed['member_titles'] = {**TITLES, FIRST: 'Altered assertion'}
+            with self.assertRaisesRegex(ValueError, '^CAMPAIGN_REVIEW_CONFLICT$'):
+                db.review_campaign(changed)
+            with db.connect() as conn:
+                saved = [json.loads(item[0]) for item in conn.execute(
+                    'SELECT review_json FROM campaign_links')]
+            self.assertEqual(len(saved), 2)
+            self.assertTrue(all(item == accepted for item in saved))
+
+    def test_same_url_different_review_race_cannot_replace_committed_review(self):
+        # The PR100 concurrent same-URL assertion race is distinct from the
+        # existing different-URL race. Preserve both when integrating fixes.
+        with TemporaryDirectory() as temporary:
+            winner, challenger = self.seed(Path(temporary) / 'review.db')
+            accepted = review('Ab123')
+            changed = review('Ab123')
+            changed['member_titles'] = {**TITLES,
+                                        FIRST: 'Altered campaign identity assertion'}
+            reached, release = threading.Event(), threading.Event()
+            outcome = {}
+            original = challenger.reindex
+
+            def paused_reindex(*args, **kwargs):
+                reached.set()
+                if not release.wait(10):
+                    raise TimeoutError('same-URL contender not released')
+                return original(*args, **kwargs)
+
+            def competing_review():
+                try:
+                    outcome['result'] = challenger.review_campaign(changed)
+                except BaseException as exc:
+                    outcome['error'] = exc
+
+            with mock.patch.object(challenger, 'reindex', side_effect=paused_reindex):
+                thread = threading.Thread(target=competing_review)
+                thread.start()
+                try:
+                    self.assertTrue(reached.wait(10),
+                                    'contender did not complete precheck')
+                    winner.review_campaign(accepted)
+                finally:
+                    release.set()
+                    thread.join(20)
+
+            self.assertFalse(thread.is_alive())
+            self.assertNotIn('result', outcome)
+            self.assertIsInstance(outcome.get('error'), ValueError)
+            self.assertEqual(str(outcome['error']), 'CAMPAIGN_REVIEW_CONFLICT')
+            with winner.connect() as conn:
+                saved = [json.loads(item[0]) for item in conn.execute(
+                    'SELECT review_json FROM campaign_links ORDER BY url')]
+            self.assertEqual(len(saved), 2)
+            self.assertTrue(all(item == accepted for item in saved))
+            self.assertEqual(len(list(Path(temporary).glob(
+                'review-before-reindex-*.db'))), 1)
+
     def test_conflicting_review_cannot_replace_commit_after_precheck(self):
         with TemporaryDirectory() as temporary:
             path = Path(temporary) / 'review.db'

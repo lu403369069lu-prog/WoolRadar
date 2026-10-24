@@ -67,5 +67,23 @@ class ReviewTitleControlTests(unittest.TestCase):
         self.assertEqual(reviewed_campaign_url(candidate,FIRST,'免费云服务 ☁️'),
                          'https://gleam.io/Ab123')
 
+class ReviewDistinctMemberTests(unittest.TestCase):
+    def test_two_marketing_variants_of_one_url_are_not_two_articles(self):
+        first=FIRST
+        second=FIRST+'?utm_source=newsletter'
+        sample=dict(method='normal_browser_read',campaign_url='https://gleam.io/Ab123',
+                    member_urls=[first,second],
+                    member_titles={first:TITLE1,second:TITLE1})
+        self.assertIsNone(reviewed_campaign_url(sample, first, TITLE1))
+
+    def test_duplicate_exact_member_is_rejected(self):
+        sample=review()
+        sample['member_urls']=[FIRST,FIRST]
+        self.assertIsNone(reviewed_campaign_url(sample,FIRST,TITLE1))
+
+    def test_two_distinct_reviewed_articles_still_match(self):
+        self.assertEqual(reviewed_campaign_url(review(),FIRST,TITLE1),
+                         'https://gleam.io/Ab123')
+
 if __name__ == '__main__':
     unittest.main()

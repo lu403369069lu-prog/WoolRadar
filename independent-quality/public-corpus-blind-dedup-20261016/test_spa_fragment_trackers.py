@@ -27,3 +27,22 @@ class SpaFragmentTrackerTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+class UrlControlIdentityTests(unittest.TestCase):
+    def test_raw_controls_and_invisible_format_cannot_change_url_identity(self):
+        for url in (
+            'https://example.org/cl\naim?batch=2',
+            'https://example.org/cl\taim',
+            '\x01https://example.org/claim',
+            'https://example.org/claim\x7f?batch=2',
+            'https://example.org/#/cl\naim?batch=2',
+            'https://example.org/#/claim?batch=\x00X',
+            'https://example.org/claim\u202eoffer',
+            'https://example.org/#/claim\u200b?batch=2',
+        ):
+            with self.subTest(url=repr(url)):
+                self.assertIsNone(canonical_public_url(url))
+
+    def test_legitimate_unicode_query_remains_usable(self):
+        self.assertEqual(canonical_public_url('https://example.org/#/claim?region=中国'),
+                         'https://example.org/#/claim?region=中国')

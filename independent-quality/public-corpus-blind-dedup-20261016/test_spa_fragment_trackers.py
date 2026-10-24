@@ -25,8 +25,6 @@ class SpaFragmentTrackerTests(unittest.TestCase):
                          'https://example.org/#/claim?batch=2026')
 
 
-if __name__ == '__main__':
-    unittest.main()
 
 class UrlControlIdentityTests(unittest.TestCase):
     def test_raw_controls_and_invisible_format_cannot_change_url_identity(self):
@@ -53,3 +51,6 @@ class UrlOuterWhitespaceIdentityTests(unittest.TestCase):
                     '\u00a0https://example.org/claim'):
             with self.subTest(url=repr(url)):
                 self.assertIsNone(canonical_public_url(url))
+
+if __name__ == '__main__':
+    unittest.main()

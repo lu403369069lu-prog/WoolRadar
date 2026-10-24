@@ -212,8 +212,12 @@ class Database:
             if not conn.in_transaction:
                 conn.execute('BEGIN IMMEDIATE')
             link = conn.execute('SELECT review_json FROM campaign_links WHERE url=?', (normalize_url(candidate.url),)).fetchone()
+            # Producer metadata is not an authorization record. Only a review
+            # committed in campaign_links may bind a public campaign identity.
+            candidate.metadata = {**candidate.metadata}
+            candidate.metadata.pop('campaign_review', None)
             if link:
-                candidate.metadata = {**candidate.metadata, 'campaign_review': json.loads(link[0])}
+                candidate.metadata['campaign_review'] = json.loads(link[0])
             key = canonical_key(candidate)
             batch = candidate.batch_id or ''
             now = candidate.discovered_at or utc_now()
@@ -335,6 +339,7 @@ class Database:
         changed = 0
         for row in rows:
             metadata = json.loads(row['metadata_json'] or '{}')
+            metadata.pop('campaign_review', None)
             review = links.get(normalize_url(row['primary_url']))
             if review:
                 metadata['campaign_review'] = review
@@ -441,9 +446,12 @@ class Database:
             merged_terminals = {}
             for row in rows:
                 metadata = json.loads(row['metadata_json'])
+                stale_claim = 'campaign_review' in metadata
+                metadata.pop('campaign_review', None)
                 link = conn.execute('SELECT review_json FROM campaign_links WHERE url=?', (normalize_url(row['primary_url']),)).fetchone()
                 if link:
                     metadata['campaign_review'] = json.loads(link[0])
+                if stale_claim or link:
                     conn.execute('UPDATE events SET metadata_json=? WHERE id=?', (json.dumps(metadata, ensure_ascii=False), row['id']))
                 candidate = Candidate(row['node'], row['source'], row['title'], row['primary_url'],
                     published_at=row['published_at'] or '', batch_id=row['batch_id'],

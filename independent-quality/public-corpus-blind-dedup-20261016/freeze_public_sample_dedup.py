@@ -64,7 +64,7 @@ def _safe_public_query_parts(query: str) -> list[str] | None:
 
 
 def canonical_public_url(raw: object) -> str | None:
-    if not isinstance(raw, str) or len(raw) > 2048 or not raw:
+    if not isinstance(raw, str) or len(raw) > 2048 or not raw or raw != raw.strip():
         return None
     # urlsplit drops CR/LF/TAB and leading C0 controls. Reject the raw
     # input first so freeze/dedup never silently changes an article identity.

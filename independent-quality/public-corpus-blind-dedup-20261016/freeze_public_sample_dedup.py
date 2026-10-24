@@ -86,10 +86,13 @@ def canonical_public_url(raw: object) -> str | None:
         retained = _safe_public_query_parts(p.query)
         if retained is None:
             return None
-        _, separator, fragment_query = p.fragment.partition('?')
-        if separator and _safe_public_query_parts(fragment_query) is None:
+        fragment_route, separator, fragment_query = p.fragment.partition('?')
+        fragment_parts = _safe_public_query_parts(fragment_query) if separator else []
+        if fragment_parts is None:
             return None
-        fragment = p.fragment if p.fragment.startswith(('/', '!/')) else ''
+        fragment = ''
+        if p.fragment.startswith(('/', '!/')):
+            fragment = fragment_route + (('?' + '&'.join(fragment_parts)) if fragment_parts else '')
         if re.search(r'(?i)(?:access_token|refresh_token|id_token|password|session|api_key|token|secret|auth|code|signature|sig|email|phone)=',
                      fragment):
             return None

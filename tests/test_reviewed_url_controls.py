@@ -67,6 +67,7 @@ class ReviewTitleControlTests(unittest.TestCase):
         self.assertEqual(reviewed_campaign_url(candidate,FIRST,'免费云服务 ☁️'),
                          'https://gleam.io/Ab123')
 
+
 class ReviewDistinctMemberTests(unittest.TestCase):
     def test_two_marketing_variants_of_one_url_are_not_two_articles(self):
         first=FIRST

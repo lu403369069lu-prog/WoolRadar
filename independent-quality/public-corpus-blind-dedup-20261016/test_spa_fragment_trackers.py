@@ -52,5 +52,19 @@ class UrlOuterWhitespaceIdentityTests(unittest.TestCase):
             with self.subTest(url=repr(url)):
                 self.assertIsNone(canonical_public_url(url))
 
+
+class PrivateHostRejectionTests(unittest.TestCase):
+    def test_internal_hosts_cannot_enter_public_corpus(self):
+        for host in ('localhost','127.0.0.1','10.0.0.1','192.168.1.9',
+                     'service.internal','printer.local','169.254.169.254'):
+            with self.subTest(host=host):
+                self.assertIsNone(canonical_public_url('http://'+host+'/offer'))
+
+    def test_public_fqdn_and_global_address_remain_eligible(self):
+        self.assertEqual(canonical_public_url('https://example.org/offer'),
+                         'https://example.org/offer')
+        self.assertEqual(canonical_public_url('https://8.8.8.8/offer'),
+                         'https://8.8.8.8/offer')
+
 if __name__ == '__main__':
     unittest.main()

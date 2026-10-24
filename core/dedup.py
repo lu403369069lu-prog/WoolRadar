@@ -30,7 +30,7 @@ def normalize_url(url: str) -> str:
     # Only explicit tracking fields are disposable. Prefix deletion silently
     # collapsed distinct source_campaign/reference_id variants into one offer.
     query = [(k, v) for k, v in parse_qsl(parts.query, keep_blank_values=True)
-             if not (k.lower().startswith('utm_') or k.lower() in {'ref', 'source'})]
+             if not (k.lower() in {'utm_source', 'utm_medium', 'utm_term', 'utm_content', 'ref', 'source'})]
     # Sorting different keys avoids duplicate events for equivalent URLs,
     # while stable sorting preserves the order of repeated values per key.
     query.sort(key=lambda item: item[0])

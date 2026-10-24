@@ -95,8 +95,8 @@ def canonical_key(candidate: Candidate) -> str:
 def _unsafe_review_url(value: object) -> bool:
     # urlsplit/strip can silently discard CR/LF/TAB and leading controls.
     # This would change the identity of a manually approved campaign member.
-    return not isinstance(value, str) or any(
-        unicodedata.category(ch) in {'Cc', 'Cf', 'Cs', 'Zl', 'Zp'} for ch in value)
+    return (not isinstance(value, str) or value != value.strip() or any(
+        unicodedata.category(ch) in {'Cc', 'Cf', 'Cs', 'Zl', 'Zp'} for ch in value))
 
 
 def reviewed_campaign_url(review, member_url: str, title: str | None = None) -> str | None:

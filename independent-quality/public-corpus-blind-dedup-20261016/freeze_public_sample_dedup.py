@@ -10,6 +10,7 @@ import json
 import math
 import os
 import re
+import unicodedata
 from pathlib import Path
 from urllib.parse import unquote_plus, urlsplit, urlunsplit
 
@@ -64,6 +65,10 @@ def _safe_public_query_parts(query: str) -> list[str] | None:
 
 def canonical_public_url(raw: object) -> str | None:
     if not isinstance(raw, str) or len(raw) > 2048 or not raw:
+        return None
+    # urlsplit drops CR/LF/TAB and leading C0 controls. Reject the raw
+    # input first so freeze/dedup never silently changes an article identity.
+    if any(unicodedata.category(ch) in {'Cc', 'Cf', 'Cs', 'Zl', 'Zp'} for ch in raw):
         return None
     try:
         raw.encode('utf-8')  # reject unpaired Unicode surrogates, including in paths

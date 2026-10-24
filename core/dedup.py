@@ -115,7 +115,10 @@ def reviewed_campaign_url(review, member_url: str, title: str | None = None) -> 
     if (not isinstance(members, list) or not 2 <= len(members) <= 20
             or any(_unsafe_review_url(value) for value in members)):
         return None
-    if normalize_url(member_url) not in {normalize_url(value) for value in members}:
+    normalized_members = {normalize_url(value) for value in members}
+    # A tracking variation or repeated URL is still only one article.
+    # Never grant reviewed campaign identity without distinct source members.
+    if len(normalized_members) != len(members) or normalize_url(member_url) not in normalized_members:
         return None
     titles = review.get('member_titles')
     if (not isinstance(titles, dict)

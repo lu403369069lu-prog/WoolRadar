@@ -6,10 +6,12 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import ipaddress
 import json
 import math
 import os
 import re
+import unicodedata
 from pathlib import Path
 from urllib.parse import unquote_plus, urlsplit, urlunsplit
 
@@ -63,7 +65,11 @@ def _safe_public_query_parts(query: str) -> list[str] | None:
 
 
 def canonical_public_url(raw: object) -> str | None:
-    if not isinstance(raw, str) or len(raw) > 2048 or not raw:
+    if not isinstance(raw, str) or len(raw) > 2048 or not raw or raw != raw.strip():
+        return None
+    # urlsplit drops CR/LF/TAB and leading C0 controls. Reject the raw
+    # input first so freeze/dedup never silently changes an article identity.
+    if any(unicodedata.category(ch) in {'Cc', 'Cf', 'Cs', 'Zl', 'Zp'} for ch in raw):
         return None
     try:
         raw.encode('utf-8')  # reject unpaired Unicode surrogates, including in paths
@@ -73,6 +79,18 @@ def canonical_public_url(raw: object) -> str | None:
         host = p.hostname.lower().rstrip('.')
         if not re.fullmatch(r'[a-z0-9.-]+', host) or '..' in host or host.startswith('-'):
             return None
+        if (host == 'localhost' or host.endswith(('.localhost', '.local', '.internal', '.invalid', '.test'))):
+            return None
+        try:
+            address = ipaddress.ip_address(host)
+        except ValueError:
+            # Reject numeric aliases and single-label hosts that cannot
+            # establish a public DNS source identity in an offline freezer.
+            if '.' not in host or re.fullmatch(r'[0-9.]+', host):
+                return None
+        else:
+            if not address.is_global:
+                return None
         # Never collapse business-significant query parameters or app routes.
         # Remove only known marketing trackers; a query such as ?batch=2
         # can represent a genuinely different grant/VPS campaign.
@@ -86,10 +104,13 @@ def canonical_public_url(raw: object) -> str | None:
         retained = _safe_public_query_parts(p.query)
         if retained is None:
             return None
-        _, separator, fragment_query = p.fragment.partition('?')
-        if separator and _safe_public_query_parts(fragment_query) is None:
+        fragment_route, separator, fragment_query = p.fragment.partition('?')
+        fragment_parts = _safe_public_query_parts(fragment_query) if separator else []
+        if fragment_parts is None:
             return None
-        fragment = p.fragment if p.fragment.startswith(('/', '!/')) else ''
+        fragment = ''
+        if p.fragment.startswith(('/', '!/')):
+            fragment = fragment_route + (('?' + '&'.join(fragment_parts)) if fragment_parts else '')
         if re.search(r'(?i)(?:access_token|refresh_token|id_token|password|session|api_key|token|secret|auth|code|signature|sig|email|phone)=',
                      fragment):
             return None

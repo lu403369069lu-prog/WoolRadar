@@ -46,3 +46,10 @@ class UrlControlIdentityTests(unittest.TestCase):
     def test_legitimate_unicode_query_remains_usable(self):
         self.assertEqual(canonical_public_url('https://example.org/#/claim?region=中国'),
                          'https://example.org/#/claim?region=中国')
+
+class UrlOuterWhitespaceIdentityTests(unittest.TestCase):
+    def test_leading_and_trailing_whitespace_cannot_change_public_identity(self):
+        for url in (' https://example.org/claim', 'https://example.org/claim ',
+                    '\u00a0https://example.org/claim'):
+            with self.subTest(url=repr(url)):
+                self.assertIsNone(canonical_public_url(url))

@@ -36,8 +36,6 @@ class ReviewedUrlControlTests(unittest.TestCase):
         self.assertEqual(reviewed_campaign_url(review(),FIRST,TITLE1),'https://gleam.io/Ab123')
         self.assertEqual(reviewed_campaign_url(review(),SECOND,TITLE2),'https://gleam.io/Ab123')
 
-if __name__=='__main__':
-    unittest.main()
 
 class ReviewOuterWhitespaceTests(unittest.TestCase):
     def test_space_tainted_member_and_campaign_urls_are_not_reviewed(self):
@@ -68,3 +66,6 @@ class ReviewTitleControlTests(unittest.TestCase):
         candidate['member_titles'][FIRST]='免费云服务 ☁️'
         self.assertEqual(reviewed_campaign_url(candidate,FIRST,'免费云服务 ☁️'),
                          'https://gleam.io/Ab123')
+
+if __name__ == '__main__':
+    unittest.main()

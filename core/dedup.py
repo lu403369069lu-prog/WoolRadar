@@ -99,6 +99,13 @@ def _unsafe_review_url(value: object) -> bool:
         unicodedata.category(ch) in {'Cc', 'Cf', 'Cs', 'Zl', 'Zp'} for ch in value))
 
 
+def _unsafe_review_title(value: object) -> bool:
+    # A normalized title must not silently erase invisible or directional
+    # text changes when binding an article to a manually reviewed campaign.
+    return not isinstance(value, str) or any(
+        unicodedata.category(ch) in {'Cc', 'Cf', 'Cs', 'Zl', 'Zp'} for ch in value)
+
+
 def reviewed_campaign_url(review, member_url: str, title: str | None = None) -> str | None:
     if not isinstance(review, dict) or review.get('method') != 'normal_browser_read':
         return None
@@ -111,9 +118,13 @@ def reviewed_campaign_url(review, member_url: str, title: str | None = None) -> 
     if normalize_url(member_url) not in {normalize_url(value) for value in members}:
         return None
     titles = review.get('member_titles')
-    if not isinstance(titles, dict) or not all(isinstance(titles.get(url), str) and titles[url].strip() for url in members):
+    if (not isinstance(titles, dict)
+            or not all(not _unsafe_review_title(titles.get(url)) and titles[url].strip()
+                       for url in members)):
         return None
     if title is not None:
+        if _unsafe_review_title(title):
+            return None
         known = next(titles[url] for url in members if normalize_url(url) == normalize_url(member_url))
         if normalize_title(title) != normalize_title(known):
             return None

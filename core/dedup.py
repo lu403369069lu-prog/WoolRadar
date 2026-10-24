@@ -92,23 +92,49 @@ def canonical_key(candidate: Candidate) -> str:
     return hashlib.sha256(normalized.encode('utf-8')).hexdigest()[:24]
 
 
+def _unsafe_review_url(value: object) -> bool:
+    # urlsplit/strip can silently discard CR/LF/TAB and leading controls.
+    # This would change the identity of a manually approved campaign member.
+    return (not isinstance(value, str) or value != value.strip() or any(
+        unicodedata.category(ch) in {'Cc', 'Cf', 'Cs', 'Zl', 'Zp'} for ch in value))
+
+
+def _unsafe_review_title(value: object) -> bool:
+    # A normalized title must not silently erase invisible or directional
+    # text changes when binding an article to a manually reviewed campaign.
+    return not isinstance(value, str) or any(
+        unicodedata.category(ch) in {'Cc', 'Cf', 'Cs', 'Zl', 'Zp'} for ch in value)
+
+
 def reviewed_campaign_url(review, member_url: str, title: str | None = None) -> str | None:
     if not isinstance(review, dict) or review.get('method') != 'normal_browser_read':
         return None
-    members = review.get('member_urls')
-    if not isinstance(members, list) or not 2 <= len(members) <= 20 or not all(isinstance(value, str) for value in members):
+    if _unsafe_review_url(member_url):
         return None
-    if normalize_url(member_url) not in {normalize_url(value) for value in members}:
+    members = review.get('member_urls')
+    if (not isinstance(members, list) or not 2 <= len(members) <= 20
+            or any(_unsafe_review_url(value) for value in members)):
+        return None
+    normalized_members = {normalize_url(value) for value in members}
+    # A tracking variation or repeated URL is still only one article.
+    # Never grant reviewed campaign identity without distinct source members.
+    if len(normalized_members) != len(members) or normalize_url(member_url) not in normalized_members:
         return None
     titles = review.get('member_titles')
-    if not isinstance(titles, dict) or not all(isinstance(titles.get(url), str) and titles[url].strip() for url in members):
+    if (not isinstance(titles, dict)
+            or not all(not _unsafe_review_title(titles.get(url)) and titles[url].strip()
+                       for url in members)):
         return None
     if title is not None:
+        if _unsafe_review_title(title):
+            return None
         known = next(titles[url] for url in members if normalize_url(url) == normalize_url(member_url))
         if normalize_title(title) != normalize_title(known):
             return None
     try:
         url = review.get('campaign_url', '')
+        if _unsafe_review_url(url):
+            return None
         parsed = urlsplit(url)
         if review.get('review_kind') == 'official_campaign_v2' and parsed.hostname != 'gleam.io':
             return _reviewed_official_identity(review, parsed)

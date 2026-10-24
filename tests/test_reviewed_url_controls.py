@@ -49,3 +49,22 @@ class ReviewOuterWhitespaceTests(unittest.TestCase):
                 sample=review()
                 sample['campaign_url']=bad
                 self.assertIsNone(reviewed_campaign_url(sample,FIRST))
+
+class ReviewTitleControlTests(unittest.TestCase):
+    def test_spoofed_runtime_title_cannot_inherit_review_identity(self):
+        for title in (TITLE1+'\u202e', TITLE1+'\u200b', TITLE1+'\n', TITLE1+'\t'):
+            with self.subTest(title=repr(title)):
+                self.assertIsNone(reviewed_campaign_url(review(), FIRST, title))
+
+    def test_poisoned_reviewed_title_does_not_certify_original(self):
+        for title in (TITLE1+'\u202e', TITLE1+'\u200b', TITLE1+'\n'):
+            with self.subTest(title=repr(title)):
+                candidate=review()
+                candidate['member_titles'][FIRST]=title
+                self.assertIsNone(reviewed_campaign_url(candidate, FIRST, TITLE1))
+
+    def test_normal_multilingual_title_works(self):
+        candidate=review()
+        candidate['member_titles'][FIRST]='免费云服务 ☁️'
+        self.assertEqual(reviewed_campaign_url(candidate,FIRST,'免费云服务 ☁️'),
+                         'https://gleam.io/Ab123')

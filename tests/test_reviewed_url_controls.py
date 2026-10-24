@@ -38,3 +38,14 @@ class ReviewedUrlControlTests(unittest.TestCase):
 
 if __name__=='__main__':
     unittest.main()
+
+class ReviewOuterWhitespaceTests(unittest.TestCase):
+    def test_space_tainted_member_and_campaign_urls_are_not_reviewed(self):
+        for bad in (' '+FIRST,FIRST+' ','\u00a0'+FIRST):
+            with self.subTest(member=repr(bad)):
+                self.assertIsNone(reviewed_campaign_url(review(),bad))
+        for bad in (' https://gleam.io/Ab123','\u00a0https://gleam.io/Ab123'):
+            with self.subTest(campaign=repr(bad)):
+                sample=review()
+                sample['campaign_url']=bad
+                self.assertIsNone(reviewed_campaign_url(sample,FIRST))

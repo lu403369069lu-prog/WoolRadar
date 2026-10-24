@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import ipaddress
 import json
 import math
 import os
@@ -78,6 +79,18 @@ def canonical_public_url(raw: object) -> str | None:
         host = p.hostname.lower().rstrip('.')
         if not re.fullmatch(r'[a-z0-9.-]+', host) or '..' in host or host.startswith('-'):
             return None
+        if (host == 'localhost' or host.endswith(('.localhost', '.local', '.internal', '.invalid', '.test'))):
+            return None
+        try:
+            address = ipaddress.ip_address(host)
+        except ValueError:
+            # Reject numeric aliases and single-label hosts that cannot
+            # establish a public DNS source identity in an offline freezer.
+            if '.' not in host or re.fullmatch(r'[0-9.]+', host):
+                return None
+        else:
+            if not address.is_global:
+                return None
         # Never collapse business-significant query parameters or app routes.
         # Remove only known marketing trackers; a query such as ?batch=2
         # can represent a genuinely different grant/VPS campaign.

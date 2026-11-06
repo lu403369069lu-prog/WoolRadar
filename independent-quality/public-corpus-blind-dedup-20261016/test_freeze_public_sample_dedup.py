@@ -9,7 +9,7 @@ from freeze_public_sample_dedup import freeze_public_sources, canonical_public_u
 
 D='a'*64
 def row(url, **kwargs):
-    return {'url':url,'title':'Public project','summary':'Public summary','accepted':True,**kwargs}
+    return {'url':url,'title':'Public project','summary':'Public summary','accepted':True,'url_identity_preserved':True,**kwargs}
 def sample(name, urls):
     return ({'schema_version':1,'public_only':True,'source_id':name,'rows':[row(u) for u in urls]},D)
 
@@ -38,6 +38,35 @@ class CleanSample(unittest.TestCase):
         self.assertEqual(canonical_public_url('https://example.org/claim?ref=inviteA'),
                          'https://example.org/claim?ref=inviteA')
         self.assertIsNone(canonical_public_url('https://example.org/claim?access_token=secret'))
+    def test_private_hosts_never_enter_public_blind_candidates(self):
+        blocked = [
+            'http://localhost/offer', 'http://sub.localhost/offer',
+            'http://127.0.0.1/offer', 'http://10.2.3.4/offer',
+            'http://172.16.9.9/offer', 'http://192.168.0.10/offer',
+            'http://169.254.1.1/offer', 'http://100.64.1.1/offer',
+            'http://0.0.0.0/offer', 'http://[::1]/offer',
+            'http://intranet/offer', 'http://nas.local/offer',
+            'http://staging.internal/offer', 'http://lab.lan/offer',
+            'http://router.home.arpa/offer', 'http://preview.test/offer',
+            'http://sample.invalid/offer', 'http://example.example/offer',
+            'http://hidden.onion/offer', 'http://127.1/offer',
+            'http://2130706433/offer',
+        ]
+        for url in blocked:
+            with self.subTest(url=url):
+                self.assertIsNone(canonical_public_url(url))
+        result=freeze_public_sources([sample('alpha',blocked+['https://example.org/offer'])],limit=8)
+        self.assertEqual(len(result['rows']),1)
+        self.assertEqual(result['sources'][0]['invalid_rows'],len(blocked))
+
+    def test_public_named_domains_still_keep_round_identity(self):
+        self.assertEqual(canonical_public_url('https://example.org/claim?batch=1'),
+                         'https://example.org/claim?batch=1')
+        self.assertEqual(canonical_public_url('https://sub.example.org/claim?batch=2'),
+                         'https://sub.example.org/claim?batch=2')
+        self.assertEqual(canonical_public_url('https://example.org/claim?utm_source=x&batch=2'),
+                         'https://example.org/claim?batch=2')
+
     def test_utm_campaign_may_encode_real_round_and_is_retained(self):
         first='https://example.org/apply?utm_campaign=fall'
         second='https://example.org/apply?utm_campaign=winter'
@@ -55,10 +84,41 @@ class CleanSample(unittest.TestCase):
     def test_upstream_query_loss_makes_blind_identity_unverified(self):
         a=sample('alpha',['https://example.org/claim'])
         a[0]['rows'][0]['url_sanitized']=True
+        a[0]['rows'][0].pop('url_identity_preserved')
         result=freeze_public_sources([a])
         self.assertEqual(result['rows'],[])
         self.assertEqual(result['sources'][0]['upstream_url_identity_lost'],1)
         self.assertFalse(result['upstream_identity_fully_preserved'])
+    def test_legacy_unproven_url_cannot_enter_new_blind_denominator(self):
+        a=sample('alpha',['https://example.org/offer?batch=alpha'])
+        a[0]['rows'][0].pop('url_identity_preserved')
+        result=freeze_public_sources([a])
+        self.assertEqual(result['rows'],[])
+        self.assertEqual(result['sources'][0]['upstream_url_identity_lost'],1)
+
+    def test_identity_proof_rejects_truthy_and_nonboolean_json_values(self):
+        for forged in (None,1,0,'true','false',[],{},False):
+            with self.subTest(forged=str(forged)):
+                a=sample('alpha',['https://example.org/offer?batch=alpha'])
+                a[0]['rows'][0]['url_identity_preserved']=forged
+                result=freeze_public_sources([a])
+                self.assertEqual(result['rows'],[])
+                self.assertEqual(result['sources'][0]['upstream_url_identity_lost'],1)
+        valid=freeze_public_sources([sample('alpha',['https://example.org/offer?batch=alpha'])])
+        self.assertEqual(len(valid['rows']),1)
+
+    def test_ambiguous_sanitized_marker_cannot_borrow_valid_identity_proof(self):
+        for forged in (None,1,0,'true','false',[],{}):
+            with self.subTest(forged=str(forged)):
+                a=sample('alpha',['https://example.org/offer?batch=alpha'])
+                a[0]['rows'][0]['url_sanitized']=forged
+                result=freeze_public_sources([a])
+                self.assertEqual(result['rows'],[])
+                self.assertEqual(result['sources'][0]['upstream_url_identity_lost'],1)
+        clean=sample('alpha',['https://example.org/offer?batch=alpha'])
+        clean[0]['rows'][0]['url_sanitized']=False
+        self.assertEqual(len(freeze_public_sources([clean])['rows']),1)
+
     def test_duplicate_cross_sources_and_order_independent(self):
         a=sample('alpha',['https://example.org/campaign'])
         b=sample('beta',['https://example.org/campaign','https://example.org/new'])

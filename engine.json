@@ -1,5 +1,5 @@
 {
-  "cursor": 6,
+  "cursor": 8,
   "families": {
     "COORD-H01": {
       "run_key": "42471605014/1",
@@ -80,13 +80,13 @@
       "strictly_complete": false
     },
     "WR-H07": {
-      "run_key": "42255714240/1",
+      "run_key": "42903992520/1",
       "source_commit": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
       "status": "FORMAL_SUBSET_PASS_NATIVE_PENDING",
       "strictly_complete": false
     },
     "WR-H08": {
-      "run_key": "42255714240/1",
+      "run_key": "42903992520/1",
       "source_commit": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
       "status": "FORMAL_SUBSET_PASS_NATIVE_PENDING",
       "strictly_complete": false
@@ -161,14 +161,14 @@
   "integration": {
     "failed": null,
     "passed": 358,
-    "run_key": "42839491940/1",
+    "run_key": "42903992520/1",
     "source_commit": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
     "status": "FAIL",
     "total": 359
   },
-  "last_run_key": "42839491940/1",
+  "last_run_key": "42903992520/1",
   "last_source_commit": "a0fc93c4b54d16f399c28ffb401d682fa823b107",
-  "last_utc": "2026-11-10T14:58:54.610487+00:00",
+  "last_utc": "2026-11-10T21:20:35.448344+00:00",
   "note": "GitHub Actions formal subsets only, not AI repairs nor native/business acceptance.",
   "processed_run_keys": [
     "39083789000/1",
@@ -225,10 +225,11 @@
     "42574917360/1",
     "42687446208/1",
     "42750612793/1",
-    "42839491940/1"
+    "42839491940/1",
+    "42903992520/1"
   ],
   "repo": "WoolRadar",
-  "revision": 55,
+  "revision": 56,
   "schema_version": 1,
   "strict_business_completed": 0
 }

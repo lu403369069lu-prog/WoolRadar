@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "audit_id": "coordinator-stop-r29-20261022",
+  "date": "2026-10-22",
+  "scope": "isolated pause/resume regression and legacy-suite compatibility",
+  "source_local_workspace": "C:/Users/lh/Documents/ChatGPT/总协调/_outbox/hook-audit-r29-20261022",
+  "source_readme_sha256": "9CF6FABAF7FB18754080B602797CB5C172F1F05F4B3B1F94B5FDC7893CE34B45",
+  "installed": {
+    "python_sha256": "A3AA3707C401C227C82A620BF1B1BA21DA1445F1B862CB08273D3EE350C092FA",
+    "powershell_wrapper_sha256": "10D3A25753FE179D73FD1FA6472ADA688EEEA86239C6C5E916A36B3003FCEFF7",
+    "deployed_r29": false
+  },
+  "isolated_artifacts": {
+    "oracle": {
+      "path": "audit_stop_resume.py",
+      "sha256": "5BE75A13DDFFEF781B5D72971B744B0340C20586B80DD7DD8DA7F301E8C4B3C3",
+      "uploaded_to_this_branch": false
+    },
+    "candidate": {
+      "path": "stop_verify_candidate.py",
+      "sha256": "C2A7CDB6573D5046ADAE3B1B8D060F3A38E6A4C8F03BA56D20FFAB099C071B85",
+      "uploaded_to_this_branch": false
+    },
+    "red_report": {
+      "path": "recheck-red.json",
+      "sha256": "60D19D4882AF56CFF83C1085889BE0826ECFAF936F6E61ACC174125BF8CFAE30",
+      "uploaded_to_this_branch": false
+    },
+    "green_report": {
+      "path": "recheck-green.json",
+      "sha256": "02F3EFED0F1065C5A0BA983775383136B3324FBDFF6DA7C4683E94CE62D75232",
+      "uploaded_to_this_branch": false
+    },
+    "r28_full_log": {
+      "path": "r28-full-installed.log",
+      "sha256": "542A5A604588DACB0102D432299E8AA5B0C1E933D5A7686EABCE467101B38725",
+      "uploaded_to_this_branch": false
+    },
+    "r29_full_log": {
+      "path": "r28-full-r29-candidate.log",
+      "sha256": "83F6F5DB4B5B800602D29234ADAA831A45E65A13AA99D843982C144C356BE1D3",
+      "uploaded_to_this_branch": false
+    }
+  },
+  "test_results": [
+    {
+      "name": "R28 eight-case RED",
+      "expected": 8,
+      "matched": 5,
+      "mismatched": 3,
+      "exit_code": 0,
+      "expect_mismatches": 3
+    },
+    {
+      "name": "R29 eight-case GREEN",
+      "expected": 8,
+      "matched": 8,
+      "mismatched": 0,
+      "exit_code": 0,
+      "expect_mismatches": 0
+    },
+    {
+      "name": "R28 legacy full suite",
+      "total": 28,
+      "passed": 28,
+      "failed": 0,
+      "exit_code": 0
+    },
+    {
+      "name": "R29 legacy full suite",
+      "total": 28,
+      "passed": 28,
+      "failed": 0,
+      "exit_code": 0
+    }
+  ],
+  "limits": [
+    "synthetic tests only",
+    "live Codex host callback unverified",
+    "new R29 PowerShell wrapper test unverified",
+    "ambiguous natural-language phrasing unverified",
+    "no live replacement"
+  ],
+  "github": {
+    "v3_state_blob": "83970b58a9261a4b1bea3cbd92bfe206f001170c",
+    "v3_revision": 439,
+    "issue3_comment_id": 6336096778,
+    "issue3_comment_url": "https://github.com/lu403369069lu-prog/WoolRadar/issues/3#issuecomment-6336096778",
+    "linked_prs": {
+      "WoolRadar/91": "6cd65734950a03a96c89770f507c82cc141c772e",
+      "WoolRadar/113": "396ce94e3510d4f09f951b0a973716c3c343bc93",
+      "WoolRadar/115": "004950858f4dd15f326072080f22d3f0a318eed0",
+      "YinQieJi/58": "0d46b8a03235918952a542da3b15f3fd68d5c36c"
+    }
+  },
+  "v5_overall_status": "IN_PROGRESS",
+  "product_acceptance": false
+}

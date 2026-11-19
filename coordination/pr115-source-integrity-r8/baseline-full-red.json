@@ -1,0 +1,62 @@
+{
+  "synthetic_only": true,
+  "run": 10,
+  "failures": 5,
+  "errors": 0,
+  "observations": [
+    {
+      "case": "test_assume_unchanged_modified_test_is_blocked",
+      "status": "PASS",
+      "error_kind": null,
+      "total": 3
+    },
+    {
+      "case": "test_clean_checkout_runs_three_real_synthetic_tests",
+      "status": "PASS",
+      "error_kind": null,
+      "total": 3
+    },
+    {
+      "case": "test_flag_added_during_suite_cannot_produce_pass",
+      "status": "PASS",
+      "error_kind": null,
+      "total": 3
+    },
+    {
+      "case": "test_missing_tracked_file_is_blocked",
+      "status": "BLOCKED",
+      "error_kind": "SOURCE_SHA_OR_DIRTY_CHECKOUT",
+      "total": null
+    },
+    {
+      "case": "test_ordinary_modified_test_is_blocked",
+      "status": "BLOCKED",
+      "error_kind": "SOURCE_SHA_OR_DIRTY_CHECKOUT",
+      "total": null
+    },
+    {
+      "case": "test_skip_worktree_modified_test_is_blocked",
+      "status": "PASS",
+      "error_kind": null,
+      "total": 3
+    },
+    {
+      "case": "test_unchanged_assume_flag_is_also_blocked",
+      "status": "PASS",
+      "error_kind": null,
+      "total": 3
+    },
+    {
+      "case": "test_unchanged_skip_flag_is_also_blocked",
+      "status": "PASS",
+      "error_kind": null,
+      "total": 3
+    },
+    {
+      "case": "test_untracked_test_is_blocked",
+      "status": "BLOCKED",
+      "error_kind": "SOURCE_SHA_OR_DIRTY_CHECKOUT",
+      "total": null
+    }
+  ]
+}

@@ -1,0 +1,76 @@
+{
+  "kind": "isolated-stop-gate-regression",
+  "source": "_outbox\\hook-audit-r29-20261022\\stop_verify_candidate.py",
+  "source_sha256": "c2a7cdb6573d5046adae3b1b8d060f3a38e6a4c8f03ba56d20ffab099c071b85",
+  "count": 8,
+  "mismatches": 0,
+  "expected_mismatches": 0,
+  "cases": [
+    {
+      "case": "active_resume",
+      "latest_user": "继续干",
+      "state": "active",
+      "expected": "block",
+      "observed": "block",
+      "correct": true
+    },
+    {
+      "case": "active_pause",
+      "latest_user": "暂停",
+      "state": "active",
+      "expected": "allow",
+      "observed": "allow",
+      "correct": true
+    },
+    {
+      "case": "active_indirect_pause",
+      "latest_user": "现在先别干了",
+      "state": "active",
+      "expected": "allow",
+      "observed": "allow",
+      "correct": true
+    },
+    {
+      "case": "active_negative_resume",
+      "latest_user": "先不要继续执行",
+      "state": "active",
+      "expected": "allow",
+      "observed": "allow",
+      "correct": true
+    },
+    {
+      "case": "paused_then_resume",
+      "latest_user": "继续干",
+      "state": "paused",
+      "expected": "block",
+      "observed": "block",
+      "correct": true
+    },
+    {
+      "case": "paused_stays_paused",
+      "latest_user": "先暂停",
+      "state": "paused",
+      "expected": "allow",
+      "observed": "allow",
+      "correct": true
+    },
+    {
+      "case": "active_conditional_pause",
+      "latest_user": "完成后阶段性停止",
+      "state": "active",
+      "expected": "block",
+      "observed": "block",
+      "correct": true
+    },
+    {
+      "case": "question_is_not_pause",
+      "latest_user": "停了？继续干",
+      "state": "active",
+      "expected": "block",
+      "observed": "block",
+      "correct": true
+    }
+  ],
+  "installed_hook_mutated": false,
+  "live_stop_event_invoked": false
+}

@@ -1,0 +1,43 @@
+{
+  "business_acceptance": false,
+  "checks": {
+    "guarded_does_not_write_pycache": true,
+    "local_failing_test_is_executed": true,
+    "local_passing_test_is_executed": true,
+    "missing_test_root_is_blocked": true,
+    "original_discovered_foreign_tests": true
+  },
+  "kind": "synthetic_python_discovery_root_verification",
+  "observed": {
+    "guarded_failing_local": {
+      "error_kind": null,
+      "failed": null,
+      "status": "FAIL",
+      "total": 1
+    },
+    "guarded_missing_local": {
+      "error_kind": "INVALID_TEST_DISCOVERY_ROOT",
+      "failed": null,
+      "status": "BLOCKED",
+      "total": null
+    },
+    "guarded_passing_local": {
+      "error_kind": null,
+      "failed": null,
+      "status": "PASS",
+      "total": 1
+    },
+    "original_failing_local": {
+      "error_kind": null,
+      "failed": null,
+      "status": "FAIL",
+      "total": 1
+    },
+    "original_missing_local": {
+      "error_kind": null,
+      "failed": null,
+      "status": "FAIL",
+      "total": 8
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "kind": "isolated_usersite_startup_negative",
+  "platform": "win32",
+  "python": "3.14.5",
+  "checks": {
+    "filtered_candidate_appdata_false_pass": true,
+    "python_isolated_flag_restores_failure": true
+  },
+  "observed": {
+    "candidate": {
+      "status": "PASS",
+      "exit_code": 0,
+      "total": 1
+    },
+    "python_I_control": {
+      "status": "FAIL",
+      "exit_code": 1,
+      "total": 1
+    }
+  },
+  "source": "synthetic failing unittest and controlled temporary APPDATA only",
+  "business_acceptance": false
+}

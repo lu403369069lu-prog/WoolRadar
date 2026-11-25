@@ -1,0 +1,10 @@
+{
+  "business_acceptance": false,
+  "gate_error_kind": "INVALID_TEST_DISCOVERY_ROOT",
+  "gate_process_exit": 0,
+  "gate_status": "BLOCKED",
+  "original_worktree_clean_after": true,
+  "source_head_sha": "396ce94e3510d4f09f951b0a973716c3c343bc93",
+  "test_root_present": false,
+  "tracked_test_python_files": 16
+}
